@@ -2,9 +2,7 @@ import { StyleSheet, Text, View } from 'react-native'
 import { Colors } from '@/constants/Colors'
 import React from 'react'
 import { useTheme } from '../context/ThemeContext'
-import {
-    responsiveFontSize
-} from "react-native-responsive-dimensions";
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 
 const CustomSecondaryText = ({ style, children, ...props }) => {
 
@@ -21,7 +19,7 @@ export default CustomSecondaryText
 
 const styles = StyleSheet.create({
     defaultText: {
-        fontSize: responsiveFontSize(1.8),
+        fontSize: moderateScale(14),
         fontFamily: 'AirbnbCereal_W_Bk',
         textDecorationLine: 'none',
     },

@@ -1,11 +1,6 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { useTheme } from '../context/ThemeContext'
-import {
-    responsiveHeight,
-    responsiveWidth,
-    responsiveFontSize
-} from "react-native-responsive-dimensions";
 
 const CustomView = ({ style, children, ...props }) => {
 
@@ -13,7 +8,7 @@ const CustomView = ({ style, children, ...props }) => {
 
     return (
         <View
-            style={[{ height: responsiveHeight(100), backgroundColor: theme.globalBackground }, style]}
+            style={[{ flex: 1, backgroundColor: theme.globalBackground }, style]}
             {...props}
         >
             {children}
