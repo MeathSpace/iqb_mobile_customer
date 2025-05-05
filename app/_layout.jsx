@@ -33,10 +33,9 @@ import { StyleSheet, Text, View } from 'react-native'
 import { useFonts } from 'expo-font';
 import { Stack } from 'expo-router';
 import React, { useEffect } from 'react'
-import CustomStatusBar from '../components/CustomStatusBar/CustomStatusBar'
+import CustomStatusBar from '../components/CustomStatusBar'
 import { ThemeProvider } from '../context/ThemeContext';
 import { SafeAreaProvider, SafeAreaView } from 'react-native-safe-area-context';
-import * as SplashScreen from 'expo-splash-screen';
 
 
 const _layout = () => {
@@ -62,6 +61,7 @@ const _layout = () => {
           <CustomStatusBar />
           {/* now every screen under here is inset‐aware */}
           <Stack>
+            <Stack.Screen name="index" options={{ headerShown: false }} />
             <Stack.Screen name="signin" options={{ headerShown: false }} />
           </Stack>
 

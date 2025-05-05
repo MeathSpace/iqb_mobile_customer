@@ -1,7 +1,10 @@
 import { StyleSheet, Text, View } from 'react-native'
 import { Colors } from '@/constants/Colors'
 import React from 'react'
-import { useTheme } from '../../context/ThemeContext'
+import { useTheme } from '../context/ThemeContext'
+import {
+    responsiveFontSize
+} from "react-native-responsive-dimensions";
 
 const CustomText = ({ style, children, ...props }) => {
 
@@ -18,7 +21,7 @@ export default CustomText
 
 const styles = StyleSheet.create({
     defaultText: {
-        fontSize: 16,
+        fontSize: responsiveFontSize(2.2),
         fontFamily: 'AirbnbCereal_W_Bk',
         textDecorationLine: 'none',
     },

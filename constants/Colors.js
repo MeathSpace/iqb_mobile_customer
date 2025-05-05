@@ -4,6 +4,7 @@ const tintColorDark = '#fff';
 export const Colors = {
   light: {
     primaryText: '#11181C', // black color
+    secondaryText: "#808080",
     globalBackground: '#fff',
     tint: tintColorLight,
     icon: '#687076',
@@ -12,6 +13,7 @@ export const Colors = {
   },
   dark: {
     primaryText: '#ECEDEE',  // white color
+    secondaryText: "#F4F4F5B2",
     globalBackground: '#151718',
     tint: tintColorDark,
     icon: '#9BA1A6',
@@ -19,7 +21,7 @@ export const Colors = {
     tabIconSelected: tintColorDark,
   },
   modeColor: {
-    colorName: "Red",
-    colorCode: "red",
+    colorName: "Rose",
+    colorCode: "#E81948",
   }
 };

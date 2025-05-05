@@ -1,6 +1,6 @@
 import { StatusBar, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import { useTheme } from '../../context/ThemeContext';
+import { useTheme } from '../context/ThemeContext';
 
 const CustomStatusBar = ({ style, children, ...props }) => {
 

@@ -1,39 +1,25 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native'
-import CustomView from "../components/CustomView/CustomView"
-import CustomText from "../components/CustomText/CustomText"
+import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
+import CustomView from "../components/CustomView"
+import CustomText from "../components/CustomText"
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import React from 'react'
-import { useTheme } from '../context/ThemeContext'
+import { useColorScheme } from 'react-native';
 
 const signin = () => {
 
-    const { theme, modeColor, setModeColor } = useTheme()
-
-    // const modeColorHandler = async (colorMode) => {
-    //     setModeColor(colorMode)
-    //     await AsyncStorage.setItem('modeColor', JSON.stringify({ ...colorMode, default: false }));
-    // }
+    const colorScheme = useColorScheme()
 
     return (
-        <CustomView style={{ flex: 1, backgroundColor: "transparent" }}>
+        <CustomView>
             <CustomText>signin</CustomText>
 
-            <Pressable
+            <Image
                 style={{
-                    height: 40,
-                    width: 100,
-                    backgroundColor: modeColor.colorCode
+                    // width: 100,
+                    // height: 100
+                    tintColor: colorScheme === "dark" ? "#fff" : "#000"
                 }}
-            >
-                <CustomText>button</CustomText>
-
-
-
-            </Pressable>
-{/* 
-            <Pressable onPress={() => modeColorHandler({ colorName: "Blue", colorCode: "blue" })}><Text>Blue</Text></Pressable>
-            <Pressable onPress={() => modeColorHandler({ colorName: "White", colorCode: "white" })}><Text>White</Text></Pressable>
-            <Pressable onPress={() => modeColorHandler({ colorName: "Red", colorCode: "red" })}><Text>Red</Text></Pressable> */}
+                source={require("../assets/images/IQB_Logo.png")}
+            />
         </CustomView>
     )
 }
