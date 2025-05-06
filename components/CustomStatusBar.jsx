@@ -7,7 +7,9 @@ const CustomStatusBar = ({ style, children, ...props }) => {
     const { theme } = useTheme();
 
     return (
-        <StatusBar backgroundColor={theme.globalBackground} />
+        <StatusBar
+            translucent={false}
+            backgroundColor={theme.globalBackground} />
     )
 }
 
