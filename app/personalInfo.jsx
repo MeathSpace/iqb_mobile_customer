@@ -1,4 +1,4 @@
-import { Alert, Button, Keyboard, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
+import { Alert, Button, Keyboard, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import CustomView from '../components/CustomView'
 import { useTheme } from '../context/ThemeContext'
@@ -23,6 +23,7 @@ const personalInfo = () => {
     const [genderOpen, setGenderOpen] = useState(false)
     const [gender, setGender] = useState("Male");
     const [date, setDate] = useState(new Date());
+    const [calenderModal, setCalenderModal] = useState(false);
     // const [selectedCountry, setSelectedCountry] = useState({});
 
     const [genderItems, setGenderItems] = useState([
@@ -84,10 +85,6 @@ const personalInfo = () => {
             setGenderOpen(false);
         }}>
 
-            {/* <ScrollView
-                    contentContainerStyle={{ flexGrow: 1 }}
-                    keyboardShouldPersistTaps="handled"
-                > */}
             <CustomView style={{ padding: scale(15), justifyContent: "space-around", gap: 15 }}>
 
                 <ProgressHeader
@@ -221,7 +218,9 @@ const personalInfo = () => {
                 <View style={styles.inputWrapper}>
                     <CustomText>Date of Birth</CustomText>
 
-                    <TextInput
+                    <Pressable onPress={() => setCalenderModal(true)}><CustomText>Open</CustomText></Pressable>
+
+                    {/* <TextInput
                         editable
                         placeholder="Select your date of birth"
                         placeholderTextColor={theme.secondaryText}
@@ -231,8 +230,22 @@ const personalInfo = () => {
                             setFirstName(text)
                         }}
                         value={firstName}
-                    />
+                    /> */}
                 </View>
+
+                <Modal
+                    animationType="fade"
+                    transparent={true}
+                    visible={calenderModal}
+                    onRequestClose={() => setCalenderModal(false)} // For Android hardware back button
+                >
+                    <View style={[styles.modalWrapper, { backgroundColor: theme.globalModalBackground }]}>
+                        <View style={styles.modalContainer}>
+                            <CustomText style={styles.modalText}>This is a Modal!</CustomText>
+                            <Button title="Close Modal" onPress={() => setCalenderModal(false)} />
+                        </View>
+                    </View>
+                </Modal>
 
                 <Pressable
                     // onPress={() => router.push("/personalInfo")}
@@ -241,7 +254,6 @@ const personalInfo = () => {
                 </Pressable>
 
             </CustomView >
-            {/* </ScrollView> */}
 
         </TouchableWithoutFeedback>
     )
@@ -292,4 +304,14 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         marginBlock: verticalScale(0)
     },
+    modalWrapper: {
+        flex: 1,
+        alignItems: "center",
+        justifyContent: "center",
+    },
+    modalContainer: {
+        height: "50%",
+        width: "50%",
+        backgroundColor: "red"
+    }
 })
