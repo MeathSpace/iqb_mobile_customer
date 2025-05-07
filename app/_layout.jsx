@@ -85,14 +85,25 @@
 
 
 import React, { useEffect, useLayoutEffect } from 'react';
-import { StyleSheet, SafeAreaView, Text, Platform } from 'react-native';
+import { StyleSheet, SafeAreaView, Text, Platform, useColorScheme } from 'react-native';
 import { useFonts } from 'expo-font';
 import { Stack, useFocusEffect } from 'expo-router';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import CustomStatusBar from '../components/CustomStatusBar';
 import { ThemeProvider } from '../context/ThemeContext';
+import * as SystemUI from 'expo-system-ui';
 
 const _layout = () => {
+  const colorScheme = useColorScheme()
+
+  useEffect(() => {
+    if (colorScheme === 'dark') {
+      SystemUI.setBackgroundColorAsync('#151718');
+    } else {
+      SystemUI.setBackgroundColorAsync('#ffffff');
+    }
+  }, [colorScheme]);
+
 
   // Load custom fonts
   const [loaded] = useFonts({
@@ -110,7 +121,10 @@ const _layout = () => {
   return (
     <SafeAreaProvider>
       <ThemeProvider>
-        <SafeAreaView style={{ flex: 1 }}>
+        <SafeAreaView style={{
+          flex: 1,
+          backgroundColor: colorScheme === 'dark' ? '#151718' : '#ffffff' // If i dont give this thing here then in ios i will see a blank white color statusbar and navigation bar default
+        }}>
           {/* Custom Status Bar Component */}
           <CustomStatusBar />
 
