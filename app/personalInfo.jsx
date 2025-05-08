@@ -1,6 +1,6 @@
 import { Alert, Button, Keyboard, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
-import CustomView from '../components/CustomView'
+import CustomScrollView from '../components/CustomScrollView'
 import { useTheme } from '../context/ThemeContext'
 import { useRouter } from 'expo-router'
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
@@ -80,182 +80,186 @@ const personalInfo = () => {
         }
     }
     return (
-        <TouchableWithoutFeedback onPress={() => {
-            Keyboard.dismiss();
-            setGenderOpen(false);
-        }}>
 
-            <CustomView style={{ padding: scale(15), justifyContent: "space-around", gap: 15 }}>
+        <CustomScrollView>
 
-                <ProgressHeader
-                    theme={theme}
-                    progressOne={progressOne}
-                    progressTwo={progressTwo}
-                    progressThree={progressThree}
-                />
+            <TouchableWithoutFeedback onPress={() => {
+                Keyboard.dismiss();
+                setGenderOpen(false);
+            }}>
 
-                <View>
-                    <CustomText style={styles.heading}>
-                        It's time to create a profile !
-                    </CustomText>
+                <View style={{
+                    flex: 1,
+                    justifyContent: "space-around",
+                    gap: verticalScale(20)
+                }}>
 
-                    <CustomSecondaryText style={styles.sub_heading}>
-                        Tell us little more about yourself
-                    </CustomSecondaryText>
-                </View>
-
-                <View style={styles.inputWrapper}>
-                    <CustomText>First Name</CustomText>
-
-                    <TextInput
-                        editable
-                        placeholder="Enter your first name"
-                        placeholderTextColor={theme.secondaryText}
-                        style={[firstNameError ? styles.inputFielderror : styles.inputField, { borderColor: theme.borderColor, backgroundColor: theme.InputBackground, fontFamily: "AirbnbCereal_W_Bk", color: theme.primaryText }]}
-                        onChangeText={(text) => {
-                            setFirstNameError("")
-                            setFirstName(text)
-                        }}
-                        value={firstName}
-                    />
-                </View>
-
-                <View style={styles.inputWrapper}>
-                    <CustomText>Last Name</CustomText>
-
-                    <TextInput
-                        editable
-                        placeholder="Enter your last name"
-                        placeholderTextColor={theme.secondaryText}
-                        style={[lastNameError ? styles.inputFielderror : styles.inputField, { borderColor: theme.borderColor, backgroundColor: theme.InputBackground, fontFamily: "AirbnbCereal_W_Bk", color: theme.primaryText }]}
-                        onChangeText={(text) => {
-                            setLastNameError("")
-                            setLastName(text)
-                        }}
-                        value={firstName}
-                    />
-                </View>
-
-                <View style={styles.inputWrapper}>
-                    <CustomText>Select Gender</CustomText>
-                    <DropDownPicker
-                        open={genderOpen}
-                        value={gender}
-                        items={genderItems}
-                        setOpen={setGenderOpen}
-                        setValue={setGender}
-                        setItems={setGenderItems}
-                        itemSeparator={true}
-                        itemSeparatorStyle={{
-                            backgroundColor: theme.borderColor
-                        }}
-                        placeholder="Select a gender"
-                        style={[
-                            styles.dropdown,
-                            {
-                                borderColor: theme.borderColor,
-                                backgroundColor: theme.InputBackground,
-                            },
-                        ]}
-                        dropDownContainerStyle={[
-                            styles.dropdownContainer,
-                            {
-                                borderColor: theme.borderColor,
-                                backgroundColor: theme.InputBackground,
-                            }
-                        ]}
-                        textStyle={{
-                            fontSize: moderateScale(14),
-                            fontFamily: 'AirbnbCereal_W_Bk',
-                            color: theme.primaryText
-                        }}
-                        listItemLabelStyle={{
-                            fontSize: moderateScale(14),
-                            fontFamily: 'AirbnbCereal_W_Bk',
-                            color: theme.primaryText,
-                        }}
-                        arrowIconStyle={{
-                            tintColor: theme.primaryText,
-                        }}
-                        tickIconStyle={{
-                            tintColor: "#00A36C"
-                        }}
-                    />
-                </View>
-
-                <View style={styles.inputWrapper}>
-                    <CustomText>Mobile Number</CustomText>
-                    <PhoneInput
-                        ref={phoneRef}
-                        initialCountry={selectedCountry.cca2.toLowerCase()}
-                        value={phoneNumber}
-                        onChangePhoneNumber={(number) => phoneNumberHandler(number)}
-                        onPressFlag={toggleCountryPicker}
-                        textStyle={{ color: theme.primaryText, fontSize: moderateScale(14) }}
-                        style={[styles.inputField, { borderColor: theme.borderColor, backgroundColor: theme.InputBackground, fontFamily: "AirbnbCereal_W_Bk", color: theme.primaryText }]}
+                    <ProgressHeader
+                        theme={theme}
+                        progressOne={progressOne}
+                        progressTwo={progressTwo}
+                        progressThree={progressThree}
                     />
 
-                    {countryPickerVisible && (
-                        <CountryPicker
-                            withFilter={true}
-                            withFlagButton={true}
-                            withFlag={true}
-                            withCountryNameButton={false}
-                            withEmoji={true}
-                            withCallingCode
-                            onSelect={onSelectCountry}
-                            onClose={() => setCountryPickerVisible(false)}
-                            visible={countryPickerVisible}
-                            containerButtonStyle={styles.countryPickerButton}
-                            theme={{
-                                ...((colorScheme === 'dark' && DARK_THEME) || {}),
+                    <View>
+                        <CustomText style={styles.heading}>
+                            It's time to create a profile !
+                        </CustomText>
+
+                        <CustomSecondaryText style={styles.sub_heading}>
+                            Tell us little more about yourself
+                        </CustomSecondaryText>
+                    </View>
+
+                    <View style={styles.inputWrapper}>
+                        <CustomText>First Name</CustomText>
+
+                        <TextInput
+                            editable
+                            placeholder="Enter your first name"
+                            placeholderTextColor={theme.secondaryText}
+                            style={[firstNameError ? styles.inputFielderror : styles.inputField, { borderColor: theme.borderColor, backgroundColor: theme.InputBackground, fontFamily: "AirbnbCereal_W_Bk", color: theme.primaryText }]}
+                            onChangeText={(text) => {
+                                setFirstNameError("")
+                                setFirstName(text)
+                            }}
+                            value={firstName}
+                        />
+                    </View>
+
+                    <View style={styles.inputWrapper}>
+                        <CustomText>Last Name</CustomText>
+
+                        <TextInput
+                            editable
+                            placeholder="Enter your last name"
+                            placeholderTextColor={theme.secondaryText}
+                            style={[lastNameError ? styles.inputFielderror : styles.inputField, { borderColor: theme.borderColor, backgroundColor: theme.InputBackground, fontFamily: "AirbnbCereal_W_Bk", color: theme.primaryText }]}
+                            onChangeText={(text) => {
+                                setLastNameError("")
+                                setLastName(text)
+                            }}
+                            value={firstName}
+                        />
+                    </View>
+
+                    <View style={styles.inputWrapper}>
+                        <CustomText>Select Gender</CustomText>
+                        <DropDownPicker
+                            listMode="SCROLLVIEW"
+                            // dropDownMaxHeight={240}
+                            open={genderOpen}
+                            value={gender}
+                            items={genderItems}
+                            setOpen={setGenderOpen}
+                            setValue={setGender}
+                            setItems={setGenderItems}
+                            itemSeparator={true}
+                            itemSeparatorStyle={{
+                                backgroundColor: theme.borderColor
+                            }}
+                            placeholder="Select a gender"
+                            style={[
+                                styles.dropdown,
+                                {
+                                    borderColor: theme.borderColor,
+                                    backgroundColor: theme.InputBackground,
+                                },
+                            ]}
+                            dropDownContainerStyle={[
+                                styles.dropdownContainer,
+                                {
+                                    borderColor: theme.borderColor,
+                                    backgroundColor: theme.InputBackground,
+                                }
+                            ]}
+                            textStyle={{
+                                fontSize: moderateScale(14),
                                 fontFamily: 'AirbnbCereal_W_Bk',
+                                color: theme.primaryText
+                            }}
+                            listItemLabelStyle={{
+                                fontSize: moderateScale(14),
+                                fontFamily: 'AirbnbCereal_W_Bk',
+                                color: theme.primaryText,
+                            }}
+                            arrowIconStyle={{
+                                tintColor: theme.primaryText,
+                            }}
+                            tickIconStyle={{
+                                tintColor: "#00A36C"
                             }}
                         />
-                    )}
-                </View>
-
-                <View style={styles.inputWrapper}>
-                    <CustomText>Date of Birth</CustomText>
-
-                    <Pressable onPress={() => setCalenderModal(true)}><CustomText>Open</CustomText></Pressable>
-
-                    {/* <TextInput
-                        editable
-                        placeholder="Select your date of birth"
-                        placeholderTextColor={theme.secondaryText}
-                        style={[firstNameError ? styles.inputFielderror : styles.inputField, { borderColor: theme.borderColor, backgroundColor: theme.InputBackground, fontFamily: "AirbnbCereal_W_Bk", color: theme.primaryText }]}
-                        onChangeText={(text) => {
-                            setFirstNameError("")
-                            setFirstName(text)
-                        }}
-                        value={firstName}
-                    /> */}
-                </View>
-
-                <Modal
-                    animationType="fade"
-                    transparent={true}
-                    visible={calenderModal}
-                    onRequestClose={() => setCalenderModal(false)} // For Android hardware back button
-                >
-                    <View style={[styles.modalWrapper, { backgroundColor: theme.globalModalBackground }]}>
-                        <View style={styles.modalContainer}>
-                            <CustomText style={styles.modalText}>This is a Modal!</CustomText>
-                            <Button title="Close Modal" onPress={() => setCalenderModal(false)} />
-                        </View>
                     </View>
-                </Modal>
 
-                <Pressable
-                    // onPress={() => router.push("/personalInfo")}
-                    style={[styles.btn, { backgroundColor: modeColor.colorCode }]}>
-                    <CustomText style={{ color: "#fff" }}>Save & Next</CustomText>
-                </Pressable>
+                    <View style={styles.inputWrapper}>
+                        <CustomText>Date of Birth</CustomText>
 
-            </CustomView >
+                        <Pressable onPress={() => setCalenderModal(true)}><CustomText>Open</CustomText></Pressable>
+                    </View>
 
-        </TouchableWithoutFeedback>
+
+                    <View style={styles.inputWrapper}>
+                        <CustomText>Mobile Number</CustomText>
+                        <PhoneInput
+                            ref={phoneRef}
+                            initialCountry={selectedCountry.cca2.toLowerCase()}
+                            value={phoneNumber}
+                            onChangePhoneNumber={(number) => phoneNumberHandler(number)}
+                            onPressFlag={toggleCountryPicker}
+                            textStyle={{ color: theme.primaryText, fontSize: moderateScale(14) }}
+                            style={[styles.inputField, { borderColor: theme.borderColor, backgroundColor: theme.InputBackground, fontFamily: "AirbnbCereal_W_Bk", color: theme.primaryText }]}
+                        />
+
+                        {countryPickerVisible && (
+                            <CountryPicker
+                                withFilter={true}
+                                withFlagButton={true}
+                                withFlag={true}
+                                withCountryNameButton={false}
+                                withEmoji={true}
+                                withCallingCode
+                                onSelect={onSelectCountry}
+                                onClose={() => setCountryPickerVisible(false)}
+                                visible={countryPickerVisible}
+                                containerButtonStyle={styles.countryPickerButton}
+                                theme={{
+                                    ...((colorScheme === 'dark' && DARK_THEME) || {}),
+                                    fontFamily: 'AirbnbCereal_W_Bk',
+                                }}
+                            />
+                        )}
+                    </View>
+
+
+
+
+                    <Modal
+                        animationType="fade"
+                        transparent={true}
+                        visible={calenderModal}
+                        onRequestClose={() => setCalenderModal(false)} // For Android hardware back button
+                    >
+                        <View
+                            style={[styles.modalWrapper, { backgroundColor: theme.globalModalBackground }]}>
+                            <View style={styles.modalContainer}>
+                                <CustomText style={styles.modalText}>This is a Modal!</CustomText>
+                                <Button title="Close Modal" onPress={() => setCalenderModal(false)} />
+                            </View>
+                        </View>
+                    </Modal>
+
+                    <Pressable
+                        // onPress={() => router.push("/personalInfo")}
+                        style={[styles.btn, { backgroundColor: modeColor.colorCode }]}>
+                        <CustomText style={{ color: "#fff" }}>Save & Next</CustomText>
+                    </Pressable>
+
+                </View>
+
+            </TouchableWithoutFeedback>
+
+        </CustomScrollView >
     )
 }
 

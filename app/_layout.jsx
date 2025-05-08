@@ -92,6 +92,10 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import CustomStatusBar from '../components/CustomStatusBar';
 import { ThemeProvider } from '../context/ThemeContext';
 import * as SystemUI from 'expo-system-ui';
+import * as SplashScreen from 'expo-splash-screen';
+
+
+SplashScreen.preventAutoHideAsync();
 
 const _layout = () => {
   const colorScheme = useColorScheme()
@@ -106,7 +110,7 @@ const _layout = () => {
 
 
   // Load custom fonts
-  const [loaded] = useFonts({
+  const [loaded, error] = useFonts({
     AirbnbCereal_W_Bd: require('../assets/fonts/AirbnbCereal_W_Bd.otf'),
     AirbnbCereal_W_Md: require('../assets/fonts/AirbnbCereal_W_Md.otf'),
     AirbnbCereal_W_Lt: require('../assets/fonts/AirbnbCereal_W_Lt.otf'),
@@ -114,30 +118,36 @@ const _layout = () => {
     AirbnbCereal_W_XBd: require('../assets/fonts/AirbnbCereal_W_XBd.otf'),
   });
 
-  if (!loaded) {
-    return null; // Wait for fonts to load
+  useEffect(() => {
+    if (loaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded, error]);
+
+  if (!loaded && !error) {
+    return null;
   }
 
   return (
-    <SafeAreaProvider>
-      <ThemeProvider>
-        <SafeAreaView style={{
-          flex: 1,
-          backgroundColor: colorScheme === 'dark' ? '#151718' : '#ffffff' // If i dont give this thing here then in ios i will see a blank white color statusbar and navigation bar default
-        }}>
-          {/* Custom Status Bar Component */}
-          <CustomStatusBar />
+    // <SafeAreaProvider>
+    <ThemeProvider>
+      <SafeAreaView style={{
+        flex: 1,
+        backgroundColor: colorScheme === 'dark' ? '#151718' : '#ffffff' // If i dont give this thing here then in ios i will see a blank white color statusbar and navigation bar default
+      }}>
+        {/* Custom Status Bar Component */}
+        <CustomStatusBar />
 
-          {/* Main Navigation Stack */}
-          <Stack screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="index" />
-            <Stack.Screen name="signin" />
-            <Stack.Screen name="signup" />
-            <Stack.Screen name="personalInfo" />
-          </Stack>
-        </SafeAreaView>
-      </ThemeProvider>
-    </SafeAreaProvider>
+        {/* Main Navigation Stack */}
+        <Stack screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="index" />
+          <Stack.Screen name="signin" />
+          <Stack.Screen name="signup" />
+          <Stack.Screen name="personalInfo" />
+        </Stack>
+      </SafeAreaView>
+    </ThemeProvider>
+    // </SafeAreaProvider>
   );
 };
 

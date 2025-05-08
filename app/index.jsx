@@ -1,7 +1,7 @@
 import { Image, Pressable, StyleSheet, Text, useColorScheme, View } from 'react-native'
 import React, { useState } from 'react'
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
-import CustomView from '../components/CustomView'
+import CustomScrollView from '../components/CustomScrollView'
 import CustomText from '../components/CustomText';
 import CustomSecondaryText from '../components/CustomSecondaryText';
 import { useTheme } from '../context/ThemeContext';
@@ -18,7 +18,7 @@ const index = () => {
     const [text, setText] = useState('');
 
     return (
-        <CustomView style={{ padding: scale(15), alignItems: "center", justifyContent: "center" }}>
+        <CustomScrollView style={{ alignItems: "center", justifyContent: "center" }}>
             <View style={{ width: "100%" }}>
                 <Image
                     style={[styles.Logo, { tintColor: colorScheme === "dark" ? "#fff" : "#000" }]}
@@ -45,7 +45,7 @@ const index = () => {
                     style={[styles.auth_btn, { borderWidth: moderateScale(1.5), borderColor: modeColor.colorCode }]}><CustomText style={{ color: modeColor.colorCode }}>Log In</CustomText></Pressable>
             </View>
 
-        </CustomView>
+        </CustomScrollView>
     )
 }
 

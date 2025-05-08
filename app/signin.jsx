@@ -1,5 +1,5 @@
 import { Image, Pressable, StyleSheet, Text, View } from 'react-native'
-import CustomView from "../components/CustomView"
+import CustomScrollView from "../components/CustomScrollView"
 import CustomText from "../components/CustomText"
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useColorScheme } from 'react-native';
@@ -9,7 +9,7 @@ const signin = () => {
     const colorScheme = useColorScheme()
 
     return (
-        <CustomView>
+        <CustomScrollView>
             <CustomText>signin</CustomText>
 
             <Image
@@ -20,7 +20,7 @@ const signin = () => {
                 }}
                 source={require("../assets/images/IQB_Logo.png")}
             />
-        </CustomView>
+        </CustomScrollView>
     )
 }
 
