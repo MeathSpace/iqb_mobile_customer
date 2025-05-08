@@ -21,6 +21,7 @@
         "foregroundImage": "./assets/images/splash.jpeg",
         "backgroundColor": "#ffffff"
       },
+      "softwareKeyboardLayoutMode": "pan",
       "edgeToEdgeEnabled": true
     },
     "androidNavigationBar": {

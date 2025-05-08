@@ -88,11 +88,13 @@ const personalInfo = () => {
                 setGenderOpen(false);
             }}>
 
-                <View style={{
-                    flex: 1,
-                    justifyContent: "space-around",
-                    gap: verticalScale(20)
-                }}>
+                <View
+                    style={{
+                        flex: 1,
+                        justifyContent: "space-around",
+                        gap: verticalScale(20)
+                    }}
+                >
 
                     <ProgressHeader
                         theme={theme}
@@ -230,8 +232,6 @@ const personalInfo = () => {
                             />
                         )}
                     </View>
-
-
 
 
                     <Modal
