@@ -144,6 +144,8 @@ const _layout = () => {
           <Stack.Screen name="signin" />
           <Stack.Screen name="signup" />
           <Stack.Screen name="personalInfo" />
+          <Stack.Screen name="passwordConfirmation" />
+          <Stack.Screen name="verification" />
         </Stack>
       </SafeAreaView>
     </ThemeProvider>

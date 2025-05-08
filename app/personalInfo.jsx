@@ -8,6 +8,8 @@ import ProgressHeader from '../components/ProgressHeader'
 import CustomText from '../components/CustomText'
 import CustomSecondaryText from '../components/CustomSecondaryText'
 import DropDownPicker from 'react-native-dropdown-picker';
+import { CalendarIcon } from '../constants/icons'
+import DateTimePicker from "@react-native-community/datetimepicker";
 
 import PhoneInput
     from 'react-native-phone-input';
@@ -15,6 +17,12 @@ import CountryPicker, { DARK_THEME }
     from 'react-native-country-picker-modal';
 
 const personalInfo = () => {
+
+    const colorScheme = useColorScheme()
+
+    const { modeColor, theme } = useTheme()
+
+    const router = useRouter()
 
 
     const [phone, setPhone] = useState("");
@@ -37,11 +45,12 @@ const personalInfo = () => {
     const [firstNameError, setFirstNameError] = useState("");
     const [lastNameError, setLastNameError] = useState("");
 
-    const colorScheme = useColorScheme()
-
-    const { modeColor, theme } = useTheme()
-
-    const router = useRouter()
+    const onChange = (event, selectedDate) => {
+        setCalenderModal(false);
+        if (event.type === "set" && selectedDate) {
+            setDate(new Date(selectedDate));
+        }
+    };
 
     const [progressOne, setProgressOne] = useState(1)
     const [progressTwo, setProgressTwo] = useState(1)
@@ -79,8 +88,12 @@ const personalInfo = () => {
             console.log("Invalid ", phoneNumber)
         }
     }
-    return (
 
+    const saveHandler = () => {
+        router.push("/passwordConfirmation")
+    }
+
+    return (
         <CustomScrollView>
 
             <TouchableWithoutFeedback onPress={() => {
@@ -108,7 +121,7 @@ const personalInfo = () => {
                             It's time to create a profile !
                         </CustomText>
 
-                        <CustomSecondaryText style={styles.sub_heading}>
+                        <CustomSecondaryText>
                             Tell us little more about yourself
                         </CustomSecondaryText>
                     </View>
@@ -194,12 +207,6 @@ const personalInfo = () => {
                         />
                     </View>
 
-                    <View style={styles.inputWrapper}>
-                        <CustomText>Date of Birth</CustomText>
-
-                        <Pressable onPress={() => setCalenderModal(true)}><CustomText>Open</CustomText></Pressable>
-                    </View>
-
 
                     <View style={styles.inputWrapper}>
                         <CustomText>Mobile Number</CustomText>
@@ -233,8 +240,29 @@ const personalInfo = () => {
                         )}
                     </View>
 
+                    <View style={styles.inputWrapper}>
+                        <CustomText>Date of Birth</CustomText>
 
-                    <Modal
+                        <Pressable
+                            style={[firstNameError ? styles.inputFielderror : styles.inputDateField, { borderColor: theme.borderColor, backgroundColor: theme.InputBackground, fontFamily: "AirbnbCereal_W_Bk", color: theme.primaryText }]}
+                            onPress={() => setCalenderModal(true)}>
+                            <CalendarIcon style={[styles.dateIcon, { color: theme.primaryText }]} />
+                        </Pressable>
+                    </View>
+
+                    {
+                        calenderModal ? (
+                            <DateTimePicker
+                                mode="date"
+                                maximumDate={new Date()}
+                                value={date}
+                                display="default"
+                                onChange={onChange}
+                            />
+                        ) : (null)
+                    }
+
+                    {/* <Modal
                         animationType="fade"
                         transparent={true}
                         visible={calenderModal}
@@ -244,13 +272,15 @@ const personalInfo = () => {
                             style={[styles.modalWrapper, { backgroundColor: theme.globalModalBackground }]}>
                             <View style={styles.modalContainer}>
                                 <CustomText style={styles.modalText}>This is a Modal!</CustomText>
+                                
+
                                 <Button title="Close Modal" onPress={() => setCalenderModal(false)} />
                             </View>
                         </View>
-                    </Modal>
+                    </Modal> */}
 
                     <Pressable
-                        // onPress={() => router.push("/personalInfo")}
+                        onPress={() => saveHandler()}
                         style={[styles.btn, { backgroundColor: modeColor.colorCode }]}>
                         <CustomText style={{ color: "#fff" }}>Save & Next</CustomText>
                     </Pressable>
@@ -282,6 +312,20 @@ const styles = StyleSheet.create({
         borderWidth: moderateScale(1.5),
         paddingHorizontal: scale(10),
         fontSize: moderateScale(14)
+    },
+    inputDateField: {
+        height: verticalScale(40),
+        borderRadius: scale(4),
+        borderWidth: moderateScale(1.5),
+        paddingHorizontal: scale(10),
+        fontSize: moderateScale(14),
+        position: "relative"
+    },
+    dateIcon: {
+        position: "absolute",
+        right: scale(5),
+        top: verticalScale(18),
+        transform: [{ translateY: -(moderateScale(24) / moderateScale(2)) }]
     },
     inputFielderror: {
 

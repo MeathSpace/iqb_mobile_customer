@@ -1,6 +1,6 @@
 import { Image, Keyboard, Pressable, StyleSheet, Text, TextInput, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
 import React from 'react'
-import CustomScrollView from '../components/CustomScrollView'
+import CustomView from '../components/CustomView'
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import { useTheme } from '../context/ThemeContext';
 import { Link, useRouter } from 'expo-router';
@@ -20,7 +20,7 @@ const signup = () => {
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-            <CustomScrollView style={{ alignItems: "center", justifyContent: "center" }}>
+            <CustomView style={{ alignItems: "center", justifyContent: "center" }}>
                 <View style={{ width: "100%" }}>
                     <Image
                         style={[styles.Logo, { tintColor: colorScheme === "dark" ? "#fff" : "#000" }]}
@@ -89,7 +89,7 @@ const signup = () => {
                     </Pressable>
 
                 </View>
-            </CustomScrollView>
+            </CustomView>
         </TouchableWithoutFeedback>
     )
 }

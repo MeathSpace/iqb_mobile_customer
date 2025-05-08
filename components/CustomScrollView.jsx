@@ -11,13 +11,13 @@ const CustomScrollView = ({ style, children, ...props }) => {
         <KeyboardAvoidingView
             style={{ flex: 1, backgroundColor: theme.globalBackground }}
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-            keyboardVerticalOffset={Platform.OS === 'ios' ? verticalScale(45) : 0}
+            keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}
         >
             <ScrollView
-                style={{ flex: 1, backgroundColor: theme.globalBackground }}
-                contentContainerStyle={[{ flexGrow: 1, padding: scale(15) }, style]}
+                style={{ flex: 1 }}
+                contentContainerStyle={[{ flexGrow: 1, paddingHorizontal: scale(15), paddingVertical: verticalScale(15) }, style]}
                 keyboardShouldPersistTaps="handled"
-                showsVerticalScrollIndicator={true}
+                showsVerticalScrollIndicator={false}
                 {...props}
             >
                 {children}
