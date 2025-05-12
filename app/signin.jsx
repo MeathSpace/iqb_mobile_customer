@@ -9,8 +9,12 @@ import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import { useState } from 'react';
 import Checkbox from 'expo-checkbox';
 import CustomSecondaryText from '../components/CustomSecondaryText';
+import { useAuth } from '../context/AuthContext'
 
 const signin = () => {
+
+    const { setUser } = useAuth()
+
 
     const colorScheme = useColorScheme()
 
@@ -19,6 +23,18 @@ const signin = () => {
     const router = useRouter()
 
     const [isChecked, setChecked] = useState(false);
+
+    const signinPressed = async () => {
+        await AsyncStorage.setItem("auth", JSON.stringify({
+            name: "John Doe",
+            email: "john@gmail.com"
+        }))
+        setUser({
+            name: "John Doe",
+            email: "john@gmail.com"
+        })
+        router.push("/dashboard")
+    }
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -78,7 +94,7 @@ const signin = () => {
 
 
 
-                        <Pressable>
+                        <Pressable onPress={() => router.push("/forgetPassword")}>
                             <CustomSecondaryText>
                                 Forgot Password ?
                             </CustomSecondaryText>
@@ -86,7 +102,7 @@ const signin = () => {
                     </View>
 
                     <Pressable
-                        onPress={() => router.push("/")}
+                        onPress={() => signinPressed()}
                         style={[styles.auth_btn, { backgroundColor: modeColor.colorCode, marginBottom: verticalScale(10) }]}>
                         <CustomText style={{ color: "#fff" }}>Sign in</CustomText>
                     </Pressable>

@@ -1,11 +1,12 @@
 import { Image, Pressable, StyleSheet, Text, useColorScheme, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import CustomView from '../components/CustomView'
 import CustomText from '../components/CustomText';
 import CustomSecondaryText from '../components/CustomSecondaryText';
 import { useTheme } from '../context/ThemeContext';
-import { Link, useRouter } from "expo-router";
+import { Link, Redirect, useFocusEffect, useRouter } from "expo-router";
+import { useAuth } from '../context/AuthContext';
 
 const index = () => {
 
@@ -15,7 +16,40 @@ const index = () => {
 
     const router = useRouter()
 
-    const [text, setText] = useState('');
+    const [loading, setLoading] = useState(true);
+
+    const { user } = useAuth()
+
+
+    useEffect(() => {
+        let timer = setTimeout(() => {
+            if (user) {
+                router.replace("/dashboard")
+            } else {
+                setLoading(false)
+            }
+        }, 500)
+
+        return () => {
+            clearTimeout(timer)
+        }
+
+    }, [user, router])
+
+
+    if (loading) {
+        return (
+            <CustomView style={{ alignItems: "center", justifyContent: "center" }}>
+                <Image
+                    style={[styles.Logo, { tintColor: colorScheme === "dark" ? "#fff" : "#000" }]}
+                    source={require("../assets/images/IQB_Logo.png")}
+                    resizeMode="cover"
+                />
+                <CustomText style={styles.heading}>iQueueBook</CustomText>
+            </CustomView>
+        )
+    }
+
 
     return (
         <CustomView style={{ alignItems: "center", justifyContent: "center" }}>

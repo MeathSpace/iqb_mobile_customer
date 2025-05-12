@@ -10,11 +10,12 @@
     "newArchEnabled": true,
     "splash": {
       "image": "./assets/images/splash.jpeg",
-      "resizeMode": "contain",
+      "resizeMode": "cover",
       "backgroundColor": "#ffffff"
     },
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.arghya1994.iqb-mobile-customer"
     },
     "android": {
       "adaptiveIcon": {
@@ -22,7 +23,8 @@
         "backgroundColor": "#ffffff"
       },
       "softwareKeyboardLayoutMode": "pan",
-      "edgeToEdgeEnabled": true
+      "edgeToEdgeEnabled": true,
+      "package": "com.arghya1994.iqb_mobile_customer"
     },
     "androidNavigationBar": {
       "visible": "sticky-immersive",
@@ -39,8 +41,8 @@
       [
         "expo-splash-screen",
         {
-          "image": "./assets/images/splash.jpeg",
-          "resizeMode": "contain",
+          "image": "./assets/images/splash.png",
+          "resizeMode": "cover",
           "backgroundColor": "#ffffff"
         }
       ]
