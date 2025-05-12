@@ -1,20 +1,18 @@
-import { Image, Keyboard, Pressable, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View, } from 'react-native'
-import CustomView from "../components/CustomView"
-import CustomText from "../components/CustomText"
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useColorScheme } from 'react-native';
-import { useTheme } from '../context/ThemeContext';
-import { Link, useRouter } from 'expo-router';
+import { Image, Keyboard, Pressable, StyleSheet, Text, TextInput, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
+import React, { useState } from 'react'
+import CustomView from "../../components/CustomView"
+import CustomText from "../../components/CustomText"
+import CustomSecondaryText from '../../components/CustomSecondaryText';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
-import { useState } from 'react';
+import { Link, useRouter } from 'expo-router';
+import { useTheme } from '../../context/ThemeContext';
 import Checkbox from 'expo-checkbox';
-import CustomSecondaryText from '../components/CustomSecondaryText';
-import { useAuth } from '../context/AuthContext'
+import { useAuth } from '../../context/AuthContext'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const signin = () => {
 
-    const { setUser } = useAuth()
-
+    const { setIsAuthenticated } = useAuth()
 
     const colorScheme = useColorScheme()
 
@@ -25,14 +23,16 @@ const signin = () => {
     const [isChecked, setChecked] = useState(false);
 
     const signinPressed = async () => {
-        await AsyncStorage.setItem("auth", JSON.stringify({
-            name: "John Doe",
-            email: "john@gmail.com"
-        }))
-        setUser({
-            name: "John Doe",
-            email: "john@gmail.com"
-        })
+        // await AsyncStorage.setItem("auth", JSON.stringify({
+        //     name: "John Doe",
+        //     email: "john@gmail.com"
+        // }))
+        // setUser({
+        //     name: "John Doe",
+        //     email: "john@gmail.com"
+        // })
+        await AsyncStorage.setItem("isAuthenticated", JSON.stringify(true))
+        setIsAuthenticated(true)
         router.push("/dashboard")
     }
 
@@ -42,7 +42,7 @@ const signin = () => {
                 <View style={{ width: "100%", gap: verticalScale(25) }}>
                     <Image
                         style={[styles.Logo, { tintColor: colorScheme === "dark" ? "#fff" : "#000" }]}
-                        source={require("../assets/images/IQB_Logo.png")}
+                        source={require("../../assets/images/IQB_Logo.png")}
                         resizeMode="cover"
                     />
 
@@ -136,7 +136,7 @@ const signin = () => {
                             }
                             ]}>
                         <Image
-                            source={require("../assets/images/google.png")}
+                            source={require("../../assets/images/google.png")}
                             height={30}
                             width={30}
                         />
@@ -192,4 +192,3 @@ const styles = StyleSheet.create({
         // marginBottom: verticalScale(20)
     },
 })
-

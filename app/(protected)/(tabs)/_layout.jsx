@@ -1,23 +1,22 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import { Tabs } from 'expo-router';
-import { CalendarIcon, UserIcon } from '../../../constants/icons';
 
-export default function _layout() {
+export default function TabLayout() {
     return (
         <Tabs screenOptions={{ tabBarActiveTintColor: 'blue' }}>
             <Tabs.Screen
                 name="queuelist"
                 options={{
                     title: 'Qlist',
-                    tabBarIcon: ({ color }) => <CalendarIcon />,
+                    // tabBarIcon: ({ color }) => <Text>Qlist</Text>,
                 }}
             />
             <Tabs.Screen
                 name="dashboard"
                 options={{
                     title: 'Dashboard',
-                    tabBarIcon: ({ color }) => <CalendarIcon />,
+                    // tabBarIcon: ({ color }) => <CalendarIcon />,
                 }}
             />
         </Tabs>

@@ -1,25 +1,24 @@
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
-import CustomText from '../../../components/CustomText'
+import { useRouter } from 'expo-router'
 import { useAuth } from '../../../context/AuthContext'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import { useRouter } from 'expo-router'
 
 const dashboard = () => {
 
+    const { setIsAuthenticated } = useAuth()
     const router = useRouter()
 
-    const { setUser } = useAuth()
-
     const logoutPressed = async () => {
-        await AsyncStorage.removeItem("auth")
-        setUser(null)
+        setIsAuthenticated(false)
+        router.replace("/")
+        await AsyncStorage.removeItem("isAuthenticated")
     }
 
     return (
         <View>
             <Text>dashboard</Text>
-            <Pressable onPress={logoutPressed}><CustomText>Logout</CustomText></Pressable>
+            <Pressable onPress={logoutPressed}><Text>Logout</Text></Pressable>
         </View>
     )
 }
