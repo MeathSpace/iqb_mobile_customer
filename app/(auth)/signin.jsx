@@ -35,7 +35,7 @@ const signin = () => {
 
     useWarmUpBrowser()
 
-    const { setIsAuthenticated } = useAuth()
+    const { setIsAuthenticated, setAuthenticatedUser } = useAuth()
 
     const colorScheme = useColorScheme()
 
@@ -43,18 +43,24 @@ const signin = () => {
 
     const router = useRouter()
 
-    const [isChecked, setChecked] = useState(false);
+    const [rememberMe, setRememberMe] = useState(true);
+
+    const { signOut } = useClerk()
 
     const signinPressed = async () => {
-        // await AsyncStorage.setItem("auth", JSON.stringify({
-        //     name: "John Doe",
-        //     email: "john@gmail.com"
-        // }))
-        // setUser({
-        //     name: "John Doe",
-        //     email: "john@gmail.com"
-        // })
-        await AsyncStorage.setItem("isAuthenticated", JSON.stringify(true))
+        if (rememberMe) {
+            await AsyncStorage.setItem("isAuthenticated", JSON.stringify(true))
+        }
+        await AsyncStorage.setItem("LoggedInUser", JSON.stringify({
+            name: "John Doe",
+            email: "john@gmail.com",
+            imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUWPPJeKqMFiZdty1MgpNIUzPE0NYsz0Y0NA&s"
+        }))
+        setAuthenticatedUser({
+            name: "John Doe",
+            email: "john@gmail.com",
+            imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUWPPJeKqMFiZdty1MgpNIUzPE0NYsz0Y0NA&s"
+        })
         setIsAuthenticated(true)
         router.push("/dashboard")
     }
@@ -81,10 +87,26 @@ const signin = () => {
 
 
     useEffect(() => {
+
         if (isSignedIn) {
             const handleAuth = async () => {
                 try {
-                    await AsyncStorage.setItem("isAuthenticated", JSON.stringify(true));
+                    if(rememberMe){
+                        await AsyncStorage.setItem("isAuthenticated", JSON.stringify(true));
+                        await AsyncStorage.setItem("LoggedInUser", JSON.stringify({
+                            name: user?.firstName,
+                            email: user?.primaryEmailAddress?.emailAddress,
+                            imageUrl: user?.imageUrl
+                        }))
+                    }else{
+                        signOut()
+                    }
+                    
+                    setAuthenticatedUser({
+                        name: user?.firstName,
+                        email: user?.primaryEmailAddress?.emailAddress,
+                        imageUrl: user?.imageUrl
+                    })
                     setIsAuthenticated(true);
                     router.replace("/dashboard");
                 } catch (error) {
@@ -94,7 +116,8 @@ const signin = () => {
 
             handleAuth();
         }
-    }, [isSignedIn, router]);
+        
+    }, [isSignedIn, router, rememberMe, user]);
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -143,9 +166,9 @@ const signin = () => {
                         <View style={{ flexDirection: "row", alignItems: "center", gap: scale(10) }}>
                             <Checkbox
                                 style={styles.checkbox}
-                                value={isChecked}
-                                onValueChange={setChecked}
-                                color={isChecked ? modeColor.colorCode : undefined}
+                                value={rememberMe}
+                                onValueChange={setRememberMe}
+                                color={rememberMe ? modeColor.colorCode : undefined}
                             />
                             <CustomSecondaryText>
                                 Remember Me

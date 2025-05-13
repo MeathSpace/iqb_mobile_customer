@@ -4,21 +4,19 @@ import { useRouter } from 'expo-router'
 import { useAuth } from '../../../context/AuthContext'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useClerk, useUser } from '@clerk/clerk-expo'
+import CustomText from '../../../components/CustomText'
 
 const dashboard = () => {
 
     const { signOut } = useClerk()
+    const { isSignedIn } = useUser()
 
-    // console.log("Google User EmailAddress Dashboard", user?.primaryEmailAddress?.emailAddress)
-    // console.log("Google User Image Url Dashboard", user?.imageUrl)
-    // console.log("Google User Image Url Dashboard", user?.firstName)
 
-    const { isSignedIn, user } = useUser()
-
-    // console.log("Signed in user ", isSignedIn)
-
-    const { setIsAuthenticated } = useAuth()
+    const { setIsAuthenticated, authenticatedUser, setAuthenticatedUser } = useAuth()
     const router = useRouter()
+
+    console.log("authUser:", authenticatedUser);
+
 
     const logoutPressed = async () => {
         if (isSignedIn) {
@@ -26,20 +24,25 @@ const dashboard = () => {
         }
 
         setIsAuthenticated(false)
+        setAuthenticatedUser(null)
+        await AsyncStorage.removeItem("LoggedInUser")
+        await AsyncStorage.removeItem("isAuthenticated")
         router.replace("/")
-        await AsyncStorage.removeItem("isAuthenticated")    
     }
 
     return (
-        <View>
+        <View style={{
+            gap: 20
+        }}>
             <Text>dashboard</Text>
-            <Text>{user?.primaryEmailAddress?.emailAddress}</Text>
+            <Text>{authenticatedUser?.name}</Text>
+            <Text>{authenticatedUser?.email}</Text>
             <Image
-                source={{ uri: user?.imageUrl }}
+                source={{ uri: authenticatedUser?.imageUrl }}
                 style={styles?.profileImage}
                 resizeMode="cover"
             />
-            <Text>{user?.firstName}</Text>
+
             <Pressable onPress={logoutPressed}><Text>Logout</Text></Pressable>
         </View>
     )

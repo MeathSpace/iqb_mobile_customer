@@ -52,15 +52,16 @@ export const AuthProvider = ({ children }) => {
         const loadUserFromStorage = async () => {
             try {
                 const value = await AsyncStorage.getItem("isAuthenticated");
-
-                // if (value) {
-                //     const parseValue = JSON.parse(value)
-                //     setIsAuthenticated(parseValue);
-                // }
+                const user = await AsyncStorage.getItem("LoggedInUser");
 
                 if (value !== null) {
                     const parsedValue = JSON.parse(value); // Parse the value as a boolean
                     setIsAuthenticated(parsedValue);
+                }
+
+                if (user) {
+                    const parseUser = JSON.parse(user)
+                    setAuthenticatedUser(parseUser)
                 }
 
             } catch (error) {
@@ -71,11 +72,15 @@ export const AuthProvider = ({ children }) => {
         loadUserFromStorage();
     }, []);
 
+    const value = {
+        isAuthenticated,
+        setIsAuthenticated,
+        authenticatedUser,
+        setAuthenticatedUser
+    }
 
-
-    // console.log("Context User ", user)
     return (
-        <AuthContext.Provider value={{ isAuthenticated, setIsAuthenticated }}>
+        <AuthContext.Provider value={value}>
             {children}
         </AuthContext.Provider>
     );
