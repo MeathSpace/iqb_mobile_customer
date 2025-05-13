@@ -17,6 +17,11 @@ const AuthLayout = () => {
         <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen name="signin" />
             <Stack.Screen name="signup" />
+            <Stack.Screen name="personalInfo" />
+            <Stack.Screen name="passwordConfirmation" />
+            <Stack.Screen name="verification" />
+            <Stack.Screen name="forgetVerification" />
+            <Stack.Screen name="forgetPassword" />
         </Stack>
     )
 }

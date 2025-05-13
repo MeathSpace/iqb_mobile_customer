@@ -90,6 +90,10 @@ import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from 'expo-font';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { AuthProvider } from '../context/AuthContext'
+import { ClerkProvider } from '@clerk/clerk-expo'
+import { tokenCache } from '@clerk/clerk-expo/token-cache'
+
+SplashScreen.preventAutoHideAsync();
 
 const RootLayout = () => {
   const colorScheme = useColorScheme()
@@ -124,15 +128,19 @@ const RootLayout = () => {
 
   return (
     <AuthProvider>
-      <ThemeProvider>
-        <SafeAreaView style={{
-          flex: 1,
-          backgroundColor: colorScheme === 'dark' ? '#151718' : '#ffffff' // If i dont give this thing here then in ios i will see a blank white color statusbar and navigation bar default
-        }}>
-          {/* <CustomStatusBar /> */}
-          <Slot />
-        </SafeAreaView>
-      </ThemeProvider>
+      <ClerkProvider
+        publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY}
+        tokenCache={tokenCache}>
+        <ThemeProvider>
+          <SafeAreaView style={{
+            flex: 1,
+            backgroundColor: colorScheme === 'dark' ? '#151718' : '#ffffff' // If i dont give this thing here then in ios i will see a blank white color statusbar and navigation bar default
+          }}>
+            <CustomStatusBar />
+            <Slot />
+          </SafeAreaView>
+        </ThemeProvider>
+      </ClerkProvider>
     </AuthProvider>
   )
 }

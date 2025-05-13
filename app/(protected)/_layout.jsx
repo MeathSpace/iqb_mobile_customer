@@ -6,8 +6,6 @@ import { useAuth } from '../../context/AuthContext'
 const ProtectedLayout = () => {
     const { isAuthenticated } = useAuth()
 
-    console.log("Authenticated Protected", isAuthenticated)
-
     if (!isAuthenticated) {
         return <Redirect href="/" />
     }

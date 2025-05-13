@@ -1,5 +1,5 @@
 import { Image, Keyboard, Pressable, StyleSheet, Text, TextInput, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useState, useCallback, useEffect } from 'react'
 import CustomView from "../../components/CustomView"
 import CustomText from "../../components/CustomText"
 import CustomSecondaryText from '../../components/CustomSecondaryText';
@@ -10,7 +10,30 @@ import Checkbox from 'expo-checkbox';
 import { useAuth } from '../../context/AuthContext'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
+
+import * as WebBrowser from 'expo-web-browser'
+import * as AuthSession from 'expo-auth-session'
+import { useClerk, useSSO, useUser } from '@clerk/clerk-expo'
+
+
+export const useWarmUpBrowser = () => {
+    useEffect(() => {
+        // Preloads the browser for Android devices to reduce authentication load time
+        // See: https://docs.expo.dev/guides/authentication/#improving-user-experience
+        void WebBrowser.warmUpAsync()
+        return () => {
+            // Cleanup: closes browser when component unmounts
+            void WebBrowser.coolDownAsync()
+        }
+    }, [])
+}
+
+// Handle any pending authentication sessions
+WebBrowser.maybeCompleteAuthSession()
+
 const signin = () => {
+
+    useWarmUpBrowser()
 
     const { setIsAuthenticated } = useAuth()
 
@@ -35,6 +58,43 @@ const signin = () => {
         setIsAuthenticated(true)
         router.push("/dashboard")
     }
+
+
+    const { startSSOFlow } = useSSO()
+
+    const { isLoaded, isSignedIn, user } = useUser()
+
+    const googleSigninPressed = useCallback(async () => {
+        try {
+            const { createdSessionId, setActive } = await startSSOFlow({
+                strategy: 'oauth_google',
+                redirectUrl: AuthSession.makeRedirectUri(),
+            });
+
+            if (createdSessionId) {
+                await setActive({ session: createdSessionId });
+            }
+        } catch (err) {
+            console.error("SSO Error:", JSON.stringify(err, null, 2));
+        }
+    }, []);
+
+
+    useEffect(() => {
+        if (isSignedIn) {
+            const handleAuth = async () => {
+                try {
+                    await AsyncStorage.setItem("isAuthenticated", JSON.stringify(true));
+                    setIsAuthenticated(true);
+                    router.replace("/dashboard");
+                } catch (error) {
+                    console.error("Error saving to AsyncStorage", error);
+                }
+            };
+
+            handleAuth();
+        }
+    }, [isSignedIn, router]);
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -107,11 +167,9 @@ const signin = () => {
                         <CustomText style={{ color: "#fff" }}>Sign in</CustomText>
                     </Pressable>
 
-                    <CustomText style={[styles.subHeading, { color: theme.secondaryText }]}>Don't have an account ?
-                        <Link href="/signup" asChild>
-                            <CustomText style={{ fontFamily: "AirbnbCereal_W_Md" }}> Sign up</CustomText>
-                        </Link>
-                    </CustomText>
+                    <Pressable onPress={() => router.replace("/signup")}>
+                        <CustomText style={[styles.subHeading, { color: theme.secondaryText }]}>Don't have an account ?<CustomText style={{ fontFamily: "AirbnbCereal_W_Md" }}> Sign up</CustomText></CustomText>
+                    </Pressable>
 
                     <View style={styles.divider}>
                         <View style={{ flex: 1, height: verticalScale(1), backgroundColor: theme.primaryText }} />
@@ -124,7 +182,7 @@ const signin = () => {
                     </View>
 
                     <Pressable
-                        // onPress={() => googleSignUp}
+                        onPress={googleSigninPressed}
                         style={
                             [styles.auth_btn,
                             {
@@ -146,7 +204,6 @@ const signin = () => {
                             Sign in with Google
                         </CustomText>
                     </Pressable>
-
                 </View>
             </CustomView>
         </TouchableWithoutFeedback>
@@ -192,3 +249,5 @@ const styles = StyleSheet.create({
         // marginBottom: verticalScale(20)
     },
 })
+
+
