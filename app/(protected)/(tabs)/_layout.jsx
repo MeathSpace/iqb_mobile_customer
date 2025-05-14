@@ -6,6 +6,13 @@ export default function TabLayout() {
     return (
         <Tabs screenOptions={{ tabBarActiveTintColor: 'blue' }}>
             <Tabs.Screen
+                name="home"
+                options={{
+                    title: 'Home',
+                    // tabBarIcon: ({ color }) => <CalendarIcon />,
+                }}
+            />
+            <Tabs.Screen
                 name="queuelist"
                 options={{
                     title: 'Qlist',
@@ -13,10 +20,17 @@ export default function TabLayout() {
                 }}
             />
             <Tabs.Screen
-                name="dashboard"
+                name="salon"
                 options={{
-                    title: 'Dashboard',
-                    // tabBarIcon: ({ color }) => <CalendarIcon />,
+                    title: 'Salon',
+                    // tabBarIcon: ({ color }) => <Text>Qlist</Text>,
+                }}
+            />
+            <Tabs.Screen
+                name="appointment"
+                options={{
+                    title: 'Appointment',
+                    // tabBarIcon: ({ color }) => <Text>Qlist</Text>,
                 }}
             />
         </Tabs>

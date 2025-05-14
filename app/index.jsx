@@ -23,7 +23,7 @@ const index = () => {
   useEffect(() => {
     let timer = setTimeout(() => {
       if (isAuthenticated) {
-        router.replace("/dashboard")
+        router.replace("/home")
       } else {
         setSplashLoading(false)
       }

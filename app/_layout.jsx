@@ -80,7 +80,7 @@
 // const styles = StyleSheet.create({});
 
 
-import { StyleSheet, Text, useColorScheme, View } from 'react-native'
+import { StatusBar, StyleSheet, Text, useColorScheme, View } from 'react-native'
 import React, { useEffect } from 'react'
 import { Slot } from 'expo-router'
 import { ThemeProvider } from '../context/ThemeContext';
@@ -129,14 +129,15 @@ const RootLayout = () => {
   return (
     <AuthProvider>
       <ClerkProvider
-        publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY}
+        // publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY}
+        publishableKey='pk_test_bGVnYWwtamF2ZWxpbi00LmNsZXJrLmFjY291bnRzLmRldiQ'
         tokenCache={tokenCache}>
         <ThemeProvider>
           <SafeAreaView style={{
             flex: 1,
             backgroundColor: colorScheme === 'dark' ? '#151718' : '#ffffff' // If i dont give this thing here then in ios i will see a blank white color statusbar and navigation bar default
           }}>
-            <CustomStatusBar />
+            <StatusBar />
             <Slot />
           </SafeAreaView>
         </ThemeProvider>

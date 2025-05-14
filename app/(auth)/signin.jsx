@@ -62,7 +62,7 @@ const signin = () => {
             imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUWPPJeKqMFiZdty1MgpNIUzPE0NYsz0Y0NA&s"
         })
         setIsAuthenticated(true)
-        router.push("/dashboard")
+        router.push("/home")
     }
 
 
@@ -72,9 +72,13 @@ const signin = () => {
 
     const googleSigninPressed = useCallback(async () => {
         try {
+            console.log("Redirect URI:", AuthSession.makeRedirectUri());
             const { createdSessionId, setActive } = await startSSOFlow({
                 strategy: 'oauth_google',
-                redirectUrl: AuthSession.makeRedirectUri(),
+                redirectUrl: AuthSession.makeRedirectUri({
+                    scheme: 'iqbmobilecustomer', // must match "expo.scheme" in app.json
+                    useProxy: false             // disable Expo’s dev proxy for standalone appss
+                }),
             });
 
             if (createdSessionId) {
@@ -91,24 +95,24 @@ const signin = () => {
         if (isSignedIn) {
             const handleAuth = async () => {
                 try {
-                    if(rememberMe){
+                    if (rememberMe) {
                         await AsyncStorage.setItem("isAuthenticated", JSON.stringify(true));
                         await AsyncStorage.setItem("LoggedInUser", JSON.stringify({
                             name: user?.firstName,
                             email: user?.primaryEmailAddress?.emailAddress,
                             imageUrl: user?.imageUrl
                         }))
-                    }else{
+                    } else {
                         signOut()
                     }
-                    
+
                     setAuthenticatedUser({
                         name: user?.firstName,
                         email: user?.primaryEmailAddress?.emailAddress,
                         imageUrl: user?.imageUrl
                     })
                     setIsAuthenticated(true);
-                    router.replace("/dashboard");
+                    router.replace("/home");
                 } catch (error) {
                     console.error("Error saving to AsyncStorage", error);
                 }
@@ -116,7 +120,7 @@ const signin = () => {
 
             handleAuth();
         }
-        
+
     }, [isSignedIn, router, rememberMe, user]);
 
     return (

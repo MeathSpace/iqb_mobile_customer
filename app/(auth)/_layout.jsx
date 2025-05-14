@@ -7,8 +7,8 @@ const AuthLayout = () => {
 
     const { isAuthenticated } = useAuth()
 
-    if(isAuthenticated){
-        return <Redirect href="/dashboard"/>
+    if (isAuthenticated) {
+        return <Redirect href="/home" />
     }
 
     console.log("Authenticated Auth", isAuthenticated)
