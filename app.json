@@ -8,11 +8,6 @@
     "scheme": "iqbmobilecustomer",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "splash": {
-      "image": "./assets/images/splash.jpeg",
-      "resizeMode": "cover",
-      "backgroundColor": "#ffffff"
-    },
     "ios": {
       "supportsTablet": true
     },
@@ -25,11 +20,6 @@
       "edgeToEdgeEnabled": true,
       "package": "com.iqbook.iqb"
     },
-    "androidNavigationBar": {
-      "visible": "sticky-immersive",
-      "barStyle": "dark-content",
-      "backgroundColor": "#000000"
-    },
     "web": {
       "bundler": "metro",
       "output": "static",
@@ -37,14 +27,6 @@
     },
     "plugins": [
       "expo-router",
-      [
-        "expo-splash-screen",
-        {
-          "image": "./assets/images/splash.png",
-          "resizeMode": "cover",
-          "backgroundColor": "#ffffff"
-        }
-      ],
       "expo-navigation-bar"
     ],
     "experiments": {
@@ -53,7 +35,7 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "3bb284b5-5708-4ea5-b40d-1af6d203eabe"
+        "projectId": "a1853b3b-abde-4f52-9af6-aa713b582770"
       }
     },
     "owner": "sagnikn00"

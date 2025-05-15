@@ -10,10 +10,10 @@ import Checkbox from 'expo-checkbox';
 import { useAuth } from '../../context/AuthContext'
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-
+import * as Linking from 'expo-linking'
 import * as WebBrowser from 'expo-web-browser'
 import * as AuthSession from 'expo-auth-session'
-import { useClerk, useSSO, useUser } from '@clerk/clerk-expo'
+import { useClerk, useOAuth, useSSO, useUser } from '@clerk/clerk-expo'
 
 
 export const useWarmUpBrowser = () => {
@@ -72,22 +72,38 @@ const signin = () => {
 
     const googleSigninPressed = useCallback(async () => {
         try {
-            console.log("Redirect URI:", AuthSession.makeRedirectUri());
-            const { createdSessionId, setActive } = await startSSOFlow({
+            // Start the authentication process by calling `startSSOFlow()`
+            const { createdSessionId, setActive, signIn, signUp } = await startSSOFlow({
                 strategy: 'oauth_google',
-                redirectUrl: AuthSession.makeRedirectUri({
-                    scheme: 'iqbmobilecustomer', // must match "expo.scheme" in app.json
-                    useProxy: false             // disable Expo’s dev proxy for standalone appss
-                }),
-            });
+                // For web, defaults to current path
+                // For native, you must pass a scheme, like AuthSession.makeRedirectUri({ scheme, path })
+                // For more info, see https://docs.expo.dev/versions/latest/sdk/auth-session/#authsessionmakeredirecturioptions
+                // redirectUrl: AuthSession.makeRedirectUri(),
+                redirectUrl: AuthSession.makeRedirectUri({ scheme: 'iqbmobilecustomer', path: '/signin' })
+            })
 
-            if (createdSessionId) {
+            // This code generates the URL that your app tells 
+            // the authentication provider (like Google) to use when sending 
+            // the user back to your app. It includes the scheme (iqbmobilecustomer) 
+            // and the path (/callback).
+
+
+            // If sign in was successful, set the active session
+            if (createdSessionId && setActive) {
                 await setActive({ session: createdSessionId });
+            } else {
+                // If there is no `createdSessionId`,
+                // there are missing requirements, such as MFA
+                // Use the `signIn` or `signUp` returned from `startSSOFlow`
+                // to handle next steps
             }
         } catch (err) {
-            console.error("SSO Error:", JSON.stringify(err, null, 2));
+            // See https://clerk.com/docs/custom-flows/error-handling
+            // for more info on error handling
+            console.error(JSON.stringify(err, null, 2))
         }
     }, []);
+
 
 
     useEffect(() => {
@@ -112,7 +128,7 @@ const signin = () => {
                         imageUrl: user?.imageUrl
                     })
                     setIsAuthenticated(true);
-                    router.replace("/home");
+                    router.push("/home");
                 } catch (error) {
                     console.error("Error saving to AsyncStorage", error);
                 }
@@ -122,6 +138,7 @@ const signin = () => {
         }
 
     }, [isSignedIn, router, rememberMe, user]);
+
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>

@@ -80,7 +80,7 @@
 // const styles = StyleSheet.create({});
 
 
-import { StatusBar, StyleSheet, Text, useColorScheme, View } from 'react-native'
+import { Platform, StatusBar, StyleSheet, Text, useColorScheme, View } from 'react-native'
 import React, { useEffect } from 'react'
 import { Slot } from 'expo-router'
 import { ThemeProvider } from '../context/ThemeContext';
@@ -92,18 +92,43 @@ import { SafeAreaView } from 'react-native-safe-area-context';
 import { AuthProvider } from '../context/AuthContext'
 import { ClerkProvider } from '@clerk/clerk-expo'
 import { tokenCache } from '@clerk/clerk-expo/token-cache'
+import * as NavigationBar from 'expo-navigation-bar';
 
 SplashScreen.preventAutoHideAsync();
 
 const RootLayout = () => {
-  const colorScheme = useColorScheme()
 
   useEffect(() => {
-    if (colorScheme === 'dark') {
-      SystemUI.setBackgroundColorAsync('#151718');
-    } else {
-      SystemUI.setBackgroundColorAsync('#ffffff');
+    const hideSplash = async () => {
+      await SplashScreen.hideAsync();
+    };
+
+    hideSplash();
+  }, []);
+
+  const colorScheme = useColorScheme()
+
+  // useEffect(() => {
+  //   if (colorScheme === 'dark') {
+  //     SystemUI.setBackgroundColorAsync('#151718');
+  //   } else {
+  //     SystemUI.setBackgroundColorAsync('#ffffff');
+  //   }
+  // }, [colorScheme]);
+
+  useEffect(() => {
+    const isDark = colorScheme === 'dark';
+    // Set status bar background color (SystemUI)
+    SystemUI.setBackgroundColorAsync(isDark ? '#151718' : '#ffffff');
+
+    if (Platform.OS === "android") {
+      // Set navigation bar background color
+      NavigationBar.setBackgroundColorAsync(isDark ? '#151718' : '#ffffff');
+
+      // Optional: change navigation bar button icons (light or dark)
+      NavigationBar.setButtonStyleAsync(isDark ? 'light' : 'dark');
     }
+
   }, [colorScheme]);
 
 
@@ -116,11 +141,11 @@ const RootLayout = () => {
     AirbnbCereal_W_XBd: require('../assets/fonts/AirbnbCereal_W_XBd.otf'),
   });
 
-  useEffect(() => {
-    if (loaded || error) {
-      SplashScreen.hideAsync();
-    }
-  }, [loaded, error]);
+  // useEffect(() => {
+  //   if (loaded || error) {
+  //     SplashScreen.hideAsync();
+  //   }
+  // }, [loaded, error]);
 
   if (!loaded && !error) {
     return null;
@@ -137,7 +162,9 @@ const RootLayout = () => {
             flex: 1,
             backgroundColor: colorScheme === 'dark' ? '#151718' : '#ffffff' // If i dont give this thing here then in ios i will see a blank white color statusbar and navigation bar default
           }}>
-            <StatusBar />
+            <StatusBar
+              backgroundColor={colorScheme === 'dark' ? '#151718' : '#ffffff'}
+            />
             <Slot />
           </SafeAreaView>
         </ThemeProvider>

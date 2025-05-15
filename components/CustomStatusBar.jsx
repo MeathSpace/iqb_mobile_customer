@@ -8,7 +8,6 @@ const CustomStatusBar = ({ style, children, ...props }) => {
 
     return (
         <StatusBar
-            translucent={false}
             backgroundColor={theme.globalBackground} />
     )
 }
