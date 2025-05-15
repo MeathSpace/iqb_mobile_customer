@@ -17,8 +17,11 @@
         "backgroundColor": "#ffffff"
       },
       "softwareKeyboardLayoutMode": "pan",
-      "edgeToEdgeEnabled": true,
       "package": "com.iqbook.iqb"
+    },
+    "androidNavigationBar": {
+      "backgroundColor": "gray",
+      "barStyle": "dark"
     },
     "web": {
       "bundler": "metro",

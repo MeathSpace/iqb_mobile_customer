@@ -82,7 +82,7 @@
 
 import { Platform, StatusBar, StyleSheet, Text, useColorScheme, View } from 'react-native'
 import React, { useEffect } from 'react'
-import { Slot } from 'expo-router'
+import { Slot, usePathname, useSegments } from 'expo-router'
 import { ThemeProvider } from '../context/ThemeContext';
 import CustomStatusBar from '../components/CustomStatusBar';
 import * as SystemUI from 'expo-system-ui';
@@ -119,17 +119,30 @@ const RootLayout = () => {
   useEffect(() => {
     const isDark = colorScheme === 'dark';
     // Set status bar background color (SystemUI)
-    SystemUI.setBackgroundColorAsync(isDark ? '#151718' : '#ffffff');
+    // SystemUI.setBackgroundColorAsync(isDark ? '#151718' : '#ffffff');
 
     if (Platform.OS === "android") {
       // Set navigation bar background color
-      NavigationBar.setBackgroundColorAsync(isDark ? '#151718' : '#ffffff');
+      // NavigationBar.setBackgroundColorAsync(isDark ? '#151718' : '#ffffff');
 
       // Optional: change navigation bar button icons (light or dark)
-      NavigationBar.setButtonStyleAsync(isDark ? 'light' : 'dark');
+      // NavigationBar.setButtonStyleAsync(isDark ? 'light' : 'dark');
     }
 
   }, [colorScheme]);
+
+
+  const segments = useSegments();
+
+  const isInsideTabs = segments.includes('(tabs)');
+
+  const backgroundColor = isInsideTabs
+    ? colorScheme === 'dark'
+      ? '#151718'
+      : '#efefef'
+    : colorScheme === 'dark'
+      ? '#151718'
+      : '#ffffff'
 
 
   // Load custom fonts
@@ -158,15 +171,10 @@ const RootLayout = () => {
         publishableKey='pk_test_bGVnYWwtamF2ZWxpbi00LmNsZXJrLmFjY291bnRzLmRldiQ'
         tokenCache={tokenCache}>
         <ThemeProvider>
-          <SafeAreaView style={{
-            flex: 1,
-            backgroundColor: colorScheme === 'dark' ? '#151718' : '#ffffff' // If i dont give this thing here then in ios i will see a blank white color statusbar and navigation bar default
-          }}>
-            <StatusBar
-              backgroundColor={colorScheme === 'dark' ? '#151718' : '#ffffff'}
-            />
-            <Slot />
-          </SafeAreaView>
+          <StatusBar
+            backgroundColor={backgroundColor}
+          />
+          <Slot />
         </ThemeProvider>
       </ClerkProvider>
     </AuthProvider>

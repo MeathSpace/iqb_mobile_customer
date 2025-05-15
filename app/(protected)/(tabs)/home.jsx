@@ -5,12 +5,16 @@ import { useAuth } from '../../../context/AuthContext'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { useClerk, useUser } from '@clerk/clerk-expo'
 import CustomText from '../../../components/CustomText'
+import { SafeAreaView } from 'react-native-safe-area-context'
+import CustomView from '../../../components/CustomView'
+import { verticalScale } from 'react-native-size-matters'
+import { useTheme } from '../../../context/ThemeContext'
 
 const dashboard = () => {
 
     const { signOut } = useClerk()
     const { isSignedIn } = useUser()
-
+    const { theme } = useTheme()
 
     const { setIsAuthenticated, authenticatedUser, setAuthenticatedUser } = useAuth()
     const router = useRouter()
@@ -31,20 +35,22 @@ const dashboard = () => {
     }
 
     return (
-        <View style={{
-            gap: 20
+        <CustomView style={{
+            backgroundColor: theme.globalModalBackground,
+            paddingVertical: verticalScale(0),
+            gap: 20,
         }}>
-            <Text>dashboard</Text>
-            <Text>{authenticatedUser?.name}</Text>
-            <Text>{authenticatedUser?.email}</Text>
+            <CustomText>dashboard</CustomText>
+            <CustomText>{authenticatedUser?.name}</CustomText>
+            <CustomText>{authenticatedUser?.email}</CustomText>
             <Image
                 source={{ uri: authenticatedUser?.imageUrl }}
                 style={styles?.profileImage}
                 resizeMode="cover"
             />
 
-            <Pressable onPress={logoutPressed}><Text>Logout</Text></Pressable>
-        </View>
+            <Pressable onPress={logoutPressed}><CustomText>Logout</CustomText></Pressable>
+        </CustomView>
     )
 }
 

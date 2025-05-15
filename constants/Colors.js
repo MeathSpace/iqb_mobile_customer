@@ -7,12 +7,13 @@ export const Colors = {
     secondaryText: "#808080",
     borderColor: "#e7e7e7",
     globalBackground: '#fff',
-    globalModalBackground: "rgba(255, 255, 255, 0.5)",
+    globalModalBackground: "#efefef",
     tint: tintColorLight,
     icon: '#687076',
     tabIconDefault: '#687076',
     tabIconSelected: tintColorLight,
     InputBackground: "#efefef",
+    tabBackground: "#fff"
   },
   dark: {
     primaryText: '#ECEDEE',  // white color
@@ -25,6 +26,7 @@ export const Colors = {
     tabIconDefault: '#9BA1A6',
     tabIconSelected: tintColorDark,
     InputBackground: "#27272A",
+    tabBackground: "#000"
   },
   modeColor: {
     colorName: "Rose",

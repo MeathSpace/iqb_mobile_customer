@@ -1,5 +1,5 @@
 import React from 'react';
-import { AntDesign, FontAwesome } from '@expo/vector-icons';
+import { AntDesign, Feather, FontAwesome, Ionicons, MaterialIcons, Octicons } from '@expo/vector-icons';
 import { moderateScale } from 'react-native-size-matters';
 
 export const CalendarIcon = ({ size = moderateScale(24), color = 'black', style }) => (
@@ -14,4 +14,18 @@ export const UserIcon = ({ size = moderateScale(24), color = 'black', style }) =
     <FontAwesome name="user" size={size} color={color} style={style} />
 );
 
+export const HomeIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <Octicons name="home" size={size} color={color} style={style} />
+);
 
+export const QueueIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <MaterialIcons name="add-to-queue" size={size} color={color} style={style} />
+);
+
+export const SalonIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <MaterialIcons name="storefront" size={size} color={color} style={style} />
+);
+
+export const CalenderIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <Feather name="calendar" size={size} color={color} style={style} />
+);
