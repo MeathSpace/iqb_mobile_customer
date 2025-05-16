@@ -2,31 +2,36 @@ import { Platform, StyleSheet, Text, View, Animated } from 'react-native'
 import React, { useEffect, useRef } from 'react'
 import { Tabs } from 'expo-router';
 import { CalenderIcon, HomeIcon, QueueIcon, SalonIcon } from '../../../constants/icons';
-import { useTheme } from '../../../context/ThemeContext';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { moderateScale, verticalScale } from 'react-native-size-matters';
+import { useTheme } from '@react-navigation/native';
+import { Colors } from '../../../constants/Colors';
+import { HapticTab } from '../../../components/HapticTab';
 
 export default function TabLayout() {
 
+    const { colors } = useTheme()
+
     const insets = useSafeAreaInsets();
-    const { modeColor, theme } = useTheme()
 
     return (
         <Tabs
             screenOptions={{
                 // tabBarShowLabel: false,
-                tabBarActiveTintColor: modeColor.colorCode,
+                tabBarActiveTintColor: Colors.modeColor.colorCode,
                 headerShown: false,
+                tabBarButton: HapticTab,
                 tabBarStyle: {
                     ...Platform.select({
-                        android: {
-                            paddingBottom: insets.bottom,
-                            minHeight: verticalScale(60) + insets.bottom,
+                        ios: {
+                            // Use a transparent background on iOS to show the blur effect
+                            position: 'absolute',
                         },
+                        default: {},
                     }),
-                    paddingTop: verticalScale(5),
-                    backgroundColor: theme.tabBackground,
+                    backgroundColor: colors.background,
                     borderTopColor: "none",
+                    // paddingTop: verticalScale(5),
                     // ✅ iOS Shadow
                     shadowColor: '#000',
                     shadowOffset: { width: 0, height: -3 },
@@ -50,7 +55,7 @@ export default function TabLayout() {
                         <AnimatedTabIcon
                             focused={focused}
                             color={color}
-                            theme={theme}
+                            // theme={theme}
                             Icon={HomeIcon}
                         />
                     ),
@@ -64,7 +69,7 @@ export default function TabLayout() {
                         <AnimatedTabIcon
                             focused={focused}
                             color={color}
-                            theme={theme}
+                            // theme={theme}
                             Icon={QueueIcon}
                         />
                     ),
@@ -78,7 +83,7 @@ export default function TabLayout() {
                         <AnimatedTabIcon
                             focused={focused}
                             color={color}
-                            theme={theme}
+                            // theme={theme}
                             Icon={SalonIcon}
                         />
                     ),
@@ -92,7 +97,7 @@ export default function TabLayout() {
                         <AnimatedTabIcon
                             focused={focused}
                             color={color}
-                            theme={theme}
+                            // theme={theme}
                             Icon={CalenderIcon}
                         />
                     ),
@@ -106,12 +111,15 @@ export default function TabLayout() {
 const styles = StyleSheet.create({})
 
 
-function AnimatedTabIcon({ focused, color, theme, Icon }) {
+function AnimatedTabIcon({ focused, color, Icon }) {
+
+    const { colors } = useTheme()
+
     const scale = useRef(new Animated.Value(focused ? 1.2 : 1)).current;
 
     useEffect(() => {
         Animated.spring(scale, {
-            toValue: focused ? 1.2 : 1,
+            toValue: focused ? 1 : 0.9,
             useNativeDriver: true,
             friction: 4,
         }).start();
@@ -119,7 +127,7 @@ function AnimatedTabIcon({ focused, color, theme, Icon }) {
 
     return (
         <Animated.View style={{ transform: [{ scale }] }}>
-            <Icon color={focused ? color : theme.primaryText} />
+            <Icon color={focused ? color : colors.text} />
         </Animated.View>
     );
 }

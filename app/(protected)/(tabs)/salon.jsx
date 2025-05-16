@@ -1,11 +1,12 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import CustomTabView from '../../../components/CustomTabView'
 
 const salon = () => {
     return (
-        <View>
+        <CustomTabView>
             <Text>salon</Text>
-        </View>
+        </CustomTabView>
     )
 }
 

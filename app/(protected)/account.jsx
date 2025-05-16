@@ -1,11 +1,12 @@
 import { StyleSheet, Text, View } from 'react-native'
 import React from 'react'
+import CustomTabView from '../../components/CustomTabView'
 
 const account = () => {
   return (
-    <View>
+    <CustomTabView>
       <Text>account</Text>
-    </View>
+    </CustomTabView>
   )
 }
 

@@ -19,18 +19,13 @@
       "softwareKeyboardLayoutMode": "pan",
       "package": "com.iqbook.iqb"
     },
-    "androidNavigationBar": {
-      "backgroundColor": "gray",
-      "barStyle": "dark"
-    },
     "web": {
       "bundler": "metro",
       "output": "static",
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router",
-      "expo-navigation-bar"
+      "expo-router"
     ],
     "experiments": {
       "typedRoutes": true
@@ -38,7 +33,7 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "a1853b3b-abde-4f52-9af6-aa713b582770"
+        "projectId": "a912a935-9575-4ef0-be44-656c47d4c86f"
       }
     },
     "owner": "sagnikn00"

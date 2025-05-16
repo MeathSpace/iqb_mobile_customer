@@ -2,17 +2,16 @@ import { Keyboard, Pressable, StyleSheet, Text, TextInput, TouchableWithoutFeedb
 import React, { useState } from 'react'
 import CustomView from '../../components/CustomView'
 import ProgressHeader from '../../components/ProgressHeader'
-import { useTheme } from '../../context/ThemeContext'
 import { useRouter } from 'expo-router'
 import CustomText from '../../components/CustomText'
 import CustomSecondaryText from '../../components/CustomSecondaryText'
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+import { useTheme } from '@react-navigation/native'
+import { Colors } from '@/constants/Colors';
 
 const passwordConfirmation = () => {
 
-    const colorScheme = useColorScheme()
-
-    const { modeColor, theme } = useTheme()
+    const { colors } = useTheme()
 
     const router = useRouter()
 
@@ -31,7 +30,6 @@ const passwordConfirmation = () => {
             <CustomView style={{ justifyContent: "space-between" }}>
                 <View style={{ gap: verticalScale(20) }}>
                     <ProgressHeader
-                        theme={theme}
                         progressOne={progressOne}
                         progressTwo={progressTwo}
                         progressThree={progressThree}
@@ -53,8 +51,8 @@ const passwordConfirmation = () => {
                         <TextInput
                             editable
                             placeholder="Enter your password"
-                            placeholderTextColor={theme.secondaryText}
-                            style={[false ? styles.inputFielderror : styles.inputField, { borderColor: theme.borderColor, backgroundColor: theme.InputBackground, fontFamily: "AirbnbCereal_W_Bk", color: theme.primaryText }]}
+                            placeholderTextColor={colors.secondaryText}
+                            style={[false ? styles.inputFielderror : styles.inputField, { borderColor: colors.border, backgroundColor: colors.card, fontFamily: "AirbnbCereal_W_Bk", color: colors.text }]}
                             // onChangeText={(text) => {
                             //     setFirstNameError("")
                             //     setFirstName(text)
@@ -70,8 +68,8 @@ const passwordConfirmation = () => {
                         <TextInput
                             editable
                             placeholder="Enter your confirm password"
-                            placeholderTextColor={theme.secondaryText}
-                            style={[false ? styles.inputFielderror : styles.inputField, { borderColor: theme.borderColor, backgroundColor: theme.InputBackground, fontFamily: "AirbnbCereal_W_Bk", color: theme.primaryText }]}
+                            placeholderTextColor={colors.secondaryText}
+                            style={[false ? styles.inputFielderror : styles.inputField, { borderColor: colors.border, backgroundColor: colors.card, fontFamily: "AirbnbCereal_W_Bk", color: colors.text }]}
                             // onChangeText={(text) => {
                             //     setFirstNameError("")
                             //     setFirstName(text)
@@ -84,7 +82,7 @@ const passwordConfirmation = () => {
 
                 <Pressable
                     onPress={() => passwordConfirmHandler()}
-                    style={[styles.btn, { backgroundColor: modeColor.colorCode }]}>
+                    style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode }]}>
                     <CustomText style={{ color: "#fff" }}>Continue</CustomText>
                 </Pressable>
             </CustomView>

@@ -2,31 +2,35 @@ import { StyleSheet, View } from 'react-native';
 import React from 'react';
 import * as Progress from 'react-native-progress';
 import { scale, verticalScale } from 'react-native-size-matters';
+import { useTheme } from '@react-navigation/native';
 
-const ProgressHeader = ({ theme, progressOne, progressTwo, progressThree }) => {
+const ProgressHeader = ({ progressOne, progressTwo, progressThree }) => {
+
+    const { colors } = useTheme()
+
     return (
         <View style={styles.container}>
             <Progress.Bar
                 progress={progressOne}
                 style={styles.bar}
-                color={theme.primaryText}
-                unfilledColor={theme.borderColor}
+                color={colors.text}
+                unfilledColor={colors.border}
                 borderWidth={0}
                 height={verticalScale(5)}
             />
             <Progress.Bar
                 progress={progressTwo}
                 style={styles.bar}
-                color={theme.primaryText}
-                unfilledColor={theme.borderColor}
+                color={colors.text}
+                unfilledColor={colors.border}
                 borderWidth={0}
                 height={verticalScale(5)}
             />
             <Progress.Bar
                 progress={progressThree}
                 style={styles.bar}
-                color={theme.primaryText}
-                unfilledColor={theme.borderColor}
+                color={colors.text}
+                unfilledColor={colors.border}
                 borderWidth={0}
                 height={verticalScale(5)}
             />

@@ -1,7 +1,6 @@
 import { Alert, Button, Keyboard, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import CustomScrollView from '../../components/CustomScrollView'
-import { useTheme } from '../../context/ThemeContext'
 import { useRouter } from 'expo-router'
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import ProgressHeader from '../../components/ProgressHeader'
@@ -10,17 +9,19 @@ import CustomSecondaryText from '../../components/CustomSecondaryText'
 import DropDownPicker from 'react-native-dropdown-picker';
 import { CalendarIcon } from '../../constants/icons'
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { Colors } from '@/constants/Colors';
 
 import PhoneInput
     from 'react-native-phone-input';
 import CountryPicker, { DARK_THEME }
     from 'react-native-country-picker-modal';
+import { useTheme } from '@react-navigation/native';
 
 const personalInfo = () => {
 
     const colorScheme = useColorScheme()
 
-    const { modeColor, theme } = useTheme()
+    const { colors } = useTheme()
 
     const router = useRouter()
 
@@ -110,7 +111,6 @@ const personalInfo = () => {
                 >
 
                     <ProgressHeader
-                        theme={theme}
                         progressOne={progressOne}
                         progressTwo={progressTwo}
                         progressThree={progressThree}
@@ -132,8 +132,8 @@ const personalInfo = () => {
                         <TextInput
                             editable
                             placeholder="Enter your first name"
-                            placeholderTextColor={theme.secondaryText}
-                            style={[firstNameError ? styles.inputFielderror : styles.inputField, { borderColor: theme.borderColor, backgroundColor: theme.InputBackground, fontFamily: "AirbnbCereal_W_Bk", color: theme.primaryText }]}
+                            placeholderTextColor={colors.secondaryText}
+                            style={[false ? styles.inputFielderror : styles.inputField, { borderColor: colors.border, backgroundColor: colors.card, fontFamily: "AirbnbCereal_W_Bk", color: colors.text }]}
                             onChangeText={(text) => {
                                 setFirstNameError("")
                                 setFirstName(text)
@@ -148,8 +148,8 @@ const personalInfo = () => {
                         <TextInput
                             editable
                             placeholder="Enter your last name"
-                            placeholderTextColor={theme.secondaryText}
-                            style={[lastNameError ? styles.inputFielderror : styles.inputField, { borderColor: theme.borderColor, backgroundColor: theme.InputBackground, fontFamily: "AirbnbCereal_W_Bk", color: theme.primaryText }]}
+                            placeholderTextColor={colors.secondaryText}
+                            style={[false ? styles.inputFielderror : styles.inputField, { borderColor: colors.border, backgroundColor: colors.card, fontFamily: "AirbnbCereal_W_Bk", color: colors.text }]}
                             onChangeText={(text) => {
                                 setLastNameError("")
                                 setLastName(text)
@@ -171,35 +171,35 @@ const personalInfo = () => {
                             setItems={setGenderItems}
                             itemSeparator={true}
                             itemSeparatorStyle={{
-                                backgroundColor: theme.borderColor
+                                backgroundColor: colors.border
                             }}
                             placeholder="Select a gender"
                             style={[
                                 styles.dropdown,
                                 {
-                                    borderColor: theme.borderColor,
-                                    backgroundColor: theme.InputBackground,
+                                    borderColor: colors.border,
+                                    backgroundColor: colors.card,
                                 },
                             ]}
                             dropDownContainerStyle={[
                                 styles.dropdownContainer,
                                 {
-                                    borderColor: theme.borderColor,
-                                    backgroundColor: theme.InputBackground,
+                                    borderColor: colors.border,
+                                    backgroundColor: colors.card,
                                 }
                             ]}
                             textStyle={{
                                 fontSize: moderateScale(14),
                                 fontFamily: 'AirbnbCereal_W_Bk',
-                                color: theme.primaryText
+                                color: colors.text
                             }}
                             listItemLabelStyle={{
                                 fontSize: moderateScale(14),
                                 fontFamily: 'AirbnbCereal_W_Bk',
-                                color: theme.primaryText,
+                                color: colors.text,
                             }}
                             arrowIconStyle={{
-                                tintColor: theme.primaryText,
+                                tintColor: colors.text,
                             }}
                             tickIconStyle={{
                                 tintColor: "#00A36C"
@@ -216,8 +216,8 @@ const personalInfo = () => {
                             value={phoneNumber}
                             onChangePhoneNumber={(number) => phoneNumberHandler(number)}
                             onPressFlag={toggleCountryPicker}
-                            textStyle={{ color: theme.primaryText, fontSize: moderateScale(14) }}
-                            style={[styles.inputField, { borderColor: theme.borderColor, backgroundColor: theme.InputBackground, fontFamily: "AirbnbCereal_W_Bk", color: theme.primaryText }]}
+                            textStyle={{ color: colors.text, fontSize: moderateScale(14) }}
+                            style={[styles.inputField, { borderColor: colors.border, backgroundColor: colors.card, fontFamily: "AirbnbCereal_W_Bk", color: colors.text }]}
                         />
 
                         {countryPickerVisible && (
@@ -244,9 +244,9 @@ const personalInfo = () => {
                         <CustomText>Date of Birth</CustomText>
 
                         <Pressable
-                            style={[firstNameError ? styles.inputFielderror : styles.inputDateField, { borderColor: theme.borderColor, backgroundColor: theme.InputBackground, fontFamily: "AirbnbCereal_W_Bk", color: theme.primaryText }]}
+                            style={[firstNameError ? styles.inputFielderror : styles.inputDateField, { borderColor: colors.border, backgroundColor: colors.card, fontFamily: "AirbnbCereal_W_Bk", color: colors.text }]}
                             onPress={() => setCalenderModal(true)}>
-                            <CalendarIcon style={[styles.dateIcon, { color: theme.primaryText }]} />
+                            <CalendarIcon style={[styles.dateIcon, { color: colors.text }]} />
                         </Pressable>
                     </View>
 
@@ -281,7 +281,7 @@ const personalInfo = () => {
 
                     <Pressable
                         onPress={() => saveHandler()}
-                        style={[styles.btn, { backgroundColor: modeColor.colorCode }]}>
+                        style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode }]}>
                         <CustomText style={{ color: "#fff" }}>Save & Next</CustomText>
                     </Pressable>
 

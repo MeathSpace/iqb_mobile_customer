@@ -6,13 +6,12 @@ import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import CustomView from '../components/CustomView'
 import CustomText from '../components/CustomText';
 import CustomSecondaryText from '../components/CustomSecondaryText';
-import { useTheme } from '../context/ThemeContext';
+import { Colors } from '../constants/Colors'
+import { useTheme } from '@react-navigation/native';
 
 const index = () => {
 
-  const colorScheme = useColorScheme()
-
-  const { modeColor } = useTheme()
+  const { colors } = useTheme()
 
   const router = useRouter()
 
@@ -38,7 +37,7 @@ const index = () => {
     return (
       <CustomView style={{ alignItems: "center", justifyContent: "center" }}>
         <Image
-          style={[styles.Logo, { tintColor: colorScheme === "dark" ? "#fff" : "#000" }]}
+          style={[styles.Logo, { tintColor: colors.text }]}
           source={require("../assets/images/IQB_Logo.png")}
           resizeMode="cover"
         />
@@ -51,7 +50,7 @@ const index = () => {
     <CustomView style={{ alignItems: "center", justifyContent: "center" }}>
       <View style={{ width: "100%" }}>
         <Image
-          style={[styles.Logo, { tintColor: colorScheme === "dark" ? "#fff" : "#000" }]}
+          style={[styles.Logo, { tintColor: colors.background }]}
           source={require("../assets/images/IQB_Logo.png")}
           resizeMode="cover"
         />
@@ -69,10 +68,10 @@ const index = () => {
 
         <Pressable
           onPress={() => router.push("/signup")}
-          style={[styles.auth_btn, { backgroundColor: modeColor.colorCode, marginBottom: verticalScale(10) }]}><CustomText style={{ color: "#fff" }}>Register</CustomText></Pressable>
+          style={[styles.auth_btn, { backgroundColor: Colors.modeColor.colorCode, marginBottom: verticalScale(10) }]}><CustomText style={{ color: "#fff" }}>Register</CustomText></Pressable>
         <Pressable
           onPress={() => router.push("/signin")}
-          style={[styles.auth_btn, { borderWidth: moderateScale(1.5), borderColor: modeColor.colorCode }]}><CustomText style={{ color: modeColor.colorCode }}>Log In</CustomText></Pressable>
+          style={[styles.auth_btn, { borderWidth: moderateScale(1.5), borderColor: Colors.modeColor.colorCode }]}><CustomText style={{ color: Colors.modeColor.colorCode }}>Log In</CustomText></Pressable>
       </View>
 
     </CustomView>
@@ -112,3 +111,6 @@ const styles = StyleSheet.create({
     justifyContent: "center"
   }
 })
+
+
+

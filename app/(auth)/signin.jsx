@@ -5,7 +5,6 @@ import CustomText from "../../components/CustomText"
 import CustomSecondaryText from '../../components/CustomSecondaryText';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import { Link, useRouter } from 'expo-router';
-import { useTheme } from '../../context/ThemeContext';
 import Checkbox from 'expo-checkbox';
 import { useAuth } from '../../context/AuthContext'
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -13,7 +12,9 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import * as Linking from 'expo-linking'
 import * as WebBrowser from 'expo-web-browser'
 import * as AuthSession from 'expo-auth-session'
-import { useClerk, useOAuth, useSSO, useUser } from '@clerk/clerk-expo'
+import { useClerk, useSSO, useUser } from '@clerk/clerk-expo'
+import { useTheme } from '@react-navigation/native';
+import { Colors } from '@/constants/Colors';
 
 
 export const useWarmUpBrowser = () => {
@@ -37,9 +38,7 @@ const signin = () => {
 
     const { setIsAuthenticated, setAuthenticatedUser } = useAuth()
 
-    const colorScheme = useColorScheme()
-
-    const { modeColor, theme } = useTheme()
+    const { colors } = useTheme()
 
     const router = useRouter()
 
@@ -145,7 +144,7 @@ const signin = () => {
             <CustomView style={{ alignItems: "center", justifyContent: "center" }}>
                 <View style={{ width: "100%", gap: verticalScale(25) }}>
                     <Image
-                        style={[styles.Logo, { tintColor: colorScheme === "dark" ? "#fff" : "#000" }]}
+                        style={[styles.Logo, { tintColor: colors.text }]}
                         source={require("../../assets/images/IQB_Logo.png")}
                         resizeMode="cover"
                     />
@@ -153,8 +152,8 @@ const signin = () => {
                     <TextInput
                         editable
                         placeholder="Enter your email"
-                        placeholderTextColor={theme.secondaryText}
-                        style={[false ? styles.inputFielderror : styles.inputField, { borderColor: theme.borderColor, backgroundColor: theme.InputBackground, fontFamily: "AirbnbCereal_W_Bk", color: theme.primaryText }]}
+                        placeholderTextColor={colors.secondaryText}
+                        style={[false ? styles.inputFielderror : styles.inputField, { borderColor: colors.border, backgroundColor: colors.card, fontFamily: "AirbnbCereal_W_Bk", color: colors.text }]}
                         // onChangeText={(text) => {
                         //     setEmailError("")
                         //     setEmail(text)
@@ -166,8 +165,8 @@ const signin = () => {
                     <TextInput
                         editable
                         placeholder="Enter your password"
-                        placeholderTextColor={theme.secondaryText}
-                        style={[false ? styles.inputFielderror : styles.inputField, { borderColor: theme.borderColor, backgroundColor: theme.InputBackground, fontFamily: "AirbnbCereal_W_Bk", color: theme.primaryText }]}
+                        placeholderTextColor={colors.secondaryText}
+                        style={[false ? styles.inputFielderror : styles.inputField, { borderColor: colors.border, backgroundColor: colors.card, fontFamily: "AirbnbCereal_W_Bk", color: colors.text }]}
                         // onChangeText={(text) => {
                         //     setEmailError("")
                         //     setEmail(text)
@@ -189,7 +188,7 @@ const signin = () => {
                                 style={styles.checkbox}
                                 value={rememberMe}
                                 onValueChange={setRememberMe}
-                                color={rememberMe ? modeColor.colorCode : undefined}
+                                color={rememberMe ? Colors.modeColor.colorCode : undefined}
                             />
                             <CustomSecondaryText>
                                 Remember Me
@@ -207,22 +206,22 @@ const signin = () => {
 
                     <Pressable
                         onPress={() => signinPressed()}
-                        style={[styles.auth_btn, { backgroundColor: modeColor.colorCode, marginBottom: verticalScale(10) }]}>
+                        style={[styles.auth_btn, { backgroundColor: Colors.modeColor.colorCode, marginBottom: verticalScale(10) }]}>
                         <CustomText style={{ color: "#fff" }}>Sign in</CustomText>
                     </Pressable>
 
                     <Pressable onPress={() => router.replace("/signup")}>
-                        <CustomText style={[styles.subHeading, { color: theme.secondaryText }]}>Don't have an account ?<CustomText style={{ fontFamily: "AirbnbCereal_W_Md" }}> Sign up</CustomText></CustomText>
+                        <CustomText style={[styles.subHeading, { color: colors.secondaryText }]}>Don't have an account ?<CustomText style={{ fontFamily: "AirbnbCereal_W_Md" }}> Sign up</CustomText></CustomText>
                     </Pressable>
 
                     <View style={styles.divider}>
-                        <View style={{ flex: 1, height: verticalScale(1), backgroundColor: theme.primaryText }} />
+                        <View style={{ flex: 1, height: verticalScale(1), backgroundColor: colors.text }} />
 
                         <View style={{ padding: moderateScale(10) }}>
-                            <CustomText style={{ color: theme.primaryText }}>or</CustomText>
+                            <CustomText style={{ color: colors.text }}>or</CustomText>
                         </View>
 
-                        <View style={{ flex: 1, height: verticalScale(1), backgroundColor: theme.primaryText }} />
+                        <View style={{ flex: 1, height: verticalScale(1), backgroundColor: colors.text }} />
                     </View>
 
                     <Pressable
@@ -242,9 +241,7 @@ const signin = () => {
                             height={30}
                             width={30}
                         />
-                        <CustomText
-                            style={{ color: theme.primaryText }}
-                        >
+                        <CustomText>
                             Sign in with Google
                         </CustomText>
                     </Pressable>

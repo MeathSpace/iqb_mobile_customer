@@ -4,33 +4,25 @@ import { scale, verticalScale } from 'react-native-size-matters';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '@react-navigation/native';
 
-const CustomView = ({ style, children, ...props }) => {
+const CustomTabView = ({ style, children, ...props }) => {
 
     const { colors } = useTheme()
 
     return (
         <SafeAreaView
+            edges={['top', 'left', 'right']}
             style={{
                 flex: 1,
-                backgroundColor: colors.background
+                backgroundColor: colors.tabBackground,
+                paddingHorizontal: scale(15),
             }}
         >
-            <View
-                style={
-                    [{
-                        flex: 1,
-                        paddingHorizontal: scale(15),
-                        paddingVertical: verticalScale(15),
-                    }, style]
-                }
-                {...props}
-            >
-                {children}
-            </View >
+
+            {children}
         </SafeAreaView>
     )
 }
 
-export default CustomView
+export default CustomTabView
 
 const styles = StyleSheet.create({})

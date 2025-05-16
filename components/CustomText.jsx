@@ -1,15 +1,14 @@
 import { StyleSheet, Text, View } from 'react-native'
-import { Colors } from '@/constants/Colors'
 import React from 'react'
-import { useTheme } from '../context/ThemeContext'
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+import { useTheme } from '@react-navigation/native';
 
 const CustomText = ({ style, children, ...props }) => {
 
-    const { theme } = useTheme();
+    const { colors } = useTheme()
 
     return (
-        <Text style={[styles.defaultText, { color: theme.primaryText }, style]} {...props}>
+        <Text style={[styles.defaultText, { color: colors.text }, style]} {...props}>
             {children}
         </Text>
     )

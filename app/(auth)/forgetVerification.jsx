@@ -1,17 +1,16 @@
 import { Keyboard, Pressable, StyleSheet, Text, TextInput, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
 import React from 'react'
-import { useTheme } from '../../context/ThemeContext'
 import { useRouter } from 'expo-router'
 import CustomView from '../../components/CustomView'
 import CustomText from '../../components/CustomText'
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import CustomSecondaryText from '../../components/CustomSecondaryText'
+import { useTheme } from '@react-navigation/native'
+import { Colors } from '@/constants/Colors';
 
 const forgetVerification = () => {
 
-    const colorScheme = useColorScheme()
-
-    const { modeColor, theme } = useTheme()
+    const { colors } = useTheme()
 
     const router = useRouter()
 
@@ -38,8 +37,8 @@ const forgetVerification = () => {
                             editable
                             keyboardType="numeric"
                             placeholder="Enter your password"
-                            placeholderTextColor={theme.secondaryText}
-                            style={[false ? styles.inputFielderror : styles.inputField, { borderColor: theme.borderColor, backgroundColor: theme.InputBackground, fontFamily: "AirbnbCereal_W_Bk", color: theme.primaryText }]}
+                            placeholderTextColor={colors.secondaryText}
+                            style={[false ? styles.inputFielderror : styles.inputField, { borderColor: colors.border, backgroundColor: colors.card, fontFamily: "AirbnbCereal_W_Bk", color: colors.text }]}
                             // onChangeText={(text) => {
                             //     setFirstNameError("")
                             //     setFirstName(text)
@@ -52,14 +51,14 @@ const forgetVerification = () => {
 
                     <Pressable
                         onPress={() => router.push("/forgetVerification")}
-                        style={[styles.resendbtn, { backgroundColor: modeColor.colorCode }]}>
+                        style={[styles.resendbtn, { backgroundColor: Colors.modeColor.colorCode }]}>
                         <CustomText style={{ color: "#fff" }}>Resend</CustomText>
                     </Pressable>
                 </View>
 
                 <Pressable
                     onPress={() => console.log("Svewvw")}
-                    style={[styles.btn, { backgroundColor: modeColor.colorCode }]}>
+                    style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode }]}>
                     <CustomText style={{ color: "#fff" }}>Done</CustomText>
                 </Pressable>
 

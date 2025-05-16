@@ -8,13 +8,15 @@ import CustomText from '../../../components/CustomText'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import CustomView from '../../../components/CustomView'
 import { verticalScale } from 'react-native-size-matters'
-import { useTheme } from '../../../context/ThemeContext'
+import { useTheme } from '@react-navigation/native'
+import CustomTabView from '../../../components/CustomTabView'
+
 
 const dashboard = () => {
 
     const { signOut } = useClerk()
     const { isSignedIn } = useUser()
-    const { theme } = useTheme()
+    const { colors } = useTheme()
 
     const { setIsAuthenticated, authenticatedUser, setAuthenticatedUser } = useAuth()
     const router = useRouter()
@@ -35,11 +37,10 @@ const dashboard = () => {
     }
 
     return (
-        <CustomView style={{
-            backgroundColor: theme.globalModalBackground,
-            paddingVertical: verticalScale(0),
-            gap: 20,
-        }}>
+        <CustomTabView
+            style={{
+                gap: 20,
+            }}>
             <CustomText>dashboard</CustomText>
             <CustomText>{authenticatedUser?.name}</CustomText>
             <CustomText>{authenticatedUser?.email}</CustomText>
@@ -50,7 +51,7 @@ const dashboard = () => {
             />
 
             <Pressable onPress={logoutPressed}><CustomText>Logout</CustomText></Pressable>
-        </CustomView>
+        </CustomTabView>
     )
 }
 
