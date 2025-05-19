@@ -196,20 +196,6 @@ const Map = () => {
                     style={styles.modalWrapper}
                     onPress={() => setSelectedCustomerSalon({ open: false, data: {} })}
                 >
-                    {/* <CloseIcon
-                        style={{
-                            position: "absolute",
-                            top: verticalScale(10),
-                            right: scale(10),
-                            backgroundColor: colors.background,
-                            borderRadius: moderateScale(4),
-                            padding: moderateScale(5),
-                            borderColor: colors.border,
-                            borderWidth: moderateScale(1),
-                        }}
-                        color={"red"}
-                        size={moderateScale(20)}
-                    /> */}
                     <Pressable
                         style={[styles.modalContainer,
                         {
@@ -242,24 +228,19 @@ const Map = () => {
                             <CustomSecondaryText key={idx} style={styles.modalService}>• {service}</CustomSecondaryText>
                         ))}
 
-                        <View style={{ flexDirection: "row", gap: scale(10) }}>
-                            <Pressable
-                                style={[styles.closebtn, { backgroundColor: colors.background, borderColor: colors.border, borderWidth: moderateScale(1) }]}
-                                onPress={() => setSelectedCustomerSalon({ open: false, data: {} })}
-                            >
-                                <CloseIcon
-                                    color={"red"}
-                                    size={moderateScale(20)}
-                                />
-                            </Pressable>
+                        <Pressable
+                            style={[styles.modalbtn, { backgroundColor: Colors.modeColor.colorCode }]}
+                            onPress={() => connectSalonPressed()}
+                        >
+                            <CustomText style={{ color: "#fff" }}>Connect</CustomText>
+                        </Pressable>
 
-                            <Pressable
-                                style={[styles.modalbtn, { backgroundColor: Colors.modeColor.colorCode, flex: 1 }]}
-                                onPress={() => connectSalonPressed()}
-                            >
-                                <CustomText style={{ color: "#fff" }}>Connect</CustomText>
-                            </Pressable>
-                        </View>
+                        <Pressable
+                            style={[styles.closebtn]}
+                            onPress={() => setSelectedCustomerSalon({ open: false, data: {} })}
+                        >
+                            <CustomText style={{ color: "red" }}>Cancel</CustomText>
+                        </Pressable>
                     </Pressable>
                 </Pressable>
             </Modal>
@@ -305,24 +286,22 @@ const styles = StyleSheet.create({
         marginBottom: verticalScale(4),
     },
     modalbtn: {
-        // width: "100%",
+        minHeight: verticalScale(35),
+        width: "100%",
         alignItems: "center",
         justifyContent: "center",
         marginTop: verticalScale(15),
-        paddingVertical: verticalScale(8),
-        paddingHorizontal: scale(16),
         borderRadius: moderateScale(6),
     },
     closebtn: {
-        marginTop: verticalScale(15),
-        paddingVertical: verticalScale(6),
-        paddingHorizontal: scale(6),
+        minHeight: verticalScale(35),
+        width: "100%",
+        alignItems: "center",
+        justifyContent: "center",
+        marginTop: verticalScale(10),
         borderRadius: moderateScale(6),
-        // shadowColor: '#000',
-        // shadowOffset: { width: 0, height: 4 },
-        // shadowOpacity: 0.3,
-        // shadowRadius: 5,
-        // elevation: 4,
+        borderWidth: moderateScale(1),
+        borderColor: "red",
     }
 })
 

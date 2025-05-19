@@ -1,5 +1,5 @@
 import React from 'react';
-import { AntDesign, Feather, FontAwesome, Ionicons, MaterialIcons, Octicons } from '@expo/vector-icons';
+import { AntDesign, Feather, FontAwesome, Ionicons, MaterialCommunityIcons, MaterialIcons, Octicons } from '@expo/vector-icons';
 import { moderateScale } from 'react-native-size-matters';
 
 export const CalendarIcon = ({ size = moderateScale(24), color = 'black', style }) => (
@@ -36,4 +36,28 @@ export const NotificationIcon = ({ size = moderateScale(24), color = 'black', st
 
 export const CloseIcon = ({ size = moderateScale(24), color = 'black', style }) => (
     <AntDesign name="close" size={size} color={color} style={style} />
+);
+
+export const RightIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <AntDesign name="right" size={size} color={color} style={style} />
+);
+
+export const HeartIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <AntDesign name="hearto" size={size} color={color} style={style} />
+);
+
+export const HelpIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <Feather name="help-circle" size={size} color={color} style={style} />
+);
+
+export const AboutIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <MaterialCommunityIcons name="information-outline" size={size} color={color} style={style} />
+);
+
+export const LogoutIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <MaterialIcons name="logout" size={size} color={color} style={style} />
+);
+
+export const ArrowLeftIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <AntDesign name="arrowleft" size={size} color={color} style={style} />
 );
