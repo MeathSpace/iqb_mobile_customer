@@ -16,6 +16,11 @@
         "foregroundImage": "./assets/images/icon.png",
         "backgroundColor": "#ffffff"
       },
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyDPbqoO4cJhjiqEStQdoDduzyIfUJZTGrk"
+        }
+      },
       "softwareKeyboardLayoutMode": "pan",
       "package": "com.iqbook.iqb"
     },

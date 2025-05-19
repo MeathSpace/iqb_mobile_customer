@@ -29,3 +29,11 @@ export const SalonIcon = ({ size = moderateScale(24), color = 'black', style }) 
 export const CalenderIcon = ({ size = moderateScale(24), color = 'black', style }) => (
     <Feather name="calendar" size={size} color={color} style={style} />
 );
+
+export const NotificationIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <MaterialIcons name="notifications-none" size={size} color={color} style={style} />
+);
+
+export const CloseIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <AntDesign name="close" size={size} color={color} style={style} />
+);

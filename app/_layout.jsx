@@ -91,7 +91,8 @@ const RootLayout = () => {
         publishableKey='pk_test_bGVnYWwtamF2ZWxpbi00LmNsZXJrLmFjY291bnRzLmRldiQ'
         tokenCache={tokenCache}>
         <ThemeProvider value={colorScheme === 'dark' ? MyDarkTheme : MyLightTheme}>
-          <Slot />
+          {/* <Slot /> */}
+          <Stack screenOptions={{ headerShown: false }} />
           <StatusBar style="auto" />
         </ThemeProvider>
       </ClerkProvider>

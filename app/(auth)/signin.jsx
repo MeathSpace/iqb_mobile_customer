@@ -53,12 +53,14 @@ const signin = () => {
         await AsyncStorage.setItem("LoggedInUser", JSON.stringify({
             name: "John Doe",
             email: "john@gmail.com",
-            imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUWPPJeKqMFiZdty1MgpNIUzPE0NYsz0Y0NA&s"
+            imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUWPPJeKqMFiZdty1MgpNIUzPE0NYsz0Y0NA&s",
+            salonId: 1
         }))
         setAuthenticatedUser({
             name: "John Doe",
             email: "john@gmail.com",
-            imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUWPPJeKqMFiZdty1MgpNIUzPE0NYsz0Y0NA&s"
+            imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUWPPJeKqMFiZdty1MgpNIUzPE0NYsz0Y0NA&s",
+            salonId: 1
         })
         setIsAuthenticated(true)
         router.push("/home")
@@ -127,7 +129,7 @@ const signin = () => {
                         imageUrl: user?.imageUrl
                     })
                     setIsAuthenticated(true);
-                    router.push("/home");
+                    router.replace("/home");
                 } catch (error) {
                     console.error("Error saving to AsyncStorage", error);
                 }

@@ -1,28 +1,45 @@
-import { ScrollView, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import { ScrollView, StyleSheet, View } from 'react-native';
+import React, { memo } from 'react';
 import { scale, verticalScale } from 'react-native-size-matters';
-import { SafeAreaView } from 'react-native-safe-area-context';
 import { useTheme } from '@react-navigation/native';
+import { useAuth } from '../context/AuthContext';
+import CustomText from './CustomText'; // Make sure this is imported
 
-const CustomTabView = ({ style, children, ...props }) => {
+const CustomTabView = ({ style, children, scrollable = false, ...props }) => {
+    const { colors } = useTheme();
+    const { authenticatedUser } = useAuth();
 
-    const { colors } = useTheme()
+    const ContentWrapper = scrollable ? ScrollView : View;
 
     return (
-        <SafeAreaView
-            edges={['top', 'left', 'right']}
-            style={{
-                flex: 1,
-                backgroundColor: colors.tabBackground,
-                paddingHorizontal: scale(15),
-            }}
-        >
+        authenticatedUser?.salonId ? (
+            <ContentWrapper
+                style={{
+                    backgroundColor: colors.tabBackground,
+                    flex: 1,
+                    paddingHorizontal: scale(10),
+                    paddingVertical: verticalScale(10),
+                    ...style
+                }}
+                contentContainerStyle={scrollable ? { flexGrow: 1 } : {}}
+                {...props}
+            >
+                {children}
+            </ContentWrapper>
+        ) : (
+            <View style={styles.centered}>
+                <CustomText style={{ fontFamily: "AirbnbCereal_W_Md" }}>Salon is not selected</CustomText>
+            </View>
+        )
+    );
+};
 
-            {children}
-        </SafeAreaView>
-    )
-}
+const styles = StyleSheet.create({
+    centered: {
+        flex: 1,
+        justifyContent: 'center',
+        alignItems: 'center',
+    }
+});
 
-export default CustomTabView
-
-const styles = StyleSheet.create({})
+export default memo(CustomTabView);
