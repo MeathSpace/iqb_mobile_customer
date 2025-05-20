@@ -24,7 +24,7 @@ const CustomTabView = ({ style, children, scrollable = false, ...props }) => {
                     paddingVertical: verticalScale(10),
                     ...style
                 }}
-                contentContainerStyle={scrollable ? { flexGrow: 1 } : {}}
+                contentContainerStyle={scrollable ? { flexGrow: 1, } : {}}
                 {...props}
             >
                 {children}

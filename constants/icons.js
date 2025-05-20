@@ -1,5 +1,5 @@
 import React from 'react';
-import { AntDesign, Feather, FontAwesome, Ionicons, MaterialCommunityIcons, MaterialIcons, Octicons } from '@expo/vector-icons';
+import { AntDesign, Entypo, Feather, FontAwesome, FontAwesome5, Ionicons, MaterialCommunityIcons, MaterialIcons, Octicons } from '@expo/vector-icons';
 import { moderateScale } from 'react-native-size-matters';
 
 export const CalendarIcon = ({ size = moderateScale(24), color = 'black', style }) => (
@@ -60,4 +60,24 @@ export const LogoutIcon = ({ size = moderateScale(24), color = 'black', style })
 
 export const ArrowLeftIcon = ({ size = moderateScale(24), color = 'black', style }) => (
     <AntDesign name="arrowleft" size={size} color={color} style={style} />
+);
+
+export const SettingsIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <Feather name="settings" size={size} color={color} style={style} />
+);
+
+export const NextIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <MaterialIcons name="queue-play-next" size={size} color={color} style={style} />
+);
+
+export const ContactIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <Entypo name="phone" size={size} color={color} style={style} />
+);
+
+export const MapIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <FontAwesome5 name="map-marker-alt" size={size} color={color} style={style} />
+);
+
+export const FacebookIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <FontAwesome name="facebook-square" size={size} color={color} style={style} />
 );

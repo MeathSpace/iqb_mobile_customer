@@ -54,13 +54,11 @@ const signin = () => {
             name: "John Doe",
             email: "john@gmail.com",
             imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUWPPJeKqMFiZdty1MgpNIUzPE0NYsz0Y0NA&s",
-            salonId: 1
         }))
         setAuthenticatedUser({
             name: "John Doe",
             email: "john@gmail.com",
             imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUWPPJeKqMFiZdty1MgpNIUzPE0NYsz0Y0NA&s",
-            salonId: 1
         })
         setIsAuthenticated(true)
         router.push("/home")

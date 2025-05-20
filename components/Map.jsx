@@ -11,6 +11,7 @@ import SalonCard from './SalonCard';
 import { Image } from 'expo-image';
 import { useTheme } from '@react-navigation/native';
 import { CloseIcon } from '../constants/icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Map = () => {
 
@@ -147,9 +148,10 @@ const Map = () => {
 
     // console.log(selectedCustomerSalon)
 
-    const connectSalonPressed = () => {
-        console.log("Connect to salon pressed");
+    const connectSalonPressed = async() => {
         setAuthenticatedUser({ ...authenticatedUser, salonId: 1 })
+        await AsyncStorage.setItem("LoggedInUser", JSON.stringify({...authenticatedUser, salonId: 1 }))
+        setSelectedCustomerSalon({ open: false, data: {} })
     }
 
     return (
