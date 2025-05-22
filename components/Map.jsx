@@ -148,9 +148,9 @@ const Map = () => {
 
     // console.log(selectedCustomerSalon)
 
-    const connectSalonPressed = async() => {
+    const connectSalonPressed = async () => {
         setAuthenticatedUser({ ...authenticatedUser, salonId: 1 })
-        await AsyncStorage.setItem("LoggedInUser", JSON.stringify({...authenticatedUser, salonId: 1 }))
+        await AsyncStorage.setItem("LoggedInUser", JSON.stringify({ ...authenticatedUser, salonId: 1 }))
         setSelectedCustomerSalon({ open: false, data: {} })
     }
 
@@ -203,7 +203,7 @@ const Map = () => {
                         {
                             backgroundColor: colors.background,
                             borderColor: colors.border,
-                            borderWidth: moderateScale(1),
+                            borderWidth: scale(1),
                         }
                         ]}
                         onPress={() => { }}
@@ -302,7 +302,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         marginTop: verticalScale(10),
         borderRadius: moderateScale(6),
-        borderWidth: moderateScale(1),
+        borderWidth: scale(1),
         borderColor: "red",
     }
 })

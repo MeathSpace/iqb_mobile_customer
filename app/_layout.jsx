@@ -5,6 +5,7 @@ import { Slot, Stack } from 'expo-router'
 import * as SplashScreen from 'expo-splash-screen';
 import { useFonts } from 'expo-font';
 import { AuthProvider } from '../context/AuthContext'
+import { GlobalProvider } from '../context/GlobalContext'
 import { ClerkProvider } from '@clerk/clerk-expo'
 import { tokenCache } from '@clerk/clerk-expo/token-cache'
 import { StatusBar } from 'expo-status-bar';
@@ -68,6 +69,7 @@ const RootLayout = () => {
       tabBackground: '#efefef',
       text: "#000000",
       secondaryText: "#808080",
+      secondaryInputBackground: "#efefef"
     },
   };
 
@@ -80,22 +82,25 @@ const RootLayout = () => {
       tabBackground: '#151718',
       text: "#ffffff",
       secondaryText: "#F4F4F5B2",
+      secondaryInputBackground: "#000000"
     },
   };
 
 
   return (
     <AuthProvider>
-      <ClerkProvider
-        // publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY}
-        publishableKey='pk_test_bGVnYWwtamF2ZWxpbi00LmNsZXJrLmFjY291bnRzLmRldiQ'
-        tokenCache={tokenCache}>
-        <ThemeProvider value={colorScheme === 'dark' ? MyDarkTheme : MyLightTheme}>
-          {/* <Slot /> */}
-          <Stack screenOptions={{ headerShown: false }} />
-          <StatusBar style="auto" />
-        </ThemeProvider>
-      </ClerkProvider>
+      <GlobalProvider>
+        <ClerkProvider
+          // publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY}
+          publishableKey='pk_test_bGVnYWwtamF2ZWxpbi00LmNsZXJrLmFjY291bnRzLmRldiQ'
+          tokenCache={tokenCache}>
+          <ThemeProvider value={colorScheme === 'dark' ? MyDarkTheme : MyLightTheme}>
+            {/* <Slot /> */}
+            <Stack screenOptions={{ headerShown: false }} />
+            <StatusBar style="auto" />
+          </ThemeProvider>
+        </ClerkProvider>
+      </GlobalProvider>
     </AuthProvider>
   )
 }

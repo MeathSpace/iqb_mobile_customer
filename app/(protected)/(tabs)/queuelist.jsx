@@ -6,6 +6,8 @@ import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 import { Colors } from '../../../constants/Colors';
 import { useTheme } from '@react-navigation/native';
 import QlistItem from '../../../components/QlistItem';
+import { useRouter } from 'expo-router';
+import { useGlobal } from '../../../context/GlobalContext';
 
 
 const QueueList = () => {
@@ -155,6 +157,8 @@ const QueueList = () => {
         }
     ]
 
+    const router = useRouter()
+    const { joinQueue, setJoinQueue } = useGlobal();
 
     return (
         <CustomTabView>
@@ -173,6 +177,13 @@ const QueueList = () => {
                                 backgroundColor: Colors.modeColor.colorCode,
                             },
                         ]}
+                        onPress={() => {
+                            setJoinQueue({
+                                singleJoin: true,
+                                groupJoin: false
+                            })
+                            router.push("/selectBarber")
+                        }}
                     >
                         <CustomText style={{
                             color: "#fff"
@@ -182,7 +193,13 @@ const QueueList = () => {
                     </Pressable>
 
                     <Pressable
-                        onPress={() => setSelected('group')}
+                        onPress={() => {
+                            setJoinQueue({
+                                singleJoin: false,
+                                groupJoin: true
+                            })
+                            router.push("/groupJoin")
+                        }}
                         style={[
                             styles.segmentButton,
                             {
@@ -206,7 +223,7 @@ const QueueList = () => {
                 contentContainerStyle={{
                     overflow: "visible",
                 }}
-                renderItem={({ item }) => <QlistItem item={item}/>}
+                renderItem={({ item }) => <QlistItem item={item} />}
                 keyExtractor={item => item.id}
                 showsVerticalScrollIndicator={false}
                 ListFooterComponent={<View style={{ height: Platform.OS === "ios" ? verticalScale(60) : 0 }} />}

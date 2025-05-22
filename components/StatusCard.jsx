@@ -28,7 +28,7 @@ const styles = StyleSheet.create({
         // height: verticalScale(125),
         borderRadius: moderateScale(4),
         padding: moderateScale(10),
-        // borderWidth: moderateScale(1),
+        // borderWidth: scale(1),
         // elevation: 4,
     },
     icon: {

@@ -20,7 +20,7 @@ export default CustomSecondaryText
 const styles = StyleSheet.create({
     defaultText: {
         fontSize: moderateScale(14),
-        fontFamily: 'AirbnbCereal_W_Bk',
+        fontFamily: 'AirbnbCereal_W_Md',
         textDecorationLine: 'none',
     },
 });

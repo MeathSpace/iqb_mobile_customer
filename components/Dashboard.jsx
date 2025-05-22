@@ -10,6 +10,7 @@ import AdvertiseCard from './AdvertiseCard'
 import { NextIcon, QueueIcon, SettingsIcon, UserIcon } from '../constants/icons'
 import StatusCard from './StatusCard'
 import BarberCard from './BarberCard'
+import { router } from 'expo-router'
 
 const Dashboard = () => {
 
@@ -87,7 +88,7 @@ const Dashboard = () => {
         },
         {
             id: 4,
-            title: "On Duty Staff",
+            title: "Barbers On Duty",
             icon: UserIcon,
             value: "4",
             color1: "#00B090",
@@ -148,8 +149,8 @@ const Dashboard = () => {
                                     <CustomSecondaryText style={{ fontFamily: "AirbnbCereal_W_Md", marginBottom: verticalScale(10) }}>Select an option to either join the current queue or schedule an appointment in advance.</CustomSecondaryText>
 
                                     <View style={{ flexDirection: "row", gap: verticalScale(10), justifyContent: "space-evenly" }}>
-                                        <Pressable style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode, shadowColor: Colors.modeColor.colorCode, marginBottom: verticalScale(10) }]}><CustomText style={{ color: "#fff" }}>Join Queue</CustomText></Pressable>
-                                        <Pressable style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode, shadowColor: Colors.modeColor.colorCode, marginBottom: verticalScale(10) }]}><CustomText style={{ color: "#fff" }}>Book Appt</CustomText></Pressable>
+                                        <Pressable onPress={() => router.push("/queuelist")} style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode, shadowColor: Colors.modeColor.colorCode, marginBottom: verticalScale(10) }]}><CustomText style={{ color: "#fff" }}>Join Queue</CustomText></Pressable>
+                                        <Pressable onPress={() => router.push("/appointment")} style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode, shadowColor: Colors.modeColor.colorCode, marginBottom: verticalScale(10) }]}><CustomText style={{ color: "#fff" }}>Book Appt</CustomText></Pressable>
                                     </View>
                                 </>
 

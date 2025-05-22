@@ -81,3 +81,15 @@ export const MapIcon = ({ size = moderateScale(24), color = 'black', style }) =>
 export const FacebookIcon = ({ size = moderateScale(24), color = 'black', style }) => (
     <FontAwesome name="facebook-square" size={size} color={color} style={style} />
 );
+
+export const ClockIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <Feather name="clock" size={size} color={color} style={style} />
+);
+
+export const PeopleIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <MaterialIcons name="people-alt" size={size} color={color} style={style} />
+);
+
+export const CheckIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <Feather name="check" size={size} color={color} style={style} />
+);

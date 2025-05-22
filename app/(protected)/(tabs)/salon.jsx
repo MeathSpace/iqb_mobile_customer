@@ -291,7 +291,7 @@ const salon = () => {
                                         zoomEnabled={false}
                                         rotateEnabled={false}
                                         pitchEnabled={false}
-                                        style={[styles.map, { borderColor: colors.border, borderWidth: moderateScale(1) }]}
+                                        style={[styles.map, { borderColor: colors.border, borderWidth: scale(1) }]}
                                         customMapStyle={colorScheme === "dark" ? darkMapStyle : []}
                                     />
                                     <View style={[styles.addressContainer, { backgroundColor: colors.background }]}>

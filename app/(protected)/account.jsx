@@ -145,13 +145,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: scale(15),
     borderRadius: scale(4),
     marginVertical: verticalScale(20),
-    borderWidth: moderateScale(1),
+    borderWidth: scale(1),
     elevation: 3,
-
-    // shadowColor: '#000',
-    // shadowOffset: { width: 0, height: 1 },
-    // shadowOpacity: 0.22,
-    // shadowRadius: 2.22,
 
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
@@ -166,7 +161,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: scale(15),
     borderRadius: scale(4),
     marginVertical: verticalScale(5),
-    borderWidth: moderateScale(1),
+    borderWidth: scale(1),
   },
   btn: {
     height: verticalScale(40),

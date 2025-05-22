@@ -40,7 +40,7 @@ const styles = StyleSheet.create({
     qlistItem: {
         // height: 100,
         marginBottom: moderateScale(10),
-        // borderWidth: moderateScale(1),
+        // borderWidth: scale(1),
         borderRadius: moderateScale(4),
         padding: moderateScale(10),
         flexDirection: "row",

@@ -57,7 +57,7 @@ const SearchHeader = () => {
             {
                 backgroundColor: colors.background,
                 borderColor: colors.border,
-                borderWidth: moderateScale(1),
+                borderWidth: scale(1),
             }]}>
                 <TextInput
                     style={[styles.input, { color: colors.text }]}
@@ -98,7 +98,7 @@ const SearchHeader = () => {
                     style={[styles.dropdown, {
                         backgroundColor: colors.background,
                         borderColor: colors.border,
-                        borderWidth: moderateScale(1),
+                        borderWidth: scale(1),
                     }]}
                 />
             )}
@@ -115,7 +115,7 @@ const styles = StyleSheet.create({
         position: 'relative',
         flexDirection: "row",
         justifyContent: "space-between",
-        alignItems:"center",
+        alignItems: "center",
         gap: scale(10),
     },
     searchWrapper: {
