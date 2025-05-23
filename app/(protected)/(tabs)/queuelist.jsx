@@ -158,7 +158,7 @@ const QueueList = () => {
     ]
 
     const router = useRouter()
-    const { joinQueue, setJoinQueue } = useGlobal();
+    const { joinModes, setJoinModes, setSelectedBarber, setSelectedBarberServices } = useGlobal();
 
     return (
         <CustomTabView>
@@ -178,10 +178,13 @@ const QueueList = () => {
                             },
                         ]}
                         onPress={() => {
-                            setJoinQueue({
+                            setJoinModes({
                                 singleJoin: true,
-                                groupJoin: false
+                                groupJoin: false,
+                                appointment: false
                             })
+                            setSelectedBarber({})
+                            setSelectedBarberServices([])
                             router.push("/selectBarber")
                         }}
                     >
@@ -194,10 +197,13 @@ const QueueList = () => {
 
                     <Pressable
                         onPress={() => {
-                            setJoinQueue({
+                            setJoinModes({
                                 singleJoin: false,
-                                groupJoin: true
+                                groupJoin: true,
+                                appointment: false
                             })
+                            setSelectedBarber({})
+                            setSelectedBarberServices([])
                             router.push("/groupJoin")
                         }}
                         style={[

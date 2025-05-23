@@ -13,12 +13,14 @@ import CustomSecondaryText from '../../components/CustomSecondaryText'
 import CustomView from '../../components/CustomView'
 import { AboutIcon, ArrowLeftIcon, HeartIcon, HelpIcon, RightIcon, SalonIcon } from '../../constants/icons'
 import { Colors } from '../../constants/Colors'
+import { useGlobal } from '../../context/GlobalContext'
 
 const account = () => {
 
   const { colors } = useTheme()
   const { signOut } = useClerk()
   const { isSignedIn } = useUser()
+  const { setSelectedBarber, setSelectedBarberServices, setCustomerName } = useGlobal();
 
   const { setIsAuthenticated, authenticatedUser, setAuthenticatedUser } = useAuth()
   const router = useRouter()
@@ -27,7 +29,9 @@ const account = () => {
     if (isSignedIn) {
       signOut()
     }
-
+    setSelectedBarber({})
+    setSelectedBarberServices([])
+    setCustomerName("")
     setIsAuthenticated(false)
     setAuthenticatedUser(null)
     await AsyncStorage.removeItem("LoggedInUser")

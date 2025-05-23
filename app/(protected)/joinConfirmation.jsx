@@ -12,14 +12,17 @@ import MapView, { PROVIDER_GOOGLE } from 'react-native-maps';
 import { Colors } from '../../constants/Colors';
 import CustomTabView from '../../components/CustomTabView';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { useGlobal } from '../../context/GlobalContext';
 
-const confirmationQueue = () => {
+const joinConfirmation = () => {
+
+  const { selectedBarber, selectedBarberServices, joinModes } = useGlobal();
 
   const colorScheme = useColorScheme();
-  const confirmationData = useLocalSearchParams();
+  // const confirmationData = useLocalSearchParams();
 
-  const selectedServices = JSON.parse(confirmationData.selectedServices)
-  const selectBarber = JSON.parse(confirmationData.barber)
+  // const selectedServices = JSON.parse(confirmationData.selectedServices)
+  // const selectBarber = JSON.parse(confirmationData.barber)
 
   const { colors } = useTheme()
   const router = useRouter()
@@ -104,11 +107,11 @@ const confirmationQueue = () => {
           </View>
           <View>
             <CustomText style={styles.heading}>
-              Yay! Good to see you here
+              {joinModes.appointment ? "Review and confirm below" : "Yay! Good to see you here"}
             </CustomText>
 
             <CustomSecondaryText style={{ textAlign: "center" }}>
-              You will be notified when your time arrives
+              {joinModes.appointment ? "You'll be notified once your appointment is scheduled" : "You will be notified when your time arrives"}
             </CustomSecondaryText>
           </View>
 
@@ -116,18 +119,18 @@ const confirmationQueue = () => {
             <View style={{ flexDirection: "row", alignItems: "center", gap: scale(10) }}>
               <Image
                 style={{ height: moderateScale(55), width: moderateScale(55), borderRadius: moderateScale(30) }}
-                source={{ uri: selectBarber.image }}
+                source={{ uri: selectedBarber.image }}
                 // placeholder={{ blurhash }}
                 contentFit="cover"
                 transition={300}
               />
-              <CustomText>{selectBarber.name}</CustomText>
+              <CustomText>{selectedBarber.name}</CustomText>
             </View>
 
             <View style={[styles.cardContent, { borderTopColor: colors.border }]}>
               <View style={{ gap: scale(6) }}>
                 {
-                  selectedServices.map((ele, index) => {
+                  selectedBarberServices.map((ele, index) => {
                     return (
                       <CustomSecondaryText key={index}>{index + 1}. {ele.serviceName}</CustomSecondaryText>
                     )
@@ -135,10 +138,10 @@ const confirmationQueue = () => {
                 }
               </View>
               <View style={{ gap: scale(6) }}>
-                <CustomText style={{ textAlign: "center", fontSize: moderateScale(20) }}>$ {selectedServices.reduce((acc, item) => acc + item.servicePrice, 0)}</CustomText>
+                <CustomText style={{ textAlign: "center", fontSize: moderateScale(20) }}>$ {selectedBarberServices.reduce((acc, item) => acc + item.servicePrice, 0)}</CustomText>
                 <View style={{ flexDirection: "row", alignItems: "center", gap: scale(10), }}>
                   <ClockIcon size={moderateScale(14)} color={colors.secondaryText} />
-                  <CustomSecondaryText> {selectedServices.reduce((acc, item) => acc + item.barberServiceEWT, 0)} mins</CustomSecondaryText>
+                  <CustomSecondaryText> {selectedBarberServices.reduce((acc, item) => acc + item.barberServiceEWT, 0)} mins</CustomSecondaryText>
                 </View>
               </View>
             </View>
@@ -180,14 +183,14 @@ const confirmationQueue = () => {
 
         <Pressable
           style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode }]}>
-          <CustomText style={{ color: "#fff" }}>Done</CustomText>
+          <CustomText style={{ color: "#fff" }}>{joinModes.appointment ? "Confirm & Book" : "Done"}</CustomText>
         </Pressable>
       </ScrollView>
     </SafeAreaView>
   )
 }
 
-export default confirmationQueue
+export default joinConfirmation
 
 const styles = StyleSheet.create({
   heading: {

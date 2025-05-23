@@ -128,7 +128,7 @@ const Dashboard = () => {
             estTime: "15 mins",
 
         },
-        
+
     ]
 
 
@@ -146,11 +146,13 @@ const Dashboard = () => {
                             return (
                                 <>
                                     {/* <CustomText style={{ fontFamily: "AirbnbCereal_W_Md"}}>Hello, {authenticatedUser?.name} 👋</CustomText> */}
-                                    <CustomSecondaryText style={{ fontFamily: "AirbnbCereal_W_Md", marginBottom: verticalScale(10) }}>Select an option to either join the current queue or schedule an appointment in advance.</CustomSecondaryText>
+                                    <CustomSecondaryText style={{ fontFamily: "AirbnbCereal_W_Md", marginBottom: verticalScale(10), textAlign: "center" }}>Select an option to either join the current queue or schedule an appointment in advance.</CustomSecondaryText>
 
                                     <View style={{ flexDirection: "row", gap: verticalScale(10), justifyContent: "space-evenly" }}>
                                         <Pressable onPress={() => router.push("/queuelist")} style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode, shadowColor: Colors.modeColor.colorCode, marginBottom: verticalScale(10) }]}><CustomText style={{ color: "#fff" }}>Join Queue</CustomText></Pressable>
-                                        <Pressable onPress={() => router.push("/appointment")} style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode, shadowColor: Colors.modeColor.colorCode, marginBottom: verticalScale(10) }]}><CustomText style={{ color: "#fff" }}>Book Appt</CustomText></Pressable>
+                                        <Pressable onPress={() => router.push("/appointment")} 
+                                        style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode, 
+                                        shadowColor: Colors.modeColor.colorCode, marginBottom: verticalScale(10) }]}><CustomText style={{ color: "#fff" }}>Book Appt</CustomText></Pressable>
                                     </View>
                                 </>
 
@@ -165,7 +167,7 @@ const Dashboard = () => {
                                             overflow: "visible",
                                         }}
                                         contentContainerStyle={{
-                                            gap: scale(10),                                        
+                                            gap: scale(10),
                                         }}
                                         data={salonData}
                                         renderItem={({ item }) => <AdvertiseCard item={item} />}
@@ -206,7 +208,7 @@ const Dashboard = () => {
                                         columnGap: scale(10),
                                     }}
                                     data={barbersData}
-                                    renderItem={({ item }) => <BarberCard item={item}  />}
+                                    renderItem={({ item }) => <BarberCard item={item} />}
                                     keyExtractor={item => item.id}
                                     bounces={false}
                                     numColumns={2}

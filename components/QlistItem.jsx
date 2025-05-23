@@ -14,7 +14,7 @@ const QlistItem = ({ item }) => {
         <View style={[styles.qlistItem, { backgroundColor: colors.background }]}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: moderateScale(10) }}>
                 <Image
-                    style={{ height: moderateScale(55), width: moderateScale(55), borderRadius: moderateScale(30) }}
+                    style={{ height: moderateScale(50), width: moderateScale(50), borderRadius: moderateScale(30) }}
                     source={{ uri: item?.image }}
                     // placeholder={{ blurhash }}
                     contentFit="cover"
@@ -51,8 +51,8 @@ const styles = StyleSheet.create({
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 2 },
         shadowOpacity: 0.2,
-        shadowRadius: 4,
+        shadowRadius: 2.5,
         
-        elevation: 3,
+        elevation: 1.5,
     }
 })

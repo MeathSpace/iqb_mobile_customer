@@ -31,5 +31,6 @@ export const Colors = {
   modeColor: {
     colorName: "Rose",
     colorCode: "#E81948",
+    colorCode2: "rgba(232, 25, 72, 0.2)"
   }
 };

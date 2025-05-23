@@ -84,13 +84,22 @@ const selectBarber = () => {
     const { colors } = useTheme()
     const router = useRouter()
 
-    const { setSelectedBarber } = useGlobal();
+    const {setSelectedBarber, joinModes } = useGlobal();
 
     return (
         <CustomView>
-            <CustomText style={styles.heading}>
-                Join Queue
-            </CustomText>
+            {
+                joinModes.appointment ? (
+                    <CustomText style={styles.heading}>
+                        Book Appointment
+                    </CustomText>
+                ) : (
+                    <CustomText style={styles.heading}>
+                        Join Queue
+                    </CustomText>
+                )
+            }
+
             <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginVertical: verticalScale(20) }}>
                 <CustomSecondaryText style={{ fontFamily: "AirbnbCereal_W_Md" }}>Who are you looking for ?</CustomSecondaryText>
                 <CustomSecondaryText style={{ fontFamily: "AirbnbCereal_W_Md" }}>Available Barbers 4</CustomSecondaryText>
@@ -111,7 +120,7 @@ const selectBarber = () => {
                             setSelectedBarber(item)
                             router.push({
                                 pathname: "/selectServices",
-                                params: item
+                                // params: item
                             })
                         }}
                         style={[styles.barberItem, { backgroundColor: colors.card, borderColor: colors.border }]}>

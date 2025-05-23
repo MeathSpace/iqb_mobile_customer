@@ -38,10 +38,6 @@ export const CloseIcon = ({ size = moderateScale(24), color = 'black', style }) 
     <AntDesign name="close" size={size} color={color} style={style} />
 );
 
-export const RightIcon = ({ size = moderateScale(24), color = 'black', style }) => (
-    <AntDesign name="right" size={size} color={color} style={style} />
-);
-
 export const HeartIcon = ({ size = moderateScale(24), color = 'black', style }) => (
     <AntDesign name="hearto" size={size} color={color} style={style} />
 );
@@ -60,6 +56,10 @@ export const LogoutIcon = ({ size = moderateScale(24), color = 'black', style })
 
 export const ArrowLeftIcon = ({ size = moderateScale(24), color = 'black', style }) => (
     <AntDesign name="arrowleft" size={size} color={color} style={style} />
+);
+
+export const RightIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <AntDesign name="right" size={size} color={color} style={style} />
 );
 
 export const SettingsIcon = ({ size = moderateScale(24), color = 'black', style }) => (
@@ -92,4 +92,13 @@ export const PeopleIcon = ({ size = moderateScale(24), color = 'black', style })
 
 export const CheckIcon = ({ size = moderateScale(24), color = 'black', style }) => (
     <Feather name="check" size={size} color={color} style={style} />
+);
+
+
+export const CalenderLeftIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <AntDesign name="left" size={size} color={color} style={style} />
+);
+
+export const CalenderRightIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <AntDesign name="right" size={size} color={color} style={style} />
 );

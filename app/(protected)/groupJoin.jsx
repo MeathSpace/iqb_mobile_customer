@@ -5,7 +5,7 @@ import CustomText from '../../components/CustomText'
 import CustomSecondaryText from '../../components/CustomSecondaryText'
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import { useTheme } from '@react-navigation/native'
-import { useRouter } from 'expo-router'
+import { Link, useRouter } from 'expo-router'
 import { Image } from 'expo-image'
 import { Colors } from '../../constants/Colors'
 import GroupItem from '../../components/GroupItem'
@@ -24,7 +24,18 @@ const groupJoin = () => {
             setSelectedBarber(removeGroupMember.data.barber)
             setSelectedBarberServices(removeGroupMember.data.barberServices)
         }
+
     }, [removeGroupMember])
+
+    // useEffect(() => {
+    //     return () => {
+    //         console.log("triggered ")
+    //         setCustomerName("")
+    //         setSelectedBarber({})
+    //         setSelectedBarberServices([])
+    //         setGroupJoinMembers([])
+    //     }
+    // }, [])
 
     return (
         <CustomView>

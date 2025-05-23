@@ -13,7 +13,8 @@ import { useGlobal } from '../../context/GlobalContext';
 
 const selectServices = () => {
 
-    const item = useLocalSearchParams();
+    // const item = useLocalSearchParams();
+
     const { colors } = useTheme()
     const router = useRouter()
 
@@ -180,23 +181,32 @@ const selectServices = () => {
         });
     }
 
-    const { setSelectedBarberServices, joinQueue } = useGlobal();
+    const { selectedBarber, setSelectedBarberServices, joinModes } = useGlobal();
 
     return (
         <CustomView>
-            <CustomText style={styles.heading}>
-                Join Queue
-            </CustomText>
+            {
+                joinModes.appointment ? (
+                    <CustomText style={styles.heading}>
+                        Book Appointment
+                    </CustomText>
+                ) : (
+                    <CustomText style={styles.heading}>
+                        Join Queue
+                    </CustomText>
+                )
+            }
+
             <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginVertical: verticalScale(20) }}>
                 <View style={{ flexDirection: "row", alignItems: "center", gap: scale(10) }}>
                     <Image
                         style={{ height: moderateScale(30), width: moderateScale(30), borderRadius: moderateScale(30) }}
-                        source={{ uri: item.image }}
+                        source={{ uri: selectedBarber.image }}
                         // placeholder={{ blurhash }}
                         contentFit="cover"
                         transition={300}
                     />
-                    <CustomText>{item.name}</CustomText>
+                    <CustomText>{selectedBarber.name}</CustomText>
                 </View>
                 <CustomSecondaryText>Available Services 5</CustomSecondaryText>
             </View>
@@ -241,16 +251,20 @@ const selectServices = () => {
 
             <Pressable
                 onPress={() => {
-                    if (joinQueue.groupJoin && !joinQueue.singleJoin) {
+                    if (joinModes.appointment) {
+                        setSelectedBarberServices(selectedServices)
+                        router.push("/appointmentCalender")
+                    } else if (joinModes.groupJoin && !joinModes.singleJoin) {
                         setSelectedBarberServices(selectedServices)
                         router.push("/groupJoin")
                     } else {
+                        setSelectedBarberServices(selectedServices)
                         router.push({
-                            pathname: "/confirmationQueue",
-                            params: {
-                                selectedServices: JSON.stringify(selectedServices),
-                                barber: JSON.stringify(item),
-                            },
+                            pathname: "/joinConfirmation",
+                            // params: {
+                            //     selectedServices: JSON.stringify(selectedServices),
+                            //     barber: JSON.stringify(item),
+                            // },
                         })
                     }
                 }}
