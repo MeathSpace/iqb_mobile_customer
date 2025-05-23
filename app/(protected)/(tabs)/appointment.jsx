@@ -2,12 +2,13 @@ import { FlatList, Platform, Pressable, StyleSheet, Text, View } from 'react-nat
 import React from 'react';
 import CustomTabView from '../../../components/CustomTabView';
 import CustomText from '../../../components/CustomText';
-import { scale, verticalScale } from 'react-native-size-matters';
+import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 import { Colors } from '../../../constants/Colors';
 import { useTheme } from '@react-navigation/native';
 import AppointmentItem from '../../../components/AppointmentItem';
 import { router, useRouter } from 'expo-router';
 import { useGlobal } from '../../../context/GlobalContext'
+import CustomSecondaryText from '../../../components/CustomSecondaryText';
 
 const Appointment = () => {
   const baseAppointData = {
@@ -30,7 +31,20 @@ const Appointment = () => {
   return (
     <CustomTabView style={{ justifyContent: "space-between", paddingVertical: verticalScale(0), paddingTop: verticalScale(10) }}>
       <View style={{ flex: 1, paddingBottom: Platform.OS === 'ios' ? verticalScale(60) : 0 }}>
-        <CustomText style={styles.title}>Upcoming Appointments</CustomText>
+        <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: verticalScale(6) }}>
+          <CustomText style={styles.title}>Scheduled Appointment</CustomText>
+          <View
+            style={{
+              width: moderateScale(28),
+              height: moderateScale(28),
+              borderRadius: moderateScale(20),
+              justifyContent: "center",
+              alignItems: "center",
+              backgroundColor: Colors.modeColor.colorCode2,
+
+            }}
+          ><CustomSecondaryText style={{ color: Colors.modeColor.colorCode }}>15</CustomSecondaryText></View>
+        </View>
         <FlatList
           data={appointData}
           contentContainerStyle={styles.listContent}
@@ -70,8 +84,7 @@ export default Appointment;
 
 const styles = StyleSheet.create({
   title: {
-    marginBottom: verticalScale(10),
-    textAlign: "center"
+    fontFamily: "AirbnbCereal_W_Bd"
   },
   listContent: {
     overflow: "visible",

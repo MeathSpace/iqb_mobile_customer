@@ -8,6 +8,7 @@ import { useTheme } from '@react-navigation/native';
 import QlistItem from '../../../components/QlistItem';
 import { useRouter } from 'expo-router';
 import { useGlobal } from '../../../context/GlobalContext';
+import CustomSecondaryText from '../../../components/CustomSecondaryText';
 
 
 const QueueList = () => {
@@ -161,9 +162,9 @@ const QueueList = () => {
     const { joinModes, setJoinModes, setSelectedBarber, setSelectedBarberServices } = useGlobal();
 
     return (
-        <CustomTabView>
-            <View style={styles.qlistHeader}>
-                <CustomText style={{ fontFamily: "AirbnbCereal_W_Md" }}>Queue List</CustomText>
+        <CustomTabView style={{ justifyContent: "space-between", paddingVertical: verticalScale(0), paddingTop: verticalScale(10) }}>
+            {/* <View style={styles.qlistHeader}>
+                <CustomText>Queue List</CustomText>
 
                 <View style={[styles.segmentContainer, {}]}>
                     <Pressable
@@ -222,18 +223,74 @@ const QueueList = () => {
                         </CustomText>
                     </Pressable>
                 </View>
+            </View> */}
+
+            <View style={{ flex: 1, paddingBottom: Platform.OS === 'ios' ? verticalScale(60) : 0 }}>
+                <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: verticalScale(6) }}>
+                    <CustomText style={styles.title}>Today's Queue</CustomText>
+                    <View
+                        style={{
+                            width: moderateScale(28),
+                            height: moderateScale(28),
+                            borderRadius: moderateScale(20),
+                            justifyContent: "center",
+                            alignItems: "center",
+                            backgroundColor: Colors.modeColor.colorCode2,
+
+                        }}
+                    ><CustomSecondaryText style={{ color: Colors.modeColor.colorCode }}>10</CustomSecondaryText></View>
+                </View>
+
+                <FlatList
+                    data={qlist}
+                    contentContainerStyle={{
+                        overflow: "visible",
+                    }}
+                    renderItem={({ item }) => <QlistItem item={item} />}
+                    keyExtractor={item => item.id}
+                    showsVerticalScrollIndicator={false}
+                    ListFooterComponent={<View style={{ height: Platform.OS === "ios" ? verticalScale(60) : 0 }} />}
+                />
+
+                <View style={{ flexDirection: "row", gap: verticalScale(10), justifyContent: "space-evenly" }}>
+                    <Pressable
+                        onPress={() => {
+                            setJoinModes({
+                                singleJoin: true,
+                                groupJoin: false,
+                                appointment: false
+                            })
+                            setSelectedBarber({})
+                            setSelectedBarberServices([])
+                            router.push("/selectBarber")
+                        }}
+                        style={[styles.btn, {
+                            backgroundColor: Colors.modeColor.colorCode,
+                            shadowColor: Colors.modeColor.colorCode,
+                            marginBottom: Platform.OS === 'ios' ? verticalScale(20) : verticalScale(10),
+                            marginTop: verticalScale(10)
+                        }]}><CustomText style={{ color: "#fff" }}>Single Join</CustomText></Pressable>
+                    <Pressable
+                        onPress={() => {
+                            setJoinModes({
+                                singleJoin: false,
+                                groupJoin: true,
+                                appointment: false
+                            })
+                            setSelectedBarber({})
+                            setSelectedBarberServices([])
+                            router.push("/groupJoin")
+                        }}
+                        style={[styles.btn, {
+                            backgroundColor: Colors.modeColor.colorCode,
+                            shadowColor: Colors.modeColor.colorCode,
+                            marginBottom: Platform.OS === 'ios' ? verticalScale(20) : verticalScale(10),
+                            marginTop: verticalScale(10)
+                        }]}><CustomText style={{ color: "#fff" }}>Group Join</CustomText></Pressable>
+                </View>
             </View>
 
-            <FlatList
-                data={qlist}
-                contentContainerStyle={{
-                    overflow: "visible",
-                }}
-                renderItem={({ item }) => <QlistItem item={item} />}
-                keyExtractor={item => item.id}
-                showsVerticalScrollIndicator={false}
-                ListFooterComponent={<View style={{ height: Platform.OS === "ios" ? verticalScale(60) : 0 }} />}
-            />
+
         </CustomTabView>
     );
 };
@@ -241,21 +298,33 @@ const QueueList = () => {
 export default QueueList;
 
 const styles = StyleSheet.create({
+    title: {
+        fontFamily: "AirbnbCereal_W_Bd"
+    },
     qlistHeader: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         marginBottom: verticalScale(10),
     },
-    segmentContainer: {
-        flexDirection: 'row',
-        overflow: 'hidden',
-    },
-    segmentButton: {
-        paddingHorizontal: scale(12),
+
+    btn: {
+        width: "45%",
         height: verticalScale(35),
-        justifyContent: 'center',
-        alignItems: 'center',
-        minWidth: scale(100),
-    },
+        borderRadius: scale(4),
+        alignItems: "center",
+        justifyContent: "center",
+        elevation: 4,
+    }
+    // segmentContainer: {
+    //     flexDirection: 'row',
+    //     overflow: 'hidden',
+    // },
+    // segmentButton: {
+    //     paddingHorizontal: scale(12),
+    //     height: verticalScale(35),
+    //     justifyContent: 'center',
+    //     alignItems: 'center',
+    //     minWidth: scale(100),
+    // },
 });
