@@ -226,7 +226,7 @@ const QueueList = () => {
             </View> */}
 
             <View style={{ flex: 1, paddingBottom: Platform.OS === 'ios' ? verticalScale(60) : 0 }}>
-                <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: verticalScale(6) }}>
+                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: verticalScale(6) }}>
                     <CustomText style={styles.title}>Today's Queue</CustomText>
                     <View
                         style={{

@@ -145,7 +145,7 @@ const signin = () => {
                 <View style={{ width: "100%", gap: verticalScale(25) }}>
                     <Image
                         style={[styles.Logo, { tintColor: colors.text }]}
-                        source={require("../../assets/images/IQB_Logo.png")}
+                        source={require("../../assets/images/icon.png")}
                         resizeMode="cover"
                     />
 

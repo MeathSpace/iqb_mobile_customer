@@ -27,7 +27,8 @@ export const GlobalProvider = ({ children }) => {
     const [joinModes, setJoinModes] = useState({
         singleJoin: false,
         groupJoin: false,
-        appointment: false
+        appointment: false,
+        appointmentType: "Book"
     })
     const [appointmentCalenderData, setAppointmentCalenderData] = useState([])
 

@@ -188,7 +188,9 @@ const selectServices = () => {
             {
                 joinModes.appointment ? (
                     <CustomText style={styles.heading}>
-                        Book Appointment
+                        {
+                            joinModes.appointmentType === "Edit" ? "Edit Appointment" : "Book Appointment"
+                        }
                     </CustomText>
                 ) : (
                     <CustomText style={styles.heading}>

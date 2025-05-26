@@ -82,6 +82,8 @@ const joinConfirmation = () => {
     }
   ];
 
+  console.log("joinModes ", joinModes)
+
   return (
     <SafeAreaView style={{
       flex: 1,
@@ -139,12 +141,29 @@ const joinConfirmation = () => {
               </View>
               <View style={{ gap: scale(6) }}>
                 <CustomText style={{ textAlign: "center", fontSize: moderateScale(20) }}>$ {selectedBarberServices.reduce((acc, item) => acc + item.servicePrice, 0)}</CustomText>
-                <View style={{ flexDirection: "row", alignItems: "center", gap: scale(10), }}>
+                <View style={{ flexDirection: "row", alignItems: "center", gap: scale(5), }}>
                   <ClockIcon size={moderateScale(14)} color={colors.secondaryText} />
-                  <CustomSecondaryText> {selectedBarberServices.reduce((acc, item) => acc + item.barberServiceEWT, 0)} mins</CustomSecondaryText>
+                  {
+                    joinModes.appointment ? (
+                      <CustomSecondaryText>12:30 AM - 2:30 PM</CustomSecondaryText>
+                    ) : (
+                      <CustomSecondaryText> {selectedBarberServices.reduce((acc, item) => acc + item.barberServiceEWT, 0)} mins</CustomSecondaryText>
+                    )
+                  }
+
                 </View>
               </View>
             </View>
+
+            {
+              joinModes.appointment && (
+                <View
+                  style={[styles.appointmentCardContent, { borderTopColor: colors.border }]}
+                >
+                  <CustomText>Hi! I’d like a quick haircut and beard trim. Please keep the sides short and tidy, and leave a bit of length on top. Looking forward to it!</CustomText>
+                </View>
+              )
+            }
           </View>
 
           <MapView
@@ -186,7 +205,7 @@ const joinConfirmation = () => {
           <CustomText style={{ color: "#fff" }}>{joinModes.appointment ? "Confirm & Book" : "Done"}</CustomText>
         </Pressable>
       </ScrollView>
-    </SafeAreaView>
+    </SafeAreaView >
   )
 }
 
@@ -221,6 +240,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between"
+  },
+  appointmentCardContent: {
+    borderTopWidth: moderateScale(1),
+    marginTop: verticalScale(10),
+    paddingTop: verticalScale(10),
   },
 
   map: {

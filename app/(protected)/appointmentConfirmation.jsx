@@ -7,6 +7,7 @@ import { Image } from 'expo-image';
 import CustomText from '../../components/CustomText';
 import CustomSecondaryText from '../../components/CustomSecondaryText';
 import { Colors } from '../../constants/Colors';
+import { useGlobal } from '../../context/GlobalContext';
 
 const appointmentConfirmation = () => {
 
@@ -15,6 +16,10 @@ const appointmentConfirmation = () => {
     const router = useRouter()
 
     // console.log("Barber ", barber)
+
+    const { joinModes, setJoinModes } = useGlobal();
+
+    // console.log("Join Modes ", joinModes)
 
     return (
         <Pressable
@@ -49,15 +54,18 @@ const appointmentConfirmation = () => {
                 </View>
 
                 <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", gap: scale(20) }}>
-                    <Pressable style={[styles.btn, {
-                        backgroundColor: "red",
-                        shadowColor: Colors.modeColor.colorCode
-                    }]}><CustomText style={{ color: "#fff" }}>Cancel</CustomText></Pressable>
+                    <Pressable
+                        onPress={() => router.back()}
+                        style={[styles.btn, {
+                            backgroundColor: "red",
+                            shadowColor: Colors.modeColor.colorCode
+                        }]}><CustomText style={{ color: "#fff" }}>Cancel</CustomText></Pressable>
                     <Pressable
                         onPress={() => {
+                            setJoinModes((prev) => ({ ...prev, appointment: true, appointmentType: "Edit" }))
                             router.push({
                                 pathname: "/selectBarber",
-                                
+
                             })
                         }}
                         style={[styles.btn, {

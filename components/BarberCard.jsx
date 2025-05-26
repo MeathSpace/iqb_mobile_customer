@@ -22,11 +22,11 @@ const BarberCard = ({ item }) => {
                 style={styles.cardContentWrapper}
             >
 
-                <CustomText style={{ fontSize: moderateScale(14), fontFamily: "AirbnbCereal_W_Md" }}>{item.name}</CustomText>
-                <CustomText style={{ fontSize: moderateScale(14), fontFamily: "AirbnbCereal_W_Md", color: item?.online ? "#00B090" : "red", }}>{item.online ? "Online" : "Offline"}</CustomText>
+                <CustomText style={{ fontSize: moderateScale(14) }}>{item.name}</CustomText>
+                <CustomText style={{ fontSize: moderateScale(14), color: item?.online ? "#00B090" : "red", }}>{item.online ? "Online" : "Offline"}</CustomText>
                 <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                    <CustomSecondaryText style={{ fontSize: moderateScale(14), fontFamily: "AirbnbCereal_W_Md" }}>Est. Time</CustomSecondaryText>
-                    <CustomSecondaryText style={{ fontSize: moderateScale(14), fontFamily: "AirbnbCereal_W_Md" }}>{item.estTime}</CustomSecondaryText>
+                    <CustomSecondaryText style={{ fontSize: moderateScale(14) }}>Est. Time</CustomSecondaryText>
+                    <CustomSecondaryText style={{ fontSize: moderateScale(14) }}>{item.estTime}</CustomSecondaryText>
                 </View>
             </View>
         </View>

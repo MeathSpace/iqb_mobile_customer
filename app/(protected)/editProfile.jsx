@@ -1,30 +1,31 @@
-import { Alert, Button, Keyboard, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
+import { Keyboard, Pressable, StyleSheet, Text, TextInput, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import CustomScrollView from '../../components/CustomScrollView'
+import { useTheme } from '@react-navigation/native'
 import { useRouter } from 'expo-router'
-import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
-import ProgressHeader from '../../components/ProgressHeader'
-import CustomText from '../../components/CustomText'
-import CustomSecondaryText from '../../components/CustomSecondaryText'
-import DropDownPicker from 'react-native-dropdown-picker';
-import { CalendarIcon } from '../../constants/icons'
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { Colors } from '@/constants/Colors';
-
-import PhoneInput
-    from 'react-native-phone-input';
+import { CalendarIcon, CameraIcon, RightIcon } from '../../constants/icons'
+import CustomText from '../../components/CustomText'
 import CountryPicker, { DARK_THEME }
     from 'react-native-country-picker-modal';
-import { useTheme } from '@react-navigation/native';
+import DropDownPicker from 'react-native-dropdown-picker'
+import PhoneInput
+    from 'react-native-phone-input';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+import { Colors } from '@/constants/Colors';
+import { useAuth } from '../../context/AuthContext'
+import { Image } from 'expo-image'
+import CustomSecondaryText from '../../components/CustomSecondaryText'
+import * as ImagePicker from 'expo-image-picker';
 
-const personalInfo = () => {
+const editProfile = () => {
 
     const colorScheme = useColorScheme()
 
     const { colors } = useTheme()
 
     const router = useRouter()
-
+    const { setIsAuthenticated, authenticatedUser, setAuthenticatedUser } = useAuth()
 
     const [phone, setPhone] = useState("");
     const [firstName, setFirstName] = useState("");
@@ -91,17 +92,37 @@ const personalInfo = () => {
     }
 
     const saveHandler = () => {
-        router.push("/passwordConfirmation")
+        router.push("/account")
     }
+
+
+    const pickImage = async () => {
+        const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
+        if (status !== 'granted') {
+            alert('Sorry, we need media library permissions to make this work!');
+            return;
+        }
+
+        const result = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.Images,
+            allowsEditing: true,
+            quality: 1,
+        });
+
+        if (!result.canceled) {
+            const selectedImageUri = result.assets[0].uri;
+            // do something with selectedImageUri
+            console.log("Selected Image:", selectedImageUri);
+        }
+    };
+
 
     return (
         <CustomScrollView>
-
             <TouchableWithoutFeedback onPress={() => {
                 Keyboard.dismiss();
                 setGenderOpen(false);
             }}>
-
                 <View
                     style={{
                         flex: 1,
@@ -110,21 +131,42 @@ const personalInfo = () => {
                     }}
                 >
 
-                    <ProgressHeader
-                        progressOne={progressOne}
-                        progressTwo={progressTwo}
-                        progressThree={progressThree}
-                    />
+                    <View style={{ flexDirection: "row", alignItems: "center", gap: moderateScale(10) }}>
+                        <View
+                            style={{
+                                position: "relative"
+                            }}
+                        >
+                            <Image
+                                style={{ height: moderateScale(65), width: moderateScale(65), borderRadius: moderateScale(40) }}
+                                source={{ uri: authenticatedUser?.imageUrl }}
+                                contentFit="cover"
+                                transition={300}
+                            />
 
-                    <View>
-                        <CustomText style={styles.heading}>
-                            It's time to create a profile !
-                        </CustomText>
+                            <Pressable
+                                style={{
+                                    position: "absolute",
+                                    bottom: moderateScale(-8),
+                                    right: moderateScale(-6),
+                                    backgroundColor: Colors.modeColor.colorCode,
+                                    borderWidth: moderateScale(2),
+                                    borderColor: colors.border,
+                                    padding: scale(6),
+                                    borderRadius: moderateScale(20),
+                                }}
+                                onPress={pickImage}>
+                                <CameraIcon color={"#fff"} size={moderateScale(16)} />
+                            </Pressable>
+                        </View>
 
-                        <CustomSecondaryText>
-                            Tell us little more about yourself
-                        </CustomSecondaryText>
+                        <View style={{ gap: moderateScale(5) }}>
+                            <CustomText>{authenticatedUser?.name}</CustomText>
+                            <CustomSecondaryText>{authenticatedUser?.email}</CustomSecondaryText>
+                            <CustomText style={{ fontSize: moderateScale(14), color: "#00B090" }}>Verified</CustomText>
+                        </View>
                     </View>
+
 
                     <View style={styles.inputWrapper}>
                         <CustomText>First Name</CustomText>
@@ -240,7 +282,6 @@ const personalInfo = () => {
                         )}
                     </View>
 
-
                     <View style={[styles.inputWrapper, { position: "relative" }]}>
                         <CustomText>Date of Birth</CustomText>
 
@@ -277,24 +318,43 @@ const personalInfo = () => {
                     <Pressable
                         onPress={() => saveHandler()}
                         style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode }]}>
-                        <CustomText style={{ color: "#fff" }}>Save & Next</CustomText>
+                        <CustomText style={{ color: "#fff" }}>Save</CustomText>
                     </Pressable>
-
                 </View>
-
             </TouchableWithoutFeedback>
-
-        </CustomScrollView >
+        </CustomScrollView>
     )
 }
 
-export default personalInfo
+export default editProfile
 
 const styles = StyleSheet.create({
-    heading: {
-        fontFamily: "AirbnbCereal_W_Bd",
-        fontSize: moderateScale(22),
-        marginBottom: verticalScale(10)
+    profileCard: {
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "space-between",
+        gap: moderateScale(10),
+        paddingVertical: verticalScale(10),
+        paddingHorizontal: scale(15),
+        borderRadius: scale(4),
+        marginVertical: verticalScale(0),
+        borderWidth: scale(1),
+        elevation: 3,
+
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 4,
+    },
+    profile_item: {
+        flexDirection: "row",
+        alignItems: "center",
+        gap: moderateScale(10),
+        paddingVertical: verticalScale(10),
+        paddingHorizontal: scale(15),
+        borderRadius: scale(4),
+        marginVertical: verticalScale(5),
+        borderWidth: scale(1),
     },
 
     inputWrapper: {

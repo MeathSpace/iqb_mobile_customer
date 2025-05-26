@@ -1,4 +1,4 @@
-import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
+import { Alert, FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import CustomTabView from '../../components/CustomTabView'
 import CustomText from '../../components/CustomText'
@@ -14,6 +14,7 @@ import CustomView from '../../components/CustomView'
 import { AboutIcon, ArrowLeftIcon, HeartIcon, HelpIcon, RightIcon, SalonIcon } from '../../constants/icons'
 import { Colors } from '../../constants/Colors'
 import { useGlobal } from '../../context/GlobalContext'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 const account = () => {
 
@@ -66,6 +67,33 @@ const account = () => {
     }
   ]
 
+
+  const menuOptionPressed = (item) => {
+    if (item.title === "Change Salon") {
+      Alert.alert(
+        "Confirm",
+        "Are you sure you want to disconnect?",
+        [
+          {
+            text: "Cancel",
+            style: "cancel",
+          },
+          {
+            text: "Yes, Disconnect",
+            onPress: async () => {
+              setAuthenticatedUser({ ...authenticatedUser, salonId: "" })
+              await AsyncStorage.setItem("LoggedInUser", JSON.stringify({ ...authenticatedUser, salonId: "" }))
+            },
+            style: "destructive",
+          },
+        ],
+        { cancelable: true }
+      );
+    } else if (item.title === "My favourites") {
+      router.push("/myFavourites")
+    }
+  };
+
   return (
     <CustomView>
       <View>
@@ -83,7 +111,9 @@ const account = () => {
         </CustomSecondaryText>
       </View>
 
-      <View style={[styles.profileCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
+      <Pressable
+        onPress={() => router.push("/editProfile")}
+        style={[styles.profileCard, { backgroundColor: colors.card, borderColor: colors.border }]}>
         <View style={{ flexDirection: "row", alignItems: "center", gap: moderateScale(10) }}>
           <Image
             style={{ height: moderateScale(55), width: moderateScale(55), borderRadius: moderateScale(30) }}
@@ -97,10 +127,8 @@ const account = () => {
             <CustomSecondaryText>{authenticatedUser?.email}</CustomSecondaryText>
           </View>
         </View>
-        <Link href="#">
-          <RightIcon size={moderateScale(20)} color={colors.text} />
-        </Link>
-      </View>
+        <RightIcon size={moderateScale(20)} color={colors.text} />
+      </Pressable>
 
       <CustomText style={styles.headingtwo}>
         Manage your account
@@ -109,10 +137,12 @@ const account = () => {
       <FlatList
         data={accountDetails}
         renderItem={({ item }) => (
-          <View style={[styles.profile_item, { borderColor: colors.border, backgroundColor: colors.card }]}>
+          <Pressable
+            onPress={() => menuOptionPressed(item)}
+            style={[styles.profile_item, { borderColor: colors.border, backgroundColor: colors.card }]}>
             {item.icon}
             <CustomText style={{ fontFamily: "AirbnbCereal_W_Md" }}>{item.title}</CustomText>
-          </View>
+          </Pressable>
         )}
         keyExtractor={item => item.id}
         bounces={false}

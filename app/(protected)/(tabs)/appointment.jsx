@@ -31,7 +31,7 @@ const Appointment = () => {
   return (
     <CustomTabView style={{ justifyContent: "space-between", paddingVertical: verticalScale(0), paddingTop: verticalScale(10) }}>
       <View style={{ flex: 1, paddingBottom: Platform.OS === 'ios' ? verticalScale(60) : 0 }}>
-        <View style={{ flexDirection: "row", justifyContent: "space-between", marginBottom: verticalScale(6) }}>
+        <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: verticalScale(6) }}>
           <CustomText style={styles.title}>Scheduled Appointment</CustomText>
           <View
             style={{
@@ -57,8 +57,9 @@ const Appointment = () => {
         />
         <Pressable
           onPress={() => {
-            setJoinModes((prev) => ({ ...prev, appointment: true }))
+            setJoinModes((prev) => ({ ...prev, appointment: true, appointmentType: "Book" }))
             router.push("/selectBarber")
+            // router.push("/appointmentCalender")
           }}
           style={[
             styles.btn,

@@ -21,7 +21,7 @@ const CustomScrollView = ({ style, children, ...props }) => {
                     // backgroundColor: colors.background
                 }}
                 behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-                keyboardVerticalOffset={Platform.OS === 'ios' ? 60 : 0}
+                keyboardVerticalOffset={Platform.OS === 'ios' ? verticalScale(0) : 0}
             >
                 <ScrollView
                     style={{ flex: 1 }}

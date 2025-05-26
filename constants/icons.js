@@ -102,3 +102,7 @@ export const CalenderLeftIcon = ({ size = moderateScale(24), color = 'black', st
 export const CalenderRightIcon = ({ size = moderateScale(24), color = 'black', style }) => (
     <AntDesign name="right" size={size} color={color} style={style} />
 );
+
+export const CameraIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <Feather name="camera" size={size} color={color} style={style} />
+);

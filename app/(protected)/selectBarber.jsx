@@ -84,14 +84,16 @@ const selectBarber = () => {
     const { colors } = useTheme()
     const router = useRouter()
 
-    const {setSelectedBarber, joinModes } = useGlobal();
+    const { setSelectedBarber, joinModes } = useGlobal();
 
     return (
         <CustomView>
             {
                 joinModes.appointment ? (
                     <CustomText style={styles.heading}>
-                        Book Appointment
+                        {
+                            joinModes.appointmentType === "Edit" ? "Edit Appointment" : "Book Appointment"
+                        }
                     </CustomText>
                 ) : (
                     <CustomText style={styles.heading}>

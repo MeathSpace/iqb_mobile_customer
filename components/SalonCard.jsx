@@ -5,7 +5,7 @@ import { useTheme } from '@react-navigation/native';
 import { Image } from 'expo-image';
 import CustomText from './CustomText';
 
-const SalonCard = ({ item, setSelectedCustomerSalon }) => {
+const SalonCard = ({ item, setSelectedCustomerSalon, favourite = false }) => {
 
     const { colors } = useTheme()
 
@@ -14,7 +14,7 @@ const SalonCard = ({ item, setSelectedCustomerSalon }) => {
             open: true,
             data: item
         })}>
-            <View style={[styles.cardWrapper, { backgroundColor: colors.background }]}>
+            <View style={[styles.cardWrapper, { width: favourite ? "100%" : scale(280), backgroundColor: colors.background }]}>
                 <Image
                     style={styles.cardImage}
                     source={{ uri: item.image }}
@@ -42,7 +42,6 @@ export default SalonCard
 
 const styles = StyleSheet.create({
     cardWrapper: {
-        width: scale(280),
         borderRadius: moderateScale(8),
         elevation: 4,
 
