@@ -1,7 +1,7 @@
 {
   "cli": {
     "version": ">= 16.6.1",
-    "appVersionSource": "remote"
+    "appVersionSource": "local"
   },
   "build": {
     "development": {
@@ -12,7 +12,12 @@
       "distribution": "internal"
     },
     "production": {
-      "autoIncrement": true
+      "ios": {
+        "distribution": "store",
+        "image": "latest"
+      },
+      "developmentClient": false,
+      "autoIncrement": false
     }
   },
   "submit": {

@@ -201,6 +201,13 @@ const joinConfirmation = () => {
 
 
         <Pressable
+          onPress={() => {
+            if (joinModes.appointment) {
+              router.push("/appointment")
+            } else {
+              router.push("/queuelist")
+            }
+          }}
           style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode }]}>
           <CustomText style={{ color: "#fff" }}>{joinModes.appointment ? "Confirm & Book" : "Done"}</CustomText>
         </Pressable>

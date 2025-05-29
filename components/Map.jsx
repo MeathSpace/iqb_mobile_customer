@@ -41,6 +41,8 @@ const Map = () => {
     }, []);
 
     // Watch for selected city and move map
+
+
     useEffect(() => {
         if (searchSalon?.latitude && searchSalon?.longitude && mapRef.current) {
             mapRef.current.animateToRegion({
@@ -160,6 +162,12 @@ const Map = () => {
                 // style={{ flex: 1 }}
                 provider={PROVIDER_GOOGLE}
                 region={region}
+                // region={{
+                //     latitude: 37.78825,
+                //     longitude: -122.4324,
+                //     latitudeDelta: 0.0922,
+                //     longitudeDelta: 0.0421,
+                // }}
                 showsUserLocation={true}
                 showsMyLocationButton={true}
                 toolbarEnabled={true}

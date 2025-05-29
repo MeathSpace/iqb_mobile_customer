@@ -9,7 +9,15 @@
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "com.iqbook.iqb",
+      "buildNumber": "12",
+      "config": {
+        "googleMapsApiKey": "AIzaSyCFTy8N-ZV2Oji8QbpQjuzXHwuC-kNSdmU"
+      },
+      "infoPlist": {
+        "ITSAppUsesNonExemptEncryption": false
+      }
     },
     "android": {
       "adaptiveIcon": {
@@ -30,7 +38,19 @@
       "favicon": "./assets/images/favicon.png"
     },
     "plugins": [
-      "expo-router"
+      "expo-router",
+      [
+        "expo-location",
+        {
+          "locationAlwaysAndWhenInUsePermission": "This app uses your location to display nearby salons on the map."
+        }
+      ],
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "The app accesses your photos to let you share them with your friends."
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true
@@ -38,9 +58,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "a912a935-9575-4ef0-be44-656c47d4c86f"
+        "projectId": "534c7c91-23ce-44be-84b7-28139f754f31"
       }
     },
-    "owner": "sagnikn00"
+    "owner": "sagnik26"
   }
 }
