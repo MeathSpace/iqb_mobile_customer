@@ -162,83 +162,64 @@ const QueueList = () => {
     const { joinModes, setJoinModes, setSelectedBarber, setSelectedBarberServices } = useGlobal();
 
     return (
-        <CustomTabView style={{ justifyContent: "space-between", paddingVertical: verticalScale(0), paddingTop: verticalScale(10) }}>
-            {/* <View style={styles.qlistHeader}>
-                <CustomText>Queue List</CustomText>
-
-                <View style={[styles.segmentContainer, {}]}>
-                    <Pressable
-                        style={[
-                            styles.segmentButton,
-                            {
-                                borderTopLeftRadius: moderateScale(4),
-                                borderBottomLeftRadius: moderateScale(4),
-                                borderRightColor: colors.border,
-                                borderRightWidth: moderateScale(1),
-                                backgroundColor: Colors.modeColor.colorCode,
-                            },
-                        ]}
-                        onPress={() => {
-                            setJoinModes({
-                                singleJoin: true,
-                                groupJoin: false,
-                                appointment: false
-                            })
-                            setSelectedBarber({})
-                            setSelectedBarberServices([])
-                            router.push("/selectBarber")
-                        }}
-                    >
-                        <CustomText style={{
-                            color: "#fff"
-                        }}>
-                            Single Join
-                        </CustomText>
-                    </Pressable>
-
-                    <Pressable
-                        onPress={() => {
-                            setJoinModes({
-                                singleJoin: false,
-                                groupJoin: true,
-                                appointment: false
-                            })
-                            setSelectedBarber({})
-                            setSelectedBarberServices([])
-                            router.push("/groupJoin")
-                        }}
-                        style={[
-                            styles.segmentButton,
-                            {
-                                borderTopRightRadius: moderateScale(4),
-                                borderBottomRightRadius: moderateScale(4),
-                                backgroundColor: Colors.modeColor.colorCode,
-                            },
-                        ]}
-                    >
-                        <CustomText style={{
-                            color: "#fff"
-                        }}>
-                            Group Join
-                        </CustomText>
-                    </Pressable>
-                </View>
-            </View> */}
-
+        <CustomTabView style={{ justifyContent: "space-between", backgroundColor: "#F7F7F7", paddingVertical: verticalScale(0), paddingTop: verticalScale(10) }}>
             <View style={{ flex: 1, paddingBottom: Platform.OS === 'ios' ? verticalScale(60) : 0 }}>
                 <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: verticalScale(6) }}>
-                    <CustomText style={styles.title}>Today's Queue</CustomText>
-                    <View
-                        style={{
-                            width: moderateScale(28),
-                            height: moderateScale(28),
-                            borderRadius: moderateScale(20),
-                            justifyContent: "center",
-                            alignItems: "center",
-                            backgroundColor: Colors.modeColor.colorCode2,
-
-                        }}
-                    ><CustomSecondaryText style={{ color: Colors.modeColor.colorCode }}>10</CustomSecondaryText></View>
+                    <CustomText style={styles.title}>Queue List</CustomText>
+                    <View style={{ flexDirection: "row", alignItems: "center", gap: scale(10) }}>
+                        <Pressable
+                            style={{
+                                height: verticalScale(30),
+                                width: scale(85),
+                                backgroundColor: "#000",
+                                borderRadius: scale(8),
+                                justifyContent: "center",
+                                alignItems: "center"
+                            }}
+                            onPress={() => {
+                                setJoinModes({
+                                    singleJoin: true,
+                                    groupJoin: false,
+                                    appointment: false
+                                })
+                                setSelectedBarber({})
+                                setSelectedBarberServices([])
+                                router.push("/singleJoin")
+                            }}
+                        ><CustomText
+                            style={{
+                                fontFamily: "AirbnbCereal_W_Bk",
+                                fontSize: scale(12),
+                                color: "#fff",
+                            }}
+                        >Single Join</CustomText></Pressable>
+                        <Pressable
+                            style={{
+                                height: verticalScale(30),
+                                width: scale(85),
+                                backgroundColor: "#000",
+                                borderRadius: scale(8),
+                                justifyContent: "center",
+                                alignItems: "center"
+                            }}
+                            onPress={() => {
+                                setJoinModes({
+                                    singleJoin: false,
+                                    groupJoin: true,
+                                    appointment: false
+                                })
+                                setSelectedBarber({})
+                                setSelectedBarberServices([])
+                                router.push("/groupJoin")
+                            }}
+                        ><CustomText
+                            style={{
+                                fontFamily: "AirbnbCereal_W_Bk",
+                                fontSize: scale(12),
+                                color: "#fff"
+                            }}
+                        >Group Join</CustomText></Pressable>
+                    </View>
                 </View>
 
                 <FlatList
@@ -246,51 +227,13 @@ const QueueList = () => {
                     contentContainerStyle={{
                         overflow: "visible",
                     }}
-                    renderItem={({ item }) => <QlistItem item={item} />}
+                    renderItem={({ item, index }) => <QlistItem item={item} index={index} qlistLength={qlist} />}
                     keyExtractor={item => item.id}
                     showsVerticalScrollIndicator={false}
                     ListFooterComponent={<View style={{ height: Platform.OS === "ios" ? verticalScale(60) : 0 }} />}
                 />
 
-                <View style={{ flexDirection: "row", gap: verticalScale(10), justifyContent: "space-evenly" }}>
-                    <Pressable
-                        onPress={() => {
-                            setJoinModes({
-                                singleJoin: true,
-                                groupJoin: false,
-                                appointment: false
-                            })
-                            setSelectedBarber({})
-                            setSelectedBarberServices([])
-                            router.push("/selectBarber")
-                        }}
-                        style={[styles.btn, {
-                            backgroundColor: Colors.modeColor.colorCode,
-                            shadowColor: Colors.modeColor.colorCode,
-                            marginBottom: Platform.OS === 'ios' ? verticalScale(20) : verticalScale(10),
-                            marginTop: verticalScale(10)
-                        }]}><CustomText style={{ color: "#fff" }}>Single Join</CustomText></Pressable>
-                    <Pressable
-                        onPress={() => {
-                            setJoinModes({
-                                singleJoin: false,
-                                groupJoin: true,
-                                appointment: false
-                            })
-                            setSelectedBarber({})
-                            setSelectedBarberServices([])
-                            router.push("/groupJoin")
-                        }}
-                        style={[styles.btn, {
-                            backgroundColor: Colors.modeColor.colorCode,
-                            shadowColor: Colors.modeColor.colorCode,
-                            marginBottom: Platform.OS === 'ios' ? verticalScale(20) : verticalScale(10),
-                            marginTop: verticalScale(10)
-                        }]}><CustomText style={{ color: "#fff" }}>Group Join</CustomText></Pressable>
-                </View>
             </View>
-
-
         </CustomTabView>
     );
 };
@@ -299,7 +242,7 @@ export default QueueList;
 
 const styles = StyleSheet.create({
     title: {
-        fontFamily: "AirbnbCereal_W_Bd"
+        fontFamily: "AirbnbCereal_W_Md"
     },
     qlistHeader: {
         flexDirection: 'row',

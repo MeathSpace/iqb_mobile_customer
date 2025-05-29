@@ -119,6 +119,13 @@ export default function TabLayout() {
                         }}
 
                     />
+
+                    <Tabs.Screen
+                        name="singleJoin" // Name of your hidden screen file (e.g., hidden-screen.js)
+                        options={{
+                            href: null, // This hides the tab from the tab bar
+                        }}
+                    />
                 </Tabs>
             </SafeAreaView>
         </>

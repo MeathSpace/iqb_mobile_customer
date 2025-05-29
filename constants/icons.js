@@ -106,3 +106,7 @@ export const CalenderRightIcon = ({ size = moderateScale(24), color = 'black', s
 export const CameraIcon = ({ size = moderateScale(24), color = 'black', style }) => (
     <Feather name="camera" size={size} color={color} style={style} />
 );
+
+export const AddIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <Entypo name="plus" size={size} color={color} style={style} />
+);

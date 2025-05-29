@@ -152,7 +152,7 @@ const Dashboard = () => {
                                         <Pressable onPress={() => router.push("/queuelist")} style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode, shadowColor: Colors.modeColor.colorCode, marginBottom: verticalScale(10) }]}><CustomText style={{ color: "#fff" }}>Join Queue</CustomText></Pressable>
                                         <Pressable onPress={() => router.push("/appointment")} 
                                         style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode, 
-                                        shadowColor: Colors.modeColor.colorCode, marginBottom: verticalScale(10) }]}><CustomText style={{ color: "#fff" }}>Book Appt sdvdsv</CustomText></Pressable>
+                                        shadowColor: Colors.modeColor.colorCode, marginBottom: verticalScale(10) }]}><CustomText style={{ color: "#fff" }}>Book Appt</CustomText></Pressable>
                                     </View>
                                 </>
 
