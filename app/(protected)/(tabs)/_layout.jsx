@@ -1,9 +1,9 @@
 import { Platform, StyleSheet, Text, View, Animated, Alert } from 'react-native'
 import React, { useEffect, useRef } from 'react'
 import { Tabs } from 'expo-router';
-import { CalenderIcon, HomeIcon, QueueIcon, SalonIcon } from '../../../constants/icons';
+import { CalenderIcon, HomeIcon, ProfileIcon, QueueIcon, SalonIcon } from '../../../constants/icons';
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { moderateScale, verticalScale } from 'react-native-size-matters';
+import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 import { useTheme } from '@react-navigation/native';
 import { Colors } from '../../../constants/Colors';
 import { HapticTab } from '../../../components/HapticTab';
@@ -53,11 +53,10 @@ export default function TabLayout() {
                             shadowRadius: 6,
                         },
                         tabBarLabelStyle: {
-                            fontFamily: 'AirbnbCereal_W_Md',
-                            fontSize: moderateScale(12),
+                            fontFamily: 'AirbnbCereal_W_Bk',
+                            fontSize: scale(9.6),
                         },
                         tabBarItemStyle: {
-                            // width: 120
                         }
                     }}
                 >
@@ -107,7 +106,7 @@ export default function TabLayout() {
                     <Tabs.Screen
                         name="appointment"
                         options={{
-                            title: 'Appt.',
+                            title: 'Appointment',
                             tabBarIcon: ({ color, focused }) => (
                                 <AnimatedTabIcon
                                     focused={focused}
@@ -117,7 +116,21 @@ export default function TabLayout() {
                                 />
                             ),
                         }}
+                    />
 
+                    <Tabs.Screen
+                        name="account"
+                        options={{
+                            title: 'Profile',
+                            tabBarIcon: ({ color, focused }) => (
+                                <AnimatedTabIcon
+                                    focused={focused}
+                                    color={color}
+                                    // theme={theme}
+                                    Icon={ProfileIcon}
+                                />
+                            ),
+                        }}
                     />
 
                     <Tabs.Screen
@@ -151,7 +164,7 @@ function AnimatedTabIcon({ focused, color, Icon }) {
 
     return (
         <Animated.View style={{ transform: [{ scale }] }}>
-            <Icon color={focused ? color : colors.text} />
+            <Icon color={focused ? color : "#6A6A6A"} />
         </Animated.View>
     );
 }

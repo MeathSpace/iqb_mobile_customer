@@ -5,6 +5,7 @@ import { useTheme } from '@react-navigation/native';
 import { Image } from 'expo-image';
 import CustomText from './CustomText';
 import CustomSecondaryText from './CustomSecondaryText';
+import { ClockIcon } from '../constants/icons';
 
 const BarberCard = ({ item }) => {
 
@@ -22,11 +23,31 @@ const BarberCard = ({ item }) => {
                 style={styles.cardContentWrapper}
             >
 
-                <CustomText style={{ fontSize: moderateScale(14) }}>{item.name}</CustomText>
-                <CustomText style={{ fontSize: moderateScale(14), color: item?.online ? "#00B090" : "red", }}>{item.online ? "Online" : "Offline"}</CustomText>
-                <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                    <CustomSecondaryText style={{ fontSize: moderateScale(14) }}>Est. Time</CustomSecondaryText>
-                    <CustomSecondaryText style={{ fontSize: moderateScale(14) }}>{item.estTime}</CustomSecondaryText>
+                <View style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                }}>
+                    <CustomText style={{ fontSize: scale(9), flex: 1 }}>{item.name}</CustomText>
+                    <CustomText style={{ fontSize: scale(9), flex: 0.4, color: item?.online ? "#00B090" : "red", }}>Online</CustomText>
+                </View>
+
+                <View style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                }}>
+                    <CustomText style={{ fontSize: scale(9), flex: 1 }}>Est. Time</CustomText>
+                    <View style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent:"space-between",
+                        gap: scale(2),
+                        flex: 1
+                    }}>
+                        <ClockIcon size={scale(9)} />
+                        <CustomText style={{ fontSize: scale(9), flex: 1 }}>120 mins</CustomText>
+                    </View>
                 </View>
             </View>
         </View>
@@ -37,28 +58,16 @@ export default BarberCard
 
 const styles = StyleSheet.create({
     cardWrapper: {
-        width: scale(160),
-        borderRadius: moderateScale(8),
+        width: scale(103),
         marginBottom: verticalScale(10),
-        elevation: 4,
-
-        // iOS shadow
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
     },
     cardImage: {
-        height: verticalScale(125),
+        height: verticalScale(80),
         width: "100%",
-        borderTopLeftRadius: moderateScale(8),
-        borderTopRightRadius: moderateScale(8)
+        borderRadius: scale(8),
+        marginBottom: verticalScale(5)
     },
     cardContentWrapper: {
-        paddingHorizontal: scale(10),
-        paddingVertical: verticalScale(10),
-        // flexDirection: "row",
-        // alignItems: "center",
         gap: verticalScale(5),
     },
 })

@@ -29,8 +29,9 @@ export const Colors = {
     tabBackground: "#000"
   },
   modeColor: {
-    colorName: "Rose",
-    colorCode: "#E81948",
-    colorCode2: "rgba(232, 25, 72, 0.2)"
+    colorName: "Emerald",
+    colorCode: "#0BA3AD",
+    colorCode2: "rgb(212, 236, 238)", // 20%
+    colorCode3: "#F3FAFB" // 5%
   }
 };

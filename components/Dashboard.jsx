@@ -10,7 +10,11 @@ import AdvertiseCard from './AdvertiseCard'
 import { NextIcon, QueueIcon, SettingsIcon, UserIcon } from '../constants/icons'
 import StatusCard from './StatusCard'
 import BarberCard from './BarberCard'
-import { router } from 'expo-router'
+import { Link, router } from 'expo-router'
+import { Dimensions } from 'react-native';
+
+// const screenWidth = Dimensions.get('window').width;
+// console.log('Screen Width:', screenWidth);
 
 const Dashboard = () => {
 
@@ -35,31 +39,31 @@ const Dashboard = () => {
         {
             id: '1',
             title: 'Glamour Grace Salon',
-            image: 'https://t4.ftcdn.net/jpg/01/81/61/29/360_F_181612908_uiOH8a4qWiNGuGS2Pg5dgwUIKJZ0C02w.jpg',
+            image: 'https://w7.pngwing.com/pngs/117/849/png-transparent-hair-salon-sale-banner-poster.png',
             services: ['Haircuts', 'Coloring', 'Styling', 'Bridal Packages', 'Spa Treatments'],
         },
         {
             id: '2',
             title: 'Velvet & Ivy Spa',
-            image: 'https://img1.wsimg.com/isteam/ip/ecf2eb3f-f55b-4193-9e98-7c1b626bf779/Hero%20Picture.png',
+            image: 'https://w7.pngwing.com/pngs/117/849/png-transparent-hair-salon-sale-banner-poster.png',
             services: ['Organic Facials', 'Aromatherapy Massages', 'Holistic Beauty Treatments'],
         },
         {
             id: '3',
             title: 'The Luxe Lotus',
-            image: 'https://cdn.magicdecor.in/com/2024/11/29145730/Beautiful-Seven-White-Horses-Art-Wallpaper-Mural-M-710x448.jpg',
+            image: 'https://w7.pngwing.com/pngs/117/849/png-transparent-hair-salon-sale-banner-poster.png',
             services: ['Hair Extensions', 'Keratin Treatments', 'Luxury Manicures'],
         },
         {
             id: '4',
             title: 'Blush & Blossom Beauty',
-            image: 'https://cdn.magicdecor.in/com/2024/10/21145259/Monochrome-Geometric-Mural-Wallpaper-M-710x448.jpg',
+            image: 'https://w7.pngwing.com/pngs/117/849/png-transparent-hair-salon-sale-banner-poster.png',
             services: ['Makeup Artistry', 'Eyelash Extensions', 'Skincare Consultations'],
         },
         {
             id: '5',
             title: 'Opulence Oasis Salon',
-            image: 'https://images.fresha.com/locations/location-profile-images/1246855/3931181/4534bff8-c5eb-41f3-be34-8b9d5cdf85a3-RitualRetreat-GB-England-Birmingham-KingsNorton-Fresha.jpg?class=width-small',
+           image: 'https://w7.pngwing.com/pngs/117/849/png-transparent-hair-salon-sale-banner-poster.png',
             services: ['Hair Spa Therapies', 'Color Correction', 'Personalized Styling Sessions'],
         },
     ];
@@ -70,59 +74,75 @@ const Dashboard = () => {
             title: "System Status",
             icon: SettingsIcon,
             value: "ON",
-            color1: "#E11D48",
+            color1: "#0BA3AD",
+            color2: "rgb(206, 237, 239)"
         },
         {
             id: 2,
             title: "Total Queue",
             icon: QueueIcon,
-            value: "0",
+            value: "40",
             color1: "#006FFD",
+            color2: "#CCDEFF"
         },
         {
             id: 3,
             title: "Next In Queue",
             icon: NextIcon,
-            value: "1",
+            value: "4",
             color1: "#EAA824",
+            color2: "#FBF1D3"
         },
         {
             id: 4,
-            title: "Barbers On Duty",
+            title: "On Duty Staff",
             icon: UserIcon,
-            value: "4",
+            value: "6",
             color1: "#00B090",
+            color2: "#CCE6E6"
         },
     ]
 
     const barbersData = [
         {
             id: 1,
-            image: "https://celebrity.edu/wp-content/uploads/2021/08/top-tips-to-be-a-successful-barber.jpg",
+            image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
             name: "Korbyn Larson",
             online: true,
             estTime: "15 mins",
-
         },
         {
             id: 2,
-            image: "https://media.istockphoto.com/id/1365608023/photo/shot-of-a-handsome-young-barber-standing-alone-in-his-salon.jpg?s=612x612&w=0&k=20&c=0l2Q3UVgXNnf3lbUvMM7hT18-AAnOloeoNMOHntomcw=",
+            image: "https://t3.ftcdn.net/jpg/02/43/12/34/360_F_243123463_zTooub557xEWABDLk0jJklDyLSGl2jrr.jpg",
             name: "Aden Schneider",
             online: true,
             estTime: "15 mins",
-
         },
         {
             id: 3,
-            image: "https://d3sc42dkmius1e.cloudfront.net/mb/2023/11/shutterstock_2267242719.jpg",
+            image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
+            name: "Parker Howard",
+            online: true,
+            estTime: "15 mins",
+        },
+        {
+            id: 4,
+            image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
+            name: "Paulina Arroyo",
+            online: true,
+            estTime: "15 mins",
+        },
+        {
+            id: 5,
+            image: "https://t3.ftcdn.net/jpg/02/43/12/34/360_F_243123463_zTooub557xEWABDLk0jJklDyLSGl2jrr.jpg",
             name: "Parker Howard",
             online: true,
             estTime: "15 mins",
 
         },
         {
-            id: 4,
-            image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQS00ttz25SjbZV0uIHzosHH25DVqhpNhtRXw&s",
+            id: 6,
+            image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
             name: "Paulina Arroyo",
             online: true,
             estTime: "15 mins",
@@ -138,21 +158,51 @@ const Dashboard = () => {
                 data={pageData}
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{
-                    gap: verticalScale(15)
+                    gap: verticalScale(0)
                 }}
                 renderItem={({ item }) => {
                     switch (item.title) {
                         case "hero": {
                             return (
                                 <>
-                                    {/* <CustomText style={{ fontFamily: "AirbnbCereal_W_Md"}}>Hello, {authenticatedUser?.name} 👋</CustomText> */}
-                                    <CustomSecondaryText style={{ fontFamily: "AirbnbCereal_W_Md", marginBottom: verticalScale(10), textAlign: "center" }}>Select an option to either join the current queue or schedule an appointment in advance.</CustomSecondaryText>
+                                    <CustomText style={{ fontFamily: "AirbnbCereal_W_Bd", fontSize: scale(16.03), marginBottom: verticalScale(10) }}>👋 Hello, {authenticatedUser?.name}</CustomText>
+                                    <View style={{
+                                        flexDirection: "row",
+                                        alignItems: "center",
+                                        justifyContent: "space-between",
+                                        position: "relative"
+                                    }}>
+                                        <CustomText style={{ width: scale(290.63), fontSize: scale(11.02) }}>Dear Customer, please click the button below to book your appointment easily and at your convenien...</CustomText>
+                                        <CustomText style={{
+                                            fontSize: scale(11.02),
+                                            color: Colors.modeColor.colorCode,
+                                            position: "absolute",
+                                            bottom: 0,
+                                            right: 0
+                                        }}>Read more</CustomText>
+                                    </View>
 
-                                    <View style={{ flexDirection: "row", gap: verticalScale(10), justifyContent: "space-evenly" }}>
-                                        <Pressable onPress={() => router.push("/queuelist")} style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode, shadowColor: Colors.modeColor.colorCode, marginBottom: verticalScale(10) }]}><CustomText style={{ color: "#fff" }}>Join Queue</CustomText></Pressable>
-                                        <Pressable onPress={() => router.push("/appointment")} 
-                                        style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode, 
-                                        shadowColor: Colors.modeColor.colorCode, marginBottom: verticalScale(10) }]}><CustomText style={{ color: "#fff" }}>Book Appt</CustomText></Pressable>
+                                    <View style={{
+                                        flexDirection: "row",
+                                        gap: verticalScale(10),
+                                        // justifyContent: "space-evenly",
+                                        paddingHorizontal: scale(25),
+                                        paddingVertical: verticalScale(16)
+                                    }}>
+                                        <Pressable onPress={() => router.push("/queuelist")} style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode, shadowColor: Colors.modeColor.colorCode, marginBottom: verticalScale(10) }]}>
+                                            <CustomText style={{ color: "#fff", fontSize: scale(11.69) }}>Join Queue</CustomText>
+                                        </Pressable>
+                                        <Pressable onPress={() => router.push("/appointment")}
+                                            style={[styles.btn, {
+                                                backgroundColor: Colors.modeColor.colorCode2,
+                                                shadowColor: Colors.modeColor.colorCode, marginBottom: verticalScale(10),
+                                                borderColor: Colors.modeColor.colorCode,
+                                                borderWidth: scale(1)
+                                            }]}><CustomText
+                                                style={{
+                                                    color: Colors.modeColor.colorCode,
+                                                    fontSize: scale(11.69),
+                                                }}>Book Appointment</CustomText></Pressable>
                                     </View>
                                 </>
 
@@ -186,7 +236,9 @@ const Dashboard = () => {
                                         overflow: "visible",
                                     }}
                                     contentContainerStyle={{
-                                        gap: scale(10)
+                                        flex: 1,
+                                        gap: scale(10),
+                                        justifyContent: "space-evenly"
                                     }}
                                     data={salonStatus}
                                     renderItem={({ item }) => <StatusCard item={item} />}
@@ -200,19 +252,46 @@ const Dashboard = () => {
 
                         case "barber": {
                             return (
-                                <FlatList
-                                    style={{
-                                        overflow: "visible",
-                                    }}
-                                    columnWrapperStyle={{
-                                        columnGap: scale(10),
-                                    }}
-                                    data={barbersData}
-                                    renderItem={({ item }) => <BarberCard item={item} />}
-                                    keyExtractor={item => item.id}
-                                    bounces={false}
-                                    numColumns={2}
-                                />
+                                <>
+                                    <View style={{
+                                        flexDirection: "row",
+                                        alignItems: "center",
+                                        justifyContent: "space-between",
+                                        paddingVertical: verticalScale(15)
+                                    }}>
+                                        <CustomText style={{
+                                            fontFamily: "AirbnbCereal_W_Bd",
+                                            fontSize: scale(16)
+                                        }}>Barbers On Duty <CustomText
+                                            style={{
+                                                fontFamily: "AirbnbCereal_W_Bd",
+                                                fontSize: scale(16),
+                                                color: Colors.modeColor.colorCode
+                                            }}
+                                        >6</CustomText></CustomText>
+                                        <CustomText
+                                            style={{
+                                                color: Colors.modeColor.colorCode,
+                                                fontSize: scale(12),
+                                                fontFamily: "AirbnbCereal_W_Md",
+                                            }}
+                                        >See more</CustomText>
+                                    </View>
+                                    <FlatList
+                                        key={3}
+                                        style={{
+                                            overflow: "visible",
+                                        }}
+                                        columnWrapperStyle={{
+                                            columnGap: scale(8),
+                                        }}
+                                        data={barbersData}
+                                        renderItem={({ item }) => <BarberCard item={item} />}
+                                        keyExtractor={item => item.id}
+                                        bounces={false}
+                                        numColumns={3}
+                                    />
+                                </>
                             )
                         }
                     }
@@ -234,9 +313,10 @@ const styles = StyleSheet.create({
     btn: {
         width: "45%",
         height: verticalScale(35),
-        borderRadius: scale(4),
+        borderRadius: scale(41),
         alignItems: "center",
         justifyContent: "center",
-        elevation: 4,
+        width: scale(131.91),
+        height: verticalScale(29.22)
     }
 })

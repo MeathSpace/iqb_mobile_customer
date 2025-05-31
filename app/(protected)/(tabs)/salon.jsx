@@ -1,108 +1,70 @@
-import { FlatList, Platform, Pressable, StyleSheet, Text, useColorScheme, View } from 'react-native'
-import React from 'react'
-import CustomTabView from '../../../components/CustomTabView'
-import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
-import AdvertiseCard from '../../../components/AdvertiseCard'
+import { Dimensions, FlatList, Platform, Pressable, ScrollView, StyleSheet, Text, useColorScheme, View } from 'react-native'
+import React, { useCallback, useRef, useState } from 'react'
+import { useFocusEffect, useTheme } from '@react-navigation/native';
+import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
+import { Image } from 'expo-image';
 import CustomText from '../../../components/CustomText'
-import BarberCard from '../../../components/BarberCard'
+import { Colors } from '../../../constants/Colors'
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
-import { useTheme } from '@react-navigation/native'
-import { ContactIcon, FacebookIcon, MapIcon } from '../../../constants/icons'
-import CustomSecondaryText from '../../../components/CustomSecondaryText'
-import ServiceCard from '../../../components/ServiceCard'
+import { ArrowDownIcon, ArrowUpIcon, ContactIcon, FacebookIcon, InstagramIcon, MapIcon } from '../../../constants/icons';
+import CustomSecondaryText from '../../../components/CustomSecondaryText';
+
+const SalonItem = ({ item }) => {
+
+    const { colors } = useTheme()
+
+    return (
+        <View style={[styles.cardWrapper, { backgroundColor: colors.background }]} >
+            <Image
+                style={styles.cardImage}
+                source={{ uri: item.image }}
+                contentFit="cover"
+                transition={300}
+            />
+        </View>
+    )
+};
+
 
 const salon = () => {
 
-    const colorScheme = useColorScheme();
-    const { colors } = useTheme()
-
-    const pageData = [
-        {
-            title: "salonImages",
-        },
-        {
-            title: "services",
-        },
-        {
-            title: "topStylist",
-        },
-        {
-            title: "Address",
-        },
-        {
-            title: "Links",
-        },
-    ]
-
-    const salonData = [
-        {
-            id: '1',
-            title: 'Glamour Grace Salon',
-            image: 'https://t4.ftcdn.net/jpg/01/81/61/29/360_F_181612908_uiOH8a4qWiNGuGS2Pg5dgwUIKJZ0C02w.jpg',
-            services: ['Haircuts', 'Coloring', 'Styling', 'Bridal Packages', 'Spa Treatments'],
-        },
-        {
-            id: '2',
-            title: 'Velvet & Ivy Spa',
-            image: 'https://img1.wsimg.com/isteam/ip/ecf2eb3f-f55b-4193-9e98-7c1b626bf779/Hero%20Picture.png',
-            services: ['Organic Facials', 'Aromatherapy Massages', 'Holistic Beauty Treatments'],
-        },
-        {
-            id: '3',
-            title: 'The Luxe Lotus',
-            image: 'https://cdn.magicdecor.in/com/2024/11/29145730/Beautiful-Seven-White-Horses-Art-Wallpaper-Mural-M-710x448.jpg',
-            services: ['Hair Extensions', 'Keratin Treatments', 'Luxury Manicures'],
-        },
-        {
-            id: '4',
-            title: 'Blush & Blossom Beauty',
-            image: 'https://cdn.magicdecor.in/com/2024/10/21145259/Monochrome-Geometric-Mural-Wallpaper-M-710x448.jpg',
-            services: ['Makeup Artistry', 'Eyelash Extensions', 'Skincare Consultations'],
-        },
-        {
-            id: '5',
-            title: 'Opulence Oasis Salon',
-            image: 'https://images.fresha.com/locations/location-profile-images/1246855/3931181/4534bff8-c5eb-41f3-be34-8b9d5cdf85a3-RitualRetreat-GB-England-Birmingham-KingsNorton-Fresha.jpg?class=width-small',
-            services: ['Hair Spa Therapies', 'Color Correction', 'Personalized Styling Sessions'],
-        },
-    ];
-
-    const barbersData = [
+    const advertisementData = [
         {
             id: 1,
-            image: "https://celebrity.edu/wp-content/uploads/2021/08/top-tips-to-be-a-successful-barber.jpg",
-            name: "Korbyn Larson",
-            online: true,
-            estTime: "15 mins",
-
+            image: "https://images.unsplash.com/photo-1600948836101-f9ffda59d250?q=80&w=2936&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
         },
         {
             id: 2,
-            image: "https://media.istockphoto.com/id/1365608023/photo/shot-of-a-handsome-young-barber-standing-alone-in-his-salon.jpg?s=612x612&w=0&k=20&c=0l2Q3UVgXNnf3lbUvMM7hT18-AAnOloeoNMOHntomcw=",
-            name: "Aden Schneider",
-            online: true,
-            estTime: "15 mins",
-
+            image: "https://img1.wsimg.com/isteam/ip/ecf2eb3f-f55b-4193-9e98-7c1b626bf779/Hero%20Picture.png"
         },
         {
             id: 3,
-            image: "https://d3sc42dkmius1e.cloudfront.net/mb/2023/11/shutterstock_2267242719.jpg",
-            name: "Parker Howard",
-            online: true,
-            estTime: "15 mins",
-
+            image: "https://cdn.wellnessta.com/vendors/5ff2c570edfc6c776857fe44/outlet/Hair-And-Care-Men's-Salon-202105121952400.webp"
         },
         {
             id: 4,
-            image: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQS00ttz25SjbZV0uIHzosHH25DVqhpNhtRXw&s",
-            name: "Paulina Arroyo",
-            online: true,
-            estTime: "15 mins",
-
+            image: "https://images.pexels.com/photos/705255/pexels-photo-705255.jpeg"
         },
-
+        {
+            id: 5,
+            image: "https://images.unsplash.com/photo-1600948836101-f9ffda59d250?q=80&w=2936&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+        },
     ]
 
+    const flatlistRef = useRef()
+    const [currentIndex, setCurrentIndex] = useState(0)
+
+    const scrollToIndex = () => {
+        flatlistRef.current.scrollToIndex({ animated: true, index: currentIndex })
+    }
+
+    useFocusEffect(
+        useCallback(() => {
+            if (flatlistRef?.current) {
+                scrollToIndex(currentIndex)
+            }
+        }, [currentIndex])
+    )
 
     const darkMapStyle = [
         {
@@ -159,221 +121,287 @@ const salon = () => {
         }
     ];
 
-    const servicesData = [
+    const colorScheme = useColorScheme();
+    const { colors } = useTheme()
+
+    const serviceData = [
         {
-            "id": "1",
-            "name": "Haircut",
-            "image": "https://plus.unsplash.com/premium_photo-1661290481306-4841edd49719?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8bWVuJTIwaGFpcmN1dHxlbnwwfHwwfHx8MA%3D%3D"
+            id: 1,
+            name: "Cutting",
+            iconImage: "https://res.cloudinary.com/dfrw3aqyp/image/upload/v1706703381/icons/Femalehaircut_1706703379391.png"
         },
         {
-            "id": "2",
-            "name": "Beard Trim",
-            "image": "https://www.milkmanaustralia.com/cdn/shop/articles/how-to-trim-beard-with-Scissors.jpg?v=1458647796"
+            id: 2,
+            name: "Trim",
+            iconImage: "https://res.cloudinary.com/dfrw3aqyp/image/upload/v1706703381/icons/hair%20dyes_1706703379402.jpg"
         },
         {
-            "id": "3",
-            "name": "Hair Coloring",
-            "image": "https://media.istockphoto.com/id/1305824214/photo/woman-dyeing-her-hair-at-the-salon.jpg?s=612x612&w=0&k=20&c=Jk2XQqn-5Tf1IeUPhmLYMP1Lq2nSlW_0udRXzc_KAJI="
+            id: 3,
+            name: "Styling",
+            iconImage: "https://res.cloudinary.com/dfrw3aqyp/image/upload/v1706703381/icons/Malehaircut_1706703379405.png"
         },
         {
-            "id": "4",
-            "name": "Facial",
-            "image": "https://media.istockphoto.com/id/1399469980/photo/close-up-portrait-of-anorganic-facial-mask-application-at-spa-salon-facial-treatment-skin.jpg?s=612x612&w=0&k=20&c=ZvZi_bdGLicsykUtlrHgQe70ftZzd_xPKvq2vzfOyV0="
+            id: 4,
+            name: "Hair Dye",
+            iconImage: "https://res.cloudinary.com/dfrw3aqyp/image/upload/v1706703380/icons/massage_1706703379406.jpg"
         },
         {
-            "id": "5",
-            "name": "Head Massage",
-            "image": "https://img.freepik.com/free-photo/closeup-man-getting-head-massage-relaxing-with-eyes-closed-spa_637285-1721.jpg"
-        }
+            id: 5,
+            name: "Grooming",
+            iconImage: "https://res.cloudinary.com/dfrw3aqyp/image/upload/v1706703380/icons/natural%20spa_1706703379406.jpg"
+        },
+
+        {
+            id: 6,
+            name: "Hair Treatment",
+            iconImage: "https://res.cloudinary.com/dfrw3aqyp/image/upload/v1706703381/icons/shave_1706703379407.png"
+        },
+        {
+            id: 7,
+            name: "Beard Shave",
+            iconImage: "https://res.cloudinary.com/dfrw3aqyp/image/upload/v1706703381/icons/spa_1706703379407.jpg"
+        },
+        {
+            id: 8,
+            name: "Cutting",
+            iconImage: "https://res.cloudinary.com/dfrw3aqyp/image/upload/v1706703381/icons/Femalehaircut_1706703379391.png"
+        },
+        {
+            id: 9,
+            name: "Trim",
+            iconImage: "https://res.cloudinary.com/dfrw3aqyp/image/upload/v1706703381/icons/hair%20dyes_1706703379402.jpg"
+        },
+        {
+            id: 10,
+            name: "Styling",
+            iconImage: "https://res.cloudinary.com/dfrw3aqyp/image/upload/v1706703381/icons/Malehaircut_1706703379405.png"
+        },
     ]
 
-
+    const [serviceDrop, setServiceDrop] = useState(false)
 
     return (
-        <CustomTabView>
-            <FlatList
-                data={pageData}
-                showsVerticalScrollIndicator={false}
-                contentContainerStyle={{
-                    gap: verticalScale(15)
-                }}
-                renderItem={({ item }) => {
-                    switch (item.title) {
-                        case "salonImages": {
+        <ScrollView
+            style={{ backgroundColor: "#efefef", flex: 1 }}
+            contentContainerStyle={{ paddingBottom: Platform.OS === "ios" ? verticalScale(60) : 0 }}
+            showsVerticalScrollIndicator={false}
+        >
+            <View>
+                <FlatList
+                    data={advertisementData}
+                    style={{
+                        position: "relative"
+                    }}
+                    renderItem={({ item }) => <SalonItem item={item} />}
+                    keyExtractor={item => item.id.toString()}
+                    ref={flatlistRef}
+                    horizontal={true}
+                    showsHorizontalScrollIndicator={false}
+                    // snapToAlignment="start"
+                    decelerationRate="fast"
+                    snapToInterval={scale(400)}
+                    onMomentumScrollEnd={(event) => {
+                        const offsetX = event.nativeEvent.contentOffset.x;
+                        const index = Math.round(offsetX / scale(400));
+                        setCurrentIndex(index);
+                    }}
+                    initialNumToRender={3}
+                    maxToRenderPerBatch={3}
+                />
+                <View
+                    style={{
+                        position: "absolute",
+                        bottom: verticalScale(10),
+                        right: scale(20),
+                        flexDirection: "row",
+                        gap: scale(8),
+                        alignItems: "center"
+                    }}
+                >
+                    {
+                        advertisementData.map((item, index) => {
                             return (
-                                <FlatList
+                                <Pressable
+                                    onPress={() => setCurrentIndex(index)}
+                                    key={index}
                                     style={{
-                                        overflow: "visible",
+                                        width: index === currentIndex ? scale(25) : scale(10),
+                                        height: scale(10),
+                                        borderRadius: scale(30),
+                                        backgroundColor: index === currentIndex ? Colors.modeColor.colorCode : "#fff"
                                     }}
-                                    contentContainerStyle={{
-                                        gap: scale(10),
-                                    }}
-                                    data={salonData}
-                                    renderItem={({ item }) => <AdvertiseCard item={item} />}
-                                    keyExtractor={item => item.id}
-                                    horizontal
-                                    showsHorizontalScrollIndicator={false}
-                                />
-
+                                ></Pressable>
                             )
-                        }
-
-                        case "services": {
-                            return (
-                                <>
-                                    <CustomText style={{ fontFamily: "AirbnbCereal_W_Md", marginBottom: verticalScale(10) }}>Services</CustomText>
-
-                                    <FlatList
-                                        style={{
-                                            overflow: "visible",
-                                        }}
-                                        // columnWrapperStyle={{
-                                        //     columnGap: scale(10),
-                                        // }}
-                                        contentContainerStyle={{
-                                            gap: scale(10),
-                                        }}
-                                        data={servicesData}
-                                        renderItem={({ item }) => <ServiceCard item={item} />}
-                                        keyExtractor={item => item.id}
-                                        bounces={false}
-                                        horizontal
-                                        showsHorizontalScrollIndicator={false}
-                                    // numColumns={1}
-                                    />
-                                </>
-                            )
-                        }
-
-                        case "topStylist": {
-                            return (
-                                <>
-                                    <CustomText style={{ fontFamily: "AirbnbCereal_W_Md", marginBottom: verticalScale(10) }}>Top Stylist</CustomText>
-
-                                    <FlatList
-                                        style={{
-                                            overflow: "visible",
-                                        }}
-                                        // columnWrapperStyle={{
-                                        //     columnGap: scale(10),
-                                        // }}
-                                        contentContainerStyle={{
-                                            gap: scale(10),
-                                        }}
-                                        data={barbersData}
-                                        renderItem={({ item }) => <BarberCard item={item} />}
-                                        keyExtractor={item => item.id}
-                                        bounces={false}
-                                        horizontal
-                                        showsHorizontalScrollIndicator={false}
-                                    // numColumns={1}
-                                    />
-                                </>
-                            )
-                        }
-
-                        case "Address": {
-                            return (
-                                <>
-                                    {/* <CustomText style={{ fontFamily: "AirbnbCereal_W_Md", marginBottom: verticalScale(10) }}>Address</CustomText> */}
-                                    <MapView
-                                        provider={PROVIDER_GOOGLE}
-                                        initialCamera={{
-                                            center: {
-                                                latitude: 37.78825,
-                                                longitude: -122.4324,
-                                            },
-                                            zoom: 15, // 0 (world view) to ~20 (very close)
-                                            pitch: 0,
-                                            heading: 0,
-                                        }}
-                                        scrollEnabled={false}
-                                        zoomEnabled={false}
-                                        rotateEnabled={false}
-                                        pitchEnabled={false}
-                                        style={[styles.map, { borderColor: colors.border, borderWidth: scale(1) }]}
-                                        customMapStyle={colorScheme === "dark" ? darkMapStyle : []}
-                                    />
-                                    <View style={[styles.addressContainer, { backgroundColor: colors.background }]}>
-                                        <CustomText style={styles.addressText}>
-                                            221B Baker Street, London, NW1 6XE, United Kingdom
-                                        </CustomText>
-                                        <View style={styles.iconContainer}>
-                                            <Pressable style={[styles.iconButton, { backgroundColor: colorScheme === "dark" ? "#0f0f0f" : "#f0f0f0" }]}>
-                                                <ContactIcon color={colors.text} />
-                                            </Pressable>
-                                            <Pressable style={[styles.iconButton, { backgroundColor: colorScheme === "dark" ? "#151718" : "#f0f0f0" }]}>
-                                                <MapIcon color={colors.text} />
-                                            </Pressable>
-                                        </View>
-                                    </View>
-                                </>
-                            )
-                        }
-
-                        case "Links": {
-                            return (
-                                <>
-                                    <CustomText
-                                        style={{
-                                            fontFamily: "AirbnbCereal_W_Bd",
-                                            fontSize: scale(16),
-                                            marginBottom: verticalScale(12),
-                                        }}
-                                    >
-                                        Follow us on
-                                    </CustomText>
-
-                                    <View
-                                        style={[
-                                            styles.linkContainer,
-                                            {
-                                                backgroundColor: colors.background,
-                                                borderRadius: scale(4),
-                                                padding: scale(14),
-                                                gap: verticalScale(10),
-                                            },
-                                        ]}
-                                    >
-                                        <View>
-                                            <CustomSecondaryText style={{ marginBottom: verticalScale(4), fontSize: scale(13) }}>
-                                                📧 Email:
-                                            </CustomSecondaryText>
-                                            <CustomText style={{ fontSize: scale(14), fontFamily: "AirbnbCereal_W_Md" }}>
-                                                iqueuebook@hotmail.com
-                                            </CustomText>
-                                        </View>
-
-                                        <View>
-                                            <CustomSecondaryText style={{ marginBottom: verticalScale(4), fontSize: scale(13) }}>
-                                                🔗 Social Links:
-                                            </CustomSecondaryText>
-                                            <View style={{ flexDirection: "row", alignItems: "center", gap: scale(10) }}>
-                                                <FacebookIcon color='#1877F2' />
-                                                {/* Add more icons if needed */}
-                                            </View>
-                                        </View>
-                                    </View>
-                                </>
-
-
-                            )
-                        }
+                        })
                     }
+
+                </View>
+            </View>
+
+            <View
+                style={{
+                    flex: 1,
+                    paddingVertical: verticalScale(20),
+                    paddingHorizontal: scale(10)
                 }}
-                keyExtractor={item => item.title}
-                ListFooterComponent={<View style={{ height: Platform.OS === "ios" ? verticalScale(60) : 0 }} />}
-            />
-        </CustomTabView>
+            >
+                <MapView
+                    provider={PROVIDER_GOOGLE}
+                    initialCamera={{
+                        center: {
+                            latitude: 37.78825,
+                            longitude: -122.4324,
+                        },
+                        zoom: 15, // 0 (world view) to ~20 (very close)
+                        pitch: 0,
+                        heading: 0,
+                    }}
+                    scrollEnabled={false}
+                    zoomEnabled={false}
+                    rotateEnabled={false}
+                    pitchEnabled={false}
+                    style={[styles.map, { borderColor: colors.border, borderWidth: scale(1) }]}
+                    customMapStyle={colorScheme === "dark" ? darkMapStyle : []}
+                />
+                <View style={[styles.addressContainer, { backgroundColor: colors.background }]}>
+                    <CustomText style={styles.addressText}>
+                        30 Elliot Rd, Selly Oak, Birmingham, UK, B29 4AQ
+                    </CustomText>
+                    <View style={styles.iconContainer}>
+                        <Pressable style={[styles.iconButton, { backgroundColor: colorScheme === "dark" ? "#0f0f0f" : "#f0f0f0" }]}>
+                            <ContactIcon color={colors.text} />
+                        </Pressable>
+                        <Pressable style={[styles.iconButton, { backgroundColor: colorScheme === "dark" ? "#151718" : "#f0f0f0" }]}>
+                            <MapIcon color={colors.text} />
+                        </Pressable>
+                    </View>
+                </View>
+
+                <View
+                    style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        height: verticalScale(42),
+                        paddingHorizontal: scale(20),
+                        borderBottomColor: "rgba(128, 117, 117, 0.6)",
+                        borderBottomWidth: scale(1)
+                    }}
+                >
+                    <CustomText
+                        style={{
+                            fontFamily: "AirbnbCereal_W_Bk"
+                        }}
+                    >Service</CustomText>
+                    <Pressable
+                        onPress={() => setServiceDrop((prev) => !prev)}
+                    >{serviceDrop ? (<ArrowDownIcon size={scale(14)} />) : (<ArrowUpIcon size={scale(14)} />)}</Pressable>
+                </View>
+
+                {serviceDrop && (
+                    <ScrollView contentContainerStyle={{ flexDirection: 'row', gap: scale(8), flexWrap: 'wrap' }}>
+                        {serviceData.map((item, index) => (
+                            <View
+                                style={{
+                                    width: '18%',
+                                    alignItems: 'center',
+                                    marginVertical: scale(8),
+                                }}
+                                key={index}
+                            >
+                                <Image
+                                    style={{
+                                        width: "100%",
+                                        height: scale(64),
+                                        borderRadius: scale(8),
+                                        borderWidth: scale(1),
+                                        borderColor: '#E8E8E8',
+                                        backgroundColor: "#fff"
+                                    }}
+                                    source={{
+                                        uri: item.iconImage
+                                    }}
+                                    contentFit="cover"
+                                    transition={300}
+                                />
+                                <CustomText
+                                    style={{
+                                        fontFamily: 'AirbnbCereal_W_Bk',
+                                        fontSize: scale(11),
+                                        textAlign: 'center',
+                                        marginTop: scale(4),
+                                    }}
+                                >
+                                    {item.name}
+                                </CustomText>
+                            </View>
+                        ))}
+                    </ScrollView>
+                )}
+
+
+                <CustomText
+                    style={{
+                        fontFamily: "AirbnbCereal_W_Bd",
+                        fontSize: scale(16),
+                        marginVertical: verticalScale(12),
+                    }}
+                >
+                    Follow us on
+                </CustomText>
+
+                <View
+                    style={[
+                        styles.linkContainer,
+                        {
+                            backgroundColor: colors.background,
+                            borderRadius: scale(4),
+                            padding: scale(14),
+                            gap: verticalScale(10),
+                        },
+                    ]}
+                >
+                    <View>
+                        <CustomSecondaryText style={{ marginBottom: verticalScale(4), fontSize: scale(13) }}>
+                            📧 Email:
+                        </CustomSecondaryText>
+                        <CustomText style={{ fontSize: scale(14), fontFamily: "AirbnbCereal_W_Md" }}>
+                            iqueuebook@hotmail.com
+                        </CustomText>
+                    </View>
+
+                    <View>
+                        <CustomSecondaryText style={{ marginBottom: verticalScale(4), fontSize: scale(13) }}>
+                            🔗 Social Links:
+                        </CustomSecondaryText>
+                        <View style={{ flexDirection: "row", alignItems: "center", gap: scale(10) }}>
+                            <FacebookIcon color='#1877F2' />
+                            <InstagramIcon color="#E1306C" />
+                        </View>
+                    </View>
+                </View>
+
+            </View>
+        </ScrollView>
     )
 }
 
 export default salon
 
 const styles = StyleSheet.create({
+    cardWrapper: {
+        height: verticalScale(280),
+        width: scale(400),
+    },
+    cardImage: {
+        height: "100%",
+        width: "100%",
+    },
+
+
     map: {
         width: "100%",
-        height: verticalScale(150),
+        height: verticalScale(128),
     },
 
     addressContainer: {
@@ -383,25 +411,27 @@ const styles = StyleSheet.create({
         padding: scale(10),
         borderRadius: scale(4),
         marginTop: verticalScale(10),
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 1 },
-        shadowOpacity: 0.1,
-        shadowRadius: scale(4),
-        elevation: 2,
+        // shadowColor: "#000",
+        // shadowOffset: { width: 0, height: 1 },
+        // shadowOpacity: 0.1,
+        // shadowRadius: scale(4),
+        // elevation: 2,
     },
     addressText: {
         flex: 1,
-        fontSize: scale(12),
-        fontFamily: "AirbnbCereal_W_Md"
+        fontSize: scale(14),
+        fontFamily: "AirbnbCereal_W_Bk"
     },
     iconContainer: {
         flexDirection: "row",
         gap: scale(10),
     },
     iconButton: {
-        padding: scale(6),
-        borderRadius: scale(6),
-        // backgroundColor: "#f0f0f0",
+        width: scale(30),
+        height: scale(30),
+        justifyContent: "center",
+        alignItems: "center",
+        borderRadius: scale(4)
     },
     linkContainer: {
         shadowColor: "#000",
@@ -410,5 +440,4 @@ const styles = StyleSheet.create({
         shadowRadius: 4,
         elevation: 2,
     }
-
 })

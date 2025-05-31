@@ -171,7 +171,7 @@ const QueueList = () => {
                             style={{
                                 height: verticalScale(30),
                                 width: scale(85),
-                                backgroundColor: "#000",
+                                backgroundColor: Colors.modeColor.colorCode,
                                 borderRadius: scale(8),
                                 justifyContent: "center",
                                 alignItems: "center"
@@ -197,10 +197,12 @@ const QueueList = () => {
                             style={{
                                 height: verticalScale(30),
                                 width: scale(85),
-                                backgroundColor: "#000",
+                                backgroundColor: Colors.modeColor.colorCode2,
                                 borderRadius: scale(8),
                                 justifyContent: "center",
-                                alignItems: "center"
+                                alignItems: "center",
+                                borderColor: Colors.modeColor.colorCode,
+                                borderWidth: scale(1)
                             }}
                             onPress={() => {
                                 setJoinModes({
@@ -216,7 +218,7 @@ const QueueList = () => {
                             style={{
                                 fontFamily: "AirbnbCereal_W_Bk",
                                 fontSize: scale(12),
-                                color: "#fff"
+                                color: Colors.modeColor.colorCode
                             }}
                         >Group Join</CustomText></Pressable>
                     </View>

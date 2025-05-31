@@ -1,5 +1,5 @@
 import React from 'react';
-import { AntDesign, Entypo, Feather, FontAwesome, FontAwesome5, Ionicons, MaterialCommunityIcons, MaterialIcons, Octicons } from '@expo/vector-icons';
+import { AntDesign, Entypo, Feather, FontAwesome, FontAwesome5, FontAwesome6, Ionicons, MaterialCommunityIcons, MaterialIcons, Octicons } from '@expo/vector-icons';
 import { moderateScale } from 'react-native-size-matters';
 
 export const CalendarIcon = ({ size = moderateScale(24), color = 'black', style }) => (
@@ -19,7 +19,7 @@ export const HomeIcon = ({ size = moderateScale(24), color = 'black', style }) =
 );
 
 export const QueueIcon = ({ size = moderateScale(24), color = 'black', style }) => (
-    <MaterialIcons name="add-to-queue" size={size} color={color} style={style} />
+    <MaterialIcons name="queue" size={size} color={color} style={style} />
 );
 
 export const SalonIcon = ({ size = moderateScale(24), color = 'black', style }) => (
@@ -58,6 +58,14 @@ export const ArrowLeftIcon = ({ size = moderateScale(24), color = 'black', style
     <AntDesign name="arrowleft" size={size} color={color} style={style} />
 );
 
+export const ArrowUpIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <AntDesign name="up" size={size} color={color} style={style} />
+);
+
+export const ArrowDownIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <AntDesign name="down" size={size} color={color} style={style} />
+);
+
 export const RightIcon = ({ size = moderateScale(24), color = 'black', style }) => (
     <AntDesign name="right" size={size} color={color} style={style} />
 );
@@ -67,7 +75,7 @@ export const SettingsIcon = ({ size = moderateScale(24), color = 'black', style 
 );
 
 export const NextIcon = ({ size = moderateScale(24), color = 'black', style }) => (
-    <MaterialIcons name="queue-play-next" size={size} color={color} style={style} />
+    <MaterialIcons name="person-add-alt-1" size={size} color={color} style={style} />
 );
 
 export const ContactIcon = ({ size = moderateScale(24), color = 'black', style }) => (
@@ -81,6 +89,11 @@ export const MapIcon = ({ size = moderateScale(24), color = 'black', style }) =>
 export const FacebookIcon = ({ size = moderateScale(24), color = 'black', style }) => (
     <FontAwesome name="facebook-square" size={size} color={color} style={style} />
 );
+
+export const InstagramIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <FontAwesome6 name="square-instagram" size={size} color={color} style={style} />
+);
+
 
 export const ClockIcon = ({ size = moderateScale(24), color = 'black', style }) => (
     <Feather name="clock" size={size} color={color} style={style} />
@@ -110,3 +123,9 @@ export const CameraIcon = ({ size = moderateScale(24), color = 'black', style })
 export const AddIcon = ({ size = moderateScale(24), color = 'black', style }) => (
     <Entypo name="plus" size={size} color={color} style={style} />
 );
+
+export const ProfileIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <Ionicons name="person-circle-outline" size={size} color={color} style={style} />
+);
+
+

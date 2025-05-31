@@ -53,12 +53,12 @@ const signin = () => {
         await AsyncStorage.setItem("LoggedInUser", JSON.stringify({
             name: "John Doe",
             email: "john@gmail.com",
-            imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUWPPJeKqMFiZdty1MgpNIUzPE0NYsz0Y0NA&s",
+            imageUrl: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
         }))
         setAuthenticatedUser({
             name: "John Doe",
             email: "john@gmail.com",
-            imageUrl: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRUWPPJeKqMFiZdty1MgpNIUzPE0NYsz0Y0NA&s",
+            imageUrl: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
         })
         setIsAuthenticated(true)
         router.push("/home")

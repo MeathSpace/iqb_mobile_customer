@@ -24,16 +24,9 @@ export default AdvertiseCard
 
 const styles = StyleSheet.create({
     cardWrapper: {
-        height: verticalScale(150),
-        width: scale(280),
+        height: verticalScale(108.53),
+        width: scale(300.56),
         borderRadius: moderateScale(8),
-        elevation: 4,
-
-        // iOS shadow
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
     },
     cardImage: {
         height: "100%",

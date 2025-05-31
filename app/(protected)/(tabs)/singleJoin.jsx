@@ -10,6 +10,7 @@ import { Image } from 'expo-image'
 import { useRouter } from 'expo-router'
 import CustomTabView from '../../../components/CustomTabView'
 import { useGlobal } from '../../../context/GlobalContext'
+import { Colors } from '../../../constants/Colors'
 
 const SingleJoin = () => {
 
@@ -93,7 +94,11 @@ const SingleJoin = () => {
     const { selectedBarber, setSelectedBarber, selectedBarberServices, setSelectedBarberServices, joinModes } = useGlobal();
 
     return (
-        <View style={{ flex: 1, padding: scale(10), backgroundColor: "#efefef", gap: verticalScale(20) }}>
+        <View style={{
+            flex: 1, paddingHorizontal: scale(10),
+            paddingBottom: Platform.OS === "ios" ? verticalScale(80) : verticalScale(5),
+            backgroundColor: "#efefef", gap: verticalScale(15)
+        }}>
             {
                 chooseService ? (
                     <ScrollView
@@ -119,8 +124,8 @@ const SingleJoin = () => {
                                 style={[
                                     styles.inputField,
                                     {
-                                        borderColor: colors.border,
-                                        backgroundColor: "rgba(232, 25, 72, 0.05)",
+                                        borderColor: Colors.modeColor.colorCode,
+                                        backgroundColor: Colors.modeColor.colorCode3,
                                         fontFamily: "AirbnbCereal_W_Bk",
                                         color: colors.text,
                                         paddingLeft: scale(45), // leave space for icon
@@ -180,8 +185,8 @@ const SingleJoin = () => {
                                 style={[
                                     styles.inputField,
                                     {
-                                        borderColor: colors.border,
-                                        backgroundColor: "rgba(232, 25, 72, 0.05)",
+                                        borderColor: Colors.modeColor.colorCode,
+                                        backgroundColor: Colors.modeColor.colorCode3,
                                         fontFamily: "AirbnbCereal_W_Bk",
                                         color: colors.text,
                                         paddingLeft: scale(45), // leave space for icon
@@ -234,7 +239,7 @@ const SingleJoin = () => {
                         borderRadius: scale(8),
                         justifyContent: "center",
                         alignItems: "center",
-                        backgroundColor: "#E81948"
+                        backgroundColor: Colors.modeColor.colorCode
                     }}>
                     <CustomText style={{ color: "#fff", fontSize: scale(12) }}>Next</CustomText>
                 </Pressable>
@@ -255,7 +260,8 @@ const styles = StyleSheet.create({
         backgroundColor: "#fff",
         borderRadius: scale(16),
         padding: scale(16),
-        elevation: 1
+        elevation: 1,
+        marginTop: verticalScale(5),
     },
     barberContainer: {
         width: "100%",
@@ -277,7 +283,7 @@ const styles = StyleSheet.create({
     inputField: {
         height: verticalScale(40),
         borderRadius: scale(8),
-        borderWidth: moderateScale(1.5),
+        borderWidth: scale(1),
         paddingHorizontal: scale(10),
         fontSize: scale(14),
     },
@@ -321,7 +327,7 @@ const ServiceItem = ({ item, index }) => (
                     height: scale(32),
                     width: scale(32),
                     borderRadius: scale(30),
-                    backgroundColor: '#E11D48',
+                    backgroundColor: Colors.modeColor.colorCode,
                     justifyContent: 'center',
                     alignItems: 'center',
                 }}

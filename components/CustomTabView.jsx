@@ -18,10 +18,10 @@ const CustomTabView = ({ style, children, scrollable = false, ...props }) => {
         authenticatedUser?.salonId ? (
             <ContentWrapper
                 style={{
-                    backgroundColor: colors.tabBackground,
+                    backgroundColor: colors.background,
                     flex: 1,
-                    paddingHorizontal: scale(20),
-                    paddingVertical: verticalScale(10),
+                    paddingHorizontal: scale(10),
+                    paddingTop: verticalScale(10),
                     ...style
                 }}
                 contentContainerStyle={scrollable ? { flexGrow: 1, } : {}}
