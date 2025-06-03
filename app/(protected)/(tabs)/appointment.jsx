@@ -154,7 +154,7 @@ const appointment = () => {
                 <Pressable
                   onPress={() => {
                     setJoinModes((prev) => ({ ...prev, appointment: true, appointmentType: "Book" }))
-                    router.push("/selectBarber")
+                    router.push("/appointmentCalender")
                   }}
                   style={{
                     backgroundColor: Colors.modeColor.colorCode,
@@ -200,64 +200,73 @@ const appointment = () => {
               <View style={{
                 flexGrow: 1
               }}>
-                <View style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                  minHeight: verticalScale(85),
-                  borderBottomColor: "#DDDDDD",
-                  borderBottomWidth: scale(1)
-                }}>
-
-                  <View style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: scale(10)
-                  }}>
-                    <View style={{
-                      position: "relative"
-                    }}>
-                      <Image
-                        style={{ height: scale(55), width: scale(55), borderRadius: moderateScale(30) }}
-                        source={{ uri: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg" }}
-                        // placeholder={{ blurhash }}
-                        contentFit="cover"
-                        transition={300}
-                      />
+                {
+                  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item, index) => {
+                    return (
                       <View
+                        key={index}
                         style={{
-                          position: "absolute",
-                          bottom: verticalScale(-5),
-                          right: scale(-15),
-                          height: verticalScale(12),
-                          paddingInline: scale(3),
-                          backgroundColor: "#fff",
-                          borderRadius: scale(20),
-                          borderColor: Colors.modeColor.colorCode,
-                          borderWidth: scale(1),
-                          justifyContent: "center",
-                          alignItems: "center"
-                        }}
-                      ><CustomText style={{ fontSize: scale(8), color: Colors.modeColor.colorCode}}>Upcoming</CustomText></View>
-                    </View>
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          minHeight: verticalScale(85),
+                          borderBottomColor: "#DDDDDD",
+                          borderBottomWidth: scale(1)
+                        }}>
+
+                        <View style={{
+                          flexDirection: "row",
+                          alignItems: "center",
+                          gap: scale(10)
+                        }}>
+                          <View style={{
+                            position: "relative"
+                          }}>
+                            <Image
+                              style={{ height: scale(55), width: scale(55), borderRadius: moderateScale(30) }}
+                              source={{ uri: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg" }}
+                              // placeholder={{ blurhash }}
+                              contentFit="cover"
+                              transition={300}
+                            />
+                            <View
+                              style={{
+                                position: "absolute",
+                                bottom: verticalScale(-5),
+                                right: scale(-15),
+                                height: verticalScale(12),
+                                paddingInline: scale(3),
+                                backgroundColor: "#fff",
+                                borderRadius: scale(20),
+                                borderColor: Colors.modeColor.colorCode,
+                                borderWidth: scale(1),
+                                justifyContent: "center",
+                                alignItems: "center"
+                              }}
+                            ><CustomText style={{ fontSize: scale(8), color: Colors.modeColor.colorCode }}>Upcoming</CustomText></View>
+                          </View>
 
 
-                    <View style={{ gap: verticalScale(8) }}>
-                      <CustomText style={{ fontSize: scale(14) }}>Michael</CustomText>
-                      <View style={{ paddingInline: scale(10) }}>
-                        <CustomText style={{ color: "#78716C", fontSize: scale(12), fontFamily: "AirbnbCereal_W_Bk" }}>. Hair Cut</CustomText>
-                        <CustomText style={{ color: "#78716C", fontSize: scale(12), fontFamily: "AirbnbCereal_W_Bk" }}>. Beard</CustomText>
+                          <View style={{ gap: verticalScale(8) }}>
+                            <CustomText style={{ fontSize: scale(14) }}>Michael</CustomText>
+                            <View style={{ paddingInline: scale(10) }}>
+                              <CustomText style={{ color: "#78716C", fontSize: scale(12), fontFamily: "AirbnbCereal_W_Bk" }}>. Hair Cut</CustomText>
+                              <CustomText style={{ color: "#78716C", fontSize: scale(12), fontFamily: "AirbnbCereal_W_Bk" }}>. Beard</CustomText>
+                            </View>
+                          </View>
+
+                        </View>
+
+                        <View style={{ gap: verticalScale(5) }}>
+                          <CustomText style={{ fontSize: scale(14) }}>31 Mar, 2025</CustomText>
+                          <CustomText style={{ color: "#78716C", fontSize: scale(12), fontFamily: "AirbnbCereal_W_Bk", marginLeft: "auto" }}>11:30 am</CustomText>
+                        </View>
+
                       </View>
-                    </View>
+                    )
+                  })
+                }
 
-                  </View>
-
-                  <View style={{ gap: verticalScale(5) }}>
-                    <CustomText style={{ fontSize: scale(14) }}>31 Mar, 2025</CustomText>
-                    <CustomText style={{ color: "#78716C", fontSize: scale(12), fontFamily: "AirbnbCereal_W_Bk", marginLeft: "auto" }}>11:30 am</CustomText>
-                  </View>
-
-                </View>
               </View>
             );
           default:

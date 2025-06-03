@@ -139,6 +139,20 @@ export default function TabLayout() {
                             href: null, // This hides the tab from the tab bar
                         }}
                     />
+
+                    <Tabs.Screen
+                        name="appointmentCalender" 
+                        options={{
+                            href: null, // This hides the tab from the tab bar
+                        }}
+                    />
+
+                    <Tabs.Screen
+                        name="joinConfirmation" 
+                        options={{
+                            href: null, // This hides the tab from the tab bar
+                        }}
+                    />
                 </Tabs>
             </SafeAreaView>
         </>

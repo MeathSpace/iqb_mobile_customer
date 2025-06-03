@@ -93,11 +93,13 @@ const SingleJoin = () => {
 
     const { selectedBarber, setSelectedBarber, selectedBarberServices, setSelectedBarberServices, joinModes } = useGlobal();
 
+    console.log("joinModes ", joinModes)
+
     return (
         <View style={{
             flex: 1, paddingHorizontal: scale(10),
             paddingBottom: Platform.OS === "ios" ? verticalScale(80) : verticalScale(5),
-            backgroundColor: "#efefef", gap: verticalScale(15)
+            backgroundColor: "#f7f7f7", gap: verticalScale(15)
         }}>
             {
                 chooseService ? (
@@ -232,7 +234,13 @@ const SingleJoin = () => {
             }}>
                 <CustomText>Clear All</CustomText>
                 <Pressable
-                    onPress={() => router.push("/joinConfirmation")}
+                    onPress={() => {
+                        if (joinModes.appointmentType === "Book" && joinModes.appointment) {
+                            router.push("/appointmentCalender")
+                        } else {
+                            router.push("/joinConfirmation")
+                        }
+                    }}
                     style={{
                         height: verticalScale(40),
                         width: scale(95),
@@ -244,7 +252,7 @@ const SingleJoin = () => {
                     <CustomText style={{ color: "#fff", fontSize: scale(12) }}>Next</CustomText>
                 </Pressable>
             </View>
-        </View>
+        </View >
     )
 }
 
