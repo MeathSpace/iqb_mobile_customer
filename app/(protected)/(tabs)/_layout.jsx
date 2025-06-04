@@ -141,14 +141,21 @@ export default function TabLayout() {
                     />
 
                     <Tabs.Screen
-                        name="appointmentCalender" 
+                        name="groupJoin" // Name of your hidden screen file (e.g., hidden-screen.js)
                         options={{
                             href: null, // This hides the tab from the tab bar
                         }}
                     />
 
                     <Tabs.Screen
-                        name="joinConfirmation" 
+                        name="appointmentCalender"
+                        options={{
+                            href: null, // This hides the tab from the tab bar
+                        }}
+                    />
+
+                    <Tabs.Screen
+                        name="joinConfirmation"
                         options={{
                             href: null, // This hides the tab from the tab bar
                         }}

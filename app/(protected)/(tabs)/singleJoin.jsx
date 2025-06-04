@@ -93,7 +93,7 @@ const SingleJoin = () => {
 
     const { selectedBarber, setSelectedBarber, selectedBarberServices, setSelectedBarberServices, joinModes } = useGlobal();
 
-    console.log("joinModes ", joinModes)
+    // console.log("joinModes ", joinModes)
 
     return (
         <View style={{
