@@ -95,6 +95,16 @@ const SingleJoin = () => {
 
     // console.log("joinModes ", joinModes)
 
+    const nextHandler = () => {
+        if (chooseService) {
+            serChooseService(false)
+            setChooseBarber(true)
+        } else {
+            router.push("/joinConfirmation")
+        }
+
+    }
+
     return (
         <View style={{
             flex: 1, paddingHorizontal: scale(10),
@@ -234,13 +244,14 @@ const SingleJoin = () => {
             }}>
                 <CustomText>Clear All</CustomText>
                 <Pressable
-                    onPress={() => {
-                        if (joinModes.appointmentType === "Book" && joinModes.appointment) {
-                            router.push("/appointmentCalender")
-                        } else {
-                            router.push("/joinConfirmation")
-                        }
-                    }}
+                    // onPress={() => {
+                    //     if (joinModes.appointmentType === "Book" && joinModes.appointment) {
+                    //         router.push("/appointmentCalender")
+                    //     } else {
+                    //         router.push("/joinConfirmation")
+                    //     }
+                    // }}
+                    onPress={nextHandler}
                     style={{
                         height: verticalScale(40),
                         width: scale(95),

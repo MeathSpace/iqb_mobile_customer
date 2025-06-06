@@ -200,6 +200,7 @@ const salon = () => {
                     // snapToAlignment="start"
                     decelerationRate="fast"
                     snapToInterval={scale(400)}
+                    pagingEnabled={true}
                     onMomentumScrollEnd={(event) => {
                         const offsetX = event.nativeEvent.contentOffset.x;
                         const index = Math.round(offsetX / scale(400));

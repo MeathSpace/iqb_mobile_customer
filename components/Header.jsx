@@ -50,7 +50,7 @@ import { useAuth } from '../context/AuthContext'
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import { useTheme } from '@react-navigation/native'
 import CustomText from './CustomText'
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 
 const Header = () => {
 
@@ -59,6 +59,8 @@ const Header = () => {
 
     const blurhash =
         'https://thumbs.dreamstime.com/b/default-profile-picture-avatar-photo-placeholder-vector-illustration-default-profile-picture-avatar-photo-placeholder-vector-189495158.jpg';
+
+    const router = useRouter()
 
     return (
         <View style={[styles.headerWrapper, { backgroundColor: colors.background, borderBottomColor: "#DDDDDD", borderBottomWidth: scale(1) }]}>
@@ -92,16 +94,36 @@ const Header = () => {
                 </Link>
             </View> */}
 
-            <Pressable
+            <View
                 style={{
-                    height: scale(44),
-                    width: scale(44),
-                    borderRadius: scale(30),
-                    backgroundColor: "#EAA82433",
-                    justifyContent: "center",
-                    alignItems: "center"
+                    position: "relative"
                 }}
-            ><NotificationIcon size={moderateScale(20)} color={colors.text} /></Pressable>
+            >
+                <Pressable
+                    style={{
+                        height: scale(40),
+                        width: scale(40),
+                        borderRadius: scale(30),
+                        backgroundColor: "#EAA82433",
+                        justifyContent: "center",
+                        alignItems: "center"
+                    }}
+                    onPress={() => router.push("/notification")}
+                >
+                    <NotificationIcon size={moderateScale(24)} color={colors.text} />
+                </Pressable>
+                <View
+                    style={{
+                        width: scale(7),
+                        height: scale(7),
+                        backgroundColor: "#D63163",
+                        borderRadius: scale(20),
+                        position: "absolute",
+                        top: scale(10),
+                        right: scale(12.5)
+                    }}
+                />
+            </View>
 
         </View>
     )

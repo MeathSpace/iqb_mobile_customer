@@ -1,4 +1,4 @@
-import { FlatList, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
+import { Alert, FlatList, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, View } from 'react-native'
 import React, { useState } from 'react'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
@@ -111,12 +111,34 @@ const groupJoin = () => {
         setAddedMember(false)
 
         if (addMember) {
+            if (!customerName) {
+                return Alert.alert(
+                    "Missing Name",
+                    "Please enter the customer name.",
+                    [{ text: "OK" }]
+                );
+            }
             serChooseService(true)
             setAddMember(false)
         } else if (chooseService) {
+            if (!selectedBarberServices.length) {
+                return Alert.alert(
+                    "Missing Name",
+                    "Please select service",
+                    [{ text: "OK" }]
+                );
+            }
             serChooseService(false)
             setChooseBarber(true)
-        } else {
+        } else if (chooseBarber) {
+            // selectedBarber
+            if (Object.keys(selectedBarber).length === 0) {
+                return Alert.alert(
+                    "Missing Name",
+                    "Please select barber",
+                    [{ text: "OK" }]
+                );
+            }
             setChooseBarber(false)
             const memberData = {
                 customerName: customerName,
@@ -128,11 +150,22 @@ const groupJoin = () => {
             setSelectedBarberServices([])
             setSelectedBarber({})
             setAddMember(true)
+        } else {
+            setAddMember(true)
         }
     }
 
 
-    console.log("setGroupJoinMembers ", groupJoinMembers)
+    // console.log("setGroupJoinMembers ", groupJoinMembers)
+
+    const removeJoinPressed = (item, index) => {
+        setGroupJoinMembers((prev) => {
+            const updatedArray = prev.filter((item, ind) => {
+                return ind !== index
+            })
+            return updatedArray
+        })
+    }
 
     return (
         <View style={{
@@ -181,7 +214,7 @@ const groupJoin = () => {
                                         fontSize: scale(12),
                                         color: "#fff"
                                     }}
-                                >2</CustomText></View>
+                                >{groupJoinMembers.length}</CustomText></View>
                             </View>
 
                             <Pressable
@@ -189,15 +222,20 @@ const groupJoin = () => {
                                     width: scale(90),
                                     height: verticalScale(40),
                                     borderRadius: scale(8),
-                                    backgroundColor: Colors.modeColor.colorCode,
+                                    backgroundColor: groupJoinMembers.length ? Colors.modeColor.colorCode : "#D7D7D7",
                                     justifyContent: "center",
                                     alignItems: "center"
+                                }}
+                                onPress={() => {
+                                    if (groupJoinMembers.length) {
+                                        router.push("/joinConfirmation")
+                                    }
                                 }}
                             >
                                 <CustomText
                                     style={{
                                         fontSize: scale(12),
-                                        color: "#fff"
+                                        color: groupJoinMembers.length ? "#fff" : "#999898"
                                     }}
                                 >Book</CustomText>
                             </Pressable>
@@ -206,17 +244,17 @@ const groupJoin = () => {
                         {
                             groupJoinMembers.map((item, index) => {
                                 return (
-                                    <View 
-                                    key={index}
-                                    style={{
-                                        paddingVertical: verticalScale(8),
-                                        paddingHorizontal: scale(16),
-                                        borderRadius: scale(8),
-                                        width: "100%",
-                                        elevation: 1,
-                                        backgroundColor: "#fff",
-                                        position: "relative"
-                                    }}>
+                                    <View
+                                        key={index}
+                                        style={{
+                                            paddingVertical: verticalScale(8),
+                                            paddingHorizontal: scale(16),
+                                            borderRadius: scale(8),
+                                            width: "100%",
+                                            elevation: 1,
+                                            backgroundColor: "#fff",
+                                            position: "relative"
+                                        }}>
                                         <View style={{ flexDirection: "row", alignItems: "center", gap: scale(10) }}>
                                             <Image
                                                 style={{ height: moderateScale(55), width: moderateScale(55), borderRadius: moderateScale(30) }}
@@ -230,7 +268,7 @@ const groupJoin = () => {
                                             }}>
                                                 <CustomText style={{
                                                     fontSize: scale(14)
-                                                }}>Michael</CustomText>
+                                                }}>{item.customerName}</CustomText>
                                                 <CustomText
                                                     style={{
                                                         fontSize: scale(14),
@@ -285,6 +323,7 @@ const groupJoin = () => {
                                         </View>
 
                                         <Pressable
+                                            onPress={() => removeJoinPressed(item, index)}
                                             style={{
                                                 position: "absolute",
                                                 right: scale(10),
@@ -302,98 +341,6 @@ const groupJoin = () => {
                             })
                         }
 
-
-
-                        {/* <View style={{
-                            paddingVertical: verticalScale(8),
-                            paddingHorizontal: scale(16),
-                            borderRadius: scale(8),
-                            width: "100%",
-                            elevation: 1,
-                            backgroundColor: "#fff",
-                            position: "relative"
-                        }}>
-                            <View style={{ flexDirection: "row", alignItems: "center", gap: scale(10) }}>
-                                <Image
-                                    style={{ height: moderateScale(55), width: moderateScale(55), borderRadius: moderateScale(30) }}
-                                    source={{ uri: "https://t3.ftcdn.net/jpg/02/43/12/34/360_F_243123463_zTooub557xEWABDLk0jJklDyLSGl2jrr.jpg" }}
-                                    // placeholder={{ blurhash }}
-                                    contentFit="cover"
-                                    transition={300}
-                                />
-                                <View style={{
-                                    gap: verticalScale(8)
-                                }}>
-                                    <CustomText style={{
-                                        fontSize: scale(14)
-                                    }}>Michael</CustomText>
-                                    <CustomText
-                                        style={{
-                                            fontSize: scale(14),
-                                            color: "rgba(0,0,0,0.6)"
-                                        }}
-                                    >Arghya Ghosh</CustomText>
-                                </View>
-                            </View>
-
-                            <View
-                                style={{
-                                    height: verticalScale(0.5),
-                                    backgroundColor: "#D2D2D2",
-                                    marginVertical: verticalScale(10)
-                                }}
-                            />
-
-                            <View style={{
-                                flexDirection: "row",
-                                alignItems: "center",
-                                justifyContent: "space-between"
-                            }}>
-                                <View>
-                                    <CustomSecondaryText
-                                        style={{
-                                            fontSize: scale(11)
-                                        }}
-                                    >. Hair cut</CustomSecondaryText>
-
-                                    <CustomSecondaryText
-                                        style={{
-                                            fontSize: scale(11)
-                                        }}
-                                    >. Hair wash</CustomSecondaryText>
-
-                                    <CustomSecondaryText
-                                        style={{
-                                            fontSize: scale(11)
-                                        }}
-                                    >. Beard</CustomSecondaryText>
-
-                                </View>
-
-                                <View style={{ gap: scale(6) }}>
-                                    <CustomText style={{ textAlign: "center", fontSize: moderateScale(20) }}>$ 30.00</CustomText>
-                                    <View style={{ flexDirection: "row", alignItems: "center", gap: scale(5), }}>
-                                        <ClockIcon size={moderateScale(16)} color={colors.secondaryText} />
-                                        <CustomSecondaryText style={{ fontSize: scale(12) }}>65 mins</CustomSecondaryText>
-
-                                    </View>
-                                </View>
-                            </View>
-
-                            <Pressable
-                                style={{
-                                    position: "absolute",
-                                    right: scale(10),
-                                    top: verticalScale(10),
-                                    backgroundColor: Colors.modeColor.colorCode,
-                                    borderRadius: scale(4),
-                                    height: verticalScale(24),
-                                    width: scale(56),
-                                    justifyContent: "center",
-                                    alignItems: "center"
-                                }}
-                            ><CustomText style={{ color: "#fff", fontSize: scale(12) }}>Remove</CustomText></Pressable>
-                        </View> */}
 
                     </ScrollView>
                 ) : (
@@ -442,7 +389,7 @@ const groupJoin = () => {
                                         fontSize: scale(12),
                                         color: "#fff"
                                     }}
-                                >2</CustomText></View>
+                                >{groupJoinMembers.length}</CustomText></View>
                             </View>
 
                             <Pressable
@@ -450,15 +397,20 @@ const groupJoin = () => {
                                     width: scale(90),
                                     height: verticalScale(40),
                                     borderRadius: scale(8),
-                                    backgroundColor: "#D7D7D7",
+                                    backgroundColor: groupJoinMembers.length ? Colors.modeColor.colorCode : "#D7D7D7",
                                     justifyContent: "center",
                                     alignItems: "center"
+                                }}
+                                onPress={() => {
+                                    if (groupJoinMembers.length) {
+                                        router.push("/joinConfirmation")
+                                    }
                                 }}
                             >
                                 <CustomText
                                     style={{
                                         fontSize: scale(12),
-                                        color: "#999898"
+                                        color: groupJoinMembers.length ? "#fff" : "#999898"
                                     }}
                                 >Book</CustomText>
                             </Pressable>
@@ -614,7 +566,7 @@ const groupJoin = () => {
 
                         {
                             [0, 1, 2, 3, 4, 5, 6].map((item, index) => {
-                                return <BarberItem item={item} index={index} selectedBarber={selectedBarber} setSelectedBarber={setSelectedBarber} />
+                                return <BarberItem key={item} item={item} index={index} selectedBarber={selectedBarber} setSelectedBarber={setSelectedBarber} />
                             })
                         }
                     </ScrollView>
@@ -646,30 +598,15 @@ const groupJoin = () => {
                 justifyContent: "space-between",
                 paddingTop: verticalScale(10)
             }}>
-                {/* <CustomText>Clear All</CustomText> */}
 
                 <Pressable
-                    // onPress={() => {
-                    //     if (joinModes.appointmentType === "Book" && joinModes.appointment) {
-                    //         router.push("/appointmentCalender")
-                    //     } else {
-                    //         router.push("/joinConfirmation")
-                    //     }
-                    // }}
                     onPress={() => {
-                        setCustomerName(false)
-                        setChooseBarber(false)
-                        serChooseService(false)
+                        setSelectedBarber({})
+                        setSelectedBarberServices([])
+                        setGroupJoinMembers([])
                     }}
-                    style={{
-                        height: verticalScale(40),
-                        width: scale(95),
-                        borderRadius: scale(8),
-                        justifyContent: "center",
-                        alignItems: "center",
-                        backgroundColor: Colors.modeColor.colorCode
-                    }}>
-                    <CustomText style={{ color: "#fff", fontSize: scale(12) }}>Back</CustomText>
+                >
+                    <CustomText>Clear All</CustomText>
                 </Pressable>
 
                 <Pressable
@@ -884,7 +821,6 @@ const ServiceItem = ({ item, index, setSelectedBarberServices, selectedBarberSer
 
 const BarberItem = ({ item, index, selectedBarber, setSelectedBarber }) => (
     <Pressable
-        key={index}
         onPress={() => setSelectedBarber({ ...item, index })}
         style={[styles.barberItem, {
             borderColor: selectedBarber.index === index ? Colors.modeColor.colorCode : "#D2D2D2",

@@ -664,6 +664,25 @@ const AppointmentCalendar = () => {
         setCurrentMonth((prev) => prev.clone().add(1, 'month'));
     };
 
+    const nextHandler = () => {
+        if (chooseService) {
+            serChooseService(false)
+            setChooseBarber(true)
+        } else if (chooseBarber) {
+            setChooseBarber(false)
+            setChooseDate(true)
+        } else if (chooseDate) {
+            setChooseDate(false)
+            setAppointmentNoteOpen(true)
+        } else {
+            serChooseService(false)
+            setChooseBarber(false)
+            setChooseDate(false)
+            setAppointmentNoteOpen(false)
+            router.push("/joinConfirmation")
+        }
+    }
+
     return (
         <View style={{
             flex: 1, paddingHorizontal: scale(10),
@@ -1036,14 +1055,15 @@ const AppointmentCalendar = () => {
             }}>
                 <CustomText>Clear All</CustomText>
                 <Pressable
-                    onPress={() => {
-                        // if (joinModes.appointmentType === "Book" && joinModes.appointment) {
-                        //     router.push("/appointmentCalender")
-                        // } else {
-                        //     router.push("/joinConfirmation")
-                        // }
-                        router.push("/joinConfirmation")
-                    }}
+                    // onPress={() => {
+                    //     // if (joinModes.appointmentType === "Book" && joinModes.appointment) {
+                    //     //     router.push("/appointmentCalender")
+                    //     // } else {
+                    //     //     router.push("/joinConfirmation")
+                    //     // }
+                    //     router.push("/joinConfirmation")
+                    // }}
+                    onPress={nextHandler}
                     style={{
                         height: verticalScale(40),
                         width: scale(95),

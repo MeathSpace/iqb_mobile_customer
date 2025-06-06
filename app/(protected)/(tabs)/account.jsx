@@ -166,27 +166,28 @@ const account = () => {
 
         <Pressable
           style={styles.profileItem}
-          onPress={() => {
-            Alert.alert(
-              "Confirm",
-              "Are you sure you want to disconnect?",
-              [
-                {
-                  text: "Cancel",
-                  style: "cancel",
-                },
-                {
-                  text: "Yes, Disconnect",
-                  onPress: async () => {
-                    setAuthenticatedUser({ ...authenticatedUser, salonId: "" })
-                    await AsyncStorage.setItem("LoggedInUser", JSON.stringify({ ...authenticatedUser, salonId: "" }))
-                  },
-                  style: "destructive",
-                },
-              ],
-              { cancelable: true }
-            );
-          }}
+          // onPress={() => {
+          //   Alert.alert(
+          //     "Confirm",
+          //     "Are you sure you want to disconnect?",
+          //     [
+          //       {
+          //         text: "Cancel",
+          //         style: "cancel",
+          //       },
+          //       {
+          //         text: "Yes, Disconnect",
+          //         onPress: async () => {
+          //           setAuthenticatedUser({ ...authenticatedUser, salonId: "" })
+          //           await AsyncStorage.setItem("LoggedInUser", JSON.stringify({ ...authenticatedUser, salonId: "" }))
+          //         },
+          //         style: "destructive",
+          //       },
+          //     ],
+          //     { cancelable: true }
+          //   );
+          // }}
+          onPress={() => router.push("/connectSalon")}
         >
           <View style={{
             flexDirection: "row",
@@ -199,7 +200,9 @@ const account = () => {
           <RightIcon size={scale(16)} />
         </Pressable>
 
-        <View style={styles.profileItem}>
+        <Pressable
+          onPress={() => router.push("/about")}
+          style={styles.profileItem}>
           <View style={{
             flexDirection: "row",
             alignItems: "center",
@@ -209,9 +212,11 @@ const account = () => {
             <CustomText style={{ fontFamily: "AirbnbCereal_W_Bk" }}>About</CustomText>
           </View>
           <RightIcon size={scale(16)} />
-        </View>
+        </Pressable>
 
-        <View style={styles.profileItem}>
+        <Pressable
+          onPress={() => router.push("/helpSupport")}
+          style={styles.profileItem}>
           <View style={{
             flexDirection: "row",
             alignItems: "center",
@@ -221,7 +226,7 @@ const account = () => {
             <CustomText style={{ fontFamily: "AirbnbCereal_W_Bk" }}>Help & Support</CustomText>
           </View>
           <RightIcon size={scale(16)} />
-        </View>
+        </Pressable>
 
         <View
           style={{

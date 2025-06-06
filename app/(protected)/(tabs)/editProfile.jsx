@@ -1,11 +1,11 @@
-import { Keyboard, Pressable, StyleSheet, Text, TextInput, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
+import { Keyboard, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
-import CustomScrollView from '../../components/CustomScrollView'
+import CustomScrollView from '../../../components/CustomScrollView'
 import { useTheme } from '@react-navigation/native'
 import { useRouter } from 'expo-router'
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { CalendarIcon, CameraIcon, RightIcon } from '../../constants/icons'
-import CustomText from '../../components/CustomText'
+import { ArrowLeftIcon, CalendarIcon, CameraIcon, RightIcon } from '../../../constants/icons'
+import CustomText from '../../../components/CustomText'
 import CountryPicker, { DARK_THEME }
     from 'react-native-country-picker-modal';
 import DropDownPicker from 'react-native-dropdown-picker'
@@ -13,10 +13,11 @@ import PhoneInput
     from 'react-native-phone-input';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import { Colors } from '@/constants/Colors';
-import { useAuth } from '../../context/AuthContext'
+import { useAuth } from '../../../context/AuthContext'
 import { Image } from 'expo-image'
-import CustomSecondaryText from '../../components/CustomSecondaryText'
+import CustomSecondaryText from '../../../components/CustomSecondaryText'
 import * as ImagePicker from 'expo-image-picker';
+import CustomTabView from '../../../components/CustomTabView'
 
 const editProfile = () => {
 
@@ -118,7 +119,18 @@ const editProfile = () => {
 
 
     return (
-        <CustomScrollView>
+        <ScrollView
+            style={{
+                flex: 1,
+            }}
+
+            contentContainerStyle={{
+                paddingTop: verticalScale(10),
+                paddingHorizontal: scale(10),
+                paddingBottom: Platform.OS === "ios" ? verticalScale(80) : verticalScale(10)
+            }}
+            showsVerticalScrollIndicator={false}
+        >
             <TouchableWithoutFeedback onPress={() => {
                 Keyboard.dismiss();
                 setGenderOpen(false);
@@ -127,19 +139,30 @@ const editProfile = () => {
                     style={{
                         flex: 1,
                         justifyContent: "space-around",
-                        gap: verticalScale(20)
+                        gap: verticalScale(15)
                     }}
                 >
+                    <Pressable
+                        onPress={() => router.push("/account")}
+                    ><ArrowLeftIcon size={scale(18)} /></Pressable>
 
-                    <View style={{ flexDirection: "row", alignItems: "center", gap: moderateScale(10) }}>
+                    <View
+                        style={[styles.profileCard, { backgroundColor: Colors.modeColor.colorCode3, marginBottom: verticalScale(10) }]}>
+                        {/* <View style={{ flexDirection: "row", alignItems: "center", gap: moderateScale(10) }}> */}
+                        <View style={{ gap: moderateScale(5) }}>
+                            <CustomText style={{ fontFamily: "AirbnbCereal_W_Bd", fontSize: scale(22) }}>{authenticatedUser?.name}</CustomText>
+                            <CustomText style={{ fontSize: scale(14), color: "#222222" }}>{authenticatedUser?.email}</CustomText>
+                        </View>
+
                         <View
                             style={{
                                 position: "relative"
                             }}
                         >
                             <Image
-                                style={{ height: moderateScale(65), width: moderateScale(65), borderRadius: moderateScale(40) }}
+                                style={{ height: scale(90), width: scale(90), borderRadius: scale(10) }}
                                 source={{ uri: authenticatedUser?.imageUrl }}
+                                // placeholder={{ blurhash }}
                                 contentFit="cover"
                                 transition={300}
                             />
@@ -149,9 +172,9 @@ const editProfile = () => {
                                     position: "absolute",
                                     bottom: moderateScale(-8),
                                     right: moderateScale(-6),
-                                    backgroundColor: Colors.modeColor.colorCode,
-                                    borderWidth: moderateScale(2),
-                                    borderColor: colors.border,
+                                    backgroundColor: "#E11D48",
+                                    // borderWidth: moderateScale(2),
+                                    // borderColor: colors.border,
                                     padding: scale(6),
                                     borderRadius: moderateScale(20),
                                 }}
@@ -159,23 +182,19 @@ const editProfile = () => {
                                 <CameraIcon color={"#fff"} size={moderateScale(16)} />
                             </Pressable>
                         </View>
-
-                        <View style={{ gap: moderateScale(5) }}>
-                            <CustomText>{authenticatedUser?.name}</CustomText>
-                            <CustomSecondaryText>{authenticatedUser?.email}</CustomSecondaryText>
-                            <CustomText style={{ fontSize: moderateScale(14), color: "#00B090" }}>Verified</CustomText>
-                        </View>
+                        {/* </View> */}
+                        {/* <RightIcon size={moderateScale(20)} color={colors.text} /> */}
                     </View>
 
 
                     <View style={styles.inputWrapper}>
-                        <CustomText>First Name</CustomText>
+                        <CustomText style={{ fontSize: scale(12) }}>First Name</CustomText>
 
                         <TextInput
                             editable
                             placeholder="Enter your first name"
                             placeholderTextColor={colors.secondaryText}
-                            style={[false ? styles.inputFielderror : styles.inputField, { borderColor: colors.border, backgroundColor: colors.card, fontFamily: "AirbnbCereal_W_Bk", color: colors.text }]}
+                            style={[false ? styles.inputFielderror : styles.inputField, { borderColor: Colors.modeColor.colorCode, backgroundColor: Colors.modeColor.colorCode3, fontFamily: "AirbnbCereal_W_Bk", color: colors.text }]}
                             onChangeText={(text) => {
                                 setFirstNameError("")
                                 setFirstName(text)
@@ -185,13 +204,13 @@ const editProfile = () => {
                     </View>
 
                     <View style={styles.inputWrapper}>
-                        <CustomText>Last Name</CustomText>
+                        <CustomText style={{ fontSize: scale(12) }}>Last Name</CustomText>
 
                         <TextInput
                             editable
                             placeholder="Enter your last name"
                             placeholderTextColor={colors.secondaryText}
-                            style={[false ? styles.inputFielderror : styles.inputField, { borderColor: colors.border, backgroundColor: colors.card, fontFamily: "AirbnbCereal_W_Bk", color: colors.text }]}
+                            style={[false ? styles.inputFielderror : styles.inputField, { borderColor: Colors.modeColor.colorCode, backgroundColor: Colors.modeColor.colorCode3, fontFamily: "AirbnbCereal_W_Bk", color: colors.text }]}
                             onChangeText={(text) => {
                                 setLastNameError("")
                                 setLastName(text)
@@ -201,7 +220,8 @@ const editProfile = () => {
                     </View>
 
                     <View style={styles.inputWrapper}>
-                        <CustomText>Select Gender</CustomText>
+                        <CustomText style={{ fontSize: scale(12) }}>Select Gender</CustomText>
+
                         <DropDownPicker
                             listMode="SCROLLVIEW"
                             // dropDownMaxHeight={240}
@@ -213,21 +233,21 @@ const editProfile = () => {
                             setItems={setGenderItems}
                             itemSeparator={true}
                             itemSeparatorStyle={{
-                                backgroundColor: colors.border
+                                backgroundColor: Colors.modeColor.colorCode
                             }}
                             placeholder="Select a gender"
                             style={[
                                 styles.dropdown,
                                 {
-                                    borderColor: colors.border,
-                                    backgroundColor: colors.card,
+                                    borderColor: Colors.modeColor.colorCode,
+                                    backgroundColor: Colors.modeColor.colorCode3,
                                 },
                             ]}
                             dropDownContainerStyle={[
                                 styles.dropdownContainer,
                                 {
-                                    borderColor: colors.border,
-                                    backgroundColor: colors.card,
+                                    borderColor: Colors.modeColor.colorCode,
+                                    backgroundColor: Colors.modeColor.colorCode3,
                                 }
                             ]}
                             textStyle={{
@@ -251,7 +271,7 @@ const editProfile = () => {
 
 
                     <View style={styles.inputWrapper}>
-                        <CustomText>Mobile Number</CustomText>
+                        <CustomText style={{ fontSize: scale(12) }}>Mobile Number</CustomText>
                         <PhoneInput
                             ref={phoneRef}
                             initialCountry={selectedCountry.cca2.toLowerCase()}
@@ -259,7 +279,7 @@ const editProfile = () => {
                             onChangePhoneNumber={(number) => phoneNumberHandler(number)}
                             onPressFlag={toggleCountryPicker}
                             textStyle={{ color: colors.text, fontSize: moderateScale(14) }}
-                            style={[styles.inputField, { borderColor: colors.border, backgroundColor: colors.card, fontFamily: "AirbnbCereal_W_Bk", color: colors.text }]}
+                            style={[styles.inputField, { borderColor: Colors.modeColor.colorCode, backgroundColor: Colors.modeColor.colorCode3, fontFamily: "AirbnbCereal_W_Bk", color: colors.text }]}
                         />
 
                         {countryPickerVisible && (
@@ -283,14 +303,14 @@ const editProfile = () => {
                     </View>
 
                     <View style={[styles.inputWrapper, { position: "relative" }]}>
-                        <CustomText>Date of Birth</CustomText>
+                        <CustomText style={{ fontSize: scale(12) }}>Date of Birth</CustomText>
 
                         <Pressable
                             style={[
                                 firstNameError ? styles.inputFielderror : styles.inputDateField,
                                 {
-                                    borderColor: colors.border,
-                                    backgroundColor: colors.card,
+                                    borderColor: Colors.modeColor.colorCode,
+                                    backgroundColor: Colors.modeColor.colorCode3,
                                     fontFamily: "AirbnbCereal_W_Bk",
                                     color: colors.text,
                                     justifyContent: "center", // Ensures CalendarIcon stays aligned
@@ -302,7 +322,7 @@ const editProfile = () => {
                         </Pressable>
 
                         {calenderModal && (
-                            <View style={{ position: "absolute", top: verticalScale(34), left: 0, zIndex: 100 }}>
+                            <View style={{ position: "absolute", top: verticalScale(22), left: 0, zIndex: 100 }}>
                                 <DateTimePicker
                                     mode="date"
                                     maximumDate={new Date()}
@@ -318,11 +338,11 @@ const editProfile = () => {
                     <Pressable
                         onPress={() => saveHandler()}
                         style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode }]}>
-                        <CustomText style={{ color: "#fff" }}>Save</CustomText>
+                        <CustomText style={{ color: "#fff" }}>Edit & Save</CustomText>
                     </Pressable>
                 </View>
             </TouchableWithoutFeedback>
-        </CustomScrollView>
+        </ScrollView>
     )
 }
 
@@ -334,17 +354,12 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "space-between",
         gap: moderateScale(10),
-        paddingVertical: verticalScale(10),
-        paddingHorizontal: scale(15),
+        // paddingVertical: verticalScale(10),
+        height: verticalScale(138),
+        padding: scale(24),
         borderRadius: scale(4),
-        marginVertical: verticalScale(0),
-        borderWidth: scale(1),
-        elevation: 3,
-
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
+        // marginVertical: verticalScale(20),
+        // borderWidth: scale(1),
     },
     profile_item: {
         flexDirection: "row",
@@ -358,19 +373,19 @@ const styles = StyleSheet.create({
     },
 
     inputWrapper: {
-        gap: verticalScale(10),
+        gap: verticalScale(4),
     },
 
     inputField: {
-        height: verticalScale(40),
-        borderRadius: scale(4),
+        height: verticalScale(35),
+        borderRadius: scale(8),
         borderWidth: moderateScale(1.5),
         paddingHorizontal: scale(10),
-        fontSize: moderateScale(14)
+        fontSize: scale(11),
     },
     inputDateField: {
-        height: verticalScale(40),
-        borderRadius: scale(4),
+        height: verticalScale(35),
+        borderRadius: scale(8),
         borderWidth: moderateScale(1.5),
         paddingHorizontal: scale(10),
         fontSize: moderateScale(14),
@@ -379,15 +394,15 @@ const styles = StyleSheet.create({
     dateIcon: {
         position: "absolute",
         right: scale(5),
-        top: verticalScale(18),
+        top: verticalScale(16),
         transform: [{ translateY: -(moderateScale(24) / moderateScale(2)) }]
     },
     inputFielderror: {
 
     },
     dropdown: {
-        height: verticalScale(40),
-        borderRadius: scale(4),
+        height: verticalScale(35),
+        borderRadius: scale(8),
         borderWidth: moderateScale(1.5),
         paddingHorizontal: scale(10),
         zIndex: 100

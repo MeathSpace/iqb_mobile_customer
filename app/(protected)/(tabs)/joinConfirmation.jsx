@@ -84,6 +84,9 @@ const joinConfirmation = () => {
 
   // console.log("joinModes ", joinModes)
 
+  console.log("selectedBarber ", selectedBarber)
+  console.log("selectedBarberServices ", selectedBarberServices)
+
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}

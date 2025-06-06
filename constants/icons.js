@@ -132,4 +132,30 @@ export const ProfileIcon = ({ size = moderateScale(24), color = 'black', style }
     <Ionicons name="person-circle-outline" size={size} color={color} style={style} />
 );
 
+export const ErrorIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <MaterialIcons name="error" size={size} color={color} style={style} />
+);
 
+export const GlobalIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <Feather name="globe" size={size} color={color} style={style} />
+);
+
+export const TermServiceIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <MaterialCommunityIcons name="clipboard-edit-outline" size={size} color={color} style={style} />
+);
+
+export const PolicyIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <MaterialIcons name="policy" size={size} color={color} style={style} />
+);
+
+export const CertificateIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <MaterialCommunityIcons name="certificate-outline" size={size} color={color} style={style} />
+);
+
+export const ExternalLinkIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <Octicons name="link-external" size={size} color={color} style={style} />
+);
+
+export const CarIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <MaterialCommunityIcons name="car-hatchback" size={24} color="black" />
+);

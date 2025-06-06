@@ -160,6 +160,55 @@ export default function TabLayout() {
                             href: null, // This hides the tab from the tab bar
                         }}
                     />
+
+                    <Tabs.Screen
+                        name="about"
+                        options={{
+                            href: null, // This hides the tab from the tab bar
+                        }}
+                    />
+
+
+                    <Tabs.Screen
+                        name="termService"
+                        options={{
+                            href: null, // This hides the tab from the tab bar
+                        }}
+                    />
+
+                    <Tabs.Screen
+                        name="privacyPolicy"
+                        options={{
+                            href: null, // This hides the tab from the tab bar
+                        }}
+                    />
+
+                    <Tabs.Screen
+                        name="licenses"
+                        options={{
+                            href: null, // This hides the tab from the tab bar
+                        }}
+                    />
+
+                    <Tabs.Screen
+                        name="myFavourites"
+                        options={{
+                            href: null, // This hides the tab from the tab bar
+                        }} />
+
+                    <Tabs.Screen
+                        name="editProfile"
+                        options={{
+                            href: null, // This hides the tab from the tab bar
+                        }} />
+
+                    <Tabs.Screen
+                        name="notification"
+                        options={{
+                            href: null, // This hides the tab from the tab bar
+                        }} />
+
+
                 </Tabs>
             </SafeAreaView>
         </>
