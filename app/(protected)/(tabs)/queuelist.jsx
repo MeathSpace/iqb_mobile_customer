@@ -184,7 +184,8 @@ const QueueList = () => {
                                 })
                                 setSelectedBarber({})
                                 setSelectedBarberServices([])
-                                router.push("/singleJoin")
+                                // router.push("/singleJoin")
+                                router.push("/demo2")
                             }}
                         ><CustomText
                             style={{
@@ -212,7 +213,8 @@ const QueueList = () => {
                                 })
                                 setSelectedBarber({})
                                 setSelectedBarberServices([])
-                                router.push("/groupJoin")
+                                // router.push("/groupJoin")
+                                router.push("/demo3")
                             }}
                         ><CustomText
                             style={{

@@ -157,5 +157,25 @@ export const ExternalLinkIcon = ({ size = moderateScale(24), color = 'black', st
 );
 
 export const CarIcon = ({ size = moderateScale(24), color = 'black', style }) => (
-    <MaterialCommunityIcons name="car-hatchback" size={24} color="black" />
+    <MaterialCommunityIcons name="car-hatchback" size={size} color={color} style={style} />
+);
+
+export const CuttingIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <Feather name="scissors" size={size} color={color} style={style} />
+);
+
+export const TrimIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <MaterialIcons name="electrical-services" size={size} color={color} style={style} />
+);
+
+export const StylingIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <MaterialCommunityIcons name="hair-dryer-outline" size={size} color={color} style={style} />
+);
+
+export const DyeIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <Entypo name="flat-brush" size={size} color={color} style={style} />
+);
+
+export const MenuIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <MaterialIcons name="dashboard-customize" size={size} color={color} style={style} />
 );

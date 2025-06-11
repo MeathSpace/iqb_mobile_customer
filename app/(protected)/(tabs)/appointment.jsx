@@ -154,7 +154,8 @@ const appointment = () => {
                 <Pressable
                   onPress={() => {
                     setJoinModes((prev) => ({ ...prev, appointment: true, appointmentType: "Book" }))
-                    router.push("/appointmentCalender")
+                    // router.push("/appointmentCalender")
+                    router.push("/demo")
                   }}
                   style={{
                     backgroundColor: Colors.modeColor.colorCode,

@@ -1,4 +1,4 @@
-import { FlatList, Platform, Pressable, StyleSheet, Text, View } from 'react-native'
+import { FlatList, Platform, Pressable, Image as ReactNativeImage, StyleSheet, Text, View } from 'react-native'
 import React from 'react'
 import CustomTabView from './CustomTabView'
 import CustomText from './CustomText'
@@ -7,11 +7,12 @@ import CustomSecondaryText from './CustomSecondaryText'
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import { Colors } from '../constants/Colors'
 import AdvertiseCard from './AdvertiseCard'
-import { NextIcon, QueueIcon, SettingsIcon, UserIcon } from '../constants/icons'
+import { ClockIcon, CuttingIcon, DyeIcon, MenuIcon, NextIcon, QueueIcon, SettingsIcon, StylingIcon, TrimIcon, UserIcon } from '../constants/icons'
 import StatusCard from './StatusCard'
 import BarberCard from './BarberCard'
 import { Link, router } from 'expo-router'
 import { Dimensions } from 'react-native';
+import { Image } from 'expo-image'
 
 // const screenWidth = Dimensions.get('window').width;
 // console.log('Screen Width:', screenWidth);
@@ -31,7 +32,13 @@ const Dashboard = () => {
             title: "status",
         },
         {
+            title: "serviceCategory",
+        },
+        {
             title: "barber",
+        },
+        {
+            title: "services",
         }
     ]
 
@@ -63,7 +70,7 @@ const Dashboard = () => {
         {
             id: '5',
             title: 'Opulence Oasis Salon',
-           image: 'https://w7.pngwing.com/pngs/117/849/png-transparent-hair-salon-sale-banner-poster.png',
+            image: 'https://w7.pngwing.com/pngs/117/849/png-transparent-hair-salon-sale-banner-poster.png',
             services: ['Hair Spa Therapies', 'Color Correction', 'Personalized Styling Sessions'],
         },
     ];
@@ -151,6 +158,118 @@ const Dashboard = () => {
 
     ]
 
+    const serviceCategories = [
+        {
+            name: "Cutting",
+            icon: <CuttingIcon color={Colors.modeColor.colorCode} />,
+            services: [
+                {
+                    name: "Hair Cut",
+                    vip: true,
+                    est: 15,
+                    price: 49,
+                    serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
+                    image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
+                },
+                {
+                    name: "Hair Cut",
+                    vip: true,
+                    est: 15,
+                    price: 49,
+                    serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
+                    image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
+                },
+            ]
+        },
+        {
+            name: "Trim",
+            icon: <TrimIcon color={Colors.modeColor.colorCode} />,
+            services: [
+                {
+                    name: "Hair Cut",
+                    vip: true,
+                    est: 15,
+                    price: 49,
+                    serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
+                    image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
+                },
+                {
+                    name: "Hair Cut",
+                    vip: true,
+                    est: 15,
+                    price: 49,
+                    serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
+                    image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
+                },
+            ]
+        },
+        {
+            name: "Styling",
+            icon: <StylingIcon color={Colors.modeColor.colorCode} />,
+            services: [
+                {
+                    name: "Hair Cut",
+                    vip: true,
+                    est: 15,
+                    price: 49,
+                    serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
+                    image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
+                },
+                {
+                    name: "Hair Cut",
+                    vip: true,
+                    est: 15,
+                    price: 49,
+                    serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
+                    image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
+                },
+            ]
+        },
+        {
+            name: "Hair Dye",
+            icon: <DyeIcon color={Colors.modeColor.colorCode} />,
+            services: [
+                {
+                    name: "Hair Cut",
+                    vip: true,
+                    est: 15,
+                    price: 49,
+                    serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
+                    image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
+                },
+                {
+                    name: "Hair Cut",
+                    vip: true,
+                    est: 15,
+                    price: 49,
+                    serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
+                    image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
+                },
+            ]
+        },
+        {
+            name: "More",
+            icon: <MenuIcon color={Colors.modeColor.colorCode} />,
+            services: [
+                {
+                    name: "Hair Cut",
+                    vip: true,
+                    est: 15,
+                    price: 49,
+                    serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
+                    image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
+                },
+                {
+                    name: "Hair Cut",
+                    vip: true,
+                    est: 15,
+                    price: 49,
+                    serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
+                    image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
+                },
+            ]
+        },
+    ]
 
     return (
         <CustomTabView>
@@ -250,6 +369,63 @@ const Dashboard = () => {
                             )
                         }
 
+                        case "serviceCategory": {
+                            return (
+                                <View>
+                                    <CustomText
+                                        style={{
+                                            lineHeight: verticalScale(50),
+                                            fontFamily: "AirbnbCereal_W_Bd"
+                                        }}
+                                    >Our Services</CustomText>
+                                    <View
+                                        style={{
+                                            height: verticalScale(97),
+                                            flexDirection: "row",
+                                            alignItems: "center",
+                                            justifyContent: "space-between"
+                                        }}
+                                    >
+
+                                        {
+                                            serviceCategories.map((item, index) => {
+                                                return (
+                                                    <View
+                                                        key={index}
+                                                        style={{
+                                                            gap: verticalScale(7)
+                                                        }}
+                                                    >
+                                                        <View
+                                                            style={{
+                                                                height: scale(48),
+                                                                width: scale(48),
+                                                                borderWidth: scale(1),
+                                                                borderColor: "rgba(0,0,0,0.4)",
+                                                                borderRadius: scale(50),
+                                                                justifyContent: "center",
+                                                                alignItems: "center"
+                                                            }}
+                                                        >
+                                                            {item.icon}
+                                                        </View>
+                                                        <CustomText
+                                                            style={{
+                                                                fontFamily: "AirbnbCereal_W_Bk",
+                                                                fontSize: scale(12),
+                                                                textAlign: "center"
+                                                            }}
+                                                        >{item.name}</CustomText>
+                                                    </View>
+                                                )
+                                            })
+                                        }
+
+                                    </View>
+                                </View>
+                            )
+                        }
+
                         case "barber": {
                             return (
                                 <>
@@ -294,13 +470,119 @@ const Dashboard = () => {
                                 </>
                             )
                         }
+
+                        case "services": {
+                            return (
+                                <>
+                                    {serviceCategories.map((item, index) => {
+                                        return (
+                                            <React.Fragment key={index}>
+                                                <View
+                                                    style={{
+                                                        height: verticalScale(38),
+                                                        flexDirection: "row",
+                                                        alignItems: "center",
+                                                        gap: scale(10),
+                                                    }}
+                                                >
+                                                    <CustomText
+                                                        style={{
+                                                            fontFamily: "AirbnbCereal_W_Bd",
+                                                            fontSize: scale(12),
+                                                        }}
+                                                    >
+                                                        {item.name}
+                                                    </CustomText>
+                                                    <View
+                                                        style={{
+                                                            width: "100%",
+                                                            height: verticalScale(1),
+                                                            backgroundColor: Colors.modeColor.colorCode,
+                                                        }}
+                                                    />
+                                                </View>
+
+                                                {
+                                                    item.services.map((item, index) => {
+                                                        return (
+                                                            <View
+                                                                key={index}
+                                                                style={{
+                                                                    flexDirection: "row",
+                                                                    alignItems: "center",
+                                                                    justifyContent: "space-between",
+                                                                    marginBottom: verticalScale(10),
+                                                                    paddingBottom: verticalScale(10),
+                                                                    borderBottomWidth: index === 0 && scale(1),
+                                                                    borderBottomColor: index === 0 && "rgba(0,0,0,0.4)"
+                                                                }}
+                                                            >
+                                                                <View style={{
+                                                                    gap: verticalScale(10)
+                                                                }}>
+                                                                    <CustomText
+                                                                        style={{
+                                                                            fontSize: scale(10)
+                                                                        }}
+                                                                    >Hair Cut <CustomText
+                                                                        style={{
+                                                                            fontSize: scale(10),
+                                                                            fontFamily: "AirbnbCereal_W_Bd"
+                                                                        }}
+                                                                    >(VIP)</CustomText></CustomText>
+                                                                    <View style={{
+                                                                        flexDirection: "row",
+                                                                        alignItems: "center",
+                                                                        gap: scale(5)
+                                                                    }}>
+                                                                        <ClockIcon size={scale(10)} />
+                                                                        <CustomText style={{
+                                                                            fontSize: scale(10)
+                                                                        }}>15 mins</CustomText>
+                                                                    </View>
+
+                                                                    <CustomText style={{
+                                                                        fontSize: scale(14),
+                                                                        color: Colors.modeColor.colorCode,
+                                                                        fontFamily: "AirbnbCereal_W_Bd"
+                                                                    }}>$ 49</CustomText>
+
+                                                                    <CustomText
+                                                                        style={{
+                                                                            fontSize: scale(10),
+                                                                            width: scale(230)
+                                                                        }}
+                                                                    >Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis, optio quo. Ipsa eius sed nesciunt!</CustomText>
+                                                                </View>
+
+                                                                <ReactNativeImage
+                                                                    style={styles.cardImage}
+                                                                    source={{ uri: item.image }}
+                                                                    resizeMode="cover" // replaces contentFit="cover"
+                                                                // transition is not supported in react-native Image
+                                                                />
+
+                                                            </View>
+                                                        )
+                                                    })
+                                                }
+
+
+                                            </React.Fragment>
+                                        );
+                                    })}
+
+                                </>
+                            );
+                        }
+
                     }
                 }}
                 keyExtractor={item => item.title}
-                ListFooterComponent={<View style={{ height: Platform.OS === "ios" ? verticalScale(60) : 0 }} />}
+                ListFooterComponent={< View style={{ height: Platform.OS === "ios" ? verticalScale(60) : 0 }} />}
             />
 
-        </CustomTabView>
+        </CustomTabView >
     )
 }
 
@@ -318,5 +600,11 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         width: scale(131.91),
         height: verticalScale(29.22)
-    }
+    },
+    cardImage: {
+        height: scale(80),
+        width: scale(80),
+        borderRadius: scale(8),
+        marginBottom: verticalScale(5)
+    },
 })
