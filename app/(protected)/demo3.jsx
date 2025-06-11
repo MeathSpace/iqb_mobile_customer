@@ -6,6 +6,8 @@ import {
     KeyboardAvoidingView,
     Platform,
     TextInput,
+    Animated,
+    Easing,
 } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
@@ -47,6 +49,25 @@ const Demo3 = () => {
 
     const [groupJoinMembers, setGroupJoinMembers] = useState([0, 1, 2, 3, 4, 5, 6, 7, 8])
 
+    const paddingAnim = useRef(new Animated.Value(scale(15))).current;
+    const flexAnim = useRef(new Animated.Value(0)).current;
+
+    useEffect(() => {
+        Animated.timing(paddingAnim, {
+            toValue: scrolling ? scale(0) : scale(15),
+            duration: 300,
+            // easing: Easing.back(),
+            useNativeDriver: false, // Padding cannot use native driver
+        }).start();
+
+        Animated.timing(flexAnim, {
+            toValue: scrolling ? 1 : 0,
+            duration: scrolling ? 300 : 0,
+            // easing: Easing.back(),
+            useNativeDriver: false, // layout props like flex can't use native driver
+        }).start();
+    }, [scrolling]);
+
     const renderSection = (key, title, content) => {
 
         const isActive = activeSection === key
@@ -54,7 +75,7 @@ const Demo3 = () => {
         if (scrolling && !isActive) return null
 
         return isActive ? (
-            <View style={[styles.boxOpenWrapper, { flex: 1 }]}>
+            <Animated.View style={[styles.boxOpenWrapper, { flex: flexAnim }]}>
                 <ScrollView
                     style={{ flex: 1 }}
                     contentContainerStyle={{
@@ -446,7 +467,7 @@ const Demo3 = () => {
                     }
 
                 </ScrollView>
-            </View>
+            </Animated.View>
         ) : (
             <Pressable
                 style={styles.boxCloseWrapper}
@@ -458,78 +479,83 @@ const Demo3 = () => {
     }
 
     return (
-        <SafeAreaView style={[
-            styles.container, {
-                paddingHorizontal: scrolling ? scale(0) : scale(15)
-            }
-        ]}>
-            <KeyboardAvoidingView
-                style={{ flex: 1 }}
-                behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-            >
-                <View style={{ flex: 1, gap: verticalScale(15) }}>
-                    {renderSection(
-                        'addedmember',
-                        'Added Members ?',
-                        ''
-                    )}
+        <Animated.View
+            style={[
+                styles.container,
+                {
+                    paddingHorizontal: paddingAnim,
+                }
+            ]}
+        >
+            <SafeAreaView style={{ flex: 1 }}>
+                <KeyboardAvoidingView
+                    style={{ flex: 1 }}
+                    behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+                >
+                    <View style={{ flex: 1, gap: verticalScale(15) }}>
+                        {renderSection(
+                            'addedmember',
+                            'Added Members ?',
+                            ''
+                        )}
 
-                    {renderSection(
-                        'addmember',
-                        'Member Name ?',
-                        ''
-                    )}
+                        {renderSection(
+                            'addmember',
+                            'Member Name ?',
+                            ''
+                        )}
 
-                    {/* {renderSection(
+                        {/* {renderSection(
                         'addmember',
                         'Member Name ?',
                         ''
                     )} */}
 
-                    {renderSection(
-                        'services',
-                        'Choose Services ?',
-                        [
-                            { id: 1 },
-                            { id: 2 },
-                            { id: 3 },
-                            { id: 4 },
-                            { id: 5 },
-                            { id: 6 },
-                            { id: 7 },
-                            { id: 8 },
-                            { id: 9 },
-                        ]
+                        {renderSection(
+                            'services',
+                            'Choose Services ?',
+                            [
+                                { id: 1 },
+                                { id: 2 },
+                                { id: 3 },
+                                { id: 4 },
+                                { id: 5 },
+                                { id: 6 },
+                                { id: 7 },
+                                { id: 8 },
+                                { id: 9 },
+                            ]
 
-                    )}
-                    {renderSection(
-                        'barber',
-                        'Choose Barber ?',
-                        [
-                            { id: 1 },
-                            { id: 2 },
-                            { id: 3 },
-                            { id: 4 },
-                            { id: 5 },
-                            { id: 6 },
-                            { id: 7 },
-                            { id: 8 },
-                            { id: 9 },
-                        ]
-                    )}
+                        )}
+                        {renderSection(
+                            'barber',
+                            'Choose Barber ?',
+                            [
+                                { id: 1 },
+                                { id: 2 },
+                                { id: 3 },
+                                { id: 4 },
+                                { id: 5 },
+                                { id: 6 },
+                                { id: 7 },
+                                { id: 8 },
+                                { id: 9 },
+                            ]
+                        )}
 
-                </View>
-
-                {!scrolling && (
-                    <View style={styles.footer}>
-                        <CustomText style={styles.clearAll}>Clear all</CustomText>
-                        <Pressable style={styles.searchButton}>
-                            <CustomText style={{ color: '#fff' }}>Next</CustomText>
-                        </Pressable>
                     </View>
-                )}
-            </KeyboardAvoidingView>
-        </SafeAreaView>
+
+                    {!scrolling && (
+                        <View style={styles.footer}>
+                            <CustomText style={styles.clearAll}>Clear all</CustomText>
+                            <Pressable style={styles.searchButton}>
+                                <CustomText style={{ color: '#fff' }}>Next</CustomText>
+                            </Pressable>
+                        </View>
+                    )}
+                </KeyboardAvoidingView>
+            </SafeAreaView>
+        </Animated.View>
     )
 }
 
