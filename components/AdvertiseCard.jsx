@@ -9,7 +9,7 @@ const AdvertiseCard = ({ item }) => {
     const { colors } = useTheme()
 
     return (
-        <View style={[styles.cardWrapper, { backgroundColor: colors.background }]}>
+        <View style={[styles.cardWrapper, {  }]}>
             <Image
                 style={styles.cardImage}
                 source={{ uri: item.image }}
@@ -24,13 +24,14 @@ export default AdvertiseCard
 
 const styles = StyleSheet.create({
     cardWrapper: {
-        height: verticalScale(108.53),
+        // height: verticalScale(200),
+        paddingVertical: verticalScale(20),
         width: scale(300.56),
-        borderRadius: moderateScale(8),
     },
     cardImage: {
-        height: "100%",
+        // height: "100%",
+        height: verticalScale(145),
         width: "100%",
-        borderRadius: moderateScale(8),
+        borderRadius: scale(12),
     }
 })

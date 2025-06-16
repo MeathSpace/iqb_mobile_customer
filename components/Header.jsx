@@ -63,7 +63,11 @@ const Header = () => {
     const router = useRouter()
 
     return (
-        <View style={[styles.headerWrapper, { backgroundColor: colors.background, borderBottomColor: "#DDDDDD", borderBottomWidth: scale(1) }]}>
+        <View style={[styles.headerWrapper, {
+            backgroundColor: colors.background,
+            // borderBottomColor: "#DDDDDD",
+            // borderBottomWidth: scale(1)
+        }]}>
             <View style={styles.headerLeft}>
                 <Image
                     style={{
@@ -78,7 +82,7 @@ const Header = () => {
                     transition={1000}
                 />
 
-                <CustomText style={{ fontSize: scale(18), fontFamily: "AirbnbCereal_W_Bd" }}>Modern Unisex Salon</CustomText>
+                <CustomText style={{ fontSize: scale(16), fontFamily: "AirbnbCereal_W_Blk" }}>Modern Unisex Salon</CustomText>
             </View>
 
             {/* <View style={styles.headerRight}>
@@ -104,7 +108,7 @@ const Header = () => {
                         height: scale(40),
                         width: scale(40),
                         borderRadius: scale(30),
-                        backgroundColor: "#EAA82433",
+                        // backgroundColor: "#EAA82433",
                         justifyContent: "center",
                         alignItems: "center"
                     }}

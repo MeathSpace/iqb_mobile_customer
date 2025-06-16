@@ -34,13 +34,6 @@ const ProtectedLayout = () => {
                     animation: 'slide_from_bottom',
                 }} />
             <Stack.Screen
-                name="groupJoin"
-                options={{
-                    presentation: 'modal',
-                    animation: 'slide_from_bottom',
-                }} />
-
-            <Stack.Screen
                 name="appointmentConfirmation"
                 options={{
                     presentation: 'transparentModal',
@@ -61,6 +54,12 @@ const ProtectedLayout = () => {
                     animation: 'fade',
                 }} />
 
+            <Stack.Screen
+                name="joinpopup"
+                options={{
+                    presentation: 'transparentModal',
+                    animation: 'fade',
+                }} />
         </Stack>
     )
 }

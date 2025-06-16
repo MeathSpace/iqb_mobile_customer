@@ -162,9 +162,14 @@ const QueueList = () => {
     const { joinModes, setJoinModes, setSelectedBarber, setSelectedBarberServices } = useGlobal();
 
     return (
-        <CustomTabView style={{ justifyContent: "space-between", backgroundColor: "#F7F7F7", paddingVertical: verticalScale(0), paddingTop: verticalScale(10) }}>
+        <CustomTabView
+            style={{
+                justifyContent: "space-between",
+                paddingVertical: verticalScale(0),
+                paddingTop: verticalScale(10)
+            }}>
             <View style={{ flex: 1, paddingBottom: Platform.OS === 'ios' ? verticalScale(60) : 0 }}>
-                <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: verticalScale(6) }}>
+                {/* <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: verticalScale(6) }}>
                     <CustomText style={styles.title}>Queue List</CustomText>
                     <View style={{ flexDirection: "row", alignItems: "center", gap: scale(10) }}>
                         <Pressable
@@ -224,7 +229,23 @@ const QueueList = () => {
                             }}
                         >Group Join</CustomText></Pressable>
                     </View>
-                </View>
+                </View> */}
+
+                <Pressable
+                    onPress={() => router.push("/joinpopup")}
+                    style={{
+                        height: verticalScale(40),
+                        width: "95%",
+                        backgroundColor: Colors.modeColor.colorCode,
+                        marginHorizontal: "auto",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        borderRadius: scale(4),
+                        marginVertical: verticalScale(10)
+                    }}
+                >
+                    <CustomText style={{ color: "#fff" }}>Join Queue</CustomText>
+                </Pressable>
 
                 <FlatList
                     data={qlist}

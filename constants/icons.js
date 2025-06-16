@@ -11,7 +11,7 @@ export const SearchIcon = ({ size = moderateScale(24), color = 'black', style })
 );
 
 export const UserIcon = ({ size = moderateScale(24), color = 'black', style }) => (
-    <FontAwesome name="user" size={size} color={color} style={style} />
+    <FontAwesome6 name="people-group" size={size} color={color} style={style} />
 );
 
 export const HomeIcon = ({ size = moderateScale(24), color = 'black', style }) => (
@@ -19,7 +19,7 @@ export const HomeIcon = ({ size = moderateScale(24), color = 'black', style }) =
 );
 
 export const QueueIcon = ({ size = moderateScale(24), color = 'black', style }) => (
-    <MaterialIcons name="queue" size={size} color={color} style={style} />
+    <MaterialCommunityIcons name="human-queue" size={size} color={color} style={style} />
 );
 
 export const SalonIcon = ({ size = moderateScale(24), color = 'black', style }) => (
@@ -51,7 +51,7 @@ export const AboutIcon = ({ size = moderateScale(24), color = 'black', style }) 
 );
 
 export const LogoutIcon = ({ size = moderateScale(24), color = 'black', style }) => (
-    <MaterialIcons name="logout" size={size} color={color} style={style} />
+    <AntDesign name="logout" size={size} color={color} style={style} />
 );
 
 export const ArrowLeftIcon = ({ size = moderateScale(24), color = 'black', style }) => (
@@ -75,7 +75,7 @@ export const RightIcon = ({ size = moderateScale(24), color = 'black', style }) 
 );
 
 export const SettingsIcon = ({ size = moderateScale(24), color = 'black', style }) => (
-    <Feather name="settings" size={size} color={color} style={style} />
+    <Feather name="power" size={size} color={color} style={style} />
 );
 
 export const NextIcon = ({ size = moderateScale(24), color = 'black', style }) => (

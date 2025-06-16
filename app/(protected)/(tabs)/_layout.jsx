@@ -43,10 +43,10 @@ export default function TabLayout() {
                                 },
                                 default: {},
                             }),
-                            backgroundColor: colors.background,
-                            borderTopColor: "none",
+                            // borderTopColor: "none",
                             // paddingTop: verticalScale(5),
                             // ✅ iOS Shadow
+                            
                             shadowColor: '#000',
                             shadowOffset: { width: 0, height: -3 },
                             shadowOpacity: 0.1,

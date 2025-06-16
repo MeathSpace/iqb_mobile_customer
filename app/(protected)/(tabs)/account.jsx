@@ -11,7 +11,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { useTheme } from '@react-navigation/native'
 import CustomSecondaryText from '../../../components/CustomSecondaryText'
 import CustomView from '../../../components/CustomView'
-import { AboutIcon, ArrowLeftIcon, HeartIcon, HelpIcon, PeopleIcon, ProfileIcon, RightIcon, SalonIcon, UserIcon } from '../../../constants/icons'
+import { AboutIcon, ArrowLeftIcon, HeartIcon, HelpIcon, LogoutIcon, PeopleIcon, ProfileIcon, RightIcon, SalonIcon, UserIcon } from '../../../constants/icons'
 import { Colors } from '../../../constants/Colors'
 import { useGlobal } from '../../../context/GlobalContext'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -106,7 +106,7 @@ const account = () => {
       <View>
         <View
           onPress={() => router.push("/editProfile")}
-          style={[styles.profileCard, { backgroundColor: Colors.modeColor.colorCode3, marginBottom: verticalScale(10) }]}>
+          style={[styles.profileCard, { backgroundColor: "#0BA3AD26", marginBottom: verticalScale(10) }]}>
           {/* <View style={{ flexDirection: "row", alignItems: "center", gap: moderateScale(10) }}> */}
           <View style={{ gap: moderateScale(5) }}>
             <CustomText style={{ fontFamily: "AirbnbCereal_W_Bd", fontSize: scale(22) }}>{authenticatedUser?.name}</CustomText>
@@ -114,14 +114,12 @@ const account = () => {
           </View>
 
           <Image
-            style={{ height: scale(90), width: scale(90), borderRadius: scale(10) }}
+            style={{ height: scale(90), width: scale(90), borderRadius: scale(80) }}
             source={{ uri: authenticatedUser?.imageUrl }}
             // placeholder={{ blurhash }}
             contentFit="cover"
             transition={300}
           />
-          {/* </View> */}
-          {/* <RightIcon size={moderateScale(20)} color={colors.text} /> */}
         </View>
 
 
@@ -134,8 +132,14 @@ const account = () => {
               alignItems: "center",
               gap: scale(10)
             }}>
-              <ProfileIcon />
-              <CustomText style={{ fontFamily: "AirbnbCereal_W_Bk" }}>My Account</CustomText>
+              <View
+                style={{
+                  padding: scale(5),
+                  backgroundColor: "#fff",
+                  borderRadius: scale(50)
+                }}
+              ><ProfileIcon color='#343434' /></View>
+              <CustomText style={{ fontFamily: "AirbnbCereal_W_Md" }}>My Account</CustomText>
             </View>
             <RightIcon size={scale(16)} />
           </Pressable>
@@ -148,45 +152,32 @@ const account = () => {
               alignItems: "center",
               gap: scale(10)
             }}>
-              <HeartIcon />
-              <CustomText style={{ fontFamily: "AirbnbCereal_W_Bk" }}>My Favourites</CustomText>
+              <View
+                style={{
+                  padding: scale(5),
+                  backgroundColor: "#fff",
+                  borderRadius: scale(50)
+                }}
+              >
+                <HeartIcon color='#343434' />
+              </View>
+              <CustomText style={{ fontFamily: "AirbnbCereal_W_Md" }}>My Favourites</CustomText>
             </View>
             <RightIcon size={scale(16)} />
           </Pressable>
         </View>
 
-        <View
+        {/* <View
           style={{
             height: verticalScale(1),
             backgroundColor: "#DDDDDD",
             marginVertical: verticalScale(10),
           }}
-        />
-        <CustomText style={{ fontFamily: "AirbnbCereal_W_Bd", height: verticalScale(35), marginTop: verticalScale(10) }}>Settings</CustomText>
+        /> */}
+        {/* <CustomText style={{ fontFamily: "AirbnbCereal_W_Bd", height: verticalScale(35), marginTop: verticalScale(10) }}>Settings</CustomText> */}
 
         <Pressable
           style={styles.profileItem}
-          // onPress={() => {
-          //   Alert.alert(
-          //     "Confirm",
-          //     "Are you sure you want to disconnect?",
-          //     [
-          //       {
-          //         text: "Cancel",
-          //         style: "cancel",
-          //       },
-          //       {
-          //         text: "Yes, Disconnect",
-          //         onPress: async () => {
-          //           setAuthenticatedUser({ ...authenticatedUser, salonId: "" })
-          //           await AsyncStorage.setItem("LoggedInUser", JSON.stringify({ ...authenticatedUser, salonId: "" }))
-          //         },
-          //         style: "destructive",
-          //       },
-          //     ],
-          //     { cancelable: true }
-          //   );
-          // }}
           onPress={() => router.push("/connectSalon")}
         >
           <View style={{
@@ -194,8 +185,16 @@ const account = () => {
             alignItems: "center",
             gap: scale(10)
           }}>
-            <SalonIcon />
-            <CustomText style={{ fontFamily: "AirbnbCereal_W_Bk" }}>Change Salon</CustomText>
+            <View
+              style={{
+                padding: scale(5),
+                backgroundColor: "#fff",
+                borderRadius: scale(50)
+              }}
+            >
+              <SalonIcon color='#343434' />
+            </View>
+            <CustomText style={{ fontFamily: "AirbnbCereal_W_Md" }}>Change Salon</CustomText>
           </View>
           <RightIcon size={scale(16)} />
         </Pressable>
@@ -208,8 +207,16 @@ const account = () => {
             alignItems: "center",
             gap: scale(10)
           }}>
-            <AboutIcon />
-            <CustomText style={{ fontFamily: "AirbnbCereal_W_Bk" }}>About</CustomText>
+            <View
+              style={{
+                padding: scale(5),
+                backgroundColor: "#fff",
+                borderRadius: scale(50)
+              }}
+            >
+              <AboutIcon color='#343434' />
+            </View>
+            <CustomText style={{ fontFamily: "AirbnbCereal_W_Md" }}>About</CustomText>
           </View>
           <RightIcon size={scale(16)} />
         </Pressable>
@@ -222,28 +229,42 @@ const account = () => {
             alignItems: "center",
             gap: scale(10)
           }}>
-            <HelpIcon />
-            <CustomText style={{ fontFamily: "AirbnbCereal_W_Bk" }}>Help & Support</CustomText>
+            <View
+              style={{
+                padding: scale(5),
+                backgroundColor: "#fff",
+                borderRadius: scale(50),
+              }}
+            >
+              <HelpIcon color='#343434' />
+            </View>
+            <CustomText style={{ fontFamily: "AirbnbCereal_W_Md" }}>Help & Support</CustomText>
           </View>
           <RightIcon size={scale(16)} />
         </Pressable>
 
-        <View
-          style={{
-            height: verticalScale(1),
-            backgroundColor: "#DDDDDD",
-            marginVertical: verticalScale(10),
-          }}
-        />
+        <Pressable
+          onPress={logoutPressed}
+          style={styles.profileItem}>
+          <View style={{
+            flexDirection: "row",
+            alignItems: "center",
+            gap: scale(10)
+          }}>
+            <View
+              style={{
+                padding: scale(5),
+                backgroundColor: "#E11D481A",
+                borderRadius: scale(50)
+              }}
+            >
+              <LogoutIcon color='#E11D48' size={scale(18)}/>
+            </View>
+            <CustomText style={{ fontFamily: "AirbnbCereal_W_Md", color: "#E11D48" }}>Logout</CustomText>
+          </View>
+        </Pressable>
 
       </View>
-
-
-      <Pressable
-        onPress={logoutPressed}
-        style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode }]}>
-        <CustomText style={{ color: "#fff", fontSize: scale(16) }}>Log out</CustomText>
-      </Pressable>
     </CustomTabView>
   )
 }
@@ -266,9 +287,9 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     gap: moderateScale(10),
     // paddingVertical: verticalScale(10),
-    height: verticalScale(138),
+    height: verticalScale(118),
     padding: scale(24),
-    borderRadius: scale(4),
+    borderRadius: scale(15),
     // marginVertical: verticalScale(20),
     // borderWidth: scale(1),
   },

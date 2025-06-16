@@ -19,7 +19,7 @@ import { Image } from 'expo-image'
 import { useRouter } from 'expo-router'
 
 
-const Demo2 = () => {
+const SingleJoin = () => {
     const [activeSection, setActiveSection] = useState('services')
     const [scrolling, setScrolling] = useState(false)
     const [addIconPressCount, setAddIconPressCount] = useState(0);
@@ -326,7 +326,7 @@ const Demo2 = () => {
     )
 }
 
-export default Demo2
+export default SingleJoin
 
 const styles = StyleSheet.create({
     container: {

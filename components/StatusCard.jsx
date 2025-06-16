@@ -10,19 +10,17 @@ const StatusCard = ({ item }) => {
     const { colors } = useTheme()
 
     return (
-        // <View style={[styles.statusCard, { backgroundColor: colors.background }]}>
-        // <View style={[styles.icon, { backgroundColor: item.color1, shadowColor: item.color1 }]}>
-        //     <item.icon size={moderateScale(20)} color={"#fff"} />
-        // </View>
-        // <CustomText style={{ fontFamily: "AirbnbCereal_W_Md", fontSize: moderateScale(12), textAlign: "center", marginVertical: verticalScale(5) }}>{item.title}</CustomText>
-        // <CustomSecondaryText style={{ fontFamily: "AirbnbCereal_W_Md", textAlign: "center" }}>{item.value}</CustomSecondaryText>
-        // </View>
         <View style={[styles.statusCard]}>
             <View style={[styles.icon, { backgroundColor: item.color2 }]}>
-                <item.icon size={moderateScale(14)} color={item.color1} />
+                <item.icon size={moderateScale(18)} color={item.color1} />
             </View>
-            <CustomText style={{ fontSize: scale(9.35), textAlign: "center", marginVertical: verticalScale(5) }}>{item.title}</CustomText>
-            <CustomText style={{ fontSize: scale(9.35), textAlign: "center" }}>{item.value}</CustomText>
+            <CustomText style={{ fontSize: scale(11), textAlign: "center", marginVertical: verticalScale(6) }}>{item.title}</CustomText>
+            <CustomText style={{
+                fontFamily: "AirbnbCereal_W_Bd",
+                fontSize: scale(14),
+                textAlign: "center",
+                // color: `${item.color1}`
+            }}>{item.value}</CustomText>
         </View>
     )
 }
@@ -35,14 +33,16 @@ const styles = StyleSheet.create({
         // height: verticalScale(125),
         // borderRadius: moderateScale(4),
         // padding: moderateScale(10),
-        marginTop: verticalScale(17),
+        // marginTop: verticalScale(17),
         // borderWidth: scale(1),
         // elevation: 4,
+        // gap: verticalScale(5),
+        marginBottom: verticalScale(20)
     },
     icon: {
-        width: moderateScale(30),
-        height: moderateScale(30),
-        borderRadius: moderateScale(6.68),
+        width: scale(40),
+        height: scale(40),
+        borderRadius: scale(8),
         justifyContent: "center",
         alignItems: "center",
         marginHorizontal: "auto",

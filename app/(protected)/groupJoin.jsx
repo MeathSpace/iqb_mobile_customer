@@ -22,7 +22,7 @@ import { useTheme } from '@react-navigation/native'
 import { useGlobal } from '../../context/GlobalContext'
 
 
-const Demo3 = () => {
+const groupJoin = () => {
     const [activeSection, setActiveSection] = useState('addedmember')
     const [scrolling, setScrolling] = useState(false)
     const [addIconPressCount, setAddIconPressCount] = useState(0);
@@ -559,7 +559,7 @@ const Demo3 = () => {
     )
 }
 
-export default Demo3
+export default groupJoin
 
 const styles = StyleSheet.create({
     container: {
