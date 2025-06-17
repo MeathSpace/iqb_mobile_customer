@@ -235,13 +235,13 @@ const QueueList = () => {
                     onPress={() => router.push("/joinpopup")}
                     style={{
                         height: verticalScale(40),
-                        width: "95%",
+                        width: "100%",
                         backgroundColor: Colors.modeColor.colorCode,
                         marginHorizontal: "auto",
                         justifyContent: "center",
                         alignItems: "center",
                         borderRadius: scale(4),
-                        marginVertical: verticalScale(10)
+                        // marginVertical: verticalScale(10)
                     }}
                 >
                     <CustomText style={{ color: "#fff" }}>Join Queue</CustomText>

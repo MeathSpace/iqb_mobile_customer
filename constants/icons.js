@@ -108,7 +108,7 @@ export const PeopleIcon = ({ size = moderateScale(24), color = 'black', style })
 );
 
 export const CheckIcon = ({ size = moderateScale(24), color = 'black', style }) => (
-    <FontAwesome5 name="check" size={size} color={color} style={style} />
+    <Feather name="check" size={size} color={color} style={style} />
 );
 
 
@@ -178,4 +178,8 @@ export const DyeIcon = ({ size = moderateScale(24), color = 'black', style }) =>
 
 export const MenuIcon = ({ size = moderateScale(24), color = 'black', style }) => (
     <MaterialIcons name="dashboard-customize" size={size} color={color} style={style} />
+);
+
+export const FilterIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <FontAwesome name="filter" size={size} color={color} style={style} />
 );

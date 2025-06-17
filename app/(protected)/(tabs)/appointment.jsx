@@ -1,108 +1,4 @@
-// import { FlatList, Platform, Pressable, StyleSheet, Text, View } from 'react-native';
-// import React from 'react';
-// import CustomTabView from '../../../components/CustomTabView';
-// import CustomText from '../../../components/CustomText';
-// import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
-// import { Colors } from '../../../constants/Colors';
-// import { useTheme } from '@react-navigation/native';
-// import AppointmentItem from '../../../components/AppointmentItem';
-// import { router, useRouter } from 'expo-router';
-// import { useGlobal } from '../../../context/GlobalContext'
-// import CustomSecondaryText from '../../../components/CustomSecondaryText';
-
-// const Appointment = () => {
-//   const baseAppointData = {
-//     CustomerName: "Tom Cruise",
-//     barberName: "Korbyn Larson",
-//     barberImage: "https://celebrity.edu/wp-content/uploads/2021/08/top-tips-to-be-a-successful-barber.jpg",
-//     timeJoined: "15:30 - 15:40",
-//     date: "May 01"
-//   };
-
-//   const appointData = Array.from({ length: 30 }, (_, index) => ({
-//     id: index + 1,
-//     ...baseAppointData,
-//   }));
-
-//   const { colors } = useTheme();
-// const router = useRouter()
-// const { setJoinModes, joinModes } = useGlobal();
-
-//   return (
-//     <CustomTabView style={{ justifyContent: "space-between", paddingVertical: verticalScale(0), paddingTop: verticalScale(10) }}>
-//       <View style={{ flex: 1, paddingBottom: Platform.OS === 'ios' ? verticalScale(60) : 0 }}>
-//         <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: verticalScale(6) }}>
-//           <CustomText style={styles.title}>Scheduled Appointment</CustomText>
-//           <View
-//             style={{
-//               width: moderateScale(28),
-//               height: moderateScale(28),
-//               borderRadius: moderateScale(20),
-//               justifyContent: "center",
-//               alignItems: "center",
-//               backgroundColor: Colors.modeColor.colorCode2,
-
-//             }}
-//           ><CustomSecondaryText style={{ color: Colors.modeColor.colorCode }}>15</CustomSecondaryText></View>
-//         </View>
-//         <FlatList
-//           data={appointData}
-//           contentContainerStyle={styles.listContent}
-//           renderItem={({ item }) => {
-//             return (<AppointmentItem item={item} />)
-//           }}
-//           keyExtractor={item => item.id.toString()}
-//           showsVerticalScrollIndicator={false}
-//           ListFooterComponent={<View style={{ height: verticalScale(20) }} />}
-//         />
-//         <Pressable
-//           onPress={() => {
-//             setJoinModes((prev) => ({ ...prev, appointment: true, appointmentType: "Book" }))
-//             router.push("/selectBarber")
-//             // router.push("/appointmentCalender")
-//           }}
-//           style={[
-//             styles.btn,
-//             {
-//               backgroundColor: Colors.modeColor.colorCode,
-//               shadowColor: Colors.modeColor.colorCode,
-//               marginBottom: Platform.OS === 'ios' ? verticalScale(20) : verticalScale(10),
-//               marginTop: verticalScale(10)
-//             }
-//           ]}
-//         >
-//           <CustomText style={styles.btnText}>Book Appt</CustomText>
-//         </Pressable>
-//       </View>
-
-
-//     </CustomTabView>
-//   );
-
-// };
-
-// export default Appointment;
-
-// const styles = StyleSheet.create({
-//   title: {
-//     fontFamily: "AirbnbCereal_W_Bd"
-//   },
-//   listContent: {
-//     overflow: "visible",
-//   },
-//   btn: {
-//     height: verticalScale(35),
-//     borderRadius: scale(4),
-//     alignItems: "center",
-//     justifyContent: "center",
-//     elevation: 4,
-//   },
-//   btnText: {
-//     color: "#fff"
-//   }
-// });
-
-import { FlatList, Pressable, StyleSheet, Text, View } from 'react-native'
+import { FlatList, Platform, Pressable, StyleSheet, Text, View } from 'react-native'
 import React, { useState } from 'react'
 import CustomText from '../../../components/CustomText';
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
@@ -110,11 +6,12 @@ import { Colors } from '../../../constants/Colors';
 import { useRouter } from 'expo-router';
 import { useGlobal } from '../../../context/GlobalContext';
 import { Image } from 'expo-image';
+import { ClockIcon, FilterIcon } from '../../../constants/icons';
 
 const appointment = () => {
 
   const customPageData = [
-    "header", "menubar", "list"
+    "header", "list"
   ]
 
   const [selectedTab, setSelectedTab] = useState("All")
@@ -129,80 +26,121 @@ const appointment = () => {
   const router = useRouter()
   const { setJoinModes, joinModes } = useGlobal();
 
+  const appData = [
+    {
+      type: "upcomming",
+      backgroundColor: "#EAA8241A",
+      color: "#EAA824"
+    },
+    {
+      type: "served",
+      backgroundColor: "#00B0901A",
+      color: "#00B090"
+    },
+    {
+      type: "cancelled",
+      backgroundColor: "#E11D481A",
+      color: "#E11D48"
+    },
+
+    {
+      type: "upcomming",
+      backgroundColor: "#EAA8241A",
+      color: "#EAA824"
+    },
+    {
+      type: "served",
+      backgroundColor: "#00B0901A",
+      color: "#00B090"
+    },
+    {
+      type: "cancelled",
+      backgroundColor: "#E11D481A",
+      color: "#E11D48"
+    },
+
+    {
+      type: "upcomming",
+      backgroundColor: "#EAA8241A",
+      color: "#EAA824"
+    },
+    {
+      type: "served",
+      backgroundColor: "#00B0901A",
+      color: "#00B090"
+    },
+    {
+      type: "cancelled",
+      backgroundColor: "#E11D481A",
+      color: "#E11D48"
+    },
+  ]
+
   return (
     <FlatList
       data={customPageData}
+      style={{
+        backgroundColor: "#0BA3AD0D",
+      }}
       contentContainerStyle={{
-        gap: verticalScale(10),
-        paddingHorizontal: scale(20)
+        // gap: verticalScale(10),
+        paddingHorizontal: scale(10),
+        paddingBottom: Platform.OS === 'ios' ? verticalScale(80) : 0
       }}
       renderItem={({ item }) => {
         switch (item) {
+
           case 'header':
             return (
               <View style={{
                 flexDirection: "row",
                 alignItems: "center",
-                justifyContent: "space-between",
-                height: verticalScale(64),
+                gap: scale(10)
               }}>
-                <CustomText
-                  style={{
-                    fontSize: scale(16)
-                  }}
-                >Appointments</CustomText>
                 <Pressable
+                  style={{
+                    height: verticalScale(40),
+                    flex: 1,
+                    backgroundColor: Colors.modeColor.colorCode,
+                    marginHorizontal: "auto",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    borderRadius: scale(4),
+                    marginTop: verticalScale(10)
+                  }}
                   onPress={() => {
                     setJoinModes((prev) => ({ ...prev, appointment: true, appointmentType: "Book" }))
                     // router.push("/appointmentCalender")
                     router.push("/demo")
                   }}
+                >
+                  <CustomText style={{ color: "#fff" }}>Book Appointment</CustomText>
+                </Pressable>
+                <Pressable
+                  onPress={() => router.push("/appointmentFilter")}
                   style={{
-                    backgroundColor: Colors.modeColor.colorCode,
-                    borderRadius: scale(8),
-                    width: scale(160),
-                    height: verticalScale(30),
+                    height: verticalScale(40),
+                    width: verticalScale(40),
+                    backgroundColor: "#0BA3AD1A",
+                    marginHorizontal: "auto",
                     justifyContent: "center",
-                    alignItems: "center"
+                    alignItems: "center",
+                    borderRadius: scale(4),
+                    marginTop: verticalScale(10)
                   }}
-                ><CustomText
-                  style={{
-                    fontSize: scale(12),
-                    color: "#fff"
-                  }}
-                >Book Appointment</CustomText></Pressable>
-              </View >
-            );
-          case 'menubar':
-            return (
-              <View style={{
-                // backgroundColor: "blue",
-                height: verticalScale(30),
-                flexDirection: "row",
-                alignItems: "center",
-                gap: scale(5)
-              }}>
-                {
-                  tabs.map((item) => {
-                    return (
-                      <Pressable
-                        onPress={() => setSelectedTab(item)}
-                        key={item}
-                        style={selectedTab === item ? styles.selectedTabBtn : styles.unSelectedTabBtn}
-                      ><CustomText style={{ color: selectedTab === item ? "#fff" : Colors.modeColor.colorCode, fontSize: scale(12) }}>{item}</CustomText></Pressable>
-                    )
-                  })
-                }
-
+                >
+                  <FilterIcon color={Colors.modeColor.colorCode} />
+                </Pressable>
               </View>
-            );
+            )
+
           case 'list':
             return (
               <View style={{
                 flexGrow: 1
               }}>
                 {
-                  [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10].map((item, index) => {
+                  appData.map((item, index) => {
                     return (
                       <View
                         key={index}
@@ -210,9 +148,9 @@ const appointment = () => {
                           flexDirection: "row",
                           justifyContent: "space-between",
                           alignItems: "center",
-                          minHeight: verticalScale(85),
-                          borderBottomColor: "#DDDDDD",
-                          borderBottomWidth: scale(1)
+                          minHeight: verticalScale(75),
+                          // borderBottomColor: appData.length - 1 !== index && "#0BA3AD1A",
+                          // borderBottomWidth: appData.length - 1 !== index && scale(1)
                         }}>
 
                         <View style={{
@@ -224,13 +162,13 @@ const appointment = () => {
                             position: "relative"
                           }}>
                             <Image
-                              style={{ height: scale(55), width: scale(55), borderRadius: moderateScale(30) }}
+                              style={{ height: scale(50), width: scale(50), borderRadius: moderateScale(30) }}
                               source={{ uri: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg" }}
                               // placeholder={{ blurhash }}
                               contentFit="cover"
                               transition={300}
                             />
-                            <View
+                            {/* <View
                               style={{
                                 position: "absolute",
                                 bottom: verticalScale(-5),
@@ -244,23 +182,45 @@ const appointment = () => {
                                 justifyContent: "center",
                                 alignItems: "center"
                               }}
-                            ><CustomText style={{ fontSize: scale(8), color: Colors.modeColor.colorCode }}>Upcoming</CustomText></View>
+                            >
+                              <CustomText style={{ fontSize: scale(8), color: Colors.modeColor.colorCode }}>Upcoming</CustomText>
+                            </View> */}
                           </View>
 
 
                           <View style={{ gap: verticalScale(8) }}>
-                            <CustomText style={{ fontSize: scale(14) }}>Michael</CustomText>
-                            <View style={{ paddingInline: scale(10) }}>
-                              <CustomText style={{ color: "#78716C", fontSize: scale(12), fontFamily: "AirbnbCereal_W_Bk" }}>. Hair Cut</CustomText>
-                              <CustomText style={{ color: "#78716C", fontSize: scale(12), fontFamily: "AirbnbCereal_W_Bk" }}>. Beard</CustomText>
-                            </View>
+                            <CustomText style={{ fontSize: scale(14) }}>Michael Swath</CustomText>
+                            <View
+                              style={{
+                                height: verticalScale(15),
+                                paddingHorizontal: scale(5),
+                                borderRadius: scale(4),
+                                backgroundColor: item.backgroundColor,
+                                justifyContent: "center",
+                                alignItems: "center",
+                                alignSelf: "flex-start"
+                              }}
+                            ><CustomText style={{
+                              color: item.color,
+                              fontSize: scale(10),
+                            }}>{item.type}</CustomText></View>
                           </View>
 
                         </View>
 
                         <View style={{ gap: verticalScale(5) }}>
-                          <CustomText style={{ fontSize: scale(14) }}>31 Mar, 2025</CustomText>
-                          <CustomText style={{ color: "#78716C", fontSize: scale(12), fontFamily: "AirbnbCereal_W_Bk", marginLeft: "auto" }}>11:30 am</CustomText>
+                          <View style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                            gap: scale(2),
+                            // flex: 1
+                          }}>
+                            <ClockIcon size={scale(12)} color='gray' />
+                            <CustomText style={{ fontSize: scale(12), color: "gray" }}>11:00 AM</CustomText>
+                          </View>
+
+                          <CustomText style={{ fontSize: scale(14), fontFamily: "AirbnbCereal_W_Bd" }}>31 Mar, 2025</CustomText>
+
                         </View>
 
                       </View>

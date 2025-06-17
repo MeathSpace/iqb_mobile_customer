@@ -153,7 +153,10 @@ const signin = () => {
                         editable
                         placeholder="Enter your email"
                         placeholderTextColor={colors.secondaryText}
-                        style={[false ? styles.inputFielderror : styles.inputField, { borderColor: colors.border, backgroundColor: colors.card, fontFamily: "AirbnbCereal_W_Bk", color: colors.text }]}
+                        style={[false ? styles.inputFielderror : styles.inputField, {
+                            backgroundColor: "#0BA3AD1A",
+                            fontFamily: "AirbnbCereal_W_Bk", color: colors.text
+                        }]}
                         // onChangeText={(text) => {
                         //     setEmailError("")
                         //     setEmail(text)
@@ -166,7 +169,10 @@ const signin = () => {
                         editable
                         placeholder="Enter your password"
                         placeholderTextColor={colors.secondaryText}
-                        style={[false ? styles.inputFielderror : styles.inputField, { borderColor: colors.border, backgroundColor: colors.card, fontFamily: "AirbnbCereal_W_Bk", color: colors.text }]}
+                        style={[false ? styles.inputFielderror : styles.inputField, {
+                            backgroundColor: "#0BA3AD1A", 
+                            fontFamily: "AirbnbCereal_W_Bk", color: colors.text
+                        }]}
                         // onChangeText={(text) => {
                         //     setEmailError("")
                         //     setEmail(text)
@@ -264,7 +270,6 @@ const styles = StyleSheet.create({
     inputField: {
         height: verticalScale(40),
         borderRadius: scale(4),
-        borderWidth: moderateScale(1.5),
         paddingHorizontal: scale(10),
         // marginBottom: verticalScale(25),
         fontSize: moderateScale(14)

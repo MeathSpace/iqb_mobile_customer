@@ -440,7 +440,7 @@ const Dashboard = () => {
                         case "hero": {
                             return (
                                 <>
-                                    <CustomText>Hello, {authenticatedUser.name} 👋</CustomText>
+                                    <CustomText style={{ fontFamily: "AirbnbCereal_W_Bd" }}>Hello, {authenticatedUser.name} 👋</CustomText>
                                     <CustomText style={{ fontSize: scale(14), marginBottom: verticalScale(15), marginTop: verticalScale(10) }}>
                                         We strive to reach beyond the roots (of hair), and into the refinement and healing of one’s core self.
                                     </CustomText>

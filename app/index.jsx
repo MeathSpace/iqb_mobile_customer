@@ -49,7 +49,7 @@ const index = () => {
   return (
     <CustomView style={{ alignItems: "center", justifyContent: "center" }}>
       <View style={{ width: "100%" }}>
-        <Image
+        {/* <Image
           style={[styles.Logo, { tintColor: colors.background }]}
           source={require("../assets/images/IQB_Logo.png")}
           resizeMode="cover"
@@ -57,7 +57,14 @@ const index = () => {
         <Image
           style={styles.onboardImage}
           source={require("../assets/images/Onboarding.png")}
+        /> */}
+        <Image
+          style={[styles.Logo, { tintColor: colors.text }]}
+          source={require("../assets/images/icon.png")}
+          resizeMode="cover"
         />
+
+
         <CustomText style={styles.heading}>
           Welcome to iQueueBook
         </CustomText>

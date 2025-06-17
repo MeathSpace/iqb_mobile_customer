@@ -14,8 +14,8 @@ const QlistItem = ({ item, index, qlistLength }) => {
     return (
         <View style={[styles.qlistItem, {
             // backgroundColor: colors.background
-            borderBottomWidth: index !== qlistLength.length - 1 ? scale(1) : 0,
-            borderBottomColor: index !== qlistLength.length - 1 && "#0BA3AD1A"
+            // borderBottomWidth: index !== qlistLength.length - 1 ? scale(1) : 0,
+            // borderBottomColor: index !== qlistLength.length - 1 && "#0BA3AD1A"
         }]}>
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: scale(10) }}>
                 <Image
