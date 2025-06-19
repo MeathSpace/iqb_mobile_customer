@@ -40,11 +40,11 @@ const about = () => {
   return (
     <CustomTabView
       style={{
-        paddingVertical: verticalScale(0),
-        paddingTop: verticalScale(10),
+        // paddingVertical: verticalScale(0),
+        // paddingTop: verticalScale(10),
         paddingBottom: Platform.OS === "ios" ? verticalScale(80) : verticalScale(20)
       }}>
-      <Pressable
+      {/* <Pressable
         onPress={() => router.back()}
         style={{
           flexDirection: "row",
@@ -55,10 +55,15 @@ const about = () => {
       >
         <ArrowLeftIcon size={scale(18)} />
         <CustomText>About</CustomText>
-      </Pressable>
+      </Pressable> */}
 
       <View style={{
-        paddingVertical: verticalScale(20)
+        // paddingVertical: verticalScale(20)
+        backgroundColor: "#fff",
+        padding: scale(10),
+        borderRadius: scale(10),
+        borderWidth: scale(1),
+        borderColor: "rgba(0,0,0,0.15)"
       }}>
 
         {
@@ -71,7 +76,7 @@ const about = () => {
                   flexDirection: "row",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  height: verticalScale(60)
+                  height: verticalScale(50)
                 }}
               >
                 <View
@@ -99,12 +104,21 @@ const about = () => {
 
       <View
         style={{
-          height: verticalScale(60)
+          backgroundColor: "#fff",
+          padding: scale(10),
+          borderRadius: scale(10),
+          borderWidth: scale(1),
+          borderColor: "rgba(0,0,0,0.15)",
+          height: verticalScale(50),
+          marginTop: verticalScale(20),
+          justifyContent: "center",
+          alignItems: "center"
         }}
       >
         <CustomText
           style={{
-            fontFamily: "AirbnbCereal_W_Bk",
+            // fontFamily: "AirbnbCereal_W_MD",
+
           }}
         >Version 1.0.0.1</CustomText>
       </View>

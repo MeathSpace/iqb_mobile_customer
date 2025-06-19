@@ -42,6 +42,10 @@ export const HeartIcon = ({ size = moderateScale(24), color = 'black', style }) 
     <AntDesign name="hearto" size={size} color={color} style={style} />
 );
 
+export const HeartFilledIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <AntDesign name="heart" size={size} color={color} style={style} />
+);
+
 export const HelpIcon = ({ size = moderateScale(24), color = 'black', style }) => (
     <Feather name="help-circle" size={size} color={color} style={style} />
 );
@@ -182,4 +186,12 @@ export const MenuIcon = ({ size = moderateScale(24), color = 'black', style }) =
 
 export const FilterIcon = ({ size = moderateScale(24), color = 'black', style }) => (
     <FontAwesome name="filter" size={size} color={color} style={style} />
+);
+
+export const EmailIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <MaterialCommunityIcons name="email" size={size} color={color} style={style} />
+);
+
+export const WhatsappIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <FontAwesome5 name="whatsapp" size={size} color={color} style={style} />
 );

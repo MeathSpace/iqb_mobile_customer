@@ -95,18 +95,21 @@ const account = () => {
   };
 
   return (
-    <CustomTabView
+    <View
       style={{
+        backgroundColor: "#0BA3AD0D",
+        flex: 1,
         justifyContent: "space-between",
-        paddingVertical: verticalScale(0),
-        paddingTop: verticalScale(10),
-        paddingBottom: Platform.OS === "ios" ? verticalScale(80) : verticalScale(20)
+        padding: scale(10)
+        // paddingVertical: verticalScale(10),
+        // paddingTop: verticalScale(10),
+        // paddingBottom: Platform.OS === "ios" ? verticalScale(80) : verticalScale(20)
       }}>
 
       <View>
         <View
           onPress={() => router.push("/editProfile")}
-          style={[styles.profileCard, { backgroundColor: "#0BA3AD26", marginBottom: verticalScale(10) }]}>
+          style={[styles.profileCard, { backgroundColor: "#fff", marginBottom: verticalScale(10) }]}>
           {/* <View style={{ flexDirection: "row", alignItems: "center", gap: moderateScale(10) }}> */}
           <View style={{ gap: moderateScale(5) }}>
             <CustomText style={{ fontFamily: "AirbnbCereal_W_Bd", fontSize: scale(22) }}>{authenticatedUser?.name}</CustomText>
@@ -123,7 +126,15 @@ const account = () => {
         </View>
 
 
-        <View>
+        <View
+          style={{
+            backgroundColor: "#fff",
+            padding: scale(10),
+            borderRadius: scale(10),
+            borderWidth: scale(1),
+            borderColor: "rgba(0,0,0,0.15)"
+          }}
+        >
           <Pressable
             onPress={() => router.push("/editProfile")}
             style={styles.profileItem}>
@@ -165,107 +176,111 @@ const account = () => {
             </View>
             <RightIcon size={scale(16)} />
           </Pressable>
+
+          <Pressable
+            style={styles.profileItem}
+            onPress={() => router.push("/connectSalon")}
+          >
+            <View style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: scale(10)
+            }}>
+              <View
+                style={{
+                  padding: scale(5),
+                  backgroundColor: "#fff",
+                  borderRadius: scale(50)
+                }}
+              >
+                <SalonIcon color='#343434' />
+              </View>
+              <CustomText style={{ fontFamily: "AirbnbCereal_W_Md" }}>Change Salon</CustomText>
+            </View>
+            <RightIcon size={scale(16)} />
+          </Pressable>
+
+          <Pressable
+            onPress={() => router.push("/about")}
+            style={styles.profileItem}>
+            <View style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: scale(10)
+            }}>
+              <View
+                style={{
+                  padding: scale(5),
+                  backgroundColor: "#fff",
+                  borderRadius: scale(50)
+                }}
+              >
+                <AboutIcon color='#343434' />
+              </View>
+              <CustomText style={{ fontFamily: "AirbnbCereal_W_Md" }}>About</CustomText>
+            </View>
+            <RightIcon size={scale(16)} />
+          </Pressable>
+
+          <Pressable
+            onPress={() => router.push("/helpSupport")}
+            style={styles.profileItem}>
+            <View style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: scale(10)
+            }}>
+              <View
+                style={{
+                  padding: scale(5),
+                  backgroundColor: "#fff",
+                  borderRadius: scale(50),
+                }}
+              >
+                <HelpIcon color='#343434' />
+              </View>
+              <CustomText style={{ fontFamily: "AirbnbCereal_W_Md" }}>Help & Support</CustomText>
+            </View>
+            <RightIcon size={scale(16)} />
+          </Pressable>
+
         </View>
 
-        {/* <View
+
+        <View
           style={{
-            height: verticalScale(1),
-            backgroundColor: "#DDDDDD",
-            marginVertical: verticalScale(10),
+            backgroundColor: "#fff",
+            padding: scale(10),
+            borderRadius: scale(10),
+            marginTop: verticalScale(10),
+            borderWidth: scale(1),
+            borderColor: "rgba(0,0,0,0.15)"
           }}
-        /> */}
-        {/* <CustomText style={{ fontFamily: "AirbnbCereal_W_Bd", height: verticalScale(35), marginTop: verticalScale(10) }}>Settings</CustomText> */}
-
-        <Pressable
-          style={styles.profileItem}
-          onPress={() => router.push("/connectSalon")}
         >
-          <View style={{
-            flexDirection: "row",
-            alignItems: "center",
-            gap: scale(10)
-          }}>
-            <View
-              style={{
-                padding: scale(5),
-                backgroundColor: "#fff",
-                borderRadius: scale(50)
-              }}
-            >
-              <SalonIcon color='#343434' />
+          <Pressable
+            onPress={logoutPressed}
+            style={styles.profileItem}>
+            <View style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: scale(10)
+            }}>
+              <View
+                style={{
+                  padding: scale(5),
+                  backgroundColor: "#E11D481A",
+                  borderRadius: scale(50)
+                }}
+              >
+                <LogoutIcon color='#E11D48' size={scale(18)} />
+              </View>
+              <CustomText style={{ fontFamily: "AirbnbCereal_W_Md", color: "#E11D48" }}>Logout</CustomText>
             </View>
-            <CustomText style={{ fontFamily: "AirbnbCereal_W_Md" }}>Change Salon</CustomText>
-          </View>
-          <RightIcon size={scale(16)} />
-        </Pressable>
-
-        <Pressable
-          onPress={() => router.push("/about")}
-          style={styles.profileItem}>
-          <View style={{
-            flexDirection: "row",
-            alignItems: "center",
-            gap: scale(10)
-          }}>
-            <View
-              style={{
-                padding: scale(5),
-                backgroundColor: "#fff",
-                borderRadius: scale(50)
-              }}
-            >
-              <AboutIcon color='#343434' />
-            </View>
-            <CustomText style={{ fontFamily: "AirbnbCereal_W_Md" }}>About</CustomText>
-          </View>
-          <RightIcon size={scale(16)} />
-        </Pressable>
-
-        <Pressable
-          onPress={() => router.push("/helpSupport")}
-          style={styles.profileItem}>
-          <View style={{
-            flexDirection: "row",
-            alignItems: "center",
-            gap: scale(10)
-          }}>
-            <View
-              style={{
-                padding: scale(5),
-                backgroundColor: "#fff",
-                borderRadius: scale(50),
-              }}
-            >
-              <HelpIcon color='#343434' />
-            </View>
-            <CustomText style={{ fontFamily: "AirbnbCereal_W_Md" }}>Help & Support</CustomText>
-          </View>
-          <RightIcon size={scale(16)} />
-        </Pressable>
-
-        <Pressable
-          onPress={logoutPressed}
-          style={styles.profileItem}>
-          <View style={{
-            flexDirection: "row",
-            alignItems: "center",
-            gap: scale(10)
-          }}>
-            <View
-              style={{
-                padding: scale(5),
-                backgroundColor: "#E11D481A",
-                borderRadius: scale(50)
-              }}
-            >
-              <LogoutIcon color='#E11D48' size={scale(18)}/>
-            </View>
-            <CustomText style={{ fontFamily: "AirbnbCereal_W_Md", color: "#E11D48" }}>Logout</CustomText>
-          </View>
-        </Pressable>
+          </Pressable>
+        </View>
 
       </View>
-    </CustomTabView>
+    </View>
   )
 }
 
@@ -289,9 +304,10 @@ const styles = StyleSheet.create({
     // paddingVertical: verticalScale(10),
     height: verticalScale(118),
     padding: scale(24),
-    borderRadius: scale(15),
+    borderRadius: scale(10),
     // marginVertical: verticalScale(20),
-    // borderWidth: scale(1),
+    borderWidth: scale(1),
+    borderColor: "rgba(0,0,0,0.15)"
   },
   // profile_item: {
   //   flexDirection: "row",

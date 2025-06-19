@@ -70,7 +70,7 @@ const SearchHeader = () => {
                     <SearchIcon size={moderateScale(16)} color={colors.text} />
                 </Pressable>
             </View>
-            <Link href="/account">
+            {/* <Link href="/account">
                 <Image
                     style={{ height: moderateScale(35), width: moderateScale(35), borderRadius: moderateScale(20) }}
                     source={authenticatedUser?.imageUrl}
@@ -78,7 +78,7 @@ const SearchHeader = () => {
                     contentFit="cover"
                     transition={1000}
                 />
-            </Link>
+            </Link> */}
 
             {filteredCities.length > 0 && query.length > 0 && (
                 <FlatList

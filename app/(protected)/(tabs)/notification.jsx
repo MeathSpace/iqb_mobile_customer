@@ -18,7 +18,7 @@ const notification = () => {
                 paddingTop: verticalScale(10),
                 paddingBottom: Platform.OS === "ios" ? verticalScale(80) : verticalScale(20)
             }}>
-            <Pressable
+            {/* <Pressable
                 onPress={() => router.push("/home")}
                 style={{
                     flexDirection: "row",
@@ -29,7 +29,7 @@ const notification = () => {
             >
                 <ArrowLeftIcon size={scale(18)} />
                 <CustomText>Notifcation</CustomText>
-            </Pressable>
+            </Pressable> */}
 
             {
                 [0, 1, 2].map((item, index) => {
@@ -46,14 +46,14 @@ const notification = () => {
                             }}
                         >
                             <Image
-                                style={{ height: scale(65), width: scale(65), borderRadius: scale(40) }}
+                                style={{ height: scale(50), width: scale(50), borderRadius: scale(40) }}
                                 source={{ uri: "https://t3.ftcdn.net/jpg/02/43/12/34/360_F_243123463_zTooub557xEWABDLk0jJklDyLSGl2jrr.jpg" }}
                                 // placeholder={{ blurhash }}
                                 contentFit="cover"
                                 transition={300}
                             />
 
-                            <View style={{ gap: verticalScale(8), flex: 1 }}>
+                            <View style={{ gap: verticalScale(5), flex: 1 }}>
                                 <CustomText
                                     style={{
                                         fontSize: scale(14)

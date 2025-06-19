@@ -11,7 +11,7 @@ import SalonCard from '../../../components/SalonCard';
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomTabView from '../../../components/CustomTabView';
-import { ArrowLeftIcon, CarIcon, ExternalLinkIcon, HeartIcon } from '../../../constants/icons';
+import { ArrowLeftIcon, CarIcon, ExternalLinkIcon, HeartFilledIcon, HeartIcon } from '../../../constants/icons';
 import { Image } from 'expo-image';
 import CustomText from '../../../components/CustomText';
 import { useRouter } from 'expo-router';
@@ -55,7 +55,7 @@ const MyFavourites = () => {
             style={{
                 paddingBottom: Platform.OS === "ios" ? verticalScale(80) : verticalScale(0)
             }}>
-            <Pressable
+            {/* <Pressable
                 onPress={() => router.back()}
                 style={{
                     flexDirection: "row",
@@ -66,7 +66,7 @@ const MyFavourites = () => {
             >
                 <ArrowLeftIcon size={scale(18)} />
                 <CustomText>My Favorites</CustomText>
-            </Pressable>
+            </Pressable> */}
 
             <FlatList
                 contentContainerStyle={styles.listContainer}
@@ -74,16 +74,19 @@ const MyFavourites = () => {
                 renderItem={({ item }) => (
                     <View
                         style={{
-                            height: verticalScale(270),
+                            // height: verticalScale(270),
                             width: "100%",
                             borderRadius: scale(8),
-                            borderColor: "#E11D48",
-                            borderWidth: scale(1)
+                            // borderColor: "#E11D48",
+                            borderWidth: scale(1),
+                            borderColor: "#d3d3d3",
+                            position: "relative",
+
                         }}
                     >
                         <Image
                             style={{
-                                height: verticalScale(210),
+                                height: verticalScale(130),
                                 borderTopLeftRadius: scale(7),
                                 borderTopRightRadius: scale(7),
                             }}
@@ -91,29 +94,57 @@ const MyFavourites = () => {
                             contentFit="cover"
                             transition={1000}
                         />
-                        <View style={{ flex: 1, paddingHorizontal: scale(15), flexDirection: "row", justifyContent: "space-between", alignItems: "center" }}>
-                            <View style={{ gap: verticalScale(5) }}>
+                        <View style={{
+                            flex: 1,
+                            // paddingHorizontal: scale(15),
+                            flexDirection: "row",
+                            justifyContent: "space-between",
+                            alignItems: "center",
+                            backgroundColor: "#fff",
+                            padding: scale(10),
+                            borderBottomLeftRadius: scale(7),
+                            borderBottomRightRadius: scale(7),
+                        }}>
+                            <View style={{ gap: verticalScale(3) }}>
                                 <CustomText
                                     style={{
-                                        fontFamily: "AirbnbCereal_W_Bd"
+                                        fontFamily: "AirbnbCereal_W_Blk"
                                     }}
                                 >The Beauty Lounge</CustomText>
+                                <CustomText
+                                    style={{
+                                        color: "gray",
+                                        fontSize: scale(12),
+                                        // width: "80%",
+                                    }}
+                                >30 Elliot Rd, Selly Oak, Birmingham, UK, B29 4AQ</CustomText>
                                 <View style={{ flexDirection: "row", alignItems: "center", gap: scale(10) }}>
                                     <CarIcon size={scale(16)} />
                                     <CustomText
                                         style={{
-                                            fontFamily: "AirbnbCereal_W_Bk"
+                                            // fontFamily: "AirbnbCereal_W_Bk"
+                                            color: "gray"
                                         }}
                                     >2.1 miles away</CustomText>
                                 </View>
 
                             </View>
 
-                            <View style={{ flexDirection: "row", alignItems: "center", gap: scale(20) }}>
+                            {/* <View style={{ flexDirection: "row", alignItems: "center", gap: scale(20) }}>
                                 <ExternalLinkIcon size={scale(18)} color={"#E11D48"} />
-                                <HeartIcon size={scale(18)} color={"#E11D48"} />
-                            </View>
+                            </View> */}
                         </View>
+
+                        <View
+                            style={{
+                                position: "absolute",
+                                top: verticalScale(10),
+                                right: scale(10),
+                                backgroundColor: "#fff",
+                                borderRadius: scale(20),
+                                padding: scale(7),
+                            }}
+                        ><HeartFilledIcon size={scale(16)} color={"#E11D48"}/></View>
 
                     </View>
                 )}

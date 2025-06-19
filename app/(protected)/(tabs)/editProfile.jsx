@@ -122,6 +122,7 @@ const editProfile = () => {
         <ScrollView
             style={{
                 flex: 1,
+                backgroundColor: "#0BA3AD0D"
             }}
 
             contentContainerStyle={{
@@ -142,12 +143,9 @@ const editProfile = () => {
                         gap: verticalScale(15)
                     }}
                 >
-                    <Pressable
-                        onPress={() => router.push("/account")}
-                    ><ArrowLeftIcon size={scale(18)} /></Pressable>
 
                     <View
-                        style={[styles.profileCard, { backgroundColor: Colors.modeColor.colorCode3, marginBottom: verticalScale(10) }]}>
+                        style={[styles.profileCard, { backgroundColor: "#fff" }]}>
                         {/* <View style={{ flexDirection: "row", alignItems: "center", gap: moderateScale(10) }}> */}
                         <View style={{ gap: moderateScale(5) }}>
                             <CustomText style={{ fontFamily: "AirbnbCereal_W_Bd", fontSize: scale(22) }}>{authenticatedUser?.name}</CustomText>
@@ -160,7 +158,7 @@ const editProfile = () => {
                             }}
                         >
                             <Image
-                                style={{ height: scale(90), width: scale(90), borderRadius: scale(10) }}
+                                style={{ height: scale(90), width: scale(90), borderRadius: scale(80) }}
                                 source={{ uri: authenticatedUser?.imageUrl }}
                                 // placeholder={{ blurhash }}
                                 contentFit="cover"
@@ -188,13 +186,13 @@ const editProfile = () => {
 
 
                     <View style={styles.inputWrapper}>
-                        <CustomText style={{ fontSize: scale(12) }}>First Name</CustomText>
+                        <CustomText>First Name</CustomText>
 
                         <TextInput
                             editable
                             placeholder="Enter your first name"
                             placeholderTextColor={colors.secondaryText}
-                            style={[false ? styles.inputFielderror : styles.inputField, { borderColor: Colors.modeColor.colorCode, backgroundColor: Colors.modeColor.colorCode3, fontFamily: "AirbnbCereal_W_Bk", color: colors.text }]}
+                            style={[false ? styles.inputFielderror : styles.inputField, { backgroundColor: "#fff", fontFamily: "AirbnbCereal_W_Bk", color: colors.text }]}
                             onChangeText={(text) => {
                                 setFirstNameError("")
                                 setFirstName(text)
@@ -204,13 +202,13 @@ const editProfile = () => {
                     </View>
 
                     <View style={styles.inputWrapper}>
-                        <CustomText style={{ fontSize: scale(12) }}>Last Name</CustomText>
+                        <CustomText>Last Name</CustomText>
 
                         <TextInput
                             editable
                             placeholder="Enter your last name"
                             placeholderTextColor={colors.secondaryText}
-                            style={[false ? styles.inputFielderror : styles.inputField, { borderColor: Colors.modeColor.colorCode, backgroundColor: Colors.modeColor.colorCode3, fontFamily: "AirbnbCereal_W_Bk", color: colors.text }]}
+                            style={[false ? styles.inputFielderror : styles.inputField, { backgroundColor: "#fff", fontFamily: "AirbnbCereal_W_Bk", color: colors.text }]}
                             onChangeText={(text) => {
                                 setLastNameError("")
                                 setLastName(text)
@@ -220,7 +218,7 @@ const editProfile = () => {
                     </View>
 
                     <View style={styles.inputWrapper}>
-                        <CustomText style={{ fontSize: scale(12) }}>Select Gender</CustomText>
+                        <CustomText>Select Gender</CustomText>
 
                         <DropDownPicker
                             listMode="SCROLLVIEW"
@@ -233,21 +231,23 @@ const editProfile = () => {
                             setItems={setGenderItems}
                             itemSeparator={true}
                             itemSeparatorStyle={{
-                                backgroundColor: Colors.modeColor.colorCode
+                                backgroundColor: "#0BA3AD1A"
                             }}
                             placeholder="Select a gender"
                             style={[
                                 styles.dropdown,
                                 {
-                                    borderColor: Colors.modeColor.colorCode,
-                                    backgroundColor: Colors.modeColor.colorCode3,
+                                    borderColor: "transparent",
+                                    backgroundColor: "#fff",
+                                    borderWidth: scale(1),
+                                    borderColor: "#d3d3d3"
                                 },
                             ]}
                             dropDownContainerStyle={[
                                 styles.dropdownContainer,
                                 {
-                                    borderColor: Colors.modeColor.colorCode,
-                                    backgroundColor: Colors.modeColor.colorCode3,
+                                    borderColor: "#0BA3AD1A",
+                                    backgroundColor: colors.card,
                                 }
                             ]}
                             textStyle={{
@@ -271,7 +271,7 @@ const editProfile = () => {
 
 
                     <View style={styles.inputWrapper}>
-                        <CustomText style={{ fontSize: scale(12) }}>Mobile Number</CustomText>
+                        <CustomText>Mobile Number</CustomText>
                         <PhoneInput
                             ref={phoneRef}
                             initialCountry={selectedCountry.cca2.toLowerCase()}
@@ -279,7 +279,7 @@ const editProfile = () => {
                             onChangePhoneNumber={(number) => phoneNumberHandler(number)}
                             onPressFlag={toggleCountryPicker}
                             textStyle={{ color: colors.text, fontSize: moderateScale(14) }}
-                            style={[styles.inputField, { borderColor: Colors.modeColor.colorCode, backgroundColor: Colors.modeColor.colorCode3, fontFamily: "AirbnbCereal_W_Bk", color: colors.text }]}
+                            style={[styles.inputField, { backgroundColor: "#fff", fontFamily: "AirbnbCereal_W_Bk", color: colors.text }]}
                         />
 
                         {countryPickerVisible && (
@@ -303,14 +303,14 @@ const editProfile = () => {
                     </View>
 
                     <View style={[styles.inputWrapper, { position: "relative" }]}>
-                        <CustomText style={{ fontSize: scale(12) }}>Date of Birth</CustomText>
+                        <CustomText>Date of Birth</CustomText>
 
                         <Pressable
                             style={[
                                 firstNameError ? styles.inputFielderror : styles.inputDateField,
                                 {
-                                    borderColor: Colors.modeColor.colorCode,
-                                    backgroundColor: Colors.modeColor.colorCode3,
+                                    // borderColor: Colors.modeColor.colorCode,
+                                    backgroundColor: "#fff",
                                     fontFamily: "AirbnbCereal_W_Bk",
                                     color: colors.text,
                                     justifyContent: "center", // Ensures CalendarIcon stays aligned
@@ -322,7 +322,7 @@ const editProfile = () => {
                         </Pressable>
 
                         {calenderModal && (
-                            <View style={{ position: "absolute", top: verticalScale(22), left: 0, zIndex: 100 }}>
+                            <View style={{ position: "absolute", top: verticalScale(34), left: 0, zIndex: 100 }}>
                                 <DateTimePicker
                                     mode="date"
                                     maximumDate={new Date()}
@@ -355,9 +355,11 @@ const styles = StyleSheet.create({
         justifyContent: "space-between",
         gap: moderateScale(10),
         // paddingVertical: verticalScale(10),
-        height: verticalScale(138),
+        height: verticalScale(118),
         padding: scale(24),
-        borderRadius: scale(4),
+        borderRadius: scale(10),
+        borderWidth: scale(1),
+        borderColor: "rgba(0,0,0,0.15)"
         // marginVertical: verticalScale(20),
         // borderWidth: scale(1),
     },
@@ -373,29 +375,32 @@ const styles = StyleSheet.create({
     },
 
     inputWrapper: {
-        gap: verticalScale(4),
+        gap: verticalScale(10),
     },
 
     inputField: {
-        height: verticalScale(35),
-        borderRadius: scale(8),
-        borderWidth: moderateScale(1.5),
-        paddingHorizontal: scale(10),
-        fontSize: scale(11),
-    },
-    inputDateField: {
-        height: verticalScale(35),
-        borderRadius: scale(8),
-        borderWidth: moderateScale(1.5),
+        height: verticalScale(40),
+        borderRadius: scale(4),
         paddingHorizontal: scale(10),
         fontSize: moderateScale(14),
-        position: "relative"
+        borderWidth: scale(1),
+        borderColor: "#d3d3d3"
+    },
+    inputDateField: {
+        height: verticalScale(40),
+        borderRadius: scale(4),
+        // borderWidth: moderateScale(1.5),
+        paddingHorizontal: scale(10),
+        fontSize: moderateScale(14),
+        position: "relative",
+        borderWidth: scale(1),
+        borderColor: "#d3d3d3"
     },
     dateIcon: {
         position: "absolute",
         right: scale(5),
-        top: verticalScale(16),
-        transform: [{ translateY: -(moderateScale(24) / moderateScale(2)) }]
+        top: verticalScale(10),
+        // transform: [{ translateY: -(verticalScale(24) / verticalScale(2)) }]
     },
     inputFielderror: {
 

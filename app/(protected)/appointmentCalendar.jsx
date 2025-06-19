@@ -14,13 +14,12 @@ import CustomText from '../../components/CustomText'
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { Colors } from '../../constants/Colors'
 import CustomSecondaryText from '../../components/CustomSecondaryText'
-import { AddIcon, ArrowLeftIcon, CheckIcon, ClockIcon } from '../../constants/icons'
+import { AddIcon, ArrowLeftIcon, CheckIcon, ClockIcon, LeftIcon, RightIcon } from '../../constants/icons'
 import { Image } from 'expo-image'
 import { useRouter } from 'expo-router'
+import moment from 'moment';
 
-
-const SingleJoin = () => {
-
+const appointmentCalendar = () => {
     const [activeSection, setActiveSection] = useState('services')
     const [scrolling, setScrolling] = useState(false)
     const [addIconPressCount, setAddIconPressCount] = useState(0);
@@ -30,6 +29,55 @@ const SingleJoin = () => {
         setScrolling(true)
         setAddIconPressCount(1)
     }
+
+    const router = useRouter()
+
+    // Calender 
+    const [currentMonth, setCurrentMonth] = useState(moment());
+    const [dates, setDates] = useState([]);
+
+    useEffect(() => {
+        generateDatesForMonth(currentMonth);
+    }, [currentMonth]);
+
+    const generateDatesForMonth = (monthMoment) => {
+        // Get start and end of month
+        const startOfMonth = monthMoment.clone().startOf('month');
+        const endOfMonth = monthMoment.clone().endOf('month');
+        const daysInMonth = monthMoment.daysInMonth();
+
+        let tempDates = [];
+        for (let i = 0; i < daysInMonth; i++) {
+            const dayMoment = startOfMonth.clone().add(i, 'days');
+            tempDates.push({
+                dayName: dayMoment.format('ddd'), // Sun, Mon, ...
+                date: dayMoment.format('DD'), // 01, 02, ...
+                month: dayMoment.format('MMM'), // Jan, Feb, ...
+                year: dayMoment.format('YYYY'),
+                fullDate: dayMoment.format('YYYY-MM-DD'),
+                slots: Math.floor(Math.random() * 10),
+                bgcolor: getRandomColor()
+            });
+        }
+        setDates(tempDates);
+    };
+
+    const getRandomColor = () => {
+        const letters = '0123456789ABCDEF';
+        let color = '#';
+        for (let i = 0; i < 6; i++) {
+            color += letters[Math.floor(Math.random() * 16)];
+        }
+        return color;
+    };
+
+    const goToPrevMonth = () => {
+        setCurrentMonth((prev) => prev.clone().subtract(1, 'month'));
+    };
+
+    const goToNextMonth = () => {
+        setCurrentMonth((prev) => prev.clone().add(1, 'month'));
+    };
 
     const paddingAnim = useRef(new Animated.Value(scale(15))).current;
     const flexAnim = useRef(new Animated.Value(0)).current;
@@ -48,20 +96,13 @@ const SingleJoin = () => {
         }).start();
     }, [scrolling]);
 
-
-
-    const router = useRouter()
-
     const renderSection = (key, title, content) => {
         const isActive = activeSection === key
 
         if (scrolling && !isActive) return null
 
-
         return isActive ? (
-            <Animated.View style={[styles.boxOpenWrapper, {
-                flex: flexAnim
-            }]}>
+            <Animated.View style={[styles.boxOpenWrapper, { flex: flexAnim }]}>
                 <ScrollView
                     style={{ flex: 1 }}
                     contentContainerStyle={{
@@ -105,6 +146,7 @@ const SingleJoin = () => {
                             </CustomText>
                         </Pressable> */}
                     </View>
+
                     {
                         activeSection === "services" && (
                             content.map((item, index) => {
@@ -255,6 +297,7 @@ const SingleJoin = () => {
                             })
                         )
                     }
+
 
                     {
                         activeSection === "barber" && (
@@ -409,6 +452,191 @@ const SingleJoin = () => {
                         )
                     }
 
+
+                    {
+                        activeSection === "calendar" && (
+                            <>
+                                <View
+                                    style={{
+                                        flexDirection: "row",
+                                        justifyContent: "space-between",
+                                        alignItems: "center"
+                                    }}
+                                >
+                                    <View
+                                        style={{
+                                            // borderColor: "#DDDDDD",
+                                            // borderWidth: scale(0.6),
+                                            paddingVertical: verticalScale(4),
+                                            paddingHorizontal: scale(10),
+                                            alignSelf: 'flex-start',
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            borderRadius: scale(0.6)
+                                        }}
+                                    ><CustomText
+                                        style={{
+                                            fontSize: scale(17),
+                                        }}
+                                    >
+                                            {currentMonth.format('MMMM YYYY')}
+                                        </CustomText></View>
+
+                                    <View style={styles.navButtons}>
+                                        <Pressable onPress={goToPrevMonth} style={styles.navButton}>
+                                            <LeftIcon color={Colors.modeColor.colorCode} size={scale(16)} />
+                                        </Pressable>
+                                        <Pressable onPress={goToNextMonth} style={styles.navButton}>
+                                            <RightIcon color={Colors.modeColor.colorCode} size={scale(16)} />
+                                        </Pressable>
+                                    </View>
+                                </View>
+
+
+                                <ScrollView
+                                    horizontal
+                                    showsHorizontalScrollIndicator={false}
+                                    contentContainerStyle={styles.weekContainer}
+                                >
+                                    {dates.map((day, index) => (
+                                        <Pressable
+                                            onPress={() => console.log(day)}
+                                            key={day.fullDate} style={[styles.dayBox, {
+                                                backgroundColor: index === 2 && "#efefef"
+                                            }]}>
+                                            <CustomText
+                                                style={{
+                                                    fontSize: scale(15),
+                                                    color: index === 2 && "#DDDDDD"
+                                                }}
+                                            >{day.dayName}</CustomText>
+                                            <CustomText
+                                                style={{
+                                                    fontSize: scale(16),
+                                                    color: index === 2 ? "#DDDDDD" : Colors.modeColor.colorCode,
+                                                }}
+                                            >{day.date}</CustomText>
+                                            {
+                                                index === 2 ? (
+                                                    <CustomText
+                                                        style={{
+                                                            fontSize: scale(13),
+                                                            fontFamily: "AirbnbCereal_W_Bk",
+                                                            lineHeight: scale(16),
+                                                            color: "#DDDDDD"
+                                                        }}
+                                                    >
+                                                        -
+                                                    </CustomText>
+                                                ) : (
+                                                    <View
+                                                        style={{
+                                                            flexDirection: "row",
+                                                            alignItems: "center",
+                                                            gap: scale(5),
+                                                            paddingVertical: scale(2),
+                                                        }}
+                                                    >
+                                                        <View
+                                                            style={{
+                                                                width: scale(8),
+                                                                height: scale(8),
+                                                                borderRadius: scale(4),
+                                                                backgroundColor: day.bgcolor,
+                                                            }}
+                                                        />
+                                                        <CustomText
+                                                            style={{
+                                                                fontSize: scale(13),
+                                                                fontFamily: "AirbnbCereal_W_Bk",
+                                                                lineHeight: scale(16),
+                                                            }}
+                                                        >
+                                                            {day.slots} Slots
+                                                        </CustomText>
+                                                    </View>
+                                                )
+                                            }
+
+                                        </Pressable>
+                                    ))}
+                                </ScrollView>
+
+                                <View style={{
+                                    flex: 1,
+                                    flexDirection: "row",
+                                    flexWrap: "wrap",
+                                    gap: scale(10)
+                                }}>
+                                    {
+                                        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((item, index) => {
+                                            return (
+                                                <Pressable
+                                                    onPress={() => {
+                                                        if (addIconPressCount === 1) {
+                                                            setScrolling(false)
+                                                            setActiveSection("appointmentnote")
+                                                            setAddIconPressCount(0)
+                                                        }
+                                                    }}
+                                                    key={index}
+                                                    style={{
+                                                        backgroundColor: Colors.modeColor.colorCode3,
+                                                        alignSelf: "flex-start",
+                                                        width: scrolling ? "31%" : "48%",
+                                                        height: verticalScale(40),
+                                                        justifyContent: "center",
+                                                        alignItems: "center",
+                                                        // borderColor: Colors.modeColor.colorCode,
+                                                        // borderWidth: scale(1),
+                                                        borderRadius: scale(8)
+                                                    }}>
+                                                    <CustomText style={{
+                                                        color: Colors.modeColor.colorCode,
+                                                        fontSize: moderateScale(12)
+                                                    }}>09: 00 A.M</CustomText>
+                                                </Pressable>
+                                            )
+                                        })
+                                    }
+
+                                </View>
+                            </>
+                        )
+                    }
+
+                    {
+                        activeSection === "appointmentnote" && (
+                            <>
+                                <TextInput
+                                    style={{
+                                        flexGrow: 1,
+                                        width: "98%",
+                                        borderWidth: scale(1),
+                                        minHeight: verticalScale(200),
+                                        borderColor: "#DDDDDD",
+                                        padding: scale(16),
+                                        borderRadius: scale(4),
+                                        textAlignVertical: "top",
+                                    }}
+                                    multiline
+                                    placeholder='Enter your appointment note'
+                                />
+                                <Pressable
+                                    onPress={() => {
+                                        if (addIconPressCount === 1) {
+                                            setScrolling(false)
+                                            setActiveSection("")
+                                            setAddIconPressCount(0)
+                                        }
+                                    }}
+                                    style={styles.searchButton}>
+                                    <CustomText style={{ color: '#fff' }}>Done</CustomText>
+                                </Pressable>
+                            </>
+                        )
+                    }
+
                 </ScrollView>
 
                 {
@@ -514,7 +742,16 @@ const SingleJoin = () => {
                                 { id: 9 },
                             ]
                         )}
-
+                        {renderSection(
+                            'calendar',
+                            'Choose Date ?',
+                            ''
+                        )}
+                        {renderSection(
+                            'appointmentnote',
+                            'Appointment Note',
+                            ''
+                        )}
                     </View>
 
                     {!scrolling && (
@@ -531,7 +768,7 @@ const SingleJoin = () => {
     )
 }
 
-export default SingleJoin
+export default appointmentCalendar
 
 const styles = StyleSheet.create({
     container: {
@@ -577,7 +814,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginVertical: verticalScale(15),
+        marginTop: verticalScale(10),
     },
     clearAll: {
         textDecorationLine: 'underline',
@@ -600,7 +837,6 @@ const styles = StyleSheet.create({
     serviceItem: {
         width: "100%",
         height: verticalScale(124),
-        backgroundColor: "red",
         // borderWidth: scale(0.5),
         // borderColor: "#D2D2D2",
         // borderRadius: scale(8),
@@ -630,9 +866,9 @@ const styles = StyleSheet.create({
         // marginBottom: 10,
     },
     navButton: {
-        backgroundColor: Colors.modeColor.colorCode3,
-        borderColor: Colors.modeColor.colorCode,
-        borderWidth: scale(1),
+        backgroundColor: "#0BA3AD0D",
+        // borderColor: Colors.modeColor.colorCode,
+        // borderWidth: scale(1),
         width: scale(30),
         height: scale(30),
         borderRadius: scale(25),
@@ -655,3 +891,5 @@ const styles = StyleSheet.create({
     },
 
 })
+
+
