@@ -444,7 +444,7 @@
 // })
 
 
-import { FlatList, Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { FlatList, Platform, Pressable, ScrollView, StyleSheet, Text, useColorScheme, View } from 'react-native'
 import React, { useCallback, useMemo, useRef, useState } from 'react'
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import BottomSheet, { BottomSheetScrollView, BottomSheetView } from '@gorhom/bottom-sheet';
@@ -887,6 +887,9 @@ const salon = () => {
 
     ]
 
+    const { colors } = useTheme()
+    const colorScheme = useColorScheme();
+
     return (
         <CustomTabView
             style={{
@@ -894,7 +897,9 @@ const salon = () => {
                 paddingTop: verticalScale(0),
             }}
         >
-            <GestureHandlerRootView style={styles.container}>
+            <GestureHandlerRootView style={[styles.container, {
+                backgroundColor: colors.background
+            }]}>
                 <View>
                     <FlatList
                         data={advertisementData}
@@ -953,7 +958,7 @@ const salon = () => {
                     snapPoints={Platform.OS === "ios" ? ["72%", "90%"] : ["68%", "87%"]}
                     enableDynamicSizing={false}
                     backgroundStyle={{
-                        backgroundColor: "#fff",
+                        backgroundColor: colors.background,
                         borderTopLeftRadius: scale(20),
                         borderTopRightRadius: scale(20),
                     }}
@@ -997,7 +1002,7 @@ const salon = () => {
                                     <Pressable
                                         key={index}
                                         style={[styles.tabBtn, {
-                                            backgroundColor: selectedTab === item ? Colors.modeColor.colorCode : "#0BA3AD1A"
+                                            backgroundColor: selectedTab === item ? Colors.modeColor.colorCode : "#00B0901A"
                                         }]}
                                         onPress={() => {
                                             setSelectedTab(item)
@@ -1017,7 +1022,7 @@ const salon = () => {
                                 <>
                                     <View
                                         style={{
-                                            backgroundColor: "#0BA3AD1A",
+                                            backgroundColor: "#00B0901A",
                                             borderRadius: scale(4),
                                             padding: scale(10),
                                             gap: verticalScale(5)
@@ -1032,14 +1037,14 @@ const salon = () => {
                                         <CustomText
                                             style={{
                                                 fontSize: scale(14),
-                                                color: "#343434"
+                                                color: "gray"
                                             }}
                                         >At our salon, we believe that beauty is personal and every client deserves a tailored experience. From classic cuts to modern styling, our skilled professionals are here to provide high-quality hair, skin, and grooming services in a clean, relaxing environment.</CustomText>
                                     </View>
 
                                     <View
                                         style={{
-                                            backgroundColor: "#0BA3AD1A",
+                                            backgroundColor: "#00B0901A",
                                             borderRadius: scale(4),
                                             padding: scale(10),
                                             gap: verticalScale(5),
@@ -1059,7 +1064,7 @@ const salon = () => {
                                             <CustomText
                                                 style={{
                                                     fontSize: scale(14),
-                                                    color: "#343434"
+                                                    color: "gray"
                                                 }}
                                             >
                                                 If you have any questions
@@ -1077,7 +1082,7 @@ const salon = () => {
                                                 style={{
                                                     width: scale(30),
                                                     height: scale(30),
-                                                    backgroundColor: "#fff",
+                                                    backgroundColor: colors.background,
                                                     justifyContent: "center",
                                                     alignItems: "center",
                                                     borderRadius: scale(4)
@@ -1090,7 +1095,7 @@ const salon = () => {
                                                 style={{
                                                     width: scale(30),
                                                     height: scale(30),
-                                                    backgroundColor: "#fff",
+                                                    backgroundColor: colors.background,
                                                     justifyContent: "center",
                                                     alignItems: "center",
                                                     borderRadius: scale(4)
@@ -1103,7 +1108,7 @@ const salon = () => {
                                                 style={{
                                                     width: scale(30),
                                                     height: scale(30),
-                                                    backgroundColor: "#fff",
+                                                    backgroundColor: colors.background,
                                                     justifyContent: "center",
                                                     alignItems: "center",
                                                     borderRadius: scale(4)
@@ -1132,8 +1137,13 @@ const salon = () => {
                                             zoomEnabled={false}
                                             rotateEnabled={false}
                                             pitchEnabled={false}
-                                            style={[styles.map, { borderColor: "#efefef", borderWidth: scale(1) }]}
-                                        // customMapStyle={colorScheme === "dark" ? darkMapStyle : []}
+                                            style={[styles.map, 
+                                                { 
+                                                    // borderColor: "#efefef", 
+                                                    // borderWidth: scale(1) 
+                                                }
+                                            ]}
+                                            customMapStyle={colorScheme === "dark" ? darkMapStyle : []}
                                         />
                                         <View
                                             style={{
@@ -1158,7 +1168,7 @@ const salon = () => {
                                                 <CustomText
                                                     style={{
                                                         fontSize: scale(14),
-                                                        color: "#343434",
+                                                        color: "gray",
                                                         maxWidth: "85%"
                                                     }}
                                                 >
@@ -1178,13 +1188,13 @@ const salon = () => {
                                                     style={{
                                                         width: scale(30),
                                                         height: scale(30),
-                                                        backgroundColor: "#fff",
+                                                        backgroundColor: colors.background,
                                                         justifyContent: "center",
                                                         alignItems: "center",
                                                         borderRadius: scale(4)
                                                     }}
                                                 >
-                                                    <MapIcon size={scale(18)} color={"#000"} />
+                                                    <MapIcon size={scale(18)} color={"#fbbf24"} />
                                                 </Pressable>
 
                                             </View>
@@ -1195,7 +1205,7 @@ const salon = () => {
 
                                     <View
                                         style={{
-                                            backgroundColor: "#0BA3AD1A",
+                                            backgroundColor: "#00B0901A",
                                             borderRadius: scale(4),
                                             padding: scale(10),
                                             gap: verticalScale(5),
@@ -1215,7 +1225,7 @@ const salon = () => {
                                             <CustomText
                                                 style={{
                                                     fontSize: scale(14),
-                                                    color: "#343434"
+                                                    color: "gray"
                                                 }}
                                             >
                                                 Social links
@@ -1233,7 +1243,7 @@ const salon = () => {
                                                 style={{
                                                     width: scale(30),
                                                     height: scale(30),
-                                                    backgroundColor: "#fff",
+                                                    backgroundColor: colors.background,
                                                     justifyContent: "center",
                                                     alignItems: "center",
                                                     borderRadius: scale(4)
@@ -1246,7 +1256,7 @@ const salon = () => {
                                                 style={{
                                                     width: scale(30),
                                                     height: scale(30),
-                                                    backgroundColor: "#fff",
+                                                    backgroundColor: colors.background,
                                                     justifyContent: "center",
                                                     alignItems: "center",
                                                     borderRadius: scale(4)
@@ -1293,7 +1303,7 @@ const salon = () => {
                                                         style={{
                                                             // height: verticalScale(195),
                                                             borderRadius: scale(10),
-                                                            backgroundColor: "#0BA3AD0D",
+                                                            backgroundColor: "#00B0901A",
                                                             padding: scale(12),
                                                             gap: verticalScale(10)
                                                         }}
@@ -1393,7 +1403,7 @@ const salon = () => {
                                                         <View style={{ marginTop: verticalScale(5), gap: verticalScale(5) }}>
                                                             <CustomText
                                                                 style={{
-                                                                    color: "#00000099",
+                                                                    color: "gray",
                                                                     fontSize: scale(12)
                                                                 }}
                                                             >Lorem ipsum dolor sit amet, consectetur adipisicing elit. Modi in odit tenetur, exercitationem qui similique?</CustomText>
@@ -1411,7 +1421,7 @@ const salon = () => {
                                                                     justifyContent: "space-between",
                                                                     width: scale(75),
                                                                     gap: scale(2),
-                                                                    backgroundColor: "#fff",
+                                                                    backgroundColor: colors.background,
                                                                     paddingHorizontal: scale(5),
                                                                     borderRadius: scale(4)
                                                                 }}>
@@ -1469,7 +1479,7 @@ const salon = () => {
                                                                 width: scale(60),
                                                                 height: scale(60),
                                                                 borderRadius: scale(30),
-                                                                backgroundColor: "#fff",
+                                                                backgroundColor: colors.background,
                                                                 marginHorizontal: "auto"
                                                             }}
                                                             onPress={() => {
@@ -1488,7 +1498,7 @@ const salon = () => {
                                                                 fontFamily: "AirbnbCereal_W_Md",
                                                                 fontSize: scale(12),
                                                                 textAlign: "center",
-                                                                color: "#343434",
+                                                                color: "gray",
                                                             }}
                                                         >{item.name}</CustomText>
                                                     </View>

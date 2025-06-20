@@ -17,6 +17,7 @@ import CustomSecondaryText from '../../components/CustomSecondaryText'
 import { AddIcon, ArrowLeftIcon, CheckIcon, ClockIcon } from '../../constants/icons'
 import { Image } from 'expo-image'
 import { useRouter } from 'expo-router'
+import { useTheme } from '@react-navigation/native'
 
 
 const SingleJoin = () => {
@@ -51,6 +52,7 @@ const SingleJoin = () => {
 
 
     const router = useRouter()
+    const { colors } = useTheme()
 
     const renderSection = (key, title, content) => {
         const isActive = activeSection === key
@@ -60,7 +62,8 @@ const SingleJoin = () => {
 
         return isActive ? (
             <Animated.View style={[styles.boxOpenWrapper, {
-                flex: flexAnim
+                flex: flexAnim,
+                backgroundColor: colors.background
             }]}>
                 <ScrollView
                     style={{ flex: 1 }}
@@ -87,7 +90,7 @@ const SingleJoin = () => {
                                 alignItems: "center",
                                 gap: scale(5)
                             }}>
-                            <ArrowLeftIcon />
+                            <ArrowLeftIcon color={colors.text}/>
                             <CustomText style={{ fontSize: scale(16), fontFamily: "AirbnbCereal_W_Blk" }}>{title}</CustomText>
                         </Pressable>
 
@@ -115,7 +118,7 @@ const SingleJoin = () => {
                                         style={{
                                             // height: verticalScale(195),
                                             borderRadius: scale(10),
-                                            backgroundColor: "#0BA3AD0D",
+                                            backgroundColor: "#00B0901A",
                                             padding: scale(12),
                                             gap: verticalScale(10)
                                         }}
@@ -215,7 +218,7 @@ const SingleJoin = () => {
                                         <View style={{ marginTop: verticalScale(5), gap: verticalScale(5) }}>
                                             <CustomText
                                                 style={{
-                                                    color: "#00000099",
+                                                    color: "gray",
                                                     fontSize: scale(12)
                                                 }}
                                             >Lorem ipsum dolor sit amet, consectetur adipisicing elit. Modi in odit tenetur, exercitationem qui similique?</CustomText>
@@ -233,7 +236,7 @@ const SingleJoin = () => {
                                                     justifyContent: "space-between",
                                                     width: scale(75),
                                                     gap: scale(2),
-                                                    backgroundColor: "#fff",
+                                                    backgroundColor: colors.background,
                                                     paddingHorizontal: scale(5),
                                                     borderRadius: scale(4)
                                                 }}>
@@ -260,98 +263,12 @@ const SingleJoin = () => {
                         activeSection === "barber" && (
                             content.map((item, index) => {
                                 return (
-                                    // <Pressable
-                                    //     style={styles.barberItem}
-                                    // onPress={() => {
-                                    //     if (addIconPressCount === 1) {
-                                    //         setScrolling(false)
-                                    //         setActiveSection("calendar")
-                                    //         setAddIconPressCount(0)
-                                    //     }
-                                    // }}
-                                    // key={index}
-                                    // >
-                                    //     <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                    //         <View style={{ flex: 1, flexDirection: "row", gap: 10 }}>
-                                    // <Image
-                                    //     style={{ height: scale(60), width: scale(60), borderRadius: scale(40) }}
-                                    //     source={{ uri: "https://media.istockphoto.com/id/1365608023/photo/shot-of-a-handsome-young-barber-standing-alone-in-his-salon.jpg?s=612x612&w=0&k=20&c=0l2Q3UVgXNnf3lbUvMM7hT18-AAnOloeoNMOHntomcw=" }}
-                                    //     contentFit="cover"
-                                    //     transition={300}
-                                    // />
-                                    //             <View style={{ gap: verticalScale(5), flex: 1 }}>
-                                    //                 <CustomText style={{ fontSize: scale(15) }}>Michael</CustomText>
-                                    //                 <CustomSecondaryText
-                                    //                     style={{
-                                    //                         fontSize: scale(11),
-                                    //                         fontFamily: "AirbnbCereal_W_Bk",
-                                    //                         flexWrap: "wrap",
-                                    //                         color: "#808080"
-                                    //                     }}>
-                                    //                     Cutting, Styling, Haircut, Hair Straightening
-                                    //                 </CustomSecondaryText>
-                                    //             </View>
-                                    //         </View>
-
-                                    //         <View style={{ gap: verticalScale(5) }}>
-                                    //             <CustomSecondaryText style={{
-                                    //                 textAlign: "center",
-                                    //                 fontSize: scale(12),
-                                    //                 fontFamily: "AirbnbCereal_W_Bk",
-                                    //                 color: "#808080"
-                                    //             }}>Queueing</CustomSecondaryText>
-                                    //             <CustomText style={{
-                                    //                 textAlign: "center",
-                                    //                 fontSize: scale(22)
-                                    //             }}>2</CustomText>
-                                    //         </View>
-                                    //     </View>
-
-                                    //     <View
-                                    //         style={{
-                                    //             height: scale(0.5),
-                                    //             marginVertical: verticalScale(10),
-                                    //             backgroundColor: '#D2D2D2',
-                                    //         }}
-                                    //     />
-
-                                    //     <View style={{
-                                    //         flexDirection: "row",
-                                    //         justifyContent: "space-around"
-                                    //     }}>
-                                    //         <View style={{ gap: verticalScale(5) }}>
-                                    //             <CustomSecondaryText
-                                    //                 style={{
-                                    //                     fontSize: scale(11),
-                                    //                     color: "#808080",
-                                    //                     fontFamily: "AirbnbCereal_W_Bk",
-                                    //                 }}
-                                    //             >Next available position</CustomSecondaryText>
-                                    //             <CustomText style={{
-                                    //                 textAlign: "center",
-                                    //                 fontSize: scale(13),
-                                    //             }}>3</CustomText>
-                                    //         </View>
-
-                                    //         <View style={{ gap: verticalScale(5) }}>
-                                    //             <CustomSecondaryText style={{
-                                    //                 fontSize: scale(11),
-                                    //                 color: "#808080",
-                                    //                 fontFamily: "AirbnbCereal_W_Bk",
-                                    //             }}>Estimated Time</CustomSecondaryText>
-                                    //             <CustomText style={{
-                                    //                 textAlign: "center",
-                                    //                 fontSize: scale(13),
-                                    //             }}>15 mins</CustomText>
-                                    //         </View>
-                                    //     </View>
-                                    // </Pressable>
                                     <Pressable
                                         style={{
                                             flexDirection: "row",
                                             alignItems: "center",
                                             justifyContent: "space-between",
-                                            backgroundColor: "#0BA3AD0D",
+                                            backgroundColor: "#00B0901A",
                                             borderRadius: scale(10),
                                             padding: scale(10)
                                         }}
@@ -460,7 +377,9 @@ const SingleJoin = () => {
             </Animated.View>
         ) : (
             <Pressable
-                style={styles.boxCloseWrapper}
+                style={[styles.boxCloseWrapper, {
+                    backgroundColor: colors.background,
+                }]}
                 onPress={() => setActiveSection(key)}
             >
                 <CustomText>{title}</CustomText>
@@ -536,11 +455,11 @@ export default SingleJoin
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#0BA3AD0D',
+        backgroundColor: '#00B0901A',
         paddingHorizontal: scale(15),
     },
     boxOpenWrapper: {
-        backgroundColor: '#fff',
+        // backgroundColor: '#fff',
         borderRadius: scale(20),
         height: verticalScale(300),
         padding: scale(25),
@@ -559,7 +478,8 @@ const styles = StyleSheet.create({
     },
     boxCloseWrapper: {
         height: verticalScale(60),
-        backgroundColor: '#fff',
+        
+        // backgroundColor: '#fff',
         borderRadius: scale(15),
         paddingHorizontal: scale(25),
         justifyContent: 'center',

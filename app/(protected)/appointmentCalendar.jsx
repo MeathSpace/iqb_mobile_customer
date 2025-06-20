@@ -18,6 +18,7 @@ import { AddIcon, ArrowLeftIcon, CheckIcon, ClockIcon, LeftIcon, RightIcon } fro
 import { Image } from 'expo-image'
 import { useRouter } from 'expo-router'
 import moment from 'moment';
+import { useTheme } from '@react-navigation/native'
 
 const appointmentCalendar = () => {
     const [activeSection, setActiveSection] = useState('services')
@@ -31,6 +32,7 @@ const appointmentCalendar = () => {
     }
 
     const router = useRouter()
+    const { colors } = useTheme()
 
     // Calender 
     const [currentMonth, setCurrentMonth] = useState(moment());
@@ -102,7 +104,10 @@ const appointmentCalendar = () => {
         if (scrolling && !isActive) return null
 
         return isActive ? (
-            <Animated.View style={[styles.boxOpenWrapper, { flex: flexAnim }]}>
+            <Animated.View style={[styles.boxOpenWrapper, {
+                flex: flexAnim,
+                backgroundColor: colors.background,
+            }]}>
                 <ScrollView
                     style={{ flex: 1 }}
                     contentContainerStyle={{
@@ -128,23 +133,9 @@ const appointmentCalendar = () => {
                                 alignItems: "center",
                                 gap: scale(5)
                             }}>
-                            <ArrowLeftIcon />
+                            <ArrowLeftIcon color={colors.text} />
                             <CustomText style={{ fontSize: scale(16), fontFamily: "AirbnbCereal_W_Blk" }}>{title}</CustomText>
                         </Pressable>
-
-                        {/* <Pressable
-                            style={{
-                                height: verticalScale(20),
-                                width: scale(55),
-                                backgroundColor: "#00B090",
-                                borderRadius: scale(4),
-                                justifyContent: "center",
-                                alignItems: "center"
-                            }}
-                        ><CustomText style={{ fontSize: scale(12), color: "#fff" }}>
-                                {activeSection === "services" ? "Next" : "Done"}
-                            </CustomText>
-                        </Pressable> */}
                     </View>
 
                     {
@@ -157,7 +148,7 @@ const appointmentCalendar = () => {
                                         style={{
                                             // height: verticalScale(195),
                                             borderRadius: scale(10),
-                                            backgroundColor: "#0BA3AD0D",
+                                            backgroundColor: "#00B0901A",
                                             padding: scale(12),
                                             gap: verticalScale(10)
                                         }}
@@ -257,7 +248,7 @@ const appointmentCalendar = () => {
                                         <View style={{ marginTop: verticalScale(5), gap: verticalScale(5) }}>
                                             <CustomText
                                                 style={{
-                                                    color: "#00000099",
+                                                    color: "gray",
                                                     fontSize: scale(12)
                                                 }}
                                             >Lorem ipsum dolor sit amet, consectetur adipisicing elit. Modi in odit tenetur, exercitationem qui similique?</CustomText>
@@ -275,7 +266,7 @@ const appointmentCalendar = () => {
                                                     justifyContent: "space-between",
                                                     width: scale(75),
                                                     gap: scale(2),
-                                                    backgroundColor: "#fff",
+                                                    backgroundColor: colors.background,
                                                     paddingHorizontal: scale(5),
                                                     borderRadius: scale(4)
                                                 }}>
@@ -303,98 +294,12 @@ const appointmentCalendar = () => {
                         activeSection === "barber" && (
                             content.map((item, index) => {
                                 return (
-                                    // <Pressable
-                                    //     style={styles.barberItem}
-                                    // onPress={() => {
-                                    //     if (addIconPressCount === 1) {
-                                    //         setScrolling(false)
-                                    //         setActiveSection("calendar")
-                                    //         setAddIconPressCount(0)
-                                    //     }
-                                    // }}
-                                    // key={index}
-                                    // >
-                                    //     <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                    //         <View style={{ flex: 1, flexDirection: "row", gap: 10 }}>
-                                    // <Image
-                                    //     style={{ height: scale(60), width: scale(60), borderRadius: scale(40) }}
-                                    //     source={{ uri: "https://media.istockphoto.com/id/1365608023/photo/shot-of-a-handsome-young-barber-standing-alone-in-his-salon.jpg?s=612x612&w=0&k=20&c=0l2Q3UVgXNnf3lbUvMM7hT18-AAnOloeoNMOHntomcw=" }}
-                                    //     contentFit="cover"
-                                    //     transition={300}
-                                    // />
-                                    //             <View style={{ gap: verticalScale(5), flex: 1 }}>
-                                    //                 <CustomText style={{ fontSize: scale(15) }}>Michael</CustomText>
-                                    //                 <CustomSecondaryText
-                                    //                     style={{
-                                    //                         fontSize: scale(11),
-                                    //                         fontFamily: "AirbnbCereal_W_Bk",
-                                    //                         flexWrap: "wrap",
-                                    //                         color: "#808080"
-                                    //                     }}>
-                                    //                     Cutting, Styling, Haircut, Hair Straightening
-                                    //                 </CustomSecondaryText>
-                                    //             </View>
-                                    //         </View>
-
-                                    //         <View style={{ gap: verticalScale(5) }}>
-                                    //             <CustomSecondaryText style={{
-                                    //                 textAlign: "center",
-                                    //                 fontSize: scale(12),
-                                    //                 fontFamily: "AirbnbCereal_W_Bk",
-                                    //                 color: "#808080"
-                                    //             }}>Queueing</CustomSecondaryText>
-                                    //             <CustomText style={{
-                                    //                 textAlign: "center",
-                                    //                 fontSize: scale(22)
-                                    //             }}>2</CustomText>
-                                    //         </View>
-                                    //     </View>
-
-                                    //     <View
-                                    //         style={{
-                                    //             height: scale(0.5),
-                                    //             marginVertical: verticalScale(10),
-                                    //             backgroundColor: '#D2D2D2',
-                                    //         }}
-                                    //     />
-
-                                    //     <View style={{
-                                    //         flexDirection: "row",
-                                    //         justifyContent: "space-around"
-                                    //     }}>
-                                    //         <View style={{ gap: verticalScale(5) }}>
-                                    //             <CustomSecondaryText
-                                    //                 style={{
-                                    //                     fontSize: scale(11),
-                                    //                     color: "#808080",
-                                    //                     fontFamily: "AirbnbCereal_W_Bk",
-                                    //                 }}
-                                    //             >Next available position</CustomSecondaryText>
-                                    //             <CustomText style={{
-                                    //                 textAlign: "center",
-                                    //                 fontSize: scale(13),
-                                    //             }}>3</CustomText>
-                                    //         </View>
-
-                                    //         <View style={{ gap: verticalScale(5) }}>
-                                    //             <CustomSecondaryText style={{
-                                    //                 fontSize: scale(11),
-                                    //                 color: "#808080",
-                                    //                 fontFamily: "AirbnbCereal_W_Bk",
-                                    //             }}>Estimated Time</CustomSecondaryText>
-                                    //             <CustomText style={{
-                                    //                 textAlign: "center",
-                                    //                 fontSize: scale(13),
-                                    //             }}>15 mins</CustomText>
-                                    //         </View>
-                                    //     </View>
-                                    // </Pressable>
                                     <Pressable
                                         style={{
                                             flexDirection: "row",
                                             alignItems: "center",
                                             justifyContent: "space-between",
-                                            backgroundColor: "#0BA3AD0D",
+                                            backgroundColor: "#00B0901A",
                                             borderRadius: scale(10),
                                             padding: scale(10)
                                         }}
@@ -468,7 +373,7 @@ const appointmentCalendar = () => {
                                             // borderColor: "#DDDDDD",
                                             // borderWidth: scale(0.6),
                                             paddingVertical: verticalScale(4),
-                                            paddingHorizontal: scale(10),
+                                            // paddingHorizontal: scale(10),
                                             alignSelf: 'flex-start',
                                             justifyContent: "center",
                                             alignItems: "center",
@@ -502,18 +407,18 @@ const appointmentCalendar = () => {
                                         <Pressable
                                             onPress={() => console.log(day)}
                                             key={day.fullDate} style={[styles.dayBox, {
-                                                backgroundColor: index === 2 && "#efefef"
+                                                backgroundColor: index === 2 && "#e5e5e5"
                                             }]}>
                                             <CustomText
                                                 style={{
                                                     fontSize: scale(15),
-                                                    color: index === 2 && "#DDDDDD"
+                                                    color: index === 2 && "#000"
                                                 }}
                                             >{day.dayName}</CustomText>
                                             <CustomText
                                                 style={{
                                                     fontSize: scale(16),
-                                                    color: index === 2 ? "#DDDDDD" : Colors.modeColor.colorCode,
+                                                    color: index === 2 ? "#000" : Colors.modeColor.colorCode,
                                                 }}
                                             >{day.date}</CustomText>
                                             {
@@ -523,7 +428,7 @@ const appointmentCalendar = () => {
                                                             fontSize: scale(13),
                                                             fontFamily: "AirbnbCereal_W_Bk",
                                                             lineHeight: scale(16),
-                                                            color: "#DDDDDD"
+                                                            color: "#000"
                                                         }}
                                                     >
                                                         -
@@ -581,7 +486,7 @@ const appointmentCalendar = () => {
                                                     }}
                                                     key={index}
                                                     style={{
-                                                        backgroundColor: Colors.modeColor.colorCode3,
+                                                        backgroundColor: "#00B0901A",
                                                         alignSelf: "flex-start",
                                                         width: scrolling ? "31%" : "48%",
                                                         height: verticalScale(40),
@@ -612,14 +517,17 @@ const appointmentCalendar = () => {
                                     style={{
                                         flexGrow: 1,
                                         width: "98%",
-                                        borderWidth: scale(1),
+                                        // borderWidth: scale(1),
                                         minHeight: verticalScale(200),
-                                        borderColor: "#DDDDDD",
+                                        // borderColor: "#DDDDDD",
                                         padding: scale(16),
                                         borderRadius: scale(4),
                                         textAlignVertical: "top",
+                                        backgroundColor: "#00B0901A",
+                                        color: colors.text,
                                     }}
                                     multiline
+                                    placeholderTextColor={"gray"}
                                     placeholder='Enter your appointment note'
                                 />
                                 <Pressable
@@ -688,7 +596,9 @@ const appointmentCalendar = () => {
             </Animated.View>
         ) : (
             <Pressable
-                style={styles.boxCloseWrapper}
+                style={[styles.boxCloseWrapper, {
+                    backgroundColor: colors.background
+                }]}
                 onPress={() => setActiveSection(key)}
             >
                 <CustomText>{title}</CustomText>
@@ -773,11 +683,11 @@ export default appointmentCalendar
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#0BA3AD0D',
+        backgroundColor: '#00B0901A',
         paddingHorizontal: scale(15),
     },
     boxOpenWrapper: {
-        backgroundColor: '#fff',
+        // backgroundColor: '#fff',
         borderRadius: scale(20),
         height: verticalScale(300),
         padding: scale(25),
@@ -796,7 +706,7 @@ const styles = StyleSheet.create({
     },
     boxCloseWrapper: {
         height: verticalScale(60),
-        backgroundColor: '#fff',
+        // backgroundColor: '#fff',
         borderRadius: scale(15),
         paddingHorizontal: scale(25),
         justifyContent: 'center',
@@ -866,7 +776,7 @@ const styles = StyleSheet.create({
         // marginBottom: 10,
     },
     navButton: {
-        backgroundColor: "#0BA3AD0D",
+        backgroundColor: "#00B0901A",
         // borderColor: Colors.modeColor.colorCode,
         // borderWidth: scale(1),
         width: scale(30),
@@ -882,8 +792,9 @@ const styles = StyleSheet.create({
     dayBox: {
         width: scale(60),
         height: verticalScale(100),
-        borderColor: "#DDDDDD",
-        borderWidth: scale(0.6),
+        backgroundColor: "#00B0901A",
+        // borderColor: "#DDDDDD",
+        // borderWidth: scale(0.6),
         borderRadius: scale(4),
         alignItems: 'center',
         justifyContent: 'center',

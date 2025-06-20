@@ -37,9 +37,10 @@ const notification = () => {
                         <View
                             key={index}
                             style={{
-                                minHeight: verticalScale(90),
-                                borderBottomWidth: scale(1),
-                                borderBottomColor: "#DDDDDD",
+                                // minHeight: verticalScale(90),
+                                // borderBottomWidth: scale(1),
+                                // borderBottomColor: "#DDDDDD",
+                                paddingVertical: verticalScale(15),
                                 flexDirection: "row",
                                 alignItems: "center",
                                 gap: scale(10)

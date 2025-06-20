@@ -14,7 +14,7 @@ const StatusCard = ({ item }) => {
             <View style={[styles.icon, { backgroundColor: item.color2 }]}>
                 <item.icon size={moderateScale(18)} color={item.color1} />
             </View>
-            <CustomText style={{ fontSize: scale(11), textAlign: "center", marginVertical: verticalScale(6) }}>{item.title}</CustomText>
+            <CustomText style={{ fontSize: scale(11), textAlign: "center", marginVertical: verticalScale(6), color: "gray" }}>{item.title}</CustomText>
             <CustomText style={{
                 fontFamily: "AirbnbCereal_W_Bd",
                 fontSize: scale(14),

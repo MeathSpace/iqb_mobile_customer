@@ -13,6 +13,7 @@ import BarberCard from './BarberCard'
 import { Link, router } from 'expo-router'
 import { Dimensions } from 'react-native';
 import { Image } from 'expo-image'
+import { useTheme } from '@react-navigation/native'
 
 // const screenWidth = Dimensions.get('window').width;
 // console.log('Screen Width:', screenWidth);
@@ -20,6 +21,7 @@ import { Image } from 'expo-image'
 const Dashboard = () => {
 
     const { authenticatedUser } = useAuth()
+    const { colors } = useTheme()
 
     const pageData = [
         {
@@ -517,7 +519,7 @@ const Dashboard = () => {
                                                                 width: scale(60),
                                                                 height: scale(60),
                                                                 borderRadius: scale(30),
-                                                                backgroundColor: "#fff",
+                                                                backgroundColor: colors.background,
                                                                 marginHorizontal: "auto"
                                                             }}
                                                         >
@@ -533,7 +535,7 @@ const Dashboard = () => {
                                                                 fontFamily: "AirbnbCereal_W_Md",
                                                                 fontSize: scale(12),
                                                                 textAlign: "center",
-                                                                color: "#343434",
+                                                                color: "gray",
                                                             }}
                                                         >{item.name}</CustomText>
                                                     </View>

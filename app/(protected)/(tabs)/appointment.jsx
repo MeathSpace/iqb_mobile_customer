@@ -87,7 +87,7 @@ const appointment = () => {
       <FlatList
         data={customPageData}
         style={{
-          backgroundColor: "#0BA3AD0D",
+          // backgroundColor: "#0BA3AD0D",
         }}
         contentContainerStyle={{
           // gap: verticalScale(10),

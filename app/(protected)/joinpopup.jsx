@@ -4,10 +4,12 @@ import { scale, verticalScale } from 'react-native-size-matters'
 import CustomText from '../../components/CustomText'
 import { Colors } from '../../constants/Colors'
 import { useRouter } from 'expo-router'
+import { useTheme } from '@react-navigation/native'
 
 const joinpopup = () => {
 
     const router = useRouter()
+    const { colors } = useTheme()
 
     return (
         <Pressable
@@ -24,10 +26,12 @@ const joinpopup = () => {
                 style={{
                     width: "85%",
                     height: verticalScale(350),
-                    backgroundColor: "#fff",
+                    backgroundColor: colors.background,
                     borderRadius: scale(10),
                     padding: scale(15),
-                    gap: verticalScale(20)
+                    gap: verticalScale(20),
+                    borderColor: "gray",
+                    borderWidth: scale(1)
                 }}
             >
                 <CustomText
@@ -52,7 +56,7 @@ const joinpopup = () => {
                     <CustomText
                         style={{
                             fontFamily: "AirbnbCereal_W_Md",
-                            color: "rgba(0,0,0,0.5)",
+                            color: "gray",
                             fontSize: scale(12)
                         }}
                     >Join the queue as a single customer. This option is for individuals waiting alone for salon services.</CustomText>
@@ -84,7 +88,7 @@ const joinpopup = () => {
                     <CustomText
                         style={{
                             fontFamily: "AirbnbCereal_W_Md",
-                            color: "rgba(0,0,0,0.5)",
+                            color: "gray",
                             fontSize: scale(12)
                         }}
                     >Join the queue with multiple people at once. Ideal for friends or family members visiting the salon together.</CustomText>

@@ -97,7 +97,7 @@ const account = () => {
   return (
     <View
       style={{
-        backgroundColor: "#0BA3AD0D",
+        backgroundColor: "#00B0901A",
         flex: 1,
         justifyContent: "space-between",
         padding: scale(10)
@@ -109,15 +109,15 @@ const account = () => {
       <View>
         <View
           onPress={() => router.push("/editProfile")}
-          style={[styles.profileCard, { backgroundColor: "#fff", marginBottom: verticalScale(10) }]}>
+          style={[styles.profileCard, { backgroundColor: colors.background, marginBottom: verticalScale(10) }]}>
           {/* <View style={{ flexDirection: "row", alignItems: "center", gap: moderateScale(10) }}> */}
           <View style={{ gap: moderateScale(5) }}>
             <CustomText style={{ fontFamily: "AirbnbCereal_W_Bd", fontSize: scale(22) }}>{authenticatedUser?.name}</CustomText>
-            <CustomText style={{ fontSize: scale(14), color: "#222222" }}>{authenticatedUser?.email}</CustomText>
+            <CustomText style={{ fontSize: scale(14), color: "gray" }}>{authenticatedUser?.email}</CustomText>
           </View>
 
           <Image
-            style={{ height: scale(90), width: scale(90), borderRadius: scale(80) }}
+            style={{ height: scale(80), width: scale(80), borderRadius: scale(80) }}
             source={{ uri: authenticatedUser?.imageUrl }}
             // placeholder={{ blurhash }}
             contentFit="cover"
@@ -128,11 +128,11 @@ const account = () => {
 
         <View
           style={{
-            backgroundColor: "#fff",
+            backgroundColor: colors.background,
             padding: scale(10),
             borderRadius: scale(10),
-            borderWidth: scale(1),
-            borderColor: "rgba(0,0,0,0.15)"
+            // borderWidth: scale(1),
+            // borderColor: "rgba(0,0,0,0.15)"
           }}
         >
           <Pressable
@@ -146,13 +146,13 @@ const account = () => {
               <View
                 style={{
                   padding: scale(5),
-                  backgroundColor: "#fff",
+                  // backgroundColor: "#fff",
                   borderRadius: scale(50)
                 }}
-              ><ProfileIcon color='#343434' /></View>
+              ><ProfileIcon color='gray' /></View>
               <CustomText style={{ fontFamily: "AirbnbCereal_W_Md" }}>My Account</CustomText>
             </View>
-            <RightIcon size={scale(16)} />
+            <RightIcon size={scale(16)} color={colors.text}/>
           </Pressable>
 
           <Pressable
@@ -166,15 +166,15 @@ const account = () => {
               <View
                 style={{
                   padding: scale(5),
-                  backgroundColor: "#fff",
+                  // backgroundColor: "#fff",
                   borderRadius: scale(50)
                 }}
               >
-                <HeartIcon color='#343434' />
+                <HeartIcon color='gray' />
               </View>
               <CustomText style={{ fontFamily: "AirbnbCereal_W_Md" }}>My Favourites</CustomText>
             </View>
-            <RightIcon size={scale(16)} />
+            <RightIcon size={scale(16)} color={colors.text} />
           </Pressable>
 
           <Pressable
@@ -189,15 +189,15 @@ const account = () => {
               <View
                 style={{
                   padding: scale(5),
-                  backgroundColor: "#fff",
+                  // backgroundColor: "#fff",
                   borderRadius: scale(50)
                 }}
               >
-                <SalonIcon color='#343434' />
+                <SalonIcon color='gray' />
               </View>
               <CustomText style={{ fontFamily: "AirbnbCereal_W_Md" }}>Change Salon</CustomText>
             </View>
-            <RightIcon size={scale(16)} />
+            <RightIcon size={scale(16)} color={colors.text} />
           </Pressable>
 
           <Pressable
@@ -211,15 +211,15 @@ const account = () => {
               <View
                 style={{
                   padding: scale(5),
-                  backgroundColor: "#fff",
+                  // backgroundColor: "#fff",
                   borderRadius: scale(50)
                 }}
               >
-                <AboutIcon color='#343434' />
+                <AboutIcon color='gray' />
               </View>
               <CustomText style={{ fontFamily: "AirbnbCereal_W_Md" }}>About</CustomText>
             </View>
-            <RightIcon size={scale(16)} />
+            <RightIcon size={scale(16)} color={colors.text}/>
           </Pressable>
 
           <Pressable
@@ -233,15 +233,15 @@ const account = () => {
               <View
                 style={{
                   padding: scale(5),
-                  backgroundColor: "#fff",
+                  // backgroundColor: "#fff",
                   borderRadius: scale(50),
                 }}
               >
-                <HelpIcon color='#343434' />
+                <HelpIcon color='gray' />
               </View>
               <CustomText style={{ fontFamily: "AirbnbCereal_W_Md" }}>Help & Support</CustomText>
             </View>
-            <RightIcon size={scale(16)} />
+            <RightIcon size={scale(16)} color={colors.text} />
           </Pressable>
 
         </View>
@@ -249,12 +249,12 @@ const account = () => {
 
         <View
           style={{
-            backgroundColor: "#fff",
+            backgroundColor: colors.background,
             padding: scale(10),
             borderRadius: scale(10),
             marginTop: verticalScale(10),
-            borderWidth: scale(1),
-            borderColor: "rgba(0,0,0,0.15)"
+            // borderWidth: scale(1),
+            // borderColor: "rgba(0,0,0,0.15)"
           }}
         >
           <Pressable
@@ -306,8 +306,8 @@ const styles = StyleSheet.create({
     padding: scale(24),
     borderRadius: scale(10),
     // marginVertical: verticalScale(20),
-    borderWidth: scale(1),
-    borderColor: "rgba(0,0,0,0.15)"
+    // borderWidth: scale(1),
+    // borderColor: "rgba(0,0,0,0.15)"
   },
   // profile_item: {
   //   flexDirection: "row",

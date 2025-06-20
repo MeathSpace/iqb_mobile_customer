@@ -122,7 +122,7 @@ const editProfile = () => {
         <ScrollView
             style={{
                 flex: 1,
-                backgroundColor: "#0BA3AD0D"
+                backgroundColor: "#00B0901A"
             }}
 
             contentContainerStyle={{
@@ -145,11 +145,11 @@ const editProfile = () => {
                 >
 
                     <View
-                        style={[styles.profileCard, { backgroundColor: "#fff" }]}>
+                        style={[styles.profileCard, { backgroundColor: colors.background }]}>
                         {/* <View style={{ flexDirection: "row", alignItems: "center", gap: moderateScale(10) }}> */}
                         <View style={{ gap: moderateScale(5) }}>
                             <CustomText style={{ fontFamily: "AirbnbCereal_W_Bd", fontSize: scale(22) }}>{authenticatedUser?.name}</CustomText>
-                            <CustomText style={{ fontSize: scale(14), color: "#222222" }}>{authenticatedUser?.email}</CustomText>
+                            <CustomText style={{ fontSize: scale(14), color: "gray" }}>{authenticatedUser?.email}</CustomText>
                         </View>
 
                         <View
@@ -158,7 +158,7 @@ const editProfile = () => {
                             }}
                         >
                             <Image
-                                style={{ height: scale(90), width: scale(90), borderRadius: scale(80) }}
+                                style={{ height: scale(80), width: scale(80), borderRadius: scale(80) }}
                                 source={{ uri: authenticatedUser?.imageUrl }}
                                 // placeholder={{ blurhash }}
                                 contentFit="cover"
@@ -168,9 +168,9 @@ const editProfile = () => {
                             <Pressable
                                 style={{
                                     position: "absolute",
-                                    bottom: moderateScale(-8),
+                                    bottom: moderateScale(0),
                                     right: moderateScale(-6),
-                                    backgroundColor: "#E11D48",
+                                    backgroundColor: Colors.modeColor.colorCode,
                                     // borderWidth: moderateScale(2),
                                     // borderColor: colors.border,
                                     padding: scale(6),
@@ -192,7 +192,7 @@ const editProfile = () => {
                             editable
                             placeholder="Enter your first name"
                             placeholderTextColor={colors.secondaryText}
-                            style={[false ? styles.inputFielderror : styles.inputField, { backgroundColor: "#fff", fontFamily: "AirbnbCereal_W_Bk", color: colors.text }]}
+                            style={[false ? styles.inputFielderror : styles.inputField, { backgroundColor: colors.background, fontFamily: "AirbnbCereal_W_Bk", color: colors.text }]}
                             onChangeText={(text) => {
                                 setFirstNameError("")
                                 setFirstName(text)
@@ -208,7 +208,7 @@ const editProfile = () => {
                             editable
                             placeholder="Enter your last name"
                             placeholderTextColor={colors.secondaryText}
-                            style={[false ? styles.inputFielderror : styles.inputField, { backgroundColor: "#fff", fontFamily: "AirbnbCereal_W_Bk", color: colors.text }]}
+                            style={[false ? styles.inputFielderror : styles.inputField, { backgroundColor: colors.background, fontFamily: "AirbnbCereal_W_Bk", color: colors.text }]}
                             onChangeText={(text) => {
                                 setLastNameError("")
                                 setLastName(text)
@@ -238,16 +238,16 @@ const editProfile = () => {
                                 styles.dropdown,
                                 {
                                     borderColor: "transparent",
-                                    backgroundColor: "#fff",
-                                    borderWidth: scale(1),
-                                    borderColor: "#d3d3d3"
+                                    backgroundColor: colors.background
+                                    // borderWidth: scale(1),
+                                    // borderColor: "#d3d3d3"
                                 },
                             ]}
                             dropDownContainerStyle={[
                                 styles.dropdownContainer,
                                 {
                                     borderColor: "#0BA3AD1A",
-                                    backgroundColor: colors.card,
+                                    backgroundColor: colors.background
                                 }
                             ]}
                             textStyle={{
@@ -279,7 +279,7 @@ const editProfile = () => {
                             onChangePhoneNumber={(number) => phoneNumberHandler(number)}
                             onPressFlag={toggleCountryPicker}
                             textStyle={{ color: colors.text, fontSize: moderateScale(14) }}
-                            style={[styles.inputField, { backgroundColor: "#fff", fontFamily: "AirbnbCereal_W_Bk", color: colors.text }]}
+                            style={[styles.inputField, { backgroundColor: colors.background, fontFamily: "AirbnbCereal_W_Bk", color: colors.text }]}
                         />
 
                         {countryPickerVisible && (
@@ -310,7 +310,7 @@ const editProfile = () => {
                                 firstNameError ? styles.inputFielderror : styles.inputDateField,
                                 {
                                     // borderColor: Colors.modeColor.colorCode,
-                                    backgroundColor: "#fff",
+                                    backgroundColor: colors.background,
                                     fontFamily: "AirbnbCereal_W_Bk",
                                     color: colors.text,
                                     justifyContent: "center", // Ensures CalendarIcon stays aligned
@@ -358,8 +358,8 @@ const styles = StyleSheet.create({
         height: verticalScale(118),
         padding: scale(24),
         borderRadius: scale(10),
-        borderWidth: scale(1),
-        borderColor: "rgba(0,0,0,0.15)"
+        // borderWidth: scale(1),
+        // borderColor: "rgba(0,0,0,0.15)"
         // marginVertical: verticalScale(20),
         // borderWidth: scale(1),
     },
@@ -383,8 +383,8 @@ const styles = StyleSheet.create({
         borderRadius: scale(4),
         paddingHorizontal: scale(10),
         fontSize: moderateScale(14),
-        borderWidth: scale(1),
-        borderColor: "#d3d3d3"
+        // borderWidth: scale(1),
+        // borderColor: "#d3d3d3"
     },
     inputDateField: {
         height: verticalScale(40),
@@ -393,8 +393,8 @@ const styles = StyleSheet.create({
         paddingHorizontal: scale(10),
         fontSize: moderateScale(14),
         position: "relative",
-        borderWidth: scale(1),
-        borderColor: "#d3d3d3"
+        // borderWidth: scale(1),
+        // borderColor: "#d3d3d3"
     },
     dateIcon: {
         position: "absolute",

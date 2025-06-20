@@ -123,8 +123,8 @@ const Header = () => {
                         backgroundColor: "#D63163",
                         borderRadius: scale(20),
                         position: "absolute",
-                        top: scale(10),
-                        right: scale(12.5)
+                        top: scale(6),
+                        right: scale(8)
                     }}
                 />
             </View>

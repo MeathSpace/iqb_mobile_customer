@@ -75,7 +75,10 @@ const groupJoin = () => {
         if (scrolling && !isActive) return null
 
         return isActive ? (
-            <Animated.View style={[styles.boxOpenWrapper, { flex: flexAnim }]}>
+            <Animated.View style={[styles.boxOpenWrapper, {
+                flex: flexAnim,
+                backgroundColor: colors.background,
+            }]}>
                 <ScrollView
                     style={{ flex: 1 }}
                     contentContainerStyle={{
@@ -101,23 +104,9 @@ const groupJoin = () => {
                                 alignItems: "center",
                                 gap: scale(5)
                             }}>
-                            <ArrowLeftIcon />
+                            <ArrowLeftIcon color={colors.text} />
                             <CustomText style={{ fontSize: scale(16), fontFamily: "AirbnbCereal_W_Blk" }}>{title}</CustomText>
                         </Pressable>
-
-                        {/* <Pressable
-                            style={{
-                                height: verticalScale(20),
-                                width: scale(55),
-                                backgroundColor: "#00B090",
-                                borderRadius: scale(4),
-                                justifyContent: "center",
-                                alignItems: "center"
-                            }}
-                        ><CustomText style={{ fontSize: scale(12), color: "#fff" }}>
-                                {activeSection === "services" ? "Next" : "Done"}
-                            </CustomText>
-                        </Pressable> */}
                     </View>
 
                     {
@@ -127,7 +116,7 @@ const groupJoin = () => {
                                     style={{
                                         flexDirection: "row",
                                         alignItems: "center",
-                                        justifyContent: "space-between"
+                                        justifyContent: "space-between",
                                     }}
                                 >
                                     {/* <View
@@ -193,7 +182,7 @@ const groupJoin = () => {
                                                 style={{
                                                     paddingVertical: verticalScale(8),
                                                     width: "100%",
-                                                    backgroundColor: "#0BA3AD0D",
+                                                    backgroundColor: "#00B0901A",
                                                     padding: scale(10),
                                                     position: "relative",
                                                     borderRadius: scale(10),
@@ -216,7 +205,7 @@ const groupJoin = () => {
                                                         <CustomText
                                                             style={{
                                                                 fontSize: scale(12),
-                                                                color: "rgba(0,0,0,0.6)"
+                                                                color: "gray"
                                                             }}
                                                         >Arghya Ghosh</CustomText>
                                                     </View>
@@ -252,7 +241,7 @@ const groupJoin = () => {
                                                         <CustomText
                                                             style={{
                                                                 textAlign: "center",
-                                                                fontSize: scale(16),
+                                                                fontSize: scale(18),
                                                                 fontFamily: "AirbnbCereal_W_Blk",
                                                                 color: Colors.modeColor.colorCode
                                                             }}>$ 30.00</CustomText>
@@ -263,14 +252,14 @@ const groupJoin = () => {
                                                             justifyContent: "space-between",
                                                             width: scale(75),
                                                             gap: scale(2),
-                                                            backgroundColor: "#fff",
+                                                            backgroundColor: colors.background,
                                                             paddingHorizontal: scale(5),
                                                             borderRadius: scale(4)
                                                         }}>
                                                             <ClockIcon size={scale(12)} color={Colors.modeColor.colorCode} />
                                                             <CustomText style={{ fontSize: scale(12), flex: 1, color: Colors.modeColor.colorCode }}>120 mins</CustomText>
                                                         </View>
-                                                        
+
                                                     </View>
                                                 </View>
 
@@ -303,8 +292,8 @@ const groupJoin = () => {
                                 <TextInput
                                     editable
                                     placeholder="Enter member name"
-                                    placeholderTextColor={colors.secondaryText}
-                                    style={[false ? styles.inputFielderror : styles.inputField, { backgroundColor: Colors.modeColor.colorCode3, fontFamily: "AirbnbCereal_W_Bk", }]}
+                                    placeholderTextColor={"gray"}
+                                    style={[false ? styles.inputFielderror : styles.inputField, { backgroundColor: "#00B0901A", fontFamily: "AirbnbCereal_W_Bk", color: colors.text }]}
                                     value={customerName}
                                     onChangeText={text => setCustomerName(text)}
                                 />
@@ -334,7 +323,7 @@ const groupJoin = () => {
                                         style={{
                                             // height: verticalScale(195),
                                             borderRadius: scale(10),
-                                            backgroundColor: "#0BA3AD0D",
+                                            backgroundColor: "#00B0901A",
                                             padding: scale(12),
                                             gap: verticalScale(10)
                                         }}
@@ -434,7 +423,7 @@ const groupJoin = () => {
                                         <View style={{ marginTop: verticalScale(5), gap: verticalScale(5) }}>
                                             <CustomText
                                                 style={{
-                                                    color: "#00000099",
+                                                    color: "gray",
                                                     fontSize: scale(12)
                                                 }}
                                             >Lorem ipsum dolor sit amet, consectetur adipisicing elit. Modi in odit tenetur, exercitationem qui similique?</CustomText>
@@ -452,7 +441,7 @@ const groupJoin = () => {
                                                     justifyContent: "space-between",
                                                     width: scale(75),
                                                     gap: scale(2),
-                                                    backgroundColor: "#fff",
+                                                    backgroundColor: colors.background,
                                                     paddingHorizontal: scale(5),
                                                     borderRadius: scale(4)
                                                 }}>
@@ -484,7 +473,7 @@ const groupJoin = () => {
                                             flexDirection: "row",
                                             alignItems: "center",
                                             justifyContent: "space-between",
-                                            backgroundColor: "#0BA3AD0D",
+                                            backgroundColor: "#00B0901A",
                                             borderRadius: scale(10),
                                             padding: scale(10)
                                         }}
@@ -593,7 +582,9 @@ const groupJoin = () => {
             </Animated.View>
         ) : (
             <Pressable
-                style={styles.boxCloseWrapper}
+                style={[styles.boxCloseWrapper, {
+                    backgroundColor: colors.background,
+                }]}
                 onPress={() => setActiveSection(key)}
             >
                 <CustomText>{title}</CustomText>
@@ -687,11 +678,11 @@ export default groupJoin
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#0BA3AD0D',
+        backgroundColor: '#00B0901A',
         paddingHorizontal: scale(15),
     },
     boxOpenWrapper: {
-        backgroundColor: '#fff',
+        // backgroundColor: '#fff',
         borderRadius: scale(20),
         height: verticalScale(300),
         padding: scale(25),
@@ -710,7 +701,7 @@ const styles = StyleSheet.create({
     },
     boxCloseWrapper: {
         height: verticalScale(60),
-        backgroundColor: '#fff',
+        // backgroundColor: '#fff',
         borderRadius: scale(15),
         paddingHorizontal: scale(25),
         justifyContent: 'center',

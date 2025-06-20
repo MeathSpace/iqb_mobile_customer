@@ -5,10 +5,12 @@ import { CloseIcon, ErrorIcon } from '../../constants/icons';
 import CustomText from '../../components/CustomText'
 import { Colors } from '../../constants/Colors';
 import { useRouter } from 'expo-router';
+import { useTheme } from '@react-navigation/native';
 
 const connectSalon = () => {
 
     const router = useRouter()
+    const { colors } = useTheme()
 
     return (
         <View
@@ -25,11 +27,11 @@ const connectSalon = () => {
                     height: verticalScale(244),
                     borderRadius: scale(8),
                     borderWidth: scale(1),
-                    borderColor: "#DDDDDD",
+                    borderColor: "gray",
                     paddingVertical: verticalScale(24),
                     paddingHorizontal: scale(48),
                     gap: verticalScale(32),
-                    backgroundColor: "#F7F7F7",
+                    backgroundColor: colors.background,
                     position: 'relative'
                 }}
             >
@@ -58,21 +60,11 @@ const connectSalon = () => {
 
                 <Pressable
                     onPress={() => router.back()}
-                    style={{
-                        position: "absolute",
-                        top: verticalScale(10),
-                        right: scale(10),
-                    }}
+                    style={styles.closeButton}
                 >
                     <CloseIcon
                         size={scale(16)}
-                        style={{
-                            backgroundColor: "#E8194833",
-                            color: "#E11D48",
-                            borderColor: "#E11D48",
-                            borderWidth: scale(1),
-                            borderRadius: scale(20),
-                        }}
+                        color="#E11D48"
                     />
                 </Pressable>
 
@@ -84,4 +76,17 @@ const connectSalon = () => {
 
 export default connectSalon
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+
+    closeButton: {
+        position: "absolute",
+        top: verticalScale(10),
+        right: scale(10),
+        width: scale(30),
+        height: scale(30),
+        justifyContent: "center",
+        alignItems: "center",
+        backgroundColor: "#E11D481A",
+        borderRadius: scale(40),
+    }
+})

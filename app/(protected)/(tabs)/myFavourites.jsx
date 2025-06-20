@@ -15,6 +15,7 @@ import { ArrowLeftIcon, CarIcon, ExternalLinkIcon, HeartFilledIcon, HeartIcon } 
 import { Image } from 'expo-image';
 import CustomText from '../../../components/CustomText';
 import { useRouter } from 'expo-router';
+import { useTheme } from '@react-navigation/native';
 
 const MyFavourites = () => {
     const salonData = [
@@ -50,23 +51,13 @@ const MyFavourites = () => {
 
     const router = useRouter()
 
+    const { colors } = useTheme()
+
     return (
         <CustomTabView
             style={{
                 paddingBottom: Platform.OS === "ios" ? verticalScale(80) : verticalScale(0)
             }}>
-            {/* <Pressable
-                onPress={() => router.back()}
-                style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: scale(10),
-                    height: verticalScale(60)
-                }}
-            >
-                <ArrowLeftIcon size={scale(18)} />
-                <CustomText>My Favorites</CustomText>
-            </Pressable> */}
 
             <FlatList
                 contentContainerStyle={styles.listContainer}
@@ -78,8 +69,8 @@ const MyFavourites = () => {
                             width: "100%",
                             borderRadius: scale(8),
                             // borderColor: "#E11D48",
-                            borderWidth: scale(1),
-                            borderColor: "#d3d3d3",
+                            // borderWidth: scale(1),
+                            borderColor: "gray",
                             position: "relative",
 
                         }}
@@ -100,15 +91,15 @@ const MyFavourites = () => {
                             flexDirection: "row",
                             justifyContent: "space-between",
                             alignItems: "center",
-                            backgroundColor: "#fff",
+                            backgroundColor: colors.background,
                             padding: scale(10),
                             borderBottomLeftRadius: scale(7),
                             borderBottomRightRadius: scale(7),
                         }}>
-                            <View style={{ gap: verticalScale(3) }}>
+                            <View style={{ gap: verticalScale(4) }}>
                                 <CustomText
                                     style={{
-                                        fontFamily: "AirbnbCereal_W_Blk"
+                                        // fontFamily: "AirbnbCereal_W_"
                                     }}
                                 >The Beauty Lounge</CustomText>
                                 <CustomText
@@ -119,11 +110,12 @@ const MyFavourites = () => {
                                     }}
                                 >30 Elliot Rd, Selly Oak, Birmingham, UK, B29 4AQ</CustomText>
                                 <View style={{ flexDirection: "row", alignItems: "center", gap: scale(10) }}>
-                                    <CarIcon size={scale(16)} />
+                                    <CarIcon size={scale(16)} color={colors.text} />
                                     <CustomText
                                         style={{
                                             // fontFamily: "AirbnbCereal_W_Bk"
-                                            color: "gray"
+                                            color: "gray",
+                                            fontSize: scale(12),
                                         }}
                                     >2.1 miles away</CustomText>
                                 </View>
@@ -140,11 +132,13 @@ const MyFavourites = () => {
                                 position: "absolute",
                                 top: verticalScale(10),
                                 right: scale(10),
-                                backgroundColor: "#fff",
+                                backgroundColor: colors.background,
                                 borderRadius: scale(20),
-                                padding: scale(7),
+                                padding: scale(8),
+                                justifyContent: "center",
+                                alignItems: "center",
                             }}
-                        ><HeartFilledIcon size={scale(16)} color={"#E11D48"}/></View>
+                        ><HeartFilledIcon size={scale(16)} color={"#E11D48"} /></View>
 
                     </View>
                 )}

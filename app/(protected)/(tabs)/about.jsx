@@ -5,6 +5,7 @@ import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import CustomTabView from '../../../components/CustomTabView'
 import CustomText from '../../../components/CustomText'
 import { ArrowLeftIcon, CertificateIcon, GlobalIcon, LeftIcon, PolicyIcon, RightIcon, TermServiceIcon } from '../../../constants/icons';
+import { useTheme } from '@react-navigation/native';
 
 const about = () => {
 
@@ -14,28 +15,30 @@ const about = () => {
     {
       id: 1,
       name: "iqueueBook Website",
-      icon: <GlobalIcon size={scale(18)} />,
+      icon: <GlobalIcon color='gray' />,
       url: "#"
     },
     {
       id: 2,
       name: "Terms of Services",
-      icon: <TermServiceIcon size={scale(18)} />,
+      icon: <TermServiceIcon color='gray' />,
       url: "/termService"
     },
     {
       id: 3,
       name: "Privacy Policy",
-      icon: <PolicyIcon size={scale(18)} />,
+      icon: <PolicyIcon color='gray' />,
       url: "/privacyPolicy"
     },
     {
       id: 4,
       name: "Licenses",
-      icon: <CertificateIcon size={scale(18)} />,
+      icon: <CertificateIcon color='gray' />,
       url: "/licenses"
     },
   ]
+
+  const { colors } = useTheme()
 
   return (
     <CustomTabView
@@ -59,11 +62,11 @@ const about = () => {
 
       <View style={{
         // paddingVertical: verticalScale(20)
-        backgroundColor: "#fff",
+        backgroundColor: colors.background,
         padding: scale(10),
         borderRadius: scale(10),
-        borderWidth: scale(1),
-        borderColor: "rgba(0,0,0,0.15)"
+        // borderWidth: scale(1),
+        // borderColor: "rgba(0,0,0,0.15)"
       }}>
 
         {
@@ -94,7 +97,7 @@ const about = () => {
                   >{item.name}</CustomText>
                 </View>
 
-                <RightIcon size={scale(16)} color={"#222222"} />
+                <RightIcon size={scale(16)} color={colors.text} />
               </Pressable>
             )
           })
@@ -104,11 +107,11 @@ const about = () => {
 
       <View
         style={{
-          backgroundColor: "#fff",
+          // backgroundColor: colors.background,
           padding: scale(10),
           borderRadius: scale(10),
-          borderWidth: scale(1),
-          borderColor: "rgba(0,0,0,0.15)",
+          // borderWidth: scale(1),
+          // borderColor: "rgba(0,0,0,0.15)",
           height: verticalScale(50),
           marginTop: verticalScale(20),
           justifyContent: "center",

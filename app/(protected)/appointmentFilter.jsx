@@ -4,10 +4,13 @@ import { useRouter } from 'expo-router'
 import { scale, verticalScale } from 'react-native-size-matters'
 import { Colors } from '../../constants/Colors'
 import CustomText from '../../components/CustomText'
+import { useTheme } from '@react-navigation/native'
 
 const appointmentFilter = () => {
 
     const router = useRouter()
+
+    const { colors } = useTheme()
 
     return (
         <Pressable
@@ -16,7 +19,7 @@ const appointmentFilter = () => {
                 flex: 1,
                 backgroundColor: "rgba(0,0,0,0.5)",
                 justifyContent: "center",
-                alignItems: "center"
+                alignItems: "center",
             }}
         >
             <Pressable
@@ -24,7 +27,9 @@ const appointmentFilter = () => {
                 style={{
                     width: "85%",
                     // height: verticalScale(350),
-                    backgroundColor: "#fff",
+                    backgroundColor: colors.background,
+                    borderColor: "gray",
+                    borderWidth: scale(1),
                     borderRadius: scale(10),
                     padding: scale(15),
                     gap: verticalScale(20)
@@ -83,7 +88,7 @@ const appointmentFilter = () => {
                             height: verticalScale(40),
                             justifyContent: "center",
                             alignItems: "center",
-                            backgroundColor: "#0BA3AD1A"
+                            backgroundColor: "#00B0901A"
                         }}
                     ><CustomText style={{
                         color: Colors.modeColor.colorCode
@@ -113,6 +118,7 @@ const appointmentFilter = () => {
                     }}
                 >
                     <Pressable
+                        onPress={() => router.back()}
                         style={{
                             backgroundColor: "#E11D481A",
                             borderRadius: scale(4),
