@@ -1,5 +1,5 @@
 import { Image, Keyboard, Pressable, StyleSheet, Text, TextInput, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
-import React from 'react'
+import React, { useCallback, useEffect } from 'react'
 import CustomView from '../../components/CustomView'
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import { Link, useRouter } from 'expo-router';
@@ -7,45 +7,170 @@ import { useState } from 'react';
 import CustomText from '../../components/CustomText';
 import { useTheme } from '@react-navigation/native';
 import { Colors } from '@/constants/Colors';
+import { useAuth } from '../../context/AuthContext'
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { ErrorIcon } from '../../constants/icons';
+
+import * as Linking from 'expo-linking'
+import * as WebBrowser from 'expo-web-browser'
+import * as AuthSession from 'expo-auth-session'
+import { useClerk, useSSO, useUser } from '@clerk/clerk-expo'
+
+
+export const useWarmUpBrowser = () => {
+    useEffect(() => {
+        // Preloads the browser for Android devices to reduce authentication load time
+        // See: https://docs.expo.dev/guides/authentication/#improving-user-experience
+        void WebBrowser.warmUpAsync()
+        return () => {
+            // Cleanup: closes browser when component unmounts
+            void WebBrowser.coolDownAsync()
+        }
+    }, [])
+}
+
+// Handle any pending authentication sessions
+WebBrowser.maybeCompleteAuthSession()
+
 
 const signup = () => {
+
+    useWarmUpBrowser()
 
     const { colors } = useTheme()
 
     const router = useRouter()
 
-    const [email, setEmail] = useState("");
-    const [emailError, setEmailError] = useState("")
+    const [email, setEmail] = useState("abcd@yopmail.com");
+    const [emailError, setEmailError] = useState(false);
+
+    const { setIsAuthenticated, setAuthenticatedUser, setSignUpData, signUpData } = useAuth()
+
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    const signupPressed = async () => {
+        if (!email) {
+            return setEmailError("Email is required")
+        } else if (!emailRegex.test(email)) {
+            return setEmailError("Invalid email format")
+        }
+
+        router.push({
+            pathname: "/personalInfo",
+            params: {
+                email
+            }
+        });
+
+    }
+
+    // const googleSignupPressed = async () => {
+
+    //     // akhanao same signin tar process tai korte hbe but 
+    //     console.log("Google Sign Up Pressed")
+    // }
+
+    const { startSSOFlow } = useSSO()
+
+    const { isLoaded, isSignedIn, user } = useUser()
+    const { signOut } = useClerk()
+
+    // useEffect(() => {
+    //     return () => {
+    //         signOut()
+    //     }
+    // }, [])
+
+    const googleSignupPressed = useCallback(async () => {
+        try {
+            // Start the authentication process by calling `startSSOFlow()`
+            const { createdSessionId, setActive, signIn, signUp } = await startSSOFlow({
+                strategy: 'oauth_google',
+                // For web, defaults to current path
+                // For native, you must pass a scheme, like AuthSession.makeRedirectUri({ scheme, path })
+                // For more info, see https://docs.expo.dev/versions/latest/sdk/auth-session/#authsessionmakeredirecturioptions
+                // redirectUrl: AuthSession.makeRedirectUri(),
+                redirectUrl: AuthSession.makeRedirectUri({ scheme: 'iqbmobilecustomer', path: '/signup' })
+            })
+
+            // This code generates the URL that your app tells 
+            // the authentication provider (like Google) to use when sending 
+            // the user back to your app. It includes the scheme (iqbmobilecustomer) 
+            // and the path (/callback).
+
+
+            // If sign in was successful, set the active session
+            if (createdSessionId && setActive) {
+                await setActive({ session: createdSessionId });
+            } else {
+                // If there is no `createdSessionId`,
+                // there are missing requirements, such as MFA
+                // Use the `signIn` or `signUp` returned from `startSSOFlow`
+                // to handle next steps
+            }
+        } catch (err) {
+            // See https://clerk.com/docs/custom-flows/error-handling
+            // for more info on error handling
+            console.error(JSON.stringify(err, null, 2))
+        }
+    }, []);
+
+    useEffect(() => {
+        if (isSignedIn) {
+            // console.log(user?.primaryEmailAddress?.emailAddress)
+            router.push({
+                pathname: "/personalInfo",
+                params: {
+                    email: user?.primaryEmailAddress?.emailAddress
+                }
+            });
+
+            signOut()
+        }
+    }, [isSignedIn])
+
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <CustomView style={{ alignItems: "center", justifyContent: "center" }}>
-                <View style={{ width: "100%" }}>
+                <View style={{ width: "100%", gap: verticalScale(20) }}>
                     <Image
                         style={[styles.Logo, { tintColor: colors.text }]}
                         source={require("../../assets/images/icon.png")}
                         resizeMode="cover"
                     />
 
-                    <TextInput
-                        editable
-                        placeholder="Enter your email"
-                        placeholderTextColor={colors.secondaryText}
-                        style={[false ? styles.inputFielderror : styles.inputField, {
-                            backgroundColor: "#0BA3AD1A", fontFamily: "AirbnbCereal_W_Bk", color: colors.text
-                        }]}
-                        onChangeText={(text) => {
-                            setEmailError("")
-                            setEmail(text)
-                        }}
-                        value={email}
-                    />
+                    <View style={{ gap: verticalScale(10) }}>
+                        <TextInput
+                            editable
+                            placeholder="Enter your email"
+                            placeholderTextColor={colors.secondaryText}
+                            style={[false ? styles.inputFielderror : styles.inputField, {
+                                backgroundColor: "#0BA3AD1A", fontFamily: "AirbnbCereal_W_Bk", color: colors.text
+                            }]}
+                            onChangeText={(text) => {
+                                setEmail(text)
+                            }}
+                            value={email}
+                        />
 
-                    {emailError && <Text style={styles.error}>{emailError}</Text>}
+                        {
+                            emailError && (
+                                <View style={{
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    gap: scale(5),
+                                }}>
+                                    <ErrorIcon color='red' size={scale(16)} />
+                                    <CustomText style={{ fontSize: scale(12), color: "red" }}>{emailError}</CustomText>
+                                </View>
+                            )
+                        }
+                    </View>
 
                     <Pressable
-                        onPress={() => router.push("/personalInfo")}
-                        style={[styles.auth_btn, { backgroundColor: Colors.modeColor.colorCode, marginBottom: verticalScale(10) }]}>
+                        onPress={signupPressed}
+                        style={[styles.auth_btn, { backgroundColor: Colors.modeColor.colorCode }]}>
                         <CustomText style={{ color: "#fff" }}>Sign up</CustomText>
                     </Pressable>
 
@@ -65,6 +190,7 @@ const signup = () => {
 
                     <Pressable
                         // onPress={() => googleSignUp}
+                        onPress={googleSignupPressed}
                         style={
                             [styles.auth_btn,
                             {
@@ -98,14 +224,14 @@ const styles = StyleSheet.create({
         width: moderateScale(100),
         height: moderateScale(100),
         marginHorizontal: "auto",
-        marginBlock: verticalScale(25)
+        // marginBlock: verticalScale(25)
     },
 
     inputField: {
         height: verticalScale(40),
         borderRadius: scale(4),
         paddingHorizontal: scale(10),
-        marginBottom: verticalScale(25),
+        // marginBottom: verticalScale(25),
         fontSize: moderateScale(14)
     },
     inputFielderror: {
@@ -118,7 +244,7 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
     subHeading: {
-        marginBlock: verticalScale(10),
+        // marginBlock: verticalScale(10),
         textAlign: "center",
     },
     divider: {
@@ -126,6 +252,6 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "space-between",
         height: verticalScale(40),
-        marginBottom: verticalScale(20)
+        // marginBottom: verticalScale(20)
     }
 })

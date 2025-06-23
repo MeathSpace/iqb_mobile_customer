@@ -1,6 +1,6 @@
 import { Keyboard, Pressable, StyleSheet, Text, TextInput, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
 import React, { useState } from 'react'
-import { useRouter } from 'expo-router'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import CustomView from '../../components/CustomView';
 import ProgressHeader from '../../components/ProgressHeader';
@@ -8,10 +8,21 @@ import CustomText from '../../components/CustomText';
 import CustomSecondaryText from '../../components/CustomSecondaryText';
 import { useTheme } from '@react-navigation/native';
 import { Colors } from '@/constants/Colors';
+import { ErrorIcon } from '../../constants/icons';
 
 const verification = () => {
 
+    const { email,
+        firstName,
+        lastName,
+        gender,
+        phoneNumber,
+        selectedDate } = useLocalSearchParams();
+
     const { colors } = useTheme()
+
+    const [verificationCode, setVerificationCode] = useState("")
+    const [verificationCodeError, setVerificationCodeError] = useState("")
 
     const router = useRouter()
 
@@ -20,7 +31,20 @@ const verification = () => {
     const [progressThree, setProgressThree] = useState(0.5)
 
     const verificationHandler = () => {
+        if (!verificationCode) {
+            setVerificationCodeError("Verification code is required")
+            return;
+        }
 
+        const signUpData = {
+            email,
+            firstName,
+            lastName,
+            gender,
+            phoneNumber,
+            selectedDate
+        }
+        console.log(signUpData)
     }
 
     return (
@@ -53,16 +77,31 @@ const verification = () => {
                             keyboardType="numeric"
                             placeholder="Enter your password"
                             placeholderTextColor={colors.secondaryText}
-                            style={[false ? styles.inputFielderror : styles.inputField, { 
-                                backgroundColor: "#0BA3AD1A", 
-                                fontFamily: "AirbnbCereal_W_Bk", color: colors.text }]}
-                            // onChangeText={(text) => {
-                            //     setFirstNameError("")
-                            //     setFirstName(text)
-                            // }}
-                            // value={firstName}
-                            value={""}
+                            style={[false ? styles.inputFielderror : styles.inputField, {
+                                backgroundColor: "#0BA3AD1A",
+                                fontFamily: "AirbnbCereal_W_Bk", color: colors.text
+                            }]}
+                            onChangeText={(text) => {
+                                setVerificationCodeError("")
+                                setVerificationCode(text)
+                            }}
+                            value={verificationCode}
                         />
+
+
+                        {
+                            verificationCodeError && (
+                                <View style={{
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    gap: scale(5),
+                                }}>
+                                    <ErrorIcon color='red' size={scale(16)} />
+                                    <CustomText style={{ fontSize: scale(12), color: "red" }}>{verificationCodeError}</CustomText>
+                                </View>
+                            )
+                        }
+
                     </View>
 
                 </View>

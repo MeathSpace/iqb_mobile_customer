@@ -137,7 +137,7 @@ export const ProfileIcon = ({ size = moderateScale(24), color = 'black', style }
 );
 
 export const ErrorIcon = ({ size = moderateScale(24), color = 'black', style }) => (
-    <MaterialIcons name="error" size={size} color={color} style={style} />
+    <MaterialIcons name="error-outline" size={size} color={color} style={style} />
 );
 
 export const GlobalIcon = ({ size = moderateScale(24), color = 'black', style }) => (
@@ -194,4 +194,12 @@ export const EmailIcon = ({ size = moderateScale(24), color = 'black', style }) 
 
 export const WhatsappIcon = ({ size = moderateScale(24), color = 'black', style }) => (
     <FontAwesome5 name="whatsapp" size={size} color={color} style={style} />
+);
+
+export const EyeIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <Ionicons name="eye" size={size} color={color} style={style} />
+);
+
+export const EyeOffIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <Ionicons name="eye-off" size={size} color={color} style={style} />
 );

@@ -1,13 +1,13 @@
 import { Alert, Button, Keyboard, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import CustomScrollView from '../../components/CustomScrollView'
-import { useRouter } from 'expo-router'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import ProgressHeader from '../../components/ProgressHeader'
 import CustomText from '../../components/CustomText'
 import CustomSecondaryText from '../../components/CustomSecondaryText'
 import DropDownPicker from 'react-native-dropdown-picker';
-import { CalendarIcon } from '../../constants/icons'
+import { CalendarIcon, ErrorIcon } from '../../constants/icons'
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Colors } from '@/constants/Colors';
 
@@ -19,19 +19,23 @@ import { useTheme } from '@react-navigation/native';
 
 const personalInfo = () => {
 
+    const { email } = useLocalSearchParams();
+
+    console.log("Email from params", email)
+
     const colorScheme = useColorScheme()
 
     const { colors } = useTheme()
 
     const router = useRouter()
 
-
-    const [phone, setPhone] = useState("");
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [genderOpen, setGenderOpen] = useState(false)
     const [gender, setGender] = useState("Male");
     const [date, setDate] = useState(new Date());
+    const [selectedDate, setSelectedDate] = useState("");
+
     const [calenderModal, setCalenderModal] = useState(false);
     // const [selectedCountry, setSelectedCountry] = useState({});
 
@@ -41,25 +45,39 @@ const personalInfo = () => {
         { label: 'Other', value: 'Other' }
     ]);
 
+    // console.log("sdv", date)
+
     //Error States
 
     const [firstNameError, setFirstNameError] = useState("");
     const [lastNameError, setLastNameError] = useState("");
+    const [phoneNumberError, setPhoneNumberError] = useState("");
+    const [dateOfBirthError, setDateOfBirthError] = useState("");
 
     const onChange = (event, selectedDate) => {
         setCalenderModal(false);
         if (event.type === "set" && selectedDate) {
             setDate(new Date(selectedDate));
+            setDateOfBirthError("");
+
+            const year = selectedDate.getFullYear();
+            const month = String(selectedDate.getMonth() + 1).padStart(2, '0'); // month is 0-indexed
+            const day = String(selectedDate.getDate()).padStart(2, '0');
+
+            const formattedDate = `${year}-${month}-${day}`;
+
+            setSelectedDate(formattedDate);
         }
     };
 
-    const [progressOne, setProgressOne] = useState(1)
-    const [progressTwo, setProgressTwo] = useState(1)
-    const [progressThree, setProgressThree] = useState(0.5)
+    const [progressOne, setProgressOne] = useState(0.5)
+    const [progressTwo, setProgressTwo] = useState(0)
+    const [progressThree, setProgressThree] = useState(0)
 
 
     const phoneRef = useRef(null);
     const [phoneNumber, setPhoneNumber] = useState('');
+
     const [selectedCountry, setSelectedCountry] =
         useState({ "callingCode": ["44"], "cca2": "GB", "currency": ["GBP"], "flag": "flag-gb", "name": "United Kingdom", "region": "Europe", "subregion": "Northern Europe" });
     const [countryPickerVisible, setCountryPickerVisible] =
@@ -84,14 +102,42 @@ const personalInfo = () => {
     const phoneNumberHandler = (phoneNumber) => {
         const isValid = phoneRef.current?.isValidNumber();
         if (isValid) {
+            setPhoneNumber(phoneNumber);
+            setPhoneNumberError("")
             console.log("Valid ", phoneNumber)
         } else {
+            setPhoneNumberError("Invalid phone number");
             console.log("Invalid ", phoneNumber)
         }
     }
 
+
     const saveHandler = () => {
-        router.push("/passwordConfirmation")
+        if (!firstName) {
+            setFirstNameError("First name is required");
+            return;
+        } else if (!lastName) {
+            setLastNameError("Last name is required");
+            return;
+        } else if (!phoneNumber) {
+            setPhoneNumberError("Phone number is required");
+            return;
+        } else if (!selectedDate) {
+            setDateOfBirthError("Date of birth is required");
+            return;
+        }
+
+        router.push({
+            pathname: "/passwordConfirmation",
+            params: {
+                email,
+                firstName,
+                lastName,
+                gender,
+                phoneNumber,
+                selectedDate
+            }
+        });
     }
 
     return (
@@ -142,6 +188,20 @@ const personalInfo = () => {
                             }}
                             value={firstName}
                         />
+
+                        {
+                            firstNameError && (
+                                <View style={{
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    gap: scale(5),
+                                }}>
+                                    <ErrorIcon color='red' size={scale(16)} />
+                                    <CustomText style={{ fontSize: scale(12), color: "red" }}>{firstNameError}</CustomText>
+                                </View>
+                            )
+                        }
+
                     </View>
 
                     <View style={styles.inputWrapper}>
@@ -159,8 +219,21 @@ const personalInfo = () => {
                                 setLastNameError("")
                                 setLastName(text)
                             }}
-                            value={firstName}
+                            value={lastName}
                         />
+
+                        {
+                            lastNameError && (
+                                <View style={{
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    gap: scale(5),
+                                }}>
+                                    <ErrorIcon color='red' size={scale(16)} />
+                                    <CustomText style={{ fontSize: scale(12), color: "red" }}>{lastNameError}</CustomText>
+                                </View>
+                            )
+                        }
                     </View>
 
                     <View style={styles.inputWrapper}>
@@ -222,9 +295,23 @@ const personalInfo = () => {
                             onChangePhoneNumber={(number) => phoneNumberHandler(number)}
                             onPressFlag={toggleCountryPicker}
                             textStyle={{ color: colors.text, fontSize: moderateScale(14) }}
-                            style={[styles.inputField, { 
-                                backgroundColor: "#0BA3AD1A", fontFamily: "AirbnbCereal_W_Bk", color: colors.text }]}
+                            style={[styles.inputField, {
+                                backgroundColor: "#0BA3AD1A", fontFamily: "AirbnbCereal_W_Bk", color: colors.text
+                            }]}
                         />
+
+                        {
+                            phoneNumberError && (
+                                <View style={{
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    gap: scale(5),
+                                }}>
+                                    <ErrorIcon color='red' size={scale(16)} />
+                                    <CustomText style={{ fontSize: scale(12), color: "red" }}>{phoneNumberError}</CustomText>
+                                </View>
+                            )
+                        }
 
                         {countryPickerVisible && (
                             <CountryPicker
@@ -246,13 +333,14 @@ const personalInfo = () => {
                         )}
                     </View>
 
+                        
 
                     <View style={[styles.inputWrapper, { position: "relative" }]}>
                         <CustomText>Date of Birth</CustomText>
 
                         <Pressable
                             style={[
-                                firstNameError ? styles.inputFielderror : styles.inputDateField,
+                                false ? styles.inputFielderror : styles.inputDateField,
                                 {
                                     // borderColor: colors.border,
                                     backgroundColor: "#0BA3AD1A",
@@ -263,8 +351,23 @@ const personalInfo = () => {
                             ]}
                             onPress={() => setCalenderModal(true)}
                         >
+                            {!calenderModal && !selectedDate && <CustomText style={{ color: colors.secondaryText, fontFamily: "AirbnbCereal_W_Bk" }}>YYYY-MM-DD</CustomText>}
+                            {!calenderModal && selectedDate && <CustomText style={{ fontFamily: "AirbnbCereal_W_Bk" }}>{selectedDate}</CustomText>}
                             <CalendarIcon style={[styles.dateIcon, { color: colors.text }]} />
                         </Pressable>
+
+                        {
+                            dateOfBirthError && (
+                                <View style={{
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    gap: scale(5),
+                                }}>
+                                    <ErrorIcon color='red' size={scale(16)} />
+                                    <CustomText style={{ fontSize: scale(12), color: "red", }}>{dateOfBirthError}</CustomText>
+                                </View>
+                            )
+                        }
 
                         {calenderModal && (
                             <View style={{ position: "absolute", top: verticalScale(34), left: 0, zIndex: 100 }}>

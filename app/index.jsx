@@ -73,15 +73,30 @@ const index = () => {
           stylist of your choice.
         </CustomSecondaryText>
 
-        <Pressable
-          onPress={() => router.push("/signup")}
-          style={[styles.auth_btn, { backgroundColor: Colors.modeColor.colorCode, marginBottom: verticalScale(10) }]}><CustomText style={{ color: "#fff" }}>Register</CustomText></Pressable>
-        <Pressable
-          onPress={() => router.push("/signin")}
-          style={[styles.auth_btn, { borderWidth: moderateScale(1.5), borderColor: Colors.modeColor.colorCode }]}><CustomText style={{ color: Colors.modeColor.colorCode }}>Log In</CustomText></Pressable>
-      </View>
+        {
+          isAuthenticated ? (
+            <Pressable
+              onPress={() => router.push("/home")}
+              style={[styles.auth_btn, { backgroundColor: Colors.modeColor.colorCode, marginBottom: verticalScale(10) }]}><CustomText style={{ color: "#fff" }}>Dashboard</CustomText>
+            </Pressable>
+          ) : (
+            <>
+              <Pressable
+                onPress={() => router.push("/signup")}
+                style={[styles.auth_btn, { backgroundColor: Colors.modeColor.colorCode, marginBottom: verticalScale(10) }]}><CustomText style={{ color: "#fff" }}>Register</CustomText>
+              </Pressable>
+              <Pressable
+                onPress={() => router.push("/signin")}
+                style={[styles.auth_btn, { borderWidth: moderateScale(1.5), borderColor: Colors.modeColor.colorCode }]}><CustomText style={{ color: Colors.modeColor.colorCode }}>Log In</CustomText>
+              </Pressable>
+            </>
+          )
+        }
 
-    </CustomView>
+
+      </View >
+
+    </CustomView >
   )
 }
 

@@ -62,6 +62,8 @@ const Header = () => {
 
     const router = useRouter()
 
+    console.log("authenticatedUserjjj ", authenticatedUser)
+
     return (
         <View style={[styles.headerWrapper, {
             backgroundColor: colors.background,

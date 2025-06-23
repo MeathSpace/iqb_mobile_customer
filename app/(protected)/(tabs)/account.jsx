@@ -118,7 +118,7 @@ const account = () => {
 
           <Image
             style={{ height: scale(80), width: scale(80), borderRadius: scale(80) }}
-            source={{ uri: authenticatedUser?.imageUrl }}
+            source={{ uri: authenticatedUser?.profile?.[0]?.url }}
             // placeholder={{ blurhash }}
             contentFit="cover"
             transition={300}

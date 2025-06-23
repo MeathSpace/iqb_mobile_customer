@@ -2,25 +2,66 @@ import { Keyboard, Pressable, StyleSheet, Text, TextInput, TouchableWithoutFeedb
 import React, { useState } from 'react'
 import CustomView from '../../components/CustomView'
 import ProgressHeader from '../../components/ProgressHeader'
-import { useRouter } from 'expo-router'
+import { useLocalSearchParams, useRouter } from 'expo-router'
 import CustomText from '../../components/CustomText'
 import CustomSecondaryText from '../../components/CustomSecondaryText'
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import { useTheme } from '@react-navigation/native'
 import { Colors } from '@/constants/Colors';
+import { ErrorIcon } from '../../constants/icons'
 
 const passwordConfirmation = () => {
+
+    const { email,
+        firstName,
+        lastName,
+        gender,
+        phoneNumber,
+        selectedDate } = useLocalSearchParams();
+
+    // console.log("Params: ", email, firstName, lastName , gender, phoneNumber, selectedDate)
 
     const { colors } = useTheme()
 
     const router = useRouter()
 
     const [progressOne, setProgressOne] = useState(1)
-    const [progressTwo, setProgressTwo] = useState(1)
-    const [progressThree, setProgressThree] = useState(0.5)
+    const [progressTwo, setProgressTwo] = useState(0.5)
+    const [progressThree, setProgressThree] = useState(0)
+
+    const [password, setPassword] = useState("")
+    const [confirmPassword, setConfirmPassword] = useState("")
+
+    const [passwordError, setPasswordError] = useState("")
+    const [confirmPasswordError, setConfirmPasswordError] = useState("")
+
 
     const passwordConfirmHandler = () => {
-        router.push("/verification")
+        if (!password) {
+            setPasswordError("Password is required")
+            return;
+        } else if (!confirmPassword) {
+            setConfirmPasswordError("Confirm password is required")
+            return;
+        } else if (password !== confirmPassword) {
+            setConfirmPasswordError("Passwords do not match")
+            return;
+        }
+
+        // router.push("/verification")
+
+        router.push({
+            pathname: "/verification",
+            params: {
+                email,
+                firstName,
+                lastName,
+                gender,
+                phoneNumber,
+                selectedDate
+            }
+        });
+
     }
 
     return (
@@ -52,15 +93,29 @@ const passwordConfirmation = () => {
                             editable
                             placeholder="Enter your password"
                             placeholderTextColor={colors.secondaryText}
-                            style={[false ? styles.inputFielderror : styles.inputField, { 
-                                backgroundColor: "#0BA3AD1A", fontFamily: "AirbnbCereal_W_Bk", color: colors.text }]}
-                            // onChangeText={(text) => {
-                            //     setFirstNameError("")
-                            //     setFirstName(text)
-                            // }}
-                            // value={firstName}
-                            value={""}
+                            style={[false ? styles.inputFielderror : styles.inputField, {
+                                backgroundColor: "#0BA3AD1A", fontFamily: "AirbnbCereal_W_Bk", color: colors.text
+                            }]}
+                            onChangeText={(text) => {
+                                setPasswordError("")
+                                setPassword(text)
+                            }}
+                            value={password}
                         />
+
+                        {
+                            passwordError && (
+                                <View style={{
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    gap: scale(5),
+                                }}>
+                                    <ErrorIcon color='red' size={scale(16)} />
+                                    <CustomText style={{ fontSize: scale(12), color: "red" }}>{passwordError}</CustomText>
+                                </View>
+                            )
+                        }
+
                     </View>
 
                     <View style={styles.inputWrapper}>
@@ -73,13 +128,25 @@ const passwordConfirmation = () => {
                             style={[false ? styles.inputFielderror : styles.inputField, {
                                 backgroundColor: "#0BA3AD1A", fontFamily: "AirbnbCereal_W_Bk", color: colors.text
                             }]}
-                            // onChangeText={(text) => {
-                            //     setFirstNameError("")
-                            //     setFirstName(text)
-                            // }}
-                            // value={firstName}
-                            value={""}
+                            onChangeText={(text) => {
+                                setConfirmPasswordError("")
+                                setConfirmPassword(text)
+                            }}
+                            value={confirmPassword}
                         />
+
+                        {
+                            confirmPasswordError && (
+                                <View style={{
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    gap: scale(5),
+                                }}>
+                                    <ErrorIcon color='red' size={scale(16)} />
+                                    <CustomText style={{ fontSize: scale(12), color: "red" }}>{confirmPasswordError}</CustomText>
+                                </View>
+                            )
+                        }
                     </View>
                 </View>
 

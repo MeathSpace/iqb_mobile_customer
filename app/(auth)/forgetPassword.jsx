@@ -1,5 +1,5 @@
 import { Keyboard, Pressable, StyleSheet, Text, TextInput, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
-import React from 'react'
+import React, { useState } from 'react'
 import CustomView from '../../components/CustomView';
 import CustomText from '../../components/CustomText';
 import * as Progress from 'react-native-progress';
@@ -8,12 +8,28 @@ import { useRouter } from 'expo-router';
 import CustomSecondaryText from '../../components/CustomSecondaryText';
 import { useTheme } from '@react-navigation/native';
 import { Colors } from '@/constants/Colors';
+import { ErrorIcon } from '../../constants/icons';
 
 const forgetPassword = () => {
 
     const { colors } = useTheme()
 
     const router = useRouter()
+
+    const [email, setEmail] = useState("")
+    const [emailError, setEmailError] = useState(false);
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    const forgetHandler = () => {
+        if (!email) {
+            setEmailError("Email is required")
+            return;
+        } else if (!emailRegex.test(email)) {
+            return setEmailError("Invalid email format")
+        }
+
+        router.push("/forgetVerification")
+    }
 
     return (
         <TouchableWithoutFeedback onPress={() => {
@@ -41,18 +57,32 @@ const forgetPassword = () => {
                             style={[false ? styles.inputFielderror : styles.inputField, {
                                 backgroundColor: "#0BA3AD1A", fontFamily: "AirbnbCereal_W_Bk", color: colors.text
                             }]}
-                        // onChangeText={(text) => {
-                        //     setFirstNameError("")
-                        //     setFirstName(text)
-                        // }}
-                        // value={firstName}
+                            onChangeText={(text) => {
+                                setEmailError("")
+                                setEmail(text)
+                            }}
+                            value={email}
                         />
+
+                        {
+                            emailError && (
+                                <View style={{
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    gap: scale(5),
+                                }}>
+                                    <ErrorIcon color='red' size={scale(16)} />
+                                    <CustomText style={{ fontSize: scale(12), color: "red", }}>{emailError}</CustomText>
+                                </View>
+                            )
+                        }
+
                     </View>
 
                 </View>
 
                 <Pressable
-                    onPress={() => router.push("/forgetVerification")}
+                    onPress={() => forgetHandler()}
                     style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode }]}>
                     <CustomText style={{ color: "#fff" }}>Save & next</CustomText>
                 </Pressable>

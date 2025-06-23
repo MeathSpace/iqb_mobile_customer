@@ -1,0 +1,1 @@
+export const BASE_URL = "https://iqb-final.onrender.com/api"

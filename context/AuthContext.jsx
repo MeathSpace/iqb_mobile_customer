@@ -6,6 +6,20 @@ const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
 
+    const [signInData, setSignInData] = useState({
+        user: null,
+        loading: false,
+        error: null,
+        success: false
+    })
+
+    const [signUpData, setSignUpData] = useState({
+        user: null,
+        loading: false,
+        error: null,
+        success: false
+    })
+
     const [isAuthenticated, setIsAuthenticated] = useState(false); // null = not logged in
     const [authenticatedUser, setAuthenticatedUser] = useState(null)
     const [searchSalon, setSearchSalon] = useState(null)
@@ -40,7 +54,11 @@ export const AuthProvider = ({ children }) => {
         authenticatedUser,
         setAuthenticatedUser,
         searchSalon,
-        setSearchSalon
+        setSearchSalon,
+        signInData,
+        setSignInData,
+        signUpData,
+        setSignUpData
     }
 
     return (

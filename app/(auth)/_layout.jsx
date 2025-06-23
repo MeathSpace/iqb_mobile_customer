@@ -11,7 +11,7 @@ const AuthLayout = () => {
         return <Redirect href="/home" />
     }
 
-    console.log("Authenticated Auth", isAuthenticated)
+    // console.log("Authenticated Auth", isAuthenticated)
 
     return (
         <Stack screenOptions={{ headerShown: false }}>

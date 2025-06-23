@@ -1,4 +1,4 @@
-import { Image, Keyboard, Pressable, StyleSheet, Text, TextInput, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
+import { ActivityIndicator, Image, Keyboard, Pressable, StyleSheet, Text, TextInput, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
 import React, { useState, useCallback, useEffect } from 'react'
 import CustomView from "../../components/CustomView"
 import CustomText from "../../components/CustomText"
@@ -15,7 +15,9 @@ import * as AuthSession from 'expo-auth-session'
 import { useClerk, useSSO, useUser } from '@clerk/clerk-expo'
 import { useTheme } from '@react-navigation/native';
 import { Colors } from '@/constants/Colors';
-
+import { ErrorIcon, EyeIcon, EyeOffIcon } from '../../constants/icons';
+import axios from 'axios';
+import { BASE_URL } from '@/utils/api';
 
 export const useWarmUpBrowser = () => {
     useEffect(() => {
@@ -34,9 +36,17 @@ WebBrowser.maybeCompleteAuthSession()
 
 const signin = () => {
 
+    const [email, setEmail] = useState("")
+    const [password, setPassword] = useState("")
+    const [showPassword, setShowPassword] = useState(false);
+
+    // Error state 
+    const [emailError, setEmailError] = useState(false);
+    const [passwordError, setPasswordError] = useState(false);
+
     useWarmUpBrowser()
 
-    const { setIsAuthenticated, setAuthenticatedUser } = useAuth()
+    const { setIsAuthenticated, setAuthenticatedUser, setSignInData, signInData } = useAuth()
 
     const { colors } = useTheme()
 
@@ -46,22 +56,61 @@ const signin = () => {
 
     const { signOut } = useClerk()
 
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
     const signinPressed = async () => {
-        if (rememberMe) {
-            await AsyncStorage.setItem("isAuthenticated", JSON.stringify(true))
+        try {
+            if (!email) {
+                setEmailError("Email is required");
+                return;
+            } else if (!emailRegex.test(email)) {
+                return setEmailError("Invalid email format")
+            } else if (!password) {
+                setPasswordError("Password is required");
+                return;
+            }
+
+            setSignInData((prev) => ({ ...prev, loading: true }))
+
+            const { data } = await axios.post(`${BASE_URL}/customer/signIn`, {
+                email,
+                password
+            })
+
+            setSignInData((prev) => ({ ...prev, loading: false, user: data?.response, success: true, error: null }))
+
+            if (rememberMe) {
+                await AsyncStorage.setItem("isAuthenticated", JSON.stringify(true))
+            }
+            await AsyncStorage.setItem("LoggedInUser", JSON.stringify(data?.response))
+            setAuthenticatedUser(data?.response)
+            setIsAuthenticated(true)
+            router.push("/home")
+
+        } catch (error) {
+            setSignInData((prev) => ({ ...prev, loading: false, user: null, success: false, error: error }))
+
+            console.error("Error during sign-in:", error);
         }
-        await AsyncStorage.setItem("LoggedInUser", JSON.stringify({
-            name: "John Doe",
-            email: "john@gmail.com",
-            imageUrl: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-        }))
-        setAuthenticatedUser({
-            name: "John Doe",
-            email: "john@gmail.com",
-            imageUrl: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-        })
-        setIsAuthenticated(true)
-        router.push("/home")
+
+
+
+
+        // if (rememberMe) {
+        //     await AsyncStorage.setItem("isAuthenticated", JSON.stringify(true))
+        // }
+        // await AsyncStorage.setItem("LoggedInUser", JSON.stringify({
+        //     name: "John Doe",
+        //     email: "john@gmail.com",
+        //     imageUrl: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
+        // }))
+        // setAuthenticatedUser({
+        //     name: "John Doe",
+        //     email: "john@gmail.com",
+        //     imageUrl: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
+        // })
+        // setIsAuthenticated(true)
+        // router.push("/home")
     }
 
 
@@ -149,37 +198,83 @@ const signin = () => {
                         resizeMode="cover"
                     />
 
-                    <TextInput
-                        editable
-                        placeholder="Enter your email"
-                        placeholderTextColor={colors.secondaryText}
-                        style={[false ? styles.inputFielderror : styles.inputField, {
-                            backgroundColor: "#0BA3AD1A",
-                            fontFamily: "AirbnbCereal_W_Bk", color: colors.text
-                        }]}
-                        // onChangeText={(text) => {
-                        //     setEmailError("")
-                        //     setEmail(text)
-                        // }}
-                        // value={email}
-                        value=''
-                    />
+                    <View style={{
+                        gap: verticalScale(10)
+                    }}>
+                        <TextInput
+                            editable
+                            placeholder="Enter your email"
+                            placeholderTextColor={colors.secondaryText}
+                            style={[false ? styles.inputFielderror : styles.inputField, {
+                                backgroundColor: "#0BA3AD1A",
+                                fontFamily: "AirbnbCereal_W_Md",
+                                color: colors.text
+                            }]}
+                            onChangeText={(text) => {
+                                setEmailError("")
+                                setEmail(text)
+                            }}
+                            value={email}
+                        />
 
-                    <TextInput
-                        editable
-                        placeholder="Enter your password"
-                        placeholderTextColor={colors.secondaryText}
-                        style={[false ? styles.inputFielderror : styles.inputField, {
-                            backgroundColor: "#0BA3AD1A", 
-                            fontFamily: "AirbnbCereal_W_Bk", color: colors.text
-                        }]}
-                        // onChangeText={(text) => {
-                        //     setEmailError("")
-                        //     setEmail(text)
-                        // }}
-                        // value={email}
-                        value=''
-                    />
+                        {
+                            emailError && (
+                                <View style={{
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    gap: scale(5),
+                                }}>
+                                    <ErrorIcon color='red' size={scale(16)} />
+                                    <CustomText style={{ fontSize: scale(12), color: "red", }}>{emailError}</CustomText>
+                                </View>
+                            )
+                        }
+                    </View>
+
+                    <View style={{
+                        gap: verticalScale(10)
+                    }}>
+                        <View style={styles.passwordInputContainer}>
+                            <TextInput
+                                editable
+                                placeholder="Enter your password"
+                                placeholderTextColor={colors.secondaryText}
+                                style={[
+                                    styles.inputField,
+                                    {
+                                        fontFamily: "AirbnbCereal_W_Md",
+                                        color: colors.text,
+                                        flex: 1,
+                                    }
+                                ]}
+                                onChangeText={(text) => {
+                                    setPasswordError("")
+                                    setPassword(text);
+                                }}
+                                value={password}
+                                secureTextEntry={!showPassword}
+                            />
+                            <Pressable
+                                onPress={() => setShowPassword(!showPassword)}
+                                style={styles.eyeIcon}
+                            >
+                                {showPassword ? (<EyeOffIcon />) : (<EyeIcon />)}
+                            </Pressable>
+                        </View>
+
+                        {
+                            passwordError && (
+                                <View style={{
+                                    flexDirection: "row",
+                                    alignItems: "center",
+                                    gap: scale(5),
+                                }}>
+                                    <ErrorIcon color='red' size={scale(16)} />
+                                    <CustomText style={{ fontSize: scale(12), color: "red", }}>{passwordError}</CustomText>
+                                </View>
+                            )
+                        }
+                    </View>
 
                     <View
                         style={{
@@ -213,7 +308,14 @@ const signin = () => {
                     <Pressable
                         onPress={() => signinPressed()}
                         style={[styles.auth_btn, { backgroundColor: Colors.modeColor.colorCode, marginBottom: verticalScale(10) }]}>
-                        <CustomText style={{ color: "#fff" }}>Sign in</CustomText>
+                        {
+                            signInData?.loading ? (
+                                <ActivityIndicator size="small" color="#fff" />
+                            ) : (
+                                <CustomText style={{ color: "#fff" }}>Sign in</CustomText>
+                            )
+                        }
+
                     </Pressable>
 
                     <Pressable onPress={() => router.replace("/signup")}>
@@ -277,6 +379,16 @@ const styles = StyleSheet.create({
     inputFielderror: {
 
     },
+
+    passwordInputContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderRadius: scale(4),
+        backgroundColor: "#0BA3AD1A",
+        gap: scale(10),
+        paddingRight: scale(10),
+    },
+
     auth_btn: {
         height: verticalScale(40),
         borderRadius: scale(4),
