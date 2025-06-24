@@ -62,7 +62,6 @@ const Header = () => {
 
     const router = useRouter()
 
-    console.log("authenticatedUserjjj ", authenticatedUser)
 
     return (
         <View style={[styles.headerWrapper, {
@@ -78,13 +77,13 @@ const Header = () => {
                         borderRadius: scale(20),
                         position: "relative"
                     }}
-                    source="https://marketplace.canva.com/EAGUXS_OW4A/1/0/1600w/canva-purple-abstract-feminine-woman-hair-salon-line-art-logo-JWrVbRab4Vs.jpg"
+                    source={authenticatedUser?.salonlogo?.[0]?.url}
                     placeholder={{ blurhash }}
                     contentFit="cover"
                     transition={1000}
                 />
 
-                <CustomText style={{ fontSize: scale(16), fontFamily: "AirbnbCereal_W_Blk" }}>Modern Unisex Salon</CustomText>
+                <CustomText style={{ fontSize: scale(16), fontFamily: "AirbnbCereal_W_Blk" }}>{authenticatedUser?.salonName}</CustomText>
             </View>
 
             {/* <View style={styles.headerRight}>

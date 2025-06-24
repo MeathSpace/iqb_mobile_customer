@@ -18,6 +18,7 @@ import { Colors } from '@/constants/Colors';
 import { ErrorIcon, EyeIcon, EyeOffIcon } from '../../constants/icons';
 import axios from 'axios';
 import { BASE_URL } from '@/utils/api';
+import { Toast } from 'toastify-react-native'
 
 export const useWarmUpBrowser = () => {
     useEffect(() => {
@@ -68,6 +69,12 @@ const signin = () => {
             } else if (!password) {
                 setPasswordError("Password is required");
                 return;
+            } else if (password.length < 8) {
+                setPasswordError("Password must be at least 8 characters");
+                return;
+            } else if (password.length > 20) {
+                setPasswordError("Password must be at most 20 characters");
+                return;
             }
 
             setSignInData((prev) => ({ ...prev, loading: true }))
@@ -89,8 +96,8 @@ const signin = () => {
 
         } catch (error) {
             setSignInData((prev) => ({ ...prev, loading: false, user: null, success: false, error: error }))
-
-            console.error("Error during sign-in:", error);
+            Toast.error(error?.response?.data?.message)
+            // console.error("Error during sign-in:", error);
         }
 
 
@@ -307,6 +314,7 @@ const signin = () => {
 
                     <Pressable
                         onPress={() => signinPressed()}
+                        disabled={signInData?.loading}
                         style={[styles.auth_btn, { backgroundColor: Colors.modeColor.colorCode, marginBottom: verticalScale(10) }]}>
                         {
                             signInData?.loading ? (
@@ -409,3 +417,52 @@ const styles = StyleSheet.create({
 })
 
 
+// import { StyleSheet, Text, View, Button } from 'react-native'
+// import React from 'react'
+// import ToastManager, { Toast } from 'toastify-react-native'
+// import CustomView from "../../components/CustomView"
+
+// const signin = () => {
+//     return (
+//          <CustomView style={{ alignItems: "center", justifyContent: "center" }}>
+//             <Text>signin</Text>
+
+//             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+//                 <Button
+//                     title='Show Success Toast'
+//                     onPress={() => {
+//                         Toast.success('Success message!')
+//                     }}
+//                 />
+
+                // <Button
+                //     title='Show Error Toast'
+                //     onPress={() => {
+                //         Toast.error('Error message!')
+                //     }}
+                // />
+
+//                 <Button
+//                     title='Show Info Toast'
+//                     onPress={() => {
+//                         Toast.info('Info message!')
+//                     }}
+//                 />
+
+//                 <Button
+//                     title='Show Warning Toast'
+//                     onPress={() => {
+//                         Toast.warn('Warning message!')
+//                     }}
+//                 />
+
+//                 {/* Toast provider should be at the root level */}
+//                 <ToastManager />
+//             </View>
+//         </CustomView>
+//     )
+// }
+
+// export default signin
+
+// const styles = StyleSheet.create({})

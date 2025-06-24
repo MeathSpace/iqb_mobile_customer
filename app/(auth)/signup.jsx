@@ -1,4 +1,4 @@
-import { Image, Keyboard, Pressable, StyleSheet, Text, TextInput, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
+import { ActivityIndicator, Image, Keyboard, Pressable, StyleSheet, Text, TextInput, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
 import React, { useCallback, useEffect } from 'react'
 import CustomView from '../../components/CustomView'
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
@@ -15,6 +15,9 @@ import * as Linking from 'expo-linking'
 import * as WebBrowser from 'expo-web-browser'
 import * as AuthSession from 'expo-auth-session'
 import { useClerk, useSSO, useUser } from '@clerk/clerk-expo'
+import axios from 'axios';
+import { BASE_URL } from '@/utils/api';
+import { Toast } from 'toastify-react-native'
 
 
 export const useWarmUpBrowser = () => {
@@ -41,45 +44,51 @@ const signup = () => {
 
     const router = useRouter()
 
-    const [email, setEmail] = useState("abcd@yopmail.com");
+    const [email, setEmail] = useState("");
     const [emailError, setEmailError] = useState(false);
 
     const { setIsAuthenticated, setAuthenticatedUser, setSignUpData, signUpData } = useAuth()
 
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+    const [checkEmailLoading, setCheckEmailLoading] = useState(false)
+
     const signupPressed = async () => {
-        if (!email) {
-            return setEmailError("Email is required")
-        } else if (!emailRegex.test(email)) {
-            return setEmailError("Invalid email format")
-        }
-
-        router.push({
-            pathname: "/personalInfo",
-            params: {
-                email
+        try {
+            if (!email) {
+                return setEmailError("Email is required")
+            } else if (!emailRegex.test(email)) {
+                return setEmailError("Invalid email format")
             }
-        });
 
+            setCheckEmailLoading(true)
+
+            const { data } = await axios.post(`${BASE_URL}/customer/checkEmail`, {
+                email
+            })
+
+            setCheckEmailLoading(false)
+
+            router.push({
+                pathname: "/personalInfo",
+                params: {
+                    email
+                }
+            });
+
+        } catch (error) {
+            setCheckEmailLoading(false)
+
+            Toast.error(error?.response?.data?.message)
+        }
     }
 
-    // const googleSignupPressed = async () => {
-
-    //     // akhanao same signin tar process tai korte hbe but 
-    //     console.log("Google Sign Up Pressed")
-    // }
 
     const { startSSOFlow } = useSSO()
 
     const { isLoaded, isSignedIn, user } = useUser()
     const { signOut } = useClerk()
 
-    // useEffect(() => {
-    //     return () => {
-    //         signOut()
-    //     }
-    // }, [])
 
     const googleSignupPressed = useCallback(async () => {
         try {
@@ -118,16 +127,32 @@ const signup = () => {
     useEffect(() => {
         if (isSignedIn) {
             // console.log(user?.primaryEmailAddress?.emailAddress)
-            router.push({
-                pathname: "/personalInfo",
-                params: {
-                    email: user?.primaryEmailAddress?.emailAddress
-                }
-            });
 
-            signOut()
+            const checkEmail = async () => {
+                try {
+
+                    const { data } = await axios.post(`${BASE_URL}/customer/checkEmail`, {
+                        email: user?.primaryEmailAddress?.emailAddress
+                    })
+
+                    router.push({
+                        pathname: "/personalInfo",
+                        params: {
+                            email: user?.primaryEmailAddress?.emailAddress
+                        }
+                    });
+
+                    signOut()
+
+                } catch (error) {
+                    Toast.error(error?.response?.data?.message)
+                }
+            }
+
+            checkEmail()
+
         }
-    }, [isSignedIn])
+    }, [isSignedIn, router, user])
 
 
     return (
@@ -149,6 +174,7 @@ const signup = () => {
                                 backgroundColor: "#0BA3AD1A", fontFamily: "AirbnbCereal_W_Bk", color: colors.text
                             }]}
                             onChangeText={(text) => {
+                                setEmailError("")
                                 setEmail(text)
                             }}
                             value={email}
@@ -170,8 +196,15 @@ const signup = () => {
 
                     <Pressable
                         onPress={signupPressed}
+                        disabled={checkEmailLoading}
                         style={[styles.auth_btn, { backgroundColor: Colors.modeColor.colorCode }]}>
-                        <CustomText style={{ color: "#fff" }}>Sign up</CustomText>
+                        {
+                            checkEmailLoading ? (
+                                <ActivityIndicator size="small" color="#fff" />
+                            ) : (
+                                <CustomText style={{ color: "#fff" }}>Sign up</CustomText>
+                            )
+                        }
                     </Pressable>
 
                     <Pressable onPress={() => router.replace("/signin")}>

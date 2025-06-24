@@ -12,7 +12,7 @@ const AdvertiseCard = ({ item }) => {
         <View style={[styles.cardWrapper, {  }]}>
             <Image
                 style={styles.cardImage}
-                source={{ uri: item.image }}
+                source={{ uri: item.url }}
                 contentFit="cover"
                 transition={300}
             />

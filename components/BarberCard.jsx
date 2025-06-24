@@ -15,9 +15,9 @@ const BarberCard = ({ item }) => {
         <View style={[styles.cardWrapper, {  }]}>
             <Image
                 style={styles.cardImage}
-                source={{ uri: item.image }}
+                source={{ uri: item?.profile?.[0]?.url }}
                 contentFit="cover"
-                transition={1000}
+                transition={300}
             />
             <View>
                 <View
@@ -47,7 +47,7 @@ const BarberCard = ({ item }) => {
                 flex: 1
             }}>
                 <ClockIcon size={scale(12)} color='gray' />
-                <CustomText style={{ fontSize: scale(12), flex: 1, color: "gray" }}>120 mins</CustomText>
+                <CustomText style={{ fontSize: scale(12), flex: 1, color: "gray" }}>{item?.barberEWT} mins</CustomText>
             </View>
 
             {/* <View style={{

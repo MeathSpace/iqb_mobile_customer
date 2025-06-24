@@ -5,6 +5,13 @@ const GlobalContext = createContext();
 
 export const GlobalProvider = ({ children }) => {
 
+    const [homeDashboardData, setHomeDashboardData] = useState({
+        dashboardData: null,
+        loading: false,
+        error: null,
+        success: false
+    })
+
     const { authenticatedUser } = useAuth()
 
     const hasRun = useRef(false);
@@ -46,7 +53,9 @@ export const GlobalProvider = ({ children }) => {
         removeGroupMember,
         setRemoveGroupMember,
         appointmentCalenderData,
-        setAppointmentCalenderData
+        setAppointmentCalenderData,
+        homeDashboardData,
+        setHomeDashboardData,
     };
 
     return (

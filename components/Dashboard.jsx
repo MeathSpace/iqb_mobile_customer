@@ -1,5 +1,5 @@
 import { FlatList, Platform, Pressable, Image as ReactNativeImage, StyleSheet, Text, View } from 'react-native'
-import React from 'react'
+import React, { useCallback, useState } from 'react'
 import CustomTabView from './CustomTabView'
 import CustomText from './CustomText'
 import { useAuth } from '../context/AuthContext'
@@ -10,17 +10,108 @@ import AdvertiseCard from './AdvertiseCard'
 import { ClockIcon, CuttingIcon, DyeIcon, MenuIcon, NextIcon, QueueIcon, RightIcon, SettingsIcon, StylingIcon, TrimIcon, UserIcon } from '../constants/icons'
 import StatusCard from './StatusCard'
 import BarberCard from './BarberCard'
-import { Link, router } from 'expo-router'
+import { Link, router, useFocusEffect } from 'expo-router'
 import { Dimensions } from 'react-native';
 import { Image } from 'expo-image'
 import { useTheme } from '@react-navigation/native'
+import { useGlobal } from '../context/GlobalContext'
+import axios from 'axios'
+import { BASE_URL } from '@/utils/api';
+import Skeleton from './Skeleton'
 
-// const screenWidth = Dimensions.get('window').width;
-// console.log('Screen Width:', screenWidth);
 
 const Dashboard = () => {
 
+    const { homeDashboardData, setHomeDashboardData } = useGlobal()
     const { authenticatedUser } = useAuth()
+
+    // console.log("homeDashboardData ", homeDashboardData?.dashboardData?.barbers)
+
+    const [sliceBarber, setSliceBarber] = useState(3)
+
+    const [homeAdvertisementData, setHomeAdvertisementData] = useState({
+        advertisementData: null,
+        loading: false,
+        error: null,
+        success: false
+    })
+
+    const [serviceCategoryData, setServiceCategoryData] = useState({
+        data: null,
+        loading: false,
+        error: null,
+        success: false
+    })
+
+    // console.log("serviceCategoryData ", serviceCategoryData)
+
+    useFocusEffect(
+        useCallback(() => {
+            if (authenticatedUser) {
+
+                const fetchDashboardData = async () => {
+                    try {
+
+                        setHomeDashboardData((prev) => ({ ...prev, loading: true }))
+
+                        const { data } = await axios.post(`${BASE_URL}/customer/customerDashboard`, {
+                            salonId: authenticatedUser?.salonId
+                        })
+
+                        setHomeDashboardData((prev) => ({ ...prev, loading: false, dashboardData: data?.response, success: true, error: null }))
+
+
+                    } catch (error) {
+                        setHomeDashboardData((prev) => ({ ...prev, loading: false, dashboardData: null, success: false, error: error }))
+                        console.error("Error fetching dashboard data: ", error)
+                    }
+                }
+
+                const fetchAdvertisementData = async () => {
+                    try {
+
+                        setHomeAdvertisementData((prev) => ({ ...prev, loading: true }))
+
+                        const { data } = await axios.post(`${BASE_URL}/mobileRoutes/getAllAdvertisements`, {
+                            salonId: authenticatedUser?.salonId
+                        })
+
+                        setHomeAdvertisementData((prev) => ({ ...prev, loading: false, advertisementData: data?.response, success: true, error: null }))
+
+
+                    } catch (error) {
+                        setHomeAdvertisementData((prev) => ({ ...prev, loading: false, advertisementData: null, success: false, error: error }))
+                        console.error("Error fetching advertisement data: ", error)
+                    }
+                }
+
+                const fetchServiceCategoryData = async () => {
+                    try {
+
+                        setServiceCategoryData((prev) => ({ ...prev, loading: true }))
+
+                        const { data } = await axios.get(`${BASE_URL}/mobileRoutes/getAllServiceCategories`)
+
+                        setServiceCategoryData((prev) => ({ ...prev, loading: false, data: data?.response, success: true, error: null }))
+
+                    } catch (error) {
+                        setServiceCategoryData((prev) => ({ ...prev, loading: false, data: null, success: false, error: error }))
+                        console.error("Error fetching service category data: ", error)
+                    }
+                }
+
+                fetchDashboardData()
+                fetchAdvertisementData()
+                fetchServiceCategoryData()
+            }
+
+            return () => {
+                // Do something when the screen is unfocused
+                // Useful for cleanup functions
+            };
+        }, [authenticatedUser])
+    );
+
     const { colors } = useTheme()
 
     const pageData = [
@@ -83,15 +174,15 @@ const Dashboard = () => {
             id: 1,
             title: "System Status",
             icon: SettingsIcon,
-            value: "ON",
-            color1: "#00B090",
-            color2: "#CCEFE9"
+            value: homeDashboardData?.dashboardData?.mobileBookingAvailability ? "ON" : "OFF",
+            color1: homeDashboardData?.dashboardData?.mobileBookingAvailability ? "#00B090" : "#E11D48",
+            color2: homeDashboardData?.dashboardData?.mobileBookingAvailability ? "#CCEFE9" : "#E11D481A"
         },
         {
             id: 2,
             title: "Total Queue",
             icon: QueueIcon,
-            value: "40",
+            value: homeDashboardData?.dashboardData?.totalQueueCount || 0,
             color1: "#006FFD",
             color2: "#006FFD33"
         },
@@ -99,7 +190,7 @@ const Dashboard = () => {
             id: 3,
             title: "Next In Queue",
             icon: NextIcon,
-            value: "4",
+            value: homeDashboardData?.dashboardData?.leastQueueCount + 1,
             color1: "#EAA824",
             color2: "#EAA82433"
         },
@@ -107,7 +198,7 @@ const Dashboard = () => {
             id: 4,
             title: "On Duty Staff",
             icon: UserIcon,
-            value: "6",
+            value: homeDashboardData?.dashboardData?.barberOnDuty,
             color1: "#7ED4AD",
             color2: "#7ED4AD33"
         },
@@ -399,26 +490,82 @@ const Dashboard = () => {
                         case "advertise": {
                             return (
                                 <>
-                                    <FlatList
-                                        style={{
-                                            overflow: "visible",
-                                        }}
-                                        contentContainerStyle={{
-                                            gap: scale(10),
-                                        }}
-                                        data={salonData}
-                                        renderItem={({ item }) => <AdvertiseCard item={item} />}
-                                        keyExtractor={item => item.id}
-                                        horizontal
-                                        showsHorizontalScrollIndicator={false}
-                                    />
+                                    {
+                                        homeAdvertisementData?.loading ? (<FlatList
+                                            style={{
+                                                overflow: "visible",
+                                            }}
+                                            contentContainerStyle={{
+                                                gap: scale(10),
+                                            }}
+                                            data={salonData}
+                                            renderItem={({ item }) => <View style={{
+                                                paddingVertical: verticalScale(20),
+                                            }}>
+                                                <Skeleton width={scale(300.56)} height={verticalScale(145)} borderRadius={scale(12)} />
+                                            </View>}
+                                            keyExtractor={item => item.id}
+                                            horizontal
+                                            showsHorizontalScrollIndicator={false}
+                                        />) : homeAdvertisementData?.advertisementData?.length ? (<FlatList
+                                            style={{
+                                                overflow: "visible",
+                                            }}
+                                            contentContainerStyle={{
+                                                gap: scale(10),
+                                            }}
+                                            data={homeAdvertisementData?.advertisementData}
+                                            renderItem={({ item }) => <AdvertiseCard item={item} />}
+                                            keyExtractor={item => item._id}
+                                            horizontal
+                                            showsHorizontalScrollIndicator={false}
+                                        />) : (
+                                            <View
+                                                style={{
+                                                    width: "100%",
+                                                    height: verticalScale(145),
+                                                    paddingVertical: verticalScale(20),
+                                                }}
+                                            >
+                                                <Image
+                                                    style={{
+                                                        width: "100%",
+                                                        height: "100%",
+                                                        borderRadius: scale(12),
+                                                    }}
+                                                    source={{ uri: "https://www.jamesuncle.com/assets/frontend/images/no-banner.jpg" }}
+                                                    contentFit="cover"
+                                                    transition={300}
+                                                />
+                                            </View>
+                                        )
+                                    }
+
                                 </>
                             )
                         }
 
                         case "status": {
                             return (
-                                <FlatList
+
+                                homeDashboardData?.loading ? (<FlatList
+                                    style={{
+                                        overflow: "visible",
+                                    }}
+                                    contentContainerStyle={{
+                                        flex: 1,
+                                        flexDirection: "row",
+                                        gap: scale(10),
+                                        paddingVertical: verticalScale(10),
+                                        justifyContent: "space-evenly"
+                                    }}
+                                    data={salonStatus}
+                                    renderItem={({ item }) => <Skeleton width={scale(60)} height={scale(80)} />}
+                                    keyExtractor={item => item.id}
+                                    horizontal
+                                    showsHorizontalScrollIndicator={false}
+                                    bounces={false}
+                                />) : (<FlatList
                                     style={{
                                         overflow: "visible",
                                     }}
@@ -435,7 +582,9 @@ const Dashboard = () => {
                                     horizontal
                                     showsHorizontalScrollIndicator={false}
                                     bounces={false}
-                                />
+                                />)
+
+
                             )
                         }
 
@@ -443,9 +592,25 @@ const Dashboard = () => {
                             return (
                                 <>
                                     <CustomText style={{ fontFamily: "AirbnbCereal_W_Bd" }}>Hello, {authenticatedUser.name} 👋</CustomText>
-                                    <CustomText style={{ fontSize: scale(14), marginBottom: verticalScale(15), marginTop: verticalScale(10) }}>
+                                    {
+                                        homeDashboardData?.loading ? (
+                                            <View style={{
+                                                marginBottom: verticalScale(15),
+                                                marginTop: verticalScale(10)
+                                            }}>
+                                                <Skeleton height={verticalScale(30)} />
+                                            </View>
+                                        ) : homeDashboardData?.dashboardData?.salonInfo?.salonDesc?.length ? (<CustomText style={{ fontSize: scale(14), marginBottom: verticalScale(15), marginTop: verticalScale(10) }}>
+                                            {homeDashboardData?.dashboardData?.salonInfo?.salonDesc}
+                                        </CustomText>) : (
+                                            <CustomText style={{ fontSize: scale(14), marginBottom: verticalScale(15), marginTop: verticalScale(10) }}>
+                                                This salon currently doesn't have a description.
+                                            </CustomText>
+                                        )
+                                    }
+                                    {/* <CustomText style={{ fontSize: scale(14), marginBottom: verticalScale(15), marginTop: verticalScale(10) }}>
                                         We strive to reach beyond the roots (of hair), and into the refinement and healing of one’s core self.
-                                    </CustomText>
+                                    </CustomText> */}
                                     <View style={{
                                         flexDirection: "row",
                                         gap: verticalScale(10),
@@ -500,49 +665,71 @@ const Dashboard = () => {
                                             // justifyContent: "space-between"
                                         }}
                                     >
-
                                         {
-                                            serviceCategories.map((item, index) => {
-                                                return (
-                                                    <View
-                                                        key={index}
-                                                        style={{
-                                                            gap: verticalScale(10),
-                                                            width: scale(65),
-                                                            marginBottom: verticalScale(10)
-                                                            // paddingLeft: scale(5)
-                                                        }}
-                                                    >
-
+                                            serviceCategoryData?.loading ? (
+                                                [0, 1, 2, 3, 4, 5, 6, 7].map((item, index) => {
+                                                    return (
                                                         <View
+                                                            key={index}
                                                             style={{
-                                                                width: scale(60),
-                                                                height: scale(60),
-                                                                borderRadius: scale(30),
-                                                                backgroundColor: colors.background,
-                                                                marginHorizontal: "auto"
+                                                                gap: verticalScale(10),
+                                                                width: scale(65),
+                                                                // marginBottom: verticalScale(10)
                                                             }}
                                                         >
-                                                            <Image
-                                                                style={{ width: "100%", height: "100%", borderRadius: scale(30) }}
-                                                                source={item.image}
-                                                                contentFit="cover"
-                                                                transition={1000}
-                                                            />
-                                                        </View>
-                                                        <CustomText
-                                                            style={{
-                                                                fontFamily: "AirbnbCereal_W_Md",
-                                                                fontSize: scale(12),
-                                                                textAlign: "center",
-                                                                color: "gray",
-                                                            }}
-                                                        >{item.name}</CustomText>
-                                                    </View>
-                                                )
-                                            })
-                                        }
 
+                                                            <Skeleton
+                                                                width={scale(60)}
+                                                                height={scale(60)}
+                                                                borderRadius={scale(30)}
+                                                            >
+
+                                                            </Skeleton>
+
+                                                        </View>
+                                                    )
+                                                })
+                                            ) : (
+                                                serviceCategoryData?.data?.map((item, index) => {
+                                                    return (
+                                                        <View
+                                                            key={item?._id}
+                                                            style={{
+                                                                gap: verticalScale(10),
+                                                                width: scale(65),
+                                                                marginBottom: verticalScale(10)
+                                                            }}
+                                                        >
+
+                                                            <View
+                                                                style={{
+                                                                    width: scale(60),
+                                                                    height: scale(60),
+                                                                    borderRadius: scale(30),
+                                                                    backgroundColor: colors.background,
+                                                                    marginHorizontal: "auto"
+                                                                }}
+                                                            >
+                                                                <Image
+                                                                    style={{ width: "100%", height: "100%", borderRadius: scale(30) }}
+                                                                    source={{ uri: item?.serviceCategoryImage?.url.replace("http", "https") }}
+                                                                    contentFit="cover"
+                                                                    transition={1000}
+                                                                />
+                                                            </View>
+                                                            <CustomText
+                                                                style={{
+                                                                    fontFamily: "AirbnbCereal_W_Md",
+                                                                    fontSize: scale(12),
+                                                                    textAlign: "center",
+                                                                    color: "gray",
+                                                                }}
+                                                            >{item.serviceCategoryName}</CustomText>
+                                                        </View>
+                                                    )
+                                                })
+                                            )
+                                        }
                                     </View>
                                 </View>
                             )
@@ -564,208 +751,122 @@ const Dashboard = () => {
                                                 fontFamily: "AirbnbCereal_W_Blk",
                                                 color: Colors.modeColor.colorCode
                                             }}
-                                        >6</CustomText></CustomText>
+                                        >{homeDashboardData?.dashboardData?.barberOnDuty}</CustomText></CustomText>
 
                                     </View>
-                                    <FlatList
-                                        key={3}
-                                        style={{
-                                            overflow: "visible",
-                                        }}
-                                        columnWrapperStyle={{
-                                            columnGap: scale(10),
-                                        }}
-                                        data={barbersData}
-                                        renderItem={({ item }) => <BarberCard item={item} />}
-                                        keyExtractor={item => item.id}
-                                        bounces={false}
-                                        numColumns={3}
-                                    />
 
-                                    <Pressable
-                                        style={{
-                                            height: verticalScale(35),
-                                            backgroundColor: "#00B0901A",
-                                            borderRadius: scale(4),
-                                            justifyContent: "center",
-                                            alignItems: "center",
-                                            marginBottom: verticalScale(20)
-                                        }}
-                                    >
-                                        <View style={{ flexDirection: "row", alignItems: "center", gap: scale(10) }}>
-                                            <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                                <View style={{
-                                                    height: scale(25),
-                                                    width: scale(25),
-                                                    borderRadius: scale(20)
-                                                }}>
-                                                    <Image
-                                                        style={{
-                                                            height: "100%",
-                                                            width: "100%",
-                                                            borderRadius: scale(20)
-                                                        }}
-                                                        source={{ uri: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg" }}
-                                                        contentFit="cover"
-                                                        transition={1000}
-                                                    />
-                                                </View>
-                                                <View style={{
-                                                    height: scale(25),
-                                                    width: scale(25),
-                                                    marginLeft: scale(-5),
-                                                    borderRadius: scale(20)
-                                                }}>
-                                                    <Image
-                                                        style={{
-                                                            height: "100%",
-                                                            width: "100%",
-                                                            borderRadius: scale(20)
-                                                        }}
-                                                        source={{ uri: "https://t3.ftcdn.net/jpg/02/43/12/34/360_F_243123463_zTooub557xEWABDLk0jJklDyLSGl2jrr.jpg" }}
-                                                        contentFit="cover"
-                                                        transition={1000}
-                                                    />
-                                                </View>
+                                    {
+                                        homeDashboardData?.loading ? (
+                                            <FlatList
+                                                key={3}
+                                                style={{
+                                                    overflow: "visible",
+                                                }}
+                                                columnWrapperStyle={{
+                                                    columnGap: scale(10),
+                                                }}
+                                                data={[0, 1, 2, 3, 4, 5,]}
+                                                renderItem={({ item }) => <Skeleton
+                                                    height={verticalScale(110)}
+                                                    width={scale(103)}
+                                                    borderRadius={scale(10)}
 
-                                                <View style={{
-                                                    height: scale(25),
-                                                    width: scale(25),
-                                                    marginLeft: scale(-5),
-                                                    borderRadius: scale(20)
-                                                }}>
-                                                    <Image
-                                                        style={{
-                                                            height: "100%",
-                                                            width: "100%",
-                                                            borderRadius: scale(20)
-                                                        }}
-                                                        source={{ uri: "https://plus.unsplash.com/premium_photo-1690579805307-7ec030c75543?fm=jpg&q=60&w=3000&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MXx8cGVyc29uJTIwaWNvbnxlbnwwfHwwfHx8MA%3D%3D" }}
-                                                        contentFit="cover"
-                                                        transition={1000}
-                                                    />
-                                                </View>
-                                            </View>
+                                                    style={{
+                                                        marginBottom: verticalScale(10)
+                                                    }}
+                                                />}
+                                                keyExtractor={item => item}
+                                                bounces={false}
+                                                numColumns={3}
+                                            />
+                                        ) : homeDashboardData?.dashboardData?.barbers?.length ? (
+                                            <FlatList
+                                                key={3}
+                                                style={{
+                                                    overflow: "visible",
+                                                }}
+                                                columnWrapperStyle={{
+                                                    columnGap: scale(10),
+                                                }}
+                                                data={homeDashboardData?.dashboardData?.barbers.slice(0, sliceBarber)}
+                                                renderItem={({ item }) => <BarberCard item={item} />}
+                                                keyExtractor={item => item.id}
+                                                bounces={false}
+                                                numColumns={3}
+                                            />
+                                        ) : (
                                             <View
                                                 style={{
-                                                    flexDirection: "row",
+                                                    height: verticalScale(100),
+                                                    justifyContent: "center",
                                                     alignItems: "center",
-                                                    gap: scale(5)
+                                                    marginBottom: verticalScale(40)
+                                                }}
+                                            ><CustomText>No barbers available</CustomText></View>
+                                        )
+                                    }
+
+                                    {
+                                        sliceBarber < homeDashboardData?.dashboardData?.barbers?.length && (
+                                            <Pressable
+                                                onPress={() => {
+                                                    setSliceBarber(homeDashboardData?.dashboardData?.barbers?.length)
+                                                }}
+                                                style={{
+                                                    height: verticalScale(35),
+                                                    backgroundColor: "#00B0901A",
+                                                    borderRadius: scale(4),
+                                                    justifyContent: "center",
+                                                    alignItems: "center",
+                                                    marginBottom: verticalScale(20)
                                                 }}
                                             >
-                                                <CustomText style={{ color: Colors.modeColor.colorCode }}>See all barbers</CustomText>
-                                                <RightIcon size={scale(14)} color={Colors.modeColor.colorCode} />
-                                            </View>
-                                        </View>
-                                    </Pressable>
+                                                <View style={{ flexDirection: "row", alignItems: "center", gap: scale(10) }}>
+                                                    <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                                        {
+                                                            homeDashboardData?.dashboardData?.barbers?.slice(0, 3).map((item, index) => {
+                                                                return (
+                                                                    <View
+                                                                        key={index}
+                                                                        style={{
+                                                                            height: scale(25),
+                                                                            width: scale(25),
+                                                                            borderRadius: scale(20),
+                                                                            marginLeft: -scale(1 * 5)
+                                                                        }}>
+                                                                        <Image
+                                                                            style={{
+                                                                                height: "100%",
+                                                                                width: "100%",
+                                                                                borderRadius: scale(20)
+                                                                            }}
+                                                                            source={{ uri: item?.profile?.[0]?.url }}
+                                                                            contentFit="cover"
+                                                                            transition={300}
+                                                                        />
+                                                                    </View>
+                                                                )
+                                                            })
+                                                        }
+                                                    </View>
+                                                    <View
+                                                        style={{
+                                                            flexDirection: "row",
+                                                            alignItems: "center",
+                                                            gap: scale(5)
+                                                        }}
+                                                    >
+                                                        <CustomText style={{ color: Colors.modeColor.colorCode }}>See all barbers</CustomText>
+                                                        <RightIcon size={scale(14)} color={Colors.modeColor.colorCode} />
+                                                    </View>
+                                                </View>
+                                            </Pressable>
+                                        )
+                                    }
+
                                 </>
                             )
                         }
-
-                        // case "services": {
-                        //     return (
-                        //         <>
-                        //             {serviceCategories.map((item, index) => {
-                        //                 return (
-                        //                     <React.Fragment key={index}>
-                        //                         <View
-                        //                             style={{
-                        //                                 height: verticalScale(38),
-                        //                                 flexDirection: "row",
-                        //                                 alignItems: "center",
-                        //                                 gap: scale(10),
-                        //                             }}
-                        //                         >
-                        //                             <CustomText
-                        //                                 style={{
-                        //                                     fontFamily: "AirbnbCereal_W_Bd",
-                        //                                     fontSize: scale(12),
-                        //                                 }}
-                        //                             >
-                        //                                 {item.name}
-                        //                             </CustomText>
-                        //                             <View
-                        //                                 style={{
-                        //                                     width: "100%",
-                        //                                     height: verticalScale(1),
-                        //                                     backgroundColor: Colors.modeColor.colorCode,
-                        //                                 }}
-                        //                             />
-                        //                         </View>
-
-                        //                         {
-                        //                             item.services.map((item, index) => {
-                        //                                 return (
-                        //                                     <View
-                        //                                         key={index}
-                        //                                         style={{
-                        //                                             flexDirection: "row",
-                        //                                             alignItems: "center",
-                        //                                             justifyContent: "space-between",
-                        //                                             marginBottom: verticalScale(10),
-                        //                                             paddingBottom: verticalScale(10),
-                        //                                             borderBottomWidth: index === 0 && scale(1),
-                        //                                             borderBottomColor: index === 0 && "rgba(0,0,0,0.4)"
-                        //                                         }}
-                        //                                     >
-                        //                                         <View style={{
-                        //                                             gap: verticalScale(10)
-                        //                                         }}>
-                        //                                             <CustomText
-                        //                                                 style={{
-                        //                                                     fontSize: scale(10)
-                        //                                                 }}
-                        //                                             >Hair Cut <CustomText
-                        //                                                 style={{
-                        //                                                     fontSize: scale(10),
-                        //                                                     fontFamily: "AirbnbCereal_W_Bd"
-                        //                                                 }}
-                        //                                             >(VIP)</CustomText></CustomText>
-                        //                                             <View style={{
-                        //                                                 flexDirection: "row",
-                        //                                                 alignItems: "center",
-                        //                                                 gap: scale(5)
-                        //                                             }}>
-                        //                                                 <ClockIcon size={scale(10)} />
-                        //                                                 <CustomText style={{
-                        //                                                     fontSize: scale(10)
-                        //                                                 }}>15 mins</CustomText>
-                        //                                             </View>
-
-                        //                                             <CustomText style={{
-                        //                                                 fontSize: scale(14),
-                        //                                                 color: Colors.modeColor.colorCode,
-                        //                                                 fontFamily: "AirbnbCereal_W_Bd"
-                        //                                             }}>$ 49</CustomText>
-
-                        //                                             <CustomText
-                        //                                                 style={{
-                        //                                                     fontSize: scale(10),
-                        //                                                     width: scale(230)
-                        //                                                 }}
-                        //                                             >Lorem ipsum dolor sit amet consectetur adipisicing elit. Officiis, optio quo. Ipsa eius sed nesciunt!</CustomText>
-                        //                                         </View>
-
-                        //                                         <ReactNativeImage
-                        //                                             style={styles.cardImage}
-                        //                                             source={{ uri: item.image }}
-                        //                                             resizeMode="cover" // replaces contentFit="cover"
-                        //                                         // transition is not supported in react-native Image
-                        //                                         />
-
-                        //                                     </View>
-                        //                                 )
-                        //                             })
-                        //                         }
-
-
-                        //                     </React.Fragment>
-                        //                 );
-                        //             })}
-
-                        //         </>
-                        //     );
-                        // }
 
                     }
                 }}

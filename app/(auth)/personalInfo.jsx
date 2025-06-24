@@ -21,20 +21,18 @@ const personalInfo = () => {
 
     const { email } = useLocalSearchParams();
 
-    console.log("Email from params", email)
-
     const colorScheme = useColorScheme()
 
     const { colors } = useTheme()
 
     const router = useRouter()
 
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
+    const [firstName, setFirstName] = useState("sagnik");
+    const [lastName, setLastName] = useState("nandy");
     const [genderOpen, setGenderOpen] = useState(false)
     const [gender, setGender] = useState("Male");
     const [date, setDate] = useState(new Date());
-    const [selectedDate, setSelectedDate] = useState("");
+    const [selectedDate, setSelectedDate] = useState("2025-12-08");
 
     const [calenderModal, setCalenderModal] = useState(false);
     // const [selectedCountry, setSelectedCountry] = useState({});
@@ -100,14 +98,13 @@ const personalInfo = () => {
     }, [selectedCountry]);
 
     const phoneNumberHandler = (phoneNumber) => {
+
         const isValid = phoneRef.current?.isValidNumber();
         if (isValid) {
             setPhoneNumber(phoneNumber);
             setPhoneNumberError("")
-            console.log("Valid ", phoneNumber)
         } else {
             setPhoneNumberError("Invalid phone number");
-            console.log("Invalid ", phoneNumber)
         }
     }
 
@@ -116,16 +113,37 @@ const personalInfo = () => {
         if (!firstName) {
             setFirstNameError("First name is required");
             return;
-        } else if (!lastName) {
+        } else if (firstName.length < 2) {
+            setFirstNameError("First name must be at least 2 characters");
+            return;
+        } else if (firstName.length > 20) {
+            setFirstNameError("First name must be at most 20 characters");
+            return;
+        }
+
+        if (!lastName) {
             setLastNameError("Last name is required");
             return;
-        } else if (!phoneNumber) {
+        } else if (lastName.length < 2) {
+            setLastNameError("Last name must be at least 2 characters");
+            return;
+        } else if (lastName.length > 20) {
+            setLastNameError("Last name must be at most 20 characters");
+            return;
+        }
+
+        if (!phoneNumber) {
             setPhoneNumberError("Phone number is required");
             return;
-        } else if (!selectedDate) {
+        }
+
+        if (!selectedDate) {
             setDateOfBirthError("Date of birth is required");
             return;
         }
+
+        const mobileNumber = phoneNumber.replace("+", "")
+        const updatedNumber = mobileNumber.startsWith(selectedCountry?.callingCode[0]) ? mobileNumber.slice(selectedCountry?.callingCode[0].length) : mobileNumber
 
         router.push({
             pathname: "/passwordConfirmation",
@@ -134,7 +152,8 @@ const personalInfo = () => {
                 firstName,
                 lastName,
                 gender,
-                phoneNumber,
+                phoneNumber: updatedNumber,
+                callingCode: selectedCountry?.callingCode[0],
                 selectedDate
             }
         });
@@ -333,7 +352,7 @@ const personalInfo = () => {
                         )}
                     </View>
 
-                        
+
 
                     <View style={[styles.inputWrapper, { position: "relative" }]}>
                         <CustomText>Date of Birth</CustomText>

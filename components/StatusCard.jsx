@@ -8,6 +8,7 @@ import CustomSecondaryText from './CustomSecondaryText'
 const StatusCard = ({ item }) => {
 
     const { colors } = useTheme()
+    
 
     return (
         <View style={[styles.statusCard]}>
@@ -19,6 +20,7 @@ const StatusCard = ({ item }) => {
                 fontFamily: "AirbnbCereal_W_Bd",
                 fontSize: scale(14),
                 textAlign: "center",
+                color: item.title === "System Status" ? (item.color1) : undefined
                 // color: `${item.color1}`
             }}>{item.value}</CustomText>
         </View>

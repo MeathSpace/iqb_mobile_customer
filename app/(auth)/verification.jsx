@@ -1,5 +1,5 @@
-import { Keyboard, Pressable, StyleSheet, Text, TextInput, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
-import React, { useState } from 'react'
+import { ActivityIndicator, Keyboard, Pressable, StyleSheet, Text, TextInput, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import CustomView from '../../components/CustomView';
@@ -9,6 +9,9 @@ import CustomSecondaryText from '../../components/CustomSecondaryText';
 import { useTheme } from '@react-navigation/native';
 import { Colors } from '@/constants/Colors';
 import { ErrorIcon } from '../../constants/icons';
+import axios from 'axios';
+import { BASE_URL } from '@/utils/api';
+import { Toast } from 'toastify-react-native'
 
 const verification = () => {
 
@@ -16,13 +19,19 @@ const verification = () => {
         firstName,
         lastName,
         gender,
+        callingCode,
         phoneNumber,
-        selectedDate } = useLocalSearchParams();
+        verificationOtp,
+        selectedDate,
+        password } = useLocalSearchParams();
 
     const { colors } = useTheme()
 
     const [verificationCode, setVerificationCode] = useState("")
     const [verificationCodeError, setVerificationCodeError] = useState("")
+    const [currentVerificationOtp, setCurrentVerificationOtp] = useState(verificationOtp)
+    const [verificationCodeLoading, setVerificationCodeLoading] = useState(false)
+    const [signupLoading, setSignupLoading] = useState(false)
 
     const router = useRouter()
 
@@ -30,21 +39,59 @@ const verification = () => {
     const [progressTwo, setProgressTwo] = useState(1)
     const [progressThree, setProgressThree] = useState(0.5)
 
-    const verificationHandler = () => {
-        if (!verificationCode) {
-            setVerificationCodeError("Verification code is required")
-            return;
-        }
+    const signupHandler = async () => {
+        try {
+            if (!verificationCode) {
+                setVerificationCodeError("Verification code is required")
+                return;
+            } else if (Number(verificationCode) !== Number(currentVerificationOtp)) {
+                setVerificationCodeError("Verification code does not match")
+                return;
+            }
 
-        const signUpData = {
-            email,
-            firstName,
-            lastName,
-            gender,
-            phoneNumber,
-            selectedDate
+            const signUpData = {
+                email,
+                name: `${firstName} ${lastName}`,
+                gender,
+                dateOfBirth: selectedDate,
+                mobileCountryCode: callingCode,
+                mobileNumber: phoneNumber,
+                password
+            }
+
+            setSignupLoading(true)
+
+            const { data } = await axios.post(`${BASE_URL}/customer/signUp`, signUpData)
+
+            setSignupLoading(false)
+
+            Toast.success(data?.message)
+
+            router.replace("/signin")
+
+        } catch (error) {
+
+            setSignupLoading(false)
+            Toast.error(error?.response?.data?.message)
         }
-        console.log(signUpData)
+    }
+
+    const resendVerification = async () => {
+        try {
+            setVerificationCodeLoading(true)
+            const { data } = await axios.post(`${BASE_URL}/customer/sendCustomerVerificationCode`, {
+                email,
+                mobileCountryCode: callingCode,
+                mobileNumber: phoneNumber
+            })
+            setVerificationCodeLoading(false)
+            setCurrentVerificationOtp(data?.response)
+
+        } catch (error) {
+            setVerificationCodeLoading(false)
+            console.log("Verification Otp error ", error)
+            Toast.error(error?.response?.data?.message)
+        }
     }
 
     return (
@@ -104,11 +151,32 @@ const verification = () => {
 
                     </View>
 
+                    <Pressable
+                        onPress={resendVerification}
+                        disabled={verificationCodeLoading}
+                        style={[styles.btn, { width: scale(100), marginLeft: "auto", backgroundColor: Colors.modeColor.colorCode }]}
+                    >
+                        {
+                            verificationCodeLoading ? (
+                                <ActivityIndicator size="small" color="#fff" />
+                            ) : (
+                                <CustomText style={{ color: "#fff" }}>Resend</CustomText>
+                            )
+                        }
+                    </Pressable>
+
                 </View>
                 <Pressable
-                    onPress={() => verificationHandler()}
+                    disabled={signupLoading}
+                    onPress={() => signupHandler()}
                     style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode }]}>
-                    <CustomText style={{ color: "#fff" }}>Done</CustomText>
+                    {
+                        signupLoading ? (
+                            <ActivityIndicator size="small" color="#fff" />
+                        ) : (
+                            <CustomText style={{ color: "#fff" }}>Done</CustomText>
+                        )
+                    }
                 </Pressable>
             </CustomView>
         </TouchableWithoutFeedback>

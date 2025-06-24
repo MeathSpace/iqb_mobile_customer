@@ -296,3 +296,4 @@ const styles = StyleSheet.create({
     //     minWidth: scale(100),
     // },
 });
+

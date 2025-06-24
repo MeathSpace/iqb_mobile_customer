@@ -9,7 +9,7 @@ import { GlobalProvider } from '../context/GlobalContext'
 import { ClerkProvider } from '@clerk/clerk-expo'
 import { tokenCache } from '@clerk/clerk-expo/token-cache'
 import { StatusBar } from 'expo-status-bar';
-
+import ToastManager from 'toastify-react-native'
 
 SplashScreen.preventAutoHideAsync();
 
@@ -99,6 +99,7 @@ const RootLayout = () => {
             {/* <Slot /> */}
             <Stack screenOptions={{ headerShown: false }} />
             <StatusBar style="auto" />
+            <ToastManager />
           </ThemeProvider>
         </ClerkProvider>
       </GlobalProvider>
