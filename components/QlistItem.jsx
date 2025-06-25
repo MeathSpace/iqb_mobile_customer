@@ -6,10 +6,13 @@ import CustomText from './CustomText'
 import CustomSecondaryText from './CustomSecondaryText'
 import { useTheme } from '@react-navigation/native'
 import { ClockIcon } from '../constants/icons'
+import { useAuth } from '../context/AuthContext'
 
 const QlistItem = ({ item, index, qlistLength }) => {
 
     const { colors } = useTheme()
+    const { authenticatedUser } = useAuth()
+
 
     return (
         <View style={[styles.qlistItem, {
@@ -20,28 +23,37 @@ const QlistItem = ({ item, index, qlistLength }) => {
             <View style={{ flexDirection: 'row', alignItems: 'center', gap: scale(10) }}>
                 <Image
                     style={{ height: scale(50), width: scale(50), borderRadius: moderateScale(30) }}
-                    source={{ uri: item?.image }}
+                    source={{ uri: item?.customerProfile?.[0]?.url }}
                     // placeholder={{ blurhash }}
                     contentFit="cover"
                     transition={300}
                 />
                 <View style={{ gap: verticalScale(5) }}>
                     <CustomText style={{ fontFamily: "AirbnbCereal_W_Md", fontSize: scale(14) }}>{item.name}</CustomText>
-                    <CustomSecondaryText style={{ fontFamily: "AirbnbCereal_W_Md", fontSize: scale(12) }}>Client</CustomSecondaryText>
+                    <CustomSecondaryText style={{
+                        fontFamily: "AirbnbCereal_W_Md",
+                        fontSize: scale(12),
+                        color: authenticatedUser?.name === item?.name ? "#0BA3AD" : colors.secondaryText
+                    }}>{authenticatedUser?.name === item?.name ? authenticatedUser?.name : item?.name}</CustomSecondaryText>
                 </View>
             </View>
 
             <View style={{ gap: verticalScale(5) }}>
-                <CustomText style={{ fontFamily: "AirbnbCereal_W_Blk", textAlign: "center", fontSize: scale(16) }}>{item.queue}</CustomText>
-                <View style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: scale(2),
-                    // flex: 1
-                }}>
-                    <ClockIcon size={scale(12)} color='gray' />
-                    <CustomText style={{ fontSize: scale(12), color: "gray" }}>120 mins</CustomText>
-                </View>
+                <CustomText style={{ fontFamily: "AirbnbCereal_W_Blk", textAlign: "center", fontSize: scale(16), minWidth: scale(50) }}>{item.qPosition}</CustomText>
+                {
+                    item.customerEWT === 0 ? <CustomText style={{ fontSize: scale(12), color: "gray", textAlign: "center" }}>-</CustomText> : (
+                        <View style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                            gap: scale(2),
+                            // flex: 1
+                        }}>
+                            <ClockIcon size={scale(12)} color='gray' />
+                            <CustomText style={{ fontSize: scale(12), color: "gray" }}>{item.customerEWT} mins</CustomText>
+                        </View>
+                    )
+                }
+
             </View>
         </View>
     )

@@ -18,9 +18,135 @@ import { AddIcon, ArrowLeftIcon, CheckIcon, ClockIcon } from '../../constants/ic
 import { Image } from 'expo-image'
 import { useRouter } from 'expo-router'
 import { useTheme } from '@react-navigation/native'
-
+import axios from 'axios';
+import { BASE_URL } from '@/utils/api';
+import { useAuth } from '../../context/AuthContext'
+import Skeleton from '../../components/Skeleton'
 
 const SingleJoin = () => {
+
+    const { authenticatedUser } = useAuth()
+
+    const [salonServices, setSalonServices] = useState({
+        data: null,
+        loading: false,
+        error: null,
+        success: false
+    })
+
+    const [salonBarber, setSalonBarber] = useState({
+        data: null,
+        loading: false,
+        error: null,
+        success: false
+    })
+
+
+    useEffect(() => {
+        const fetchSalonServices = async () => {
+            try {
+
+                setSalonServices((prev) => ({ ...prev, loading: true }))
+
+                const { data } = await axios.get(`${BASE_URL}/mobileRoutes/getAllSalonServices`, {
+                    params: {
+                        salonId: authenticatedUser?.salonId
+                    }
+                })
+
+                setSalonServices((prev) => ({
+                    ...prev, loading: false, data: data?.response?.map((item) => {
+                        return (
+                            { ...item, selected: false }
+                        )
+                    }), success: true, error: null
+                }))
+
+            } catch (error) {
+
+                setSalonServices((prev) => ({ ...prev, loading: false, data: null, success: false, error: error }))
+                console.log("Error fetching salon Info ", error)
+            }
+        }
+
+        fetchSalonServices()
+    }, [authenticatedUser])
+
+
+    // console.log("salonServices ", salonServices)
+
+    const [selectCustomerServices, setSelectedCustomerServices] = useState([])
+    const [selectedCustomerBarber, setSelectedCustomerBarber] = useState({})
+    const [continueService, setContinueService] = useState(false)
+
+    useEffect(() => {
+        if (selectCustomerServices.length > 0 && continueService) {
+
+            const fetchBarbersByMultipleServiceId = async () => {
+                try {
+
+                    setSelectedCustomerBarber((prev) => ({ ...prev, loading: true }))
+
+                    const { data } = await axios.post(`${BASE_URL}/mobileRoutes/getBarberByMultipleServiceId`, {
+                        salonId: authenticatedUser.salonId,
+                        serviceIds: selectCustomerServices.map((item) => item.serviceId)
+                    })
+
+                    setSelectedCustomerBarber((prev) => ({ ...prev, loading: false, data: data?.response, success: true, error: null }))
+
+                } catch (error) {
+
+                    setSelectedCustomerBarber((prev) => ({ ...prev, loading: false, data: null, success: false, error: error }))
+                    console.log("Error fetching barbers by multiple service Id", error)
+                }
+            }
+
+            fetchBarbersByMultipleServiceId()
+        }
+
+    }, [authenticatedUser, selectCustomerServices, continueService])
+
+    const addServiceHandler = (service) => {
+        setContinueService(false)
+        const updatedSalonServices = salonServices?.data?.map((item) => {
+            return item?.serviceId === service?.serviceId ? { ...service, selected: true } : item
+        })
+
+        setSalonServices({
+            data: updatedSalonServices,
+            loading: false,
+            error: null,
+            success: false
+        })
+
+        setSelectedCustomerServices([...selectCustomerServices, service])
+    }
+
+    const removeServiceHandler = (service) => {
+        setContinueService(false)
+        const updatedSalonServices = salonServices?.data?.map((item) => {
+            return item?.serviceId === service?.serviceId ? { ...service, selected: false } : item
+        })
+
+        setSalonServices({
+            data: updatedSalonServices,
+            loading: false,
+            error: null,
+            success: false
+        })
+
+        setSelectedCustomerServices((prev) => {
+
+            const filteredArray = prev.filter((item) => {
+                return item?.serviceId !== service?.serviceId
+            })
+
+            return filteredArray
+        })
+    }
+
+    // console.log("selectCustomerServices ", selectCustomerServices)
+    // console.log("selectedCustomerBarber ", selectedCustomerBarber)
 
     const [activeSection, setActiveSection] = useState('services')
     const [scrolling, setScrolling] = useState(false)
@@ -84,46 +210,219 @@ const SingleJoin = () => {
                                 setScrolling(false)
                                 setActiveSection("")
                                 setAddIconPressCount(0)
+                                setContinueService(false)
                             }}
                             style={{
                                 flexDirection: "row",
                                 alignItems: "center",
                                 gap: scale(5)
                             }}>
-                            <ArrowLeftIcon color={colors.text}/>
+                            <ArrowLeftIcon color={colors.text} />
                             <CustomText style={{ fontSize: scale(16), fontFamily: "AirbnbCereal_W_Blk" }}>{title}</CustomText>
                         </Pressable>
 
-                        {/* <Pressable
-                            style={{
-                                height: verticalScale(20),
-                                width: scale(55),
-                                backgroundColor: "#00B090",
-                                borderRadius: scale(4),
-                                justifyContent: "center",
-                                alignItems: "center"
-                            }}
-                        ><CustomText style={{ fontSize: scale(12), color: "#fff" }}>
-                                {activeSection === "services" ? "Next" : "Done"}
-                            </CustomText>
-                        </Pressable> */}
                     </View>
                     {
                         activeSection === "services" && (
-                            content.map((item, index) => {
-                                return (
+                            salonServices?.loading ? (
+                                [0, 1, 2, 3, 4, 5].map((_, index) => {
+                                    return (
+                                        <Skeleton
+                                            key={index}
+                                            height={verticalScale(150)}
+                                            borderRadius={scale(10)}
+                                        />
+                                    )
+                                })
+                            ) : (
+                                salonServices?.data?.map((item, index) => {
+                                    return (
+                                        <Pressable
+                                            key={item?.serviceId}
+                                            style={{
+                                                borderRadius: scale(10),
+                                                backgroundColor: "#00B0901A",
+                                                padding: scale(12),
+                                                gap: verticalScale(10)
+                                            }}
+                                        >
+                                            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                                                <View
+                                                    style={{
+                                                        flexDirection: "row",
+                                                        alignItems: "center",
+                                                        gap: scale(10)
+                                                    }}
+                                                >
 
-                                    <Pressable
-                                        key={index}
-                                        style={{
-                                            // height: verticalScale(195),
-                                            borderRadius: scale(10),
-                                            backgroundColor: "#00B0901A",
-                                            padding: scale(12),
-                                            gap: verticalScale(10)
-                                        }}
-                                    >
-                                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                                                    {
+                                                        item?.selected ? (
+                                                            <View
+                                                                style={{
+                                                                    height: scale(50),
+                                                                    width: scale(50),
+                                                                    borderRadius: scale(80),
+                                                                    backgroundColor: "rgba(0,0,0,0.4)",
+                                                                    position: "relative"
+                                                                }}
+                                                            >
+                                                                <Image
+                                                                    style={{ height: scale(50), width: scale(50), borderRadius: scale(80), zIndex: -1 }}
+                                                                    source={{ uri: item?.serviceIcon?.url }}
+                                                                    // placeholder={{ blurhash }}
+                                                                    contentFit="cover"
+                                                                    transition={300}
+                                                                />
+                                                                <CheckIcon
+                                                                    color='#fff'
+                                                                    style={{
+                                                                        position: "absolute",
+                                                                        top: scale(14),
+                                                                        left: scale(14)
+                                                                    }}
+                                                                />
+                                                            </View>
+                                                        ) : (
+                                                            <Image
+                                                                style={{ height: scale(50), width: scale(50), borderRadius: scale(80) }}
+                                                                source={{ uri: item?.serviceIcon?.url }}
+                                                                // placeholder={{ blurhash }}
+                                                                contentFit="cover"
+                                                                transition={300}
+                                                            />
+                                                        )
+                                                    }
+
+                                                    <View style={{ gap: verticalScale(5) }}>
+                                                        <CustomText style={{
+                                                            fontSize: scale(12),
+                                                            fontFamily: "AirbnbCereal_W_Bd"
+                                                        }}>{item?.serviceName}</CustomText>
+                                                        <Pressable
+                                                            style={{
+                                                                height: verticalScale(15),
+                                                                width: scale(50),
+                                                                backgroundColor: "#00B0901A",
+                                                                borderRadius: scale(4),
+                                                                justifyContent: "center",
+                                                                alignItems: "center"
+                                                            }}
+                                                        ><CustomText style={{ fontSize: scale(10), color: "#00B090" }}>{item?.serviceCategoryName}</CustomText></Pressable>
+                                                    </View>
+                                                </View>
+
+                                                {
+                                                    item?.selected ? (
+                                                        <Pressable
+                                                            onPress={() => removeServiceHandler(item)}
+                                                            style={{
+                                                                height: verticalScale(20),
+                                                                width: scale(60),
+                                                                backgroundColor: "#E11D48",
+                                                                borderRadius: scale(4),
+                                                                justifyContent: "center",
+                                                                alignItems: "center"
+                                                            }}
+                                                        ><CustomText style={{ fontSize: scale(12), color: "#fff" }}>Remove</CustomText>
+                                                        </Pressable>
+                                                    ) : (
+                                                        <Pressable
+                                                            onPress={() => addServiceHandler(item)}
+                                                            style={{
+                                                                height: verticalScale(20),
+                                                                width: scale(55),
+                                                                backgroundColor: "#1f2937",
+                                                                borderRadius: scale(4),
+                                                                justifyContent: "center",
+                                                                alignItems: "center"
+                                                            }}
+                                                        ><CustomText style={{ fontSize: scale(12), color: "#fff" }}>Add</CustomText>
+                                                        </Pressable>
+                                                    )
+                                                }
+                                            </View>
+
+                                            <View style={{ marginTop: verticalScale(5), gap: verticalScale(5) }}>
+                                                <CustomText
+                                                    style={{
+                                                        color: "gray",
+                                                        fontSize: scale(12)
+                                                    }}
+                                                >{item?.serviceDesc}</CustomText>
+
+                                                <View
+                                                    style={{
+                                                        flexDirection: "row",
+                                                        alignItems: "center",
+                                                        justifyContent: "space-between"
+                                                    }}
+                                                >
+                                                    <View style={{
+                                                        flexDirection: "row",
+                                                        alignItems: "center",
+                                                        justifyContent: "space-between",
+                                                        width: scale(75),
+                                                        gap: scale(2),
+                                                        backgroundColor: colors.background,
+                                                        paddingHorizontal: scale(5),
+                                                        borderRadius: scale(4)
+                                                    }}>
+                                                        <ClockIcon size={scale(12)} color={Colors.modeColor.colorCode} />
+                                                        <CustomText style={{ fontSize: scale(12), flex: 1, color: Colors.modeColor.colorCode }}>{item?.serviceEWT} mins</CustomText>
+                                                    </View>
+
+                                                    {/* Currency should also be added in authenticated user response */}
+                                                    {/* Service Price doesnot have point value */}
+
+                                                    <CustomText
+                                                        style={{
+                                                            fontFamily: "AirbnbCereal_W_Blk",
+                                                            fontSize: scale(18),
+                                                            color: Colors.modeColor.colorCode
+                                                        }}
+                                                    >$ {item?.servicePrice}</CustomText>
+                                                </View>
+                                            </View>
+                                        </Pressable >
+                                    )
+                                })
+                            )
+
+                        )
+                    }
+
+                    {
+                        activeSection === "barber" && (
+                            selectedCustomerBarber?.loading ? (
+                                [0, 1, 2, 3, 4, 5].map((_, index) => {
+                                    return (
+                                        <Skeleton
+                                            key={index}
+                                            height={verticalScale(60)}
+                                            borderRadius={scale(10)}
+                                        />
+                                    )
+                                })
+                            ) : selectedCustomerBarber?.data?.length > 0 ? (
+                                selectedCustomerBarber?.data?.map((item, index) => {
+                                    return (
+                                        <Pressable
+                                            key={item?.barberId}
+                                            style={{
+                                                flexDirection: "row",
+                                                alignItems: "center",
+                                                justifyContent: "space-between",
+                                                backgroundColor: "#00B0901A",
+                                                borderRadius: scale(10),
+                                                padding: scale(10)
+                                            }}
+                                            onPress={() => {
+                                                setSelectedCustomerBarber(item)
+                                                setScrolling(false)
+                                                setActiveSection("")
+                                                setAddIconPressCount(0)
+                                            }}
+                                        >
                                             <View
                                                 style={{
                                                     flexDirection: "row",
@@ -131,205 +430,59 @@ const SingleJoin = () => {
                                                     gap: scale(10)
                                                 }}
                                             >
+                                                <Image
+                                                    style={{ height: scale(50), width: scale(50), borderRadius: scale(40) }}
+                                                    source={{ uri: item?.profile?.[0]?.url }}
+                                                    contentFit="cover"
+                                                    transition={300}
+                                                />
 
-                                                {
-                                                    index % 2 === 1 ? (
-                                                        <Image
-                                                            style={{ height: scale(50), width: scale(50), borderRadius: scale(80) }}
-                                                            source={{ uri: "https://www.knksalon.in/assets-admin/upload/category_service/6595410e1a466.webp" }}
-                                                            // placeholder={{ blurhash }}
-                                                            contentFit="cover"
-                                                            transition={300}
-                                                        />
-                                                    ) : (
-                                                        <View
-                                                            style={{
-                                                                height: scale(50),
-                                                                width: scale(50),
-                                                                borderRadius: scale(80),
-                                                                backgroundColor: "rgba(0,0,0,0.4)",
-                                                                position: "relative"
-                                                            }}
-                                                        >
-                                                            <Image
-                                                                style={{ height: scale(50), width: scale(50), borderRadius: scale(80), zIndex: -1 }}
-                                                                source={{ uri: "https://www.knksalon.in/assets-admin/upload/category_service/6595410e1a466.webp" }}
-                                                                // placeholder={{ blurhash }}
-                                                                contentFit="cover"
-                                                                transition={300}
-                                                            />
-                                                            <CheckIcon
-                                                                color='#fff'
-                                                                style={{
-                                                                    position: "absolute",
-                                                                    top: scale(14),
-                                                                    left: scale(14)
-                                                                }}
-                                                            />
-                                                        </View>
-                                                    )
-                                                }
-
-                                                <View style={{ gap: verticalScale(5) }}>
+                                                <View>
                                                     <CustomText style={{
-                                                        fontSize: scale(12),
-                                                        fontFamily: "AirbnbCereal_W_Bd"
-                                                    }}>Haircuts & Styling</CustomText>
-                                                    <Pressable
-                                                        style={{
-                                                            height: verticalScale(15),
-                                                            width: scale(50),
-                                                            backgroundColor: "#00B0901A",
-                                                            borderRadius: scale(4),
-                                                            justifyContent: "center",
-                                                            alignItems: "center"
-                                                        }}
-                                                    ><CustomText style={{ fontSize: scale(10), color: "#00B090" }}>Haircut</CustomText></Pressable>
+                                                        fontSize: scale(14)
+                                                    }}>{item?.name}</CustomText>
+                                                    <View style={{
+                                                        flexDirection: "row",
+                                                        alignItems: "center",
+                                                        justifyContent: "space-between",
+                                                        gap: scale(2),
+                                                        minWidth: scale(75),
+                                                        flex: 1
+                                                    }}>
+                                                        <ClockIcon size={scale(12)} color='gray' />
+                                                        <CustomText style={{ fontSize: scale(12), flex: 1, color: "gray" }}>{item?.barberEWT} mins</CustomText>
+                                                    </View>
                                                 </View>
                                             </View>
-
-                                            {
-                                                index % 2 === 1 ? (
-                                                    <Pressable
-                                                        style={{
-                                                            height: verticalScale(20),
-                                                            width: scale(55),
-                                                            backgroundColor: "#1f2937",
-                                                            borderRadius: scale(4),
-                                                            justifyContent: "center",
-                                                            alignItems: "center"
-                                                        }}
-                                                    ><CustomText style={{ fontSize: scale(12), color: "#fff" }}>Add</CustomText>
-                                                    </Pressable>
-                                                ) : (<Pressable
-                                                    style={{
-                                                        height: verticalScale(20),
-                                                        width: scale(60),
-                                                        backgroundColor: "#E11D48",
-                                                        borderRadius: scale(4),
-                                                        justifyContent: "center",
-                                                        alignItems: "center"
-                                                    }}
-                                                ><CustomText style={{ fontSize: scale(12), color: "#fff" }}>Remove</CustomText>
-                                                </Pressable>)
-                                            }
-                                        </View>
-
-                                        <View style={{ marginTop: verticalScale(5), gap: verticalScale(5) }}>
-                                            <CustomText
-                                                style={{
-                                                    color: "gray",
-                                                    fontSize: scale(12)
-                                                }}
-                                            >Lorem ipsum dolor sit amet, consectetur adipisicing elit. Modi in odit tenetur, exercitationem qui similique?</CustomText>
 
                                             <View
                                                 style={{
-                                                    flexDirection: "row",
-                                                    alignItems: "center",
-                                                    justifyContent: "space-between"
+
                                                 }}
                                             >
-                                                <View style={{
-                                                    flexDirection: "row",
-                                                    alignItems: "center",
-                                                    justifyContent: "space-between",
-                                                    width: scale(75),
-                                                    gap: scale(2),
-                                                    backgroundColor: colors.background,
-                                                    paddingHorizontal: scale(5),
-                                                    borderRadius: scale(4)
-                                                }}>
-                                                    <ClockIcon size={scale(12)} color={Colors.modeColor.colorCode} />
-                                                    <CustomText style={{ fontSize: scale(12), flex: 1, color: Colors.modeColor.colorCode }}>120 mins</CustomText>
-                                                </View>
-
-                                                <CustomText
-                                                    style={{
-                                                        fontFamily: "AirbnbCereal_W_Blk",
-                                                        fontSize: scale(18),
-                                                        color: Colors.modeColor.colorCode
-                                                    }}
-                                                >$49.00</CustomText>
+                                                <CustomText style={{ fontSize: scale(16), fontFamily: "AirbnbCereal_W_Blk", textAlign: "center" }}>{item?.queueCount}</CustomText>
+                                                <CustomText style={{ fontSize: scale(14), color: "gray" }}>In Queue</CustomText>
                                             </View>
-                                        </View>
-                                    </Pressable >
-                                )
-                            })
-                        )
-                    }
+                                        </Pressable>
+                                    )
+                                })
+                            ) : (
+                                <View
+                                    style={{
+                                        paddingTop: verticalScale(20)
+                                    }}
+                                >
+                                    <CustomText>No barbers available</CustomText>
+                                </View>
+                            )
 
-                    {
-                        activeSection === "barber" && (
-                            content.map((item, index) => {
-                                return (
-                                    <Pressable
-                                        style={{
-                                            flexDirection: "row",
-                                            alignItems: "center",
-                                            justifyContent: "space-between",
-                                            backgroundColor: "#00B0901A",
-                                            borderRadius: scale(10),
-                                            padding: scale(10)
-                                        }}
-                                        onPress={() => {
-                                            if (addIconPressCount === 1) {
-                                                setScrolling(false)
-                                                setActiveSection("calendar")
-                                                setAddIconPressCount(0)
-                                            }
-                                        }}
-                                        key={index}
-                                    >
-                                        <View
-                                            style={{
-                                                flexDirection: "row",
-                                                alignItems: "center",
-                                                gap: scale(10)
-                                            }}
-                                        >
-                                            <Image
-                                                style={{ height: scale(50), width: scale(50), borderRadius: scale(40) }}
-                                                source={{ uri: "https://media.istockphoto.com/id/1365608023/photo/shot-of-a-handsome-young-barber-standing-alone-in-his-salon.jpg?s=612x612&w=0&k=20&c=0l2Q3UVgXNnf3lbUvMM7hT18-AAnOloeoNMOHntomcw=" }}
-                                                contentFit="cover"
-                                                transition={300}
-                                            />
-
-                                            <View>
-                                                <CustomText style={{
-                                                    fontSize: scale(14)
-                                                }}>Wade Warren</CustomText>
-                                                <View style={{
-                                                    flexDirection: "row",
-                                                    alignItems: "center",
-                                                    justifyContent: "space-between",
-                                                    gap: scale(2),
-                                                    flex: 1
-                                                }}>
-                                                    <ClockIcon size={scale(12)} color='gray' />
-                                                    <CustomText style={{ fontSize: scale(12), flex: 1, color: "gray" }}>120 mins</CustomText>
-                                                </View>
-                                            </View>
-                                        </View>
-
-                                        <View
-                                            style={{
-
-                                            }}
-                                        >
-                                            <CustomText style={{ fontSize: scale(16), fontFamily: "AirbnbCereal_W_Blk", textAlign: "center" }}>2</CustomText>
-                                            <CustomText style={{ fontSize: scale(14), color: "gray" }}>In Queue</CustomText>
-                                        </View>
-                                    </Pressable>
-                                )
-                            })
                         )
                     }
 
                 </ScrollView>
 
                 {
-                    scrolling && activeSection === "services" && (
+                    scrolling && activeSection === "services" && selectCustomerServices.length > 0 && (
                         <View style={{
                             // height: verticalScale(50),
                             width: "100%",
@@ -348,21 +501,27 @@ const SingleJoin = () => {
                                         fontSize: scale(18),
                                         fontFamily: "AirbnbCereal_W_Blk"
                                     }}
-                                >$ 147</CustomText>
+                                >$ {selectCustomerServices.reduce((acc, item) => acc + item.servicePrice, 0)}</CustomText>
                                 <CustomText
                                     style={{
                                         fontSize: scale(12),
                                         color: "gray"
                                     }}
-                                >3 services | 45 mins</CustomText>
+                                >{selectCustomerServices.length} services | {selectCustomerServices.reduce((acc, item) => acc + item.serviceEWT, 0)} mins</CustomText>
                             </View>
 
                             <Pressable
+                                onPress={() => {
+                                    setContinueService(true)
+                                    setScrolling(false)
+                                    setActiveSection("barber")
+                                    setAddIconPressCount(0)
+                                }}
                                 style={{
                                     height: verticalScale(40),
                                     width: scale(100),
                                     backgroundColor: Colors.modeColor.colorCode,
-                                    borderRadius: scale(10),
+                                    borderRadius: scale(6),
                                     justifyContent: "center",
                                     alignItems: "center"
                                 }}
@@ -438,7 +597,13 @@ const SingleJoin = () => {
 
                     {!scrolling && (
                         <View style={styles.footer}>
-                            <CustomText style={styles.clearAll}>Clear all</CustomText>
+                            <Pressable
+                                onPress={() => {
+                                    router.replace("/queuelist")
+                                }}
+                                style={styles.searchButton}>
+                                <CustomText style={{ color: '#fff' }}>Back</CustomText>
+                            </Pressable>
                             <Pressable style={styles.searchButton}>
                                 <CustomText style={{ color: '#fff' }}>Next</CustomText>
                             </Pressable>
@@ -478,7 +643,7 @@ const styles = StyleSheet.create({
     },
     boxCloseWrapper: {
         height: verticalScale(60),
-        
+
         // backgroundColor: '#fff',
         borderRadius: scale(15),
         paddingHorizontal: scale(25),

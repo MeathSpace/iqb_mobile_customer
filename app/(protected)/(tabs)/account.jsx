@@ -152,7 +152,7 @@ const account = () => {
               ><ProfileIcon color='gray' /></View>
               <CustomText style={{ fontFamily: "AirbnbCereal_W_Md" }}>My Account</CustomText>
             </View>
-            <RightIcon size={scale(16)} color={colors.text}/>
+            <RightIcon size={scale(16)} color={colors.text} />
           </Pressable>
 
           <Pressable
@@ -177,28 +177,33 @@ const account = () => {
             <RightIcon size={scale(16)} color={colors.text} />
           </Pressable>
 
-          <Pressable
-            style={styles.profileItem}
-            onPress={() => router.push("/connectSalon")}
-          >
-            <View style={{
-              flexDirection: "row",
-              alignItems: "center",
-              gap: scale(10)
-            }}>
+          {authenticatedUser?.salonId ? (
+            <Pressable
+              style={styles.profileItem}
+              onPress={() => router.push("/connectSalon")}
+            >
               <View
                 style={{
-                  padding: scale(5),
-                  // backgroundColor: "#fff",
-                  borderRadius: scale(50)
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: scale(10),
                 }}
               >
-                <SalonIcon color='gray' />
+                <View
+                  style={{
+                    padding: scale(5),
+                    borderRadius: scale(50),
+                  }}
+                >
+                  <SalonIcon color="gray" />
+                </View>
+                <CustomText style={{ fontFamily: "AirbnbCereal_W_Md" }}>
+                  Change Salon
+                </CustomText>
               </View>
-              <CustomText style={{ fontFamily: "AirbnbCereal_W_Md" }}>Change Salon</CustomText>
-            </View>
-            <RightIcon size={scale(16)} color={colors.text} />
-          </Pressable>
+              <RightIcon size={scale(16)} color={colors.text} />
+            </Pressable>
+          ) : null}
 
           <Pressable
             onPress={() => router.push("/about")}
@@ -219,7 +224,7 @@ const account = () => {
               </View>
               <CustomText style={{ fontFamily: "AirbnbCereal_W_Md" }}>About</CustomText>
             </View>
-            <RightIcon size={scale(16)} color={colors.text}/>
+            <RightIcon size={scale(16)} color={colors.text} />
           </Pressable>
 
           <Pressable

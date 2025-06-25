@@ -1,17 +1,59 @@
 import { FlatList, Platform, Pressable, StyleSheet, View } from 'react-native';
-import React, { useState } from 'react';
+import React, { useCallback, useState } from 'react';
 import CustomTabView from '../../../components/CustomTabView';
 import CustomText from '../../../components/CustomText';
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 import { Colors } from '../../../constants/Colors';
 import { useTheme } from '@react-navigation/native';
 import QlistItem from '../../../components/QlistItem';
-import { useRouter } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 import { useGlobal } from '../../../context/GlobalContext';
 import CustomSecondaryText from '../../../components/CustomSecondaryText';
+import { useAuth } from '../../../context/AuthContext';
+import axios from 'axios';
+import { BASE_URL } from '@/utils/api';
+import Skeleton from '../../../components/Skeleton';
+import { PeopleIcon } from '../../../constants/icons';
 
 
 const QueueList = () => {
+
+    const { authenticatedUser } = useAuth()
+
+    const [qlistData, setQlistData] = useState({
+        data: null,
+        loading: false,
+        error: null,
+        success: false
+    })
+
+
+    useFocusEffect(
+        useCallback(() => {
+            const fetchQlist = async () => {
+                try {
+
+                    setQlistData((prev) => ({ ...prev, loading: true }))
+
+                    const { data } = await axios.get(`${BASE_URL}/mobileRoutes/getQlistBySalonId`, {
+                        params: {
+                            salonId: authenticatedUser?.salonId,
+                            customerEmail: authenticatedUser?.email
+                        }
+                    })
+
+                    setQlistData((prev) => ({ ...prev, loading: false, data: data?.response, success: true, error: null }))
+
+                } catch (error) {
+
+                    setQlistData((prev) => ({ ...prev, loading: false, data: null, success: false, error: error }))
+                    console.log("Error fetching queue list ", error)
+                }
+            }
+
+            fetchQlist()
+        }, [authenticatedUser])
+    )
 
     const { colors } = useTheme()
 
@@ -169,94 +211,113 @@ const QueueList = () => {
                 paddingTop: verticalScale(10)
             }}>
             <View style={{ flex: 1, paddingBottom: Platform.OS === 'ios' ? verticalScale(60) : 0 }}>
-                {/* <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between", marginBottom: verticalScale(6) }}>
-                    <CustomText style={styles.title}>Queue List</CustomText>
-                    <View style={{ flexDirection: "row", alignItems: "center", gap: scale(10) }}>
+                {
+                    qlistData?.data?.length ? (
                         <Pressable
+                            onPress={() => router.push("/joinpopup")}
                             style={{
-                                height: verticalScale(30),
-                                width: scale(85),
+                                height: verticalScale(40),
+                                width: "100%",
                                 backgroundColor: Colors.modeColor.colorCode,
-                                borderRadius: scale(8),
-                                justifyContent: "center",
-                                alignItems: "center"
-                            }}
-                            onPress={() => {
-                                setJoinModes({
-                                    singleJoin: true,
-                                    groupJoin: false,
-                                    appointment: false
-                                })
-                                setSelectedBarber({})
-                                setSelectedBarberServices([])
-                                // router.push("/singleJoin")
-                                router.push("/demo2")
-                            }}
-                        ><CustomText
-                            style={{
-                                fontFamily: "AirbnbCereal_W_Bk",
-                                fontSize: scale(12),
-                                color: "#fff",
-                            }}
-                        >Single Join</CustomText></Pressable>
-                        <Pressable
-                            style={{
-                                height: verticalScale(30),
-                                width: scale(85),
-                                backgroundColor: Colors.modeColor.colorCode2,
-                                borderRadius: scale(8),
+                                marginHorizontal: "auto",
                                 justifyContent: "center",
                                 alignItems: "center",
-                                borderColor: Colors.modeColor.colorCode,
-                                borderWidth: scale(1)
+                                borderRadius: scale(4),
+                                // marginVertical: verticalScale(10)
                             }}
-                            onPress={() => {
-                                setJoinModes({
-                                    singleJoin: false,
-                                    groupJoin: true,
-                                    appointment: false
-                                })
-                                setSelectedBarber({})
-                                setSelectedBarberServices([])
-                                // router.push("/groupJoin")
-                                router.push("/demo3")
-                            }}
-                        ><CustomText
+                        >
+                            <CustomText style={{ color: "#fff" }}>Join Queue</CustomText>
+                        </Pressable>
+                    ) : null
+                }
+
+
+                {
+                    qlistData?.loading ? (<FlatList
+                        data={[0, 1, 2, 3, 4, 5, 6, 7, 8]}
+                        contentContainerStyle={{
+                            overflow: "visible",
+                        }}
+                        renderItem={({ item, index }) => <Skeleton
+                            height={verticalScale(70)}
                             style={{
-                                fontFamily: "AirbnbCereal_W_Bk",
-                                fontSize: scale(12),
-                                color: Colors.modeColor.colorCode
+                                marginTop: verticalScale(5)
                             }}
-                        >Group Join</CustomText></Pressable>
-                    </View>
-                </View> */}
+                        />
+                        }
+                        keyExtractor={item => item}
+                        showsVerticalScrollIndicator={false}
+                        ListFooterComponent={<View style={{ height: Platform.OS === "ios" ? verticalScale(60) : 0 }} />}
+                    />) : qlistData?.data?.length ? (
+                        <FlatList
+                            data={qlistData?.data}
+                            contentContainerStyle={{
+                                overflow: "visible",
+                            }}
+                            renderItem={({ item, index }) => <QlistItem item={item} index={index} qlistLength={qlistData?.data} />}
+                            keyExtractor={item => item._id}
+                            showsVerticalScrollIndicator={false}
+                            ListFooterComponent={<View style={{ height: Platform.OS === "ios" ? verticalScale(60) : 0 }} />}
+                        />
 
-                <Pressable
-                    onPress={() => router.push("/joinpopup")}
-                    style={{
-                        height: verticalScale(40),
-                        width: "100%",
-                        backgroundColor: Colors.modeColor.colorCode,
-                        marginHorizontal: "auto",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        borderRadius: scale(4),
-                        // marginVertical: verticalScale(10)
-                    }}
-                >
-                    <CustomText style={{ color: "#fff" }}>Join Queue</CustomText>
-                </Pressable>
+                    ) : (
+                        <View style={{
+                            flex: 1,
+                            justifyContent: "center",
+                            alignItems: "center",
+                        }}>
+                            <View
+                                style={{
+                                    gap: verticalScale(12)
+                                }}
+                            >
+                                <View
+                                    style={{
+                                        width: scale(60),
+                                        height: scale(60),
+                                        backgroundColor: colors.background,
+                                        marginHorizontal: "auto",
+                                        borderRadius: scale(50),
+                                        justifyContent: "center",
+                                        alignItems: "center"
+                                    }}
+                                >
+                                    <PeopleIcon
+                                        color={colors.text}
+                                        size={scale(40)}
+                                    />
+                                </View>
+                                <CustomText
+                                    style={{
+                                        textAlign: "center",
+                                        fontSize: scale(16)
+                                    }}
+                                >Queue's Open - Join now</CustomText>
+                                <CustomSecondaryText
+                                    style={{
+                                        textAlign: "center"
+                                    }}
+                                >No waiting, no hassle! Be the first to join the queue and get served right away. Tap below to grab your spot now.</CustomSecondaryText>
+                                <Pressable
+                                    onPress={() => router.push("/joinpopup")}
+                                    style={{
+                                        height: verticalScale(40),
+                                        paddingInline: scale(30),
+                                        backgroundColor: Colors.modeColor.colorCode,
+                                        marginHorizontal: "auto",
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                        borderRadius: scale(4),
+                                    }}
+                                ><CustomText style={{
+                                    color: "#fff"
+                                }}>Join Queue</CustomText></Pressable>
+                            </View>
+                        </View>
+                    )
 
-                <FlatList
-                    data={qlist}
-                    contentContainerStyle={{
-                        overflow: "visible",
-                    }}
-                    renderItem={({ item, index }) => <QlistItem item={item} index={index} qlistLength={qlist} />}
-                    keyExtractor={item => item.id}
-                    showsVerticalScrollIndicator={false}
-                    ListFooterComponent={<View style={{ height: Platform.OS === "ios" ? verticalScale(60) : 0 }} />}
-                />
+                }
+
 
             </View>
         </CustomTabView>
@@ -284,16 +345,5 @@ const styles = StyleSheet.create({
         justifyContent: "center",
         elevation: 4,
     }
-    // segmentContainer: {
-    //     flexDirection: 'row',
-    //     overflow: 'hidden',
-    // },
-    // segmentButton: {
-    //     paddingHorizontal: scale(12),
-    //     height: verticalScale(35),
-    //     justifyContent: 'center',
-    //     alignItems: 'center',
-    //     minWidth: scale(100),
-    // },
 });
 

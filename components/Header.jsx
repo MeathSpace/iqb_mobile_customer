@@ -62,6 +62,8 @@ const Header = () => {
 
     const router = useRouter()
 
+    console.log("authenticatedUser ", authenticatedUser)
+
 
     return (
         <View style={[styles.headerWrapper, {

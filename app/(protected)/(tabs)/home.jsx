@@ -18,9 +18,6 @@ import SearchHeader from '../../../components/SearchHeader'
 const dashboard = () => {
 
     const { authenticatedUser } = useAuth()
-
-    console.log("authenticatedUser ", authenticatedUser)
-
     return (
         <View style={{ flex: 1 }}>
             {

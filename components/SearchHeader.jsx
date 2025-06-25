@@ -1,14 +1,22 @@
-import { FlatList, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
+import { FlatList, Keyboard, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import { SearchIcon } from '../constants/icons';
 import CustomText from './CustomText';
 import { useTheme } from '@react-navigation/native';
 import { Link } from 'expo-router';
 import { Image } from 'expo-image';
 import { useAuth } from '../context/AuthContext';
+import { useGlobal } from '../context/GlobalContext';
+import { BASE_URL } from '@/utils/api'
+import axios from 'axios'
 
 const SearchHeader = () => {
+
+    const { colors } = useTheme()
+    const { authenticatedUser, setSearchSalon } = useAuth()
+    const { searchCitySalons, setSearchCitySalons } = useGlobal()
+
     const allCities = [
         { id: '1', title: 'Mumbai', latitude: 19.0760, longitude: 72.8777 },
         { id: '2', title: 'Delhi', latitude: 28.6139, longitude: 77.2090 },
@@ -23,33 +31,78 @@ const SearchHeader = () => {
     ];
 
 
+
     const [query, setQuery] = useState('');
     const [filteredCities, setFilteredCities] = useState(allCities);
 
 
+    // console.log("searchCitySalons  asvwev", searchCitySalons)
+
+    const timeoutRef = useRef(null);
+
+
     const handleTextChange = (text) => {
+        clearTimeout(timeoutRef.current);
         setQuery(text);
-        if (!text) {
-            setFilteredCities(allCities);
-            return;
-        }
-        const filtered = allCities.filter((item) =>
-            item.title.toLowerCase().includes(text.toLowerCase())
-        );
-        setFilteredCities(filtered);
+        // if (!text) {
+        //     setFilteredCities(allCities);
+        //     return;
+        // }
+        // const filtered = allCities.filter((item) =>
+        //     item.title.toLowerCase().includes(text.toLowerCase())
+        // );
+        // setFilteredCities(filtered);
     };
+
+    useEffect(() => {
+
+        let timeId;
+
+        if (query) {
+
+            timeId = setTimeout(() => {
+                const fetchCityName = async () => {
+                    try {
+
+                        setSearchCitySalons((prev) => ({ ...prev, loading: true }))
+
+                        const { data } = await axios.get(`${BASE_URL}/mobileRoutes/searchByNameAndCity`, {
+                            params: {
+                                searchValue: query
+                            }
+                        })
+
+                        setSearchCitySalons((prev) => ({ ...prev, loading: false, data: data?.response, success: true, error: null }))
+                        Keyboard.dismiss()
+
+                    } catch (error) {
+
+                        setSearchCitySalons((prev) => ({ ...prev, loading: false, data: null, success: false, error: error }))
+                        console.log("Error fetching city or name ", error)
+                    }
+                }
+
+                fetchCityName()
+
+            }, 300)
+
+            timeoutRef.current = timeId;
+        }
+
+        return () => {
+            clearTimeout(timeoutRef.current);
+        }
+
+    }, [query])
 
     const handleSelect = (item) => {
-        setSearchSalon(item);
-        setQuery(item.title);
-        setFilteredCities([]);
+        // setSearchSalon(item);
+        // setQuery(item.title);
+        // setFilteredCities([]);
+        setSearchSalon()
+        console.log("City Salons")
     };
 
-    const { colors } = useTheme()
-    const { authenticatedUser, setSearchSalon } = useAuth()
-
-    const blurhash =
-        'https://thumbs.dreamstime.com/b/default-profile-picture-avatar-photo-placeholder-vector-illustration-default-profile-picture-avatar-photo-placeholder-vector-189495158.jpg';
 
     return (
         <View style={[styles.container, { backgroundColor: colors.tabBackground }]}>
@@ -70,20 +123,11 @@ const SearchHeader = () => {
                     <SearchIcon size={moderateScale(16)} color={colors.text} />
                 </Pressable>
             </View>
-            {/* <Link href="/account">
-                <Image
-                    style={{ height: moderateScale(35), width: moderateScale(35), borderRadius: moderateScale(20) }}
-                    source={authenticatedUser?.imageUrl}
-                    placeholder={{ blurhash }}
-                    contentFit="cover"
-                    transition={1000}
-                />
-            </Link> */}
 
-            {filteredCities.length > 0 && query.length > 0 && (
+            {/* {searchCityNameData?.data?.length > 0 && query.length > 0 && (
                 <FlatList
-                    data={filteredCities}
-                    keyExtractor={(item) => item.id}
+                    data={searchCityNameData?.data}
+                    keyExtractor={(item) => item._id}
                     renderItem={({ item }) => (
                         <Pressable
                             style={[styles.dropdownItem, {
@@ -92,7 +136,7 @@ const SearchHeader = () => {
                             }]}
                             onPress={() => handleSelect(item)}
                         >
-                            <CustomText>{item.title}</CustomText>
+                            <CustomText>{item.city}</CustomText>
                         </Pressable>
                     )}
                     style={[styles.dropdown, {
@@ -101,7 +145,7 @@ const SearchHeader = () => {
                         borderWidth: scale(1),
                     }]}
                 />
-            )}
+            )} */}
         </View>
     );
 };

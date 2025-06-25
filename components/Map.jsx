@@ -1,8 +1,9 @@
-import { FlatList, Modal, Platform, Pressable, StyleSheet, Text, useColorScheme, View } from 'react-native'
+import { FlatList, Keyboard, Modal, Platform, Pressable, StyleSheet, Text, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import MapView, { PROVIDER_GOOGLE, Marker, Region } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { useAuth } from '../context/AuthContext';
+import { useGlobal } from '../context/GlobalContext'
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 import CustomText from './CustomText';
 import CustomSecondaryText from './CustomSecondaryText';
@@ -12,6 +13,9 @@ import { Image } from 'expo-image';
 import { useTheme } from '@react-navigation/native';
 import { CloseIcon } from '../constants/icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import { BASE_URL } from '@/utils/api';
+import Skeleton from './Skeleton';
 
 const Map = () => {
 
@@ -19,8 +23,24 @@ const Map = () => {
 
     const { colors } = useTheme()
     const { searchSalon, setAuthenticatedUser, authenticatedUser } = useAuth()
+    const { searchCitySalons, setSearchCitySalons, selectedSalonLocation } = useGlobal()
+
+    const [serviceCategoryData, setServiceCategoryData] = useState({
+        data: null,
+        loading: false,
+        error: null,
+        success: false
+    })
+
+    // console.log("Map screen ", searchCitySalons)
+
+    // console.log("selectedSalonLocation ", selectedSalonLocation)
+
     const [region, setRegion] = useState(null);
     const mapRef = useRef(null);
+
+    // console.log("searchCityNameData ", searchCityNameData)
+
 
     useEffect(() => {
         (async () => {
@@ -44,15 +64,16 @@ const Map = () => {
 
 
     useEffect(() => {
-        if (searchSalon?.latitude && searchSalon?.longitude && mapRef.current) {
+        if (selectedSalonLocation) {
             mapRef.current.animateToRegion({
-                latitude: searchSalon.latitude,
-                longitude: searchSalon.longitude,
+                latitude: selectedSalonLocation.latitude,
+                longitude: selectedSalonLocation.longitude,
                 latitudeDelta: 0.05,
                 longitudeDelta: 0.05,
-            }, 1000); // 1 second animation
+            }, 3000); // 1 second animation
         }
-    }, [searchSalon]);
+
+    }, [selectedSalonLocation]);
 
     const darkMapStyle = [
         {
@@ -148,12 +169,55 @@ const Map = () => {
         data: {}
     });
 
-    // console.log(selectedCustomerSalon)
+    useEffect(() => {
+
+        const fetchServiceCategoryData = async () => {
+            try {
+
+                setServiceCategoryData((prev) => ({ ...prev, loading: true }))
+
+                const { data } = await axios.get(`${BASE_URL}/mobileRoutes/getAllServiceCategories`)
+
+                setServiceCategoryData((prev) => ({ ...prev, loading: false, data: data?.response, success: true, error: null }))
+
+            } catch (error) {
+                setServiceCategoryData((prev) => ({ ...prev, loading: false, data: null, success: false, error: error }))
+                console.error("Error fetching service category data: ", error)
+            }
+        }
+
+        fetchServiceCategoryData()
+
+    }, [])
+
 
     const connectSalonPressed = async () => {
-        setAuthenticatedUser({ ...authenticatedUser, salonId: 1 })
-        await AsyncStorage.setItem("LoggedInUser", JSON.stringify({ ...authenticatedUser, salonId: 1 }))
-        setSelectedCustomerSalon({ open: false, data: {} })
+        try {
+
+            const { data } = await axios.post(`${BASE_URL}/customer/customerConnectSalon`, {
+                salonId: selectedCustomerSalon?.data?.salonId,
+                email: authenticatedUser?.email
+            })
+
+            // console.log(data)
+
+            //This response should be same as signin response then everything will work perfectly
+
+            // console.log("Salon connect api ", data?.response?.salonInfo?.salonLogo?.[0]?.url)
+            // console.log("Salon connect api ", data?.response?.salonInfo?.salonName)
+
+            setAuthenticatedUser(data?.response)
+            await AsyncStorage.setItem("LoggedInUser", JSON.stringify(data?.response))
+            setSelectedCustomerSalon({ open: false, data: {} })
+            setSearchCitySalons({
+                data: null,
+                loading: false,
+                error: null,
+                success: false
+            })
+        } catch (error) {
+            console.log("Error connecting salon ", error)
+        }
     }
 
     const serviceCategories = [
@@ -383,172 +447,251 @@ const Map = () => {
 
     return (
         <>
-            <MapView
-                // style={{ flex: 1 }}
-                provider={PROVIDER_GOOGLE}
-                region={region}
-                // region={{
-                //     latitude: 37.78825,
-                //     longitude: -122.4324,
-                //     latitudeDelta: 0.0922,
-                //     longitudeDelta: 0.0421,
-                // }}
-                showsUserLocation={true}
-                showsMyLocationButton={true}
-                toolbarEnabled={true}
-                zoomControlEnabled={true}
-                // paddingAdjustmentBehavior="automatic"
-                ref={mapRef}
-                style={{ flex: 1, paddingBottom: 80, position: "relative" }}
-                customMapStyle={colorScheme === "dark" ? darkMapStyle : []}
-            />
-            <FlatList
-                style={{
-                    position: "absolute",
-                    bottom: Platform.OS === "ios" ? verticalScale(80) : verticalScale(10),
-                    left: 0,
-                    right: 0,
-                    paddingHorizontal: scale(10),
-                    overflow: "visible"
-                }}
-                contentContainerStyle={{
-                    gap: scale(10)
-                }}
-                data={salonData}
-                renderItem={({ item }) => <SalonCard item={item} setSelectedCustomerSalon={setSelectedCustomerSalon} />}
-                keyExtractor={item => item.id}
-                horizontal
-                showsHorizontalScrollIndicator={false}
-            />
-
-            <Modal
-                animationType="fade"
-                transparent={true}
-                visible={selectedCustomerSalon.open}
-                onRequestClose={() => setSelectedCustomerSalon({ open: false, data: {} })}
-            >
-                <Pressable
-                    style={styles.modalWrapper}
-                    onPress={() => setSelectedCustomerSalon({ open: false, data: {} })}
-                >
-                    <Pressable
-                        style={[styles.modalContainer,
-                        {
-                            backgroundColor: colors.background,
-                            borderColor: colors.border,
-                            borderWidth: scale(1),
-                        }
-                        ]}
-                        onPress={() => { }}
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+                <View style={{
+                    flex: 1
+                }}>
+                    <MapView
+                        provider={PROVIDER_GOOGLE}
+                        region={region}
+                        showsUserLocation={true}
+                        showsMyLocationButton={true}
+                        toolbarEnabled={true}
+                        zoomControlEnabled={true}
+                        ref={mapRef}
+                        style={{ flex: 1, paddingBottom: 80, position: 'relative' }}
+                        customMapStyle={colorScheme === 'dark' ? darkMapStyle : []}
                     >
-                        <Image
-                            style={styles.modalImage}
-                            source={{ uri: selectedCustomerSalon?.data?.image }}
-                            // placeholder={{ blurhash }}
-                            contentFit="cover"
-                            transition={300}
-                        />
-                        <View style={{ marginBottom: verticalScale(5), flexDirection: "row", alignItems: "center", gap: scale(10) }}>
-                            <Image
-                                style={{ height: moderateScale(35), width: moderateScale(35), borderRadius: moderateScale(20) }}
-                                source="https://marketplace.canva.com/EAGUXS_OW4A/1/0/1600w/canva-purple-abstract-feminine-woman-hair-salon-line-art-logo-JWrVbRab4Vs.jpg"
-                                // placeholder={{ blurhash }}
-                                contentFit="cover"
-                                transition={300}
-                            />
-                            <CustomText style={styles.modalTitle}>{selectedCustomerSalon?.data?.title}</CustomText>
-                        </View>
-
-                        {/* {selectedCustomerSalon?.data?.services?.map((service, idx) => (
-                            <CustomSecondaryText key={idx} style={styles.modalService}>• {service}</CustomSecondaryText>
-                        ))} */}
-
-
-                        <View
-                            style={{
-                                marginTop: verticalScale(20),
+                        <Marker
+                            coordinate={{
+                                latitude: selectedSalonLocation.latitude,
+                                longitude: selectedSalonLocation.longitude,
                             }}
-                        >
-                            <CustomText
-                                style={{
-                                    fontFamily: "AirbnbCereal_W_Blk"
-                                }}
-                            >Explore all services</CustomText>
-                            <View
-                                style={{
-                                    // height: verticalScale(97),
-                                    flexDirection: "row",
-                                    alignItems: "center",
-                                    flexDirection: "row",
-                                    flexWrap: "wrap",
-                                    paddingVertical: verticalScale(20),
-                                    gap: scale(25),
-                                    // justifyContent: "space-between"
-                                }}
-                            >
+                            title={selectedSalonLocation?.salonName}
+                            description={selectedSalonLocation?.address}
+                        />
+                    </MapView>
 
-                                {
-                                    serviceCategories.map((item, index) => {
-                                        return (
-                                            <View
-                                                key={index}
-                                                style={{
-                                                    gap: verticalScale(10),
-                                                    // width: scale(65),
-                                                    // marginBottom: verticalScale(10)
-                                                    // paddingLeft: scale(5)
-                                                }}
-                                            >
+                    <FlatList
+                        style={{
+                            position: "absolute",
+                            bottom: Platform.OS === "ios" ? verticalScale(80) : verticalScale(10),
+                            left: 0,
+                            right: 0,
+                            paddingHorizontal: scale(10),
+                            overflow: "visible"
+                        }}
+                        contentContainerStyle={{
+                            gap: scale(10)
+                        }}
+                        data={searchCitySalons?.data}
+                        renderItem={({ item }) => <SalonCard item={item} setSelectedCustomerSalon={setSelectedCustomerSalon} />}
+                        keyExtractor={item => item._id}
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                    />
 
-                                                <View
-                                                    style={{
-                                                        width: scale(45),
-                                                        height: scale(45),
-                                                        borderRadius: scale(30),
-                                                        backgroundColor: colors.background,
-                                                        marginHorizontal: "auto"
-                                                    }}
-                                                >
-                                                    <Image
-                                                        style={{ width: "100%", height: "100%", borderRadius: scale(30) }}
-                                                        source={item.image}
-                                                        contentFit="cover"
-                                                        transition={1000}
-                                                    />
-                                                </View>
-                                                <CustomText
-                                                    style={{
-                                                        fontFamily: "AirbnbCereal_W_Md",
-                                                        fontSize: scale(12),
-                                                        textAlign: "center",
-                                                        color: "gray",
-                                                    }}
-                                                >{item.name}</CustomText>
-                                            </View>
-                                        )
-                                    })
-                                }
-
-                            </View>
-                        </View>
-
+                    <Modal
+                        animationType="fade"
+                        transparent={true}
+                        visible={selectedCustomerSalon.open}
+                        onRequestClose={() => setSelectedCustomerSalon({ open: false, data: {} })}
+                    >
                         <Pressable
-                            style={[styles.modalbtn, { backgroundColor: Colors.modeColor.colorCode }]}
-                            onPress={() => connectSalonPressed()}
-                        >
-                            <CustomText style={{ color: "#fff" }}>Connect</CustomText>
-                        </Pressable>
-
-                        <Pressable
-                            style={[styles.closebtn]}
+                            style={styles.modalWrapper}
                             onPress={() => setSelectedCustomerSalon({ open: false, data: {} })}
                         >
-                            <CustomText style={{ color: "#E11D48" }}>Cancel</CustomText>
-                        </Pressable>
-                    </Pressable>
-                </Pressable>
-            </Modal>
+                            <Pressable
+                                style={[styles.modalContainer,
+                                {
+                                    backgroundColor: colors.background,
+                                    borderColor: colors.border,
+                                    borderWidth: scale(1),
+                                }
+                                ]}
+                                onPress={() => { }}
+                            >
+                                {
+                                    selectedCustomerSalon?.data?.gallery?.length ? (
+                                        <Image
+                                            style={styles.modalImage}
+                                            source={{ uri: selectedCustomerSalon?.data?.gallery?.[0]?.url }}
+                                            contentFit="cover"
+                                            transition={300}
+                                        />
+                                    ) : (
+                                        <Image
+                                            style={styles.modalImage}
+                                            source={require('@/assets/images/dummygallery.jpg')}
+                                            contentFit="cover"
+                                            transition={300}
+                                        />
+                                    )
+                                }
 
+                                <View style={{ marginBottom: verticalScale(5), flexDirection: "row", alignItems: "center", gap: scale(10) }}>
+                                    <Image
+                                        style={{ height: moderateScale(35), width: moderateScale(35), borderRadius: moderateScale(20) }}
+                                        source={selectedCustomerSalon?.data?.salonLogo?.[0]?.url}
+                                        // placeholder={{ blurhash }}
+                                        contentFit="cover"
+                                        transition={300}
+                                    />
+                                    <CustomText style={styles.modalTitle}>{selectedCustomerSalon?.data?.salonName}</CustomText>
+                                </View>
+
+                                <View
+                                    style={{
+                                        marginTop: verticalScale(20),
+                                    }}
+                                >
+                                    <CustomText
+                                        style={{
+                                            fontFamily: "AirbnbCereal_W_Blk"
+                                        }}
+                                    >Explore all services</CustomText>
+                                    <View
+                                        style={{
+                                            // height: verticalScale(97),
+                                            flexDirection: "row",
+                                            alignItems: "center",
+                                            flexDirection: "row",
+                                            flexWrap: "wrap",
+                                            paddingVertical: verticalScale(20),
+                                            gap: scale(25),
+                                            // justifyContent: "space-between"
+                                        }}
+                                    >
+
+                                        {
+                                            serviceCategoryData?.loading ? (
+                                                [0, 1, 2, 3, 4, 5, 6, 7].map((item, index) => {
+                                                    return (
+                                                        <View
+                                                            key={index}
+                                                            style={{
+                                                                gap: verticalScale(10),
+                                                                width: scale(65),
+                                                                // marginBottom: verticalScale(10)
+                                                            }}
+                                                        >
+
+                                                            <Skeleton
+                                                                width={scale(60)}
+                                                                height={scale(60)}
+                                                                borderRadius={scale(30)}
+                                                            >
+
+                                                            </Skeleton>
+
+                                                        </View>
+                                                    )
+                                                })
+                                            ) : (
+                                                serviceCategoryData?.data?.map((item, index) => {
+                                                    return (
+                                                        <View
+                                                            key={item?._id}
+                                                            style={{
+                                                                gap: verticalScale(10),
+                                                                width: scale(65),
+                                                                marginBottom: verticalScale(10)
+                                                            }}
+                                                        >
+
+                                                            <View
+                                                                style={{
+                                                                    width: scale(55),
+                                                                    height: scale(55),
+                                                                    borderRadius: scale(30),
+                                                                    backgroundColor: colors.background,
+                                                                    marginHorizontal: "auto"
+                                                                }}
+                                                            >
+                                                                <Image
+                                                                    style={{ width: "100%", height: "100%", borderRadius: scale(30) }}
+                                                                    source={{ uri: item?.serviceCategoryImage?.url.replace("http", "https") }}
+                                                                    contentFit="cover"
+                                                                    transition={1000}
+                                                                />
+                                                            </View>
+                                                            <CustomText
+                                                                style={{
+                                                                    fontFamily: "AirbnbCereal_W_Md",
+                                                                    fontSize: scale(12),
+                                                                    textAlign: "center",
+                                                                    color: "gray",
+                                                                }}
+                                                            >{item.serviceCategoryName}</CustomText>
+                                                        </View>
+                                                    )
+                                                })
+                                            )
+                                        }
+
+                                        {/* {
+                                            serviceCategories.map((item, index) => {
+                                                return (
+                                                    <View
+                                                        key={index}
+                                                        style={{
+                                                            gap: verticalScale(10),
+                                                            // width: scale(65),
+                                                            // marginBottom: verticalScale(10)
+                                                            // paddingLeft: scale(5)
+                                                        }}
+                                                    >
+
+                                                        <View
+                                                            style={{
+                                                                width: scale(45),
+                                                                height: scale(45),
+                                                                borderRadius: scale(30),
+                                                                backgroundColor: colors.background,
+                                                                marginHorizontal: "auto"
+                                                            }}
+                                                        >
+                                                            <Image
+                                                                style={{ width: "100%", height: "100%", borderRadius: scale(30) }}
+                                                                source={item.image}
+                                                                contentFit="cover"
+                                                                transition={1000}
+                                                            />
+                                                        </View>
+                                                        <CustomText
+                                                            style={{
+                                                                fontFamily: "AirbnbCereal_W_Md",
+                                                                fontSize: scale(12),
+                                                                textAlign: "center",
+                                                                color: "gray",
+                                                            }}
+                                                        >{item.name}</CustomText>
+                                                    </View>
+                                                )
+                                            })
+                                        } */}
+
+                                    </View>
+                                </View>
+
+                                <Pressable
+                                    style={[styles.modalbtn, { backgroundColor: Colors.modeColor.colorCode }]}
+                                    onPress={() => connectSalonPressed()}
+                                >
+                                    <CustomText style={{ color: "#fff" }}>Connect</CustomText>
+                                </Pressable>
+
+                                <Pressable
+                                    style={[styles.closebtn]}
+                                    onPress={() => setSelectedCustomerSalon({ open: false, data: {} })}
+                                >
+                                    <CustomText style={{ color: "#E11D48" }}>Cancel</CustomText>
+                                </Pressable>
+                            </Pressable>
+                        </Pressable>
+                    </Modal>
+                </View>
+            </TouchableWithoutFeedback>
         </>
     )
 }

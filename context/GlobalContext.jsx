@@ -12,6 +12,15 @@ export const GlobalProvider = ({ children }) => {
         success: false
     })
 
+    const [searchCitySalons, setSearchCitySalons] = useState({
+        data: null,
+        loading: false,
+        error: null,
+        success: false
+    })
+
+    const [selectedSalonLocation, setSelectedSalonLocation] = useState("")
+
     const { authenticatedUser } = useAuth()
 
     const hasRun = useRef(false);
@@ -56,6 +65,10 @@ export const GlobalProvider = ({ children }) => {
         setAppointmentCalenderData,
         homeDashboardData,
         setHomeDashboardData,
+        searchCitySalons,
+        setSearchCitySalons,
+        selectedSalonLocation,
+        setSelectedSalonLocation
     };
 
     return (

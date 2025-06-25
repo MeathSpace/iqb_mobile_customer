@@ -6,11 +6,20 @@ import CustomText from '../../components/CustomText'
 import { Colors } from '../../constants/Colors';
 import { useRouter } from 'expo-router';
 import { useTheme } from '@react-navigation/native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAuth } from '../../context/AuthContext';
 
 const connectSalon = () => {
 
     const router = useRouter()
     const { colors } = useTheme()
+    const { setAuthenticatedUser, authenticatedUser } = useAuth()
+
+    const changeSalonPressed = async () => {
+        setAuthenticatedUser({ ...authenticatedUser, salonId: 0 })
+        await AsyncStorage.setItem("LoggedInUser", JSON.stringify({ ...authenticatedUser, salonId: 0 }))
+        router.replace("/home")
+    }
 
     return (
         <View
@@ -45,6 +54,7 @@ const connectSalon = () => {
                 </View>
 
                 <Pressable
+                    onPress={changeSalonPressed}
                     style={{
                         height: verticalScale(44),
                         width: scale(180),

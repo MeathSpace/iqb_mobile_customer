@@ -37,7 +37,7 @@ const Skeleton = ({ width = '100%', height = verticalScale(20), borderRadius = s
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#e0e0e0',
+        backgroundColor: 'rgba(11, 163, 173, 0.1)',
         overflow: 'hidden',
         position: 'relative',
     },

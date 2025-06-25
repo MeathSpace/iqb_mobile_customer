@@ -4,10 +4,13 @@ import React from 'react'
 import { useTheme } from '@react-navigation/native';
 import { Image } from 'expo-image';
 import CustomText from './CustomText';
+import { useGlobal } from '../context/GlobalContext';
+import { MapIcon } from '../constants/icons';
 
 const SalonCard = ({ item, setSelectedCustomerSalon, favourite = false }) => {
 
     const { colors } = useTheme()
+    const { selectedSalonLocation, setSelectedSalonLocation } = useGlobal()
 
     return (
         <Pressable onPress={() => setSelectedCustomerSalon({
@@ -15,24 +18,64 @@ const SalonCard = ({ item, setSelectedCustomerSalon, favourite = false }) => {
             data: item
         })}>
             <View style={[styles.cardWrapper, { width: favourite ? "100%" : scale(280), backgroundColor: colors.background }]}>
-                <Image
+                {/* <Image
                     style={styles.cardImage}
-                    source={{ uri: item.image }}
+                    source={{ uri: item?.gallery?.[0]?.url }}
                     contentFit="cover"
-                    transition={1000}
-                />
+                    transition={300}
+                /> */}
+                {
+                    item?.gallery.length ? (
+                        <Image
+                            style={styles.cardImage}
+                            source={{ uri: item?.gallery?.[0]?.url }}
+                            contentFit="cover"
+                            transition={300}
+                        />
+                    ) : (
+                        <Image
+                            style={styles.cardImage}
+                            source={require('@/assets/images/dummygallery.jpg')}
+                            contentFit="cover"
+                            transition={300}
+                        />
+                    )
+                }
                 <View
                     style={styles.cardContentWrapper}
                 >
                     <Image
                         style={{ height: moderateScale(35), width: moderateScale(35), borderRadius: moderateScale(20) }}
-                        source="https://marketplace.canva.com/EAGUXS_OW4A/1/0/1600w/canva-purple-abstract-feminine-woman-hair-salon-line-art-logo-JWrVbRab4Vs.jpg"
+                        source={{ uri: item?.salonLogo?.[0]?.url }}
                         // placeholder={{ blurhash }}
                         contentFit="cover"
                         transition={1000}
                     />
-                    <CustomText style={{ fontSize: moderateScale(14), fontFamily: "AirbnbCereal_W_Md" }}>{item.title}</CustomText>
+                    <CustomText style={{ fontSize: moderateScale(14), fontFamily: "AirbnbCereal_W_Md" }}>{item.salonName}</CustomText>
                 </View>
+
+
+                <Pressable
+                    onPress={() => {
+                        setSelectedSalonLocation({ ...item?.location?.coordinates, address: item?.address, salonName: item?.salonName })
+                    }}
+                    style={{
+                        width: "90%",
+                        height: verticalScale(30),
+                        marginHorizontal: "auto",
+                        backgroundColor: "#0BA3AD1A",
+                        marginBottom: verticalScale(10),
+                        justifyContent: "center",
+                        alignItems: "center",
+                        borderRadius: scale(4),
+                        flexDirection: "row",
+                        gap: scale(10)
+                    }}
+                >
+                    <MapIcon size={scale(18)}/>
+                    <CustomText style={{ color: "##0BA3AD" }}>See location</CustomText>
+                </Pressable>
+
             </View>
         </Pressable>
     )

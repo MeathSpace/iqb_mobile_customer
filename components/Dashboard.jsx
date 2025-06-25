@@ -25,8 +25,6 @@ const Dashboard = () => {
     const { homeDashboardData, setHomeDashboardData } = useGlobal()
     const { authenticatedUser } = useAuth()
 
-    // console.log("homeDashboardData ", homeDashboardData?.dashboardData?.barbers)
-
     const [sliceBarber, setSliceBarber] = useState(3)
 
     const [homeAdvertisementData, setHomeAdvertisementData] = useState({
@@ -43,8 +41,6 @@ const Dashboard = () => {
         success: false
     })
 
-    // console.log("serviceCategoryData ", serviceCategoryData)
-
     useFocusEffect(
         useCallback(() => {
             if (authenticatedUser) {
@@ -60,10 +56,9 @@ const Dashboard = () => {
 
                         setHomeDashboardData((prev) => ({ ...prev, loading: false, dashboardData: data?.response, success: true, error: null }))
 
-
                     } catch (error) {
                         setHomeDashboardData((prev) => ({ ...prev, loading: false, dashboardData: null, success: false, error: error }))
-                        console.error("Error fetching dashboard data: ", error)
+                        console.error("Error fetching dashboard data: ", error?.response?.data)
                     }
                 }
 
