@@ -28,12 +28,6 @@ const ProtectedLayout = () => {
                     animation: 'slide_from_bottom',
                 }} />
             <Stack.Screen
-                name="joinConfirmation"
-                options={{
-                    presentation: 'modal',
-                    animation: 'slide_from_bottom',
-                }} />
-            <Stack.Screen
                 name="appointmentConfirmation"
                 options={{
                     presentation: 'transparentModal',

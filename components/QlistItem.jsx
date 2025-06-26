@@ -34,7 +34,7 @@ const QlistItem = ({ item, index, qlistLength }) => {
                         fontFamily: "AirbnbCereal_W_Md",
                         fontSize: scale(12),
                         color: authenticatedUser?.name === item?.name ? "#0BA3AD" : colors.secondaryText
-                    }}>{authenticatedUser?.name === item?.name ? authenticatedUser?.name : item?.name}</CustomSecondaryText>
+                    }}>{authenticatedUser?.name === item?.name ? authenticatedUser?.name : "client"}</CustomSecondaryText>
                 </View>
             </View>
 

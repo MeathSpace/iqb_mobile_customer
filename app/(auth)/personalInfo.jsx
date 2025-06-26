@@ -27,8 +27,8 @@ const personalInfo = () => {
 
     const router = useRouter()
 
-    const [firstName, setFirstName] = useState("sagnik");
-    const [lastName, setLastName] = useState("nandy");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
     const [genderOpen, setGenderOpen] = useState(false)
     const [gender, setGender] = useState("Male");
     const [date, setDate] = useState(new Date());

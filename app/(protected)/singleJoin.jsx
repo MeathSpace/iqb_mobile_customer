@@ -22,6 +22,7 @@ import axios from 'axios';
 import { BASE_URL } from '@/utils/api';
 import { useAuth } from '../../context/AuthContext'
 import Skeleton from '../../components/Skeleton'
+import joinConfirmation from './joinConfirmation'
 
 const SingleJoin = () => {
 
@@ -76,8 +77,9 @@ const SingleJoin = () => {
     // console.log("salonServices ", salonServices)
 
     const [selectCustomerServices, setSelectedCustomerServices] = useState([])
-    const [selectedCustomerBarber, setSelectedCustomerBarber] = useState({})
+    const [selectedCustomerBarber, setSelectedCustomerBarber] = useState(null)
     const [continueService, setContinueService] = useState(false)
+
 
     useEffect(() => {
         if (selectCustomerServices.length > 0 && continueService) {
@@ -85,18 +87,18 @@ const SingleJoin = () => {
             const fetchBarbersByMultipleServiceId = async () => {
                 try {
 
-                    setSelectedCustomerBarber((prev) => ({ ...prev, loading: true }))
+                    setSalonBarber((prev) => ({ ...prev, loading: true }))
 
                     const { data } = await axios.post(`${BASE_URL}/mobileRoutes/getBarberByMultipleServiceId`, {
                         salonId: authenticatedUser.salonId,
                         serviceIds: selectCustomerServices.map((item) => item.serviceId)
                     })
 
-                    setSelectedCustomerBarber((prev) => ({ ...prev, loading: false, data: data?.response, success: true, error: null }))
+                    setSalonBarber((prev) => ({ ...prev, loading: false, data: data?.response, success: true, error: null }))
 
                 } catch (error) {
 
-                    setSelectedCustomerBarber((prev) => ({ ...prev, loading: false, data: null, success: false, error: error }))
+                    setSalonBarber((prev) => ({ ...prev, loading: false, data: null, success: false, error: error }))
                     console.log("Error fetching barbers by multiple service Id", error)
                 }
             }
@@ -179,6 +181,18 @@ const SingleJoin = () => {
 
     const router = useRouter()
     const { colors } = useTheme()
+
+    const joinConfirmation = () => {
+        router.push({
+            pathname: "/joinConfirmation",
+            params: {
+                selectCustomerServices: JSON.stringify(selectCustomerServices),
+                selectedCustomerBarber: JSON.stringify(selectedCustomerBarber),
+                join: true
+            },
+        });
+
+    }
 
     const renderSection = (key, title, content) => {
         const isActive = activeSection === key
@@ -393,7 +407,7 @@ const SingleJoin = () => {
 
                     {
                         activeSection === "barber" && (
-                            selectedCustomerBarber?.loading ? (
+                            salonBarber?.loading ? (
                                 [0, 1, 2, 3, 4, 5].map((_, index) => {
                                     return (
                                         <Skeleton
@@ -403,8 +417,8 @@ const SingleJoin = () => {
                                         />
                                     )
                                 })
-                            ) : selectedCustomerBarber?.data?.length > 0 ? (
-                                selectedCustomerBarber?.data?.map((item, index) => {
+                            ) : salonBarber?.data?.length > 0 ? (
+                                salonBarber?.data?.map((item, index) => {
                                     return (
                                         <Pressable
                                             key={item?.barberId}
@@ -604,7 +618,15 @@ const SingleJoin = () => {
                                 style={styles.searchButton}>
                                 <CustomText style={{ color: '#fff' }}>Back</CustomText>
                             </Pressable>
-                            <Pressable style={styles.searchButton}>
+                            <Pressable
+                                disabled={selectCustomerServices?.length === 0 || !selectedCustomerBarber}
+                                onPress={joinConfirmation}
+                                style={[
+                                    styles.searchButton,
+                                    {
+                                        opacity: selectCustomerServices?.length === 0 || !selectedCustomerBarber ? 0.5 : 1
+                                    }
+                                ]}>
                                 <CustomText style={{ color: '#fff' }}>Next</CustomText>
                             </Pressable>
                         </View>
