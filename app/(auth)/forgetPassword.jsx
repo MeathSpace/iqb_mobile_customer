@@ -9,6 +9,9 @@ import CustomSecondaryText from '../../components/CustomSecondaryText';
 import { useTheme } from '@react-navigation/native';
 import { Colors } from '@/constants/Colors';
 import { ErrorIcon } from '../../constants/icons';
+import axios from 'axios';
+import { BASE_URL } from '@/utils/api';
+import { Toast } from 'toastify-react-native'
 
 const forgetPassword = () => {
 
@@ -16,11 +19,11 @@ const forgetPassword = () => {
 
     const router = useRouter()
 
-    const [email, setEmail] = useState("")
+    const [email, setEmail] = useState("arghya@yopmail.com")
     const [emailError, setEmailError] = useState(false);
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    const forgetHandler = () => {
+    const forgetHandler = async () => {
         if (!email) {
             setEmailError("Email is required")
             return;
@@ -28,7 +31,23 @@ const forgetPassword = () => {
             return setEmailError("Invalid email format")
         }
 
-        router.push("/forgetVerification")
+        try {
+            const { data } = await axios.post(`${BASE_URL}/customer/forgetPassword`, {
+                email,
+            })
+
+            router.push({
+                pathname: "/forgetPasswordConfirmation",
+                params: {
+                    email
+                }
+            });
+
+        } catch (error) {
+            Toast.error(error?.response?.data?.message)
+            console.log("Error in forget password ", error)
+        }
+
     }
 
     return (

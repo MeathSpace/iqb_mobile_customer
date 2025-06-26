@@ -19,7 +19,10 @@ import { useTheme } from '@react-navigation/native';
 
 const personalInfo = () => {
 
-    const { email } = useLocalSearchParams();
+    const { email, authType } = useLocalSearchParams();
+
+    console.log("email ", email)
+    console.log("authType ", authType ?? "none")
 
     const colorScheme = useColorScheme()
 
@@ -27,12 +30,12 @@ const personalInfo = () => {
 
     const router = useRouter()
 
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
+    const [firstName, setFirstName] = useState("werre");
+    const [lastName, setLastName] = useState("werwer");
     const [genderOpen, setGenderOpen] = useState(false)
     const [gender, setGender] = useState("Male");
     const [date, setDate] = useState(new Date());
-    const [selectedDate, setSelectedDate] = useState("2025-12-08");
+    const [selectedDate, setSelectedDate] = useState("2025-02-15");
 
     const [calenderModal, setCalenderModal] = useState(false);
     // const [selectedCountry, setSelectedCountry] = useState({});
@@ -145,18 +148,35 @@ const personalInfo = () => {
         const mobileNumber = phoneNumber.replace("+", "")
         const updatedNumber = mobileNumber.startsWith(selectedCountry?.callingCode[0]) ? mobileNumber.slice(selectedCountry?.callingCode[0].length) : mobileNumber
 
-        router.push({
-            pathname: "/passwordConfirmation",
-            params: {
-                email,
-                firstName,
-                lastName,
-                gender,
-                phoneNumber: updatedNumber,
-                callingCode: selectedCountry?.callingCode[0],
-                selectedDate
-            }
-        });
+        if (authType === "google") {
+            router.push({
+                pathname: "/verification",
+                params: {
+                    email,
+                    firstName,
+                    lastName,
+                    gender,
+                    phoneNumber: updatedNumber,
+                    callingCode: selectedCountry?.callingCode[0],
+                    selectedDate,
+                    authType
+                }
+            });
+        } else {
+            router.push({
+                pathname: "/passwordConfirmation",
+                params: {
+                    email,
+                    firstName,
+                    lastName,
+                    gender,
+                    phoneNumber: updatedNumber,
+                    callingCode: selectedCountry?.callingCode[0],
+                    selectedDate
+                }
+            });
+        }
+
     }
 
     return (

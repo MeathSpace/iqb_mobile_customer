@@ -518,7 +518,7 @@ const Dashboard = () => {
                                             <View
                                                 style={{
                                                     width: "100%",
-                                                    height: verticalScale(145),
+                                                    height: verticalScale(180),
                                                     paddingVertical: verticalScale(20),
                                                 }}
                                             >
@@ -527,8 +527,10 @@ const Dashboard = () => {
                                                         width: "100%",
                                                         height: "100%",
                                                         borderRadius: scale(12),
+                                                        borderWidth: scale(1),
+                                                        borderColor: "#d3d3d3"
                                                     }}
-                                                    source={{ uri: "https://www.jamesuncle.com/assets/frontend/images/no-banner.jpg" }}
+                                                    source={require('@/assets/images/dummygallery.jpg')}
                                                     contentFit="cover"
                                                     transition={300}
                                                 />

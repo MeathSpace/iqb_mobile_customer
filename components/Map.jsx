@@ -445,6 +445,9 @@ const Map = () => {
 
     ]
 
+
+    console.log("selectedSalonLocation ", selectedSalonLocation)
+
     return (
         <>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -462,14 +465,19 @@ const Map = () => {
                         style={{ flex: 1, paddingBottom: 80, position: 'relative' }}
                         customMapStyle={colorScheme === 'dark' ? darkMapStyle : []}
                     >
-                        <Marker
-                            coordinate={{
-                                latitude: selectedSalonLocation.latitude,
-                                longitude: selectedSalonLocation.longitude,
-                            }}
-                            title={selectedSalonLocation?.salonName}
-                            description={selectedSalonLocation?.address}
-                        />
+                        {
+                            selectedSalonLocation?.latitude && selectedSalonLocation?.longitude && (
+                                <Marker
+                                    coordinate={{
+                                        latitude: selectedSalonLocation.latitude,
+                                        longitude: selectedSalonLocation.longitude,
+                                    }}
+                                    title={selectedSalonLocation?.salonName}
+                                    description={selectedSalonLocation?.address}
+                                />
+                            )
+                        }
+
                     </MapView>
 
                     <FlatList

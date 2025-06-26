@@ -21,17 +21,43 @@ const verification = () => {
         gender,
         callingCode,
         phoneNumber,
-        verificationOtp,
+        // verificationOtp,
         selectedDate,
+        authType,
         password } = useLocalSearchParams();
 
     const { colors } = useTheme()
 
+    console.log("Current Email ", email)
+    console.log("Auth Type Verification ", authType ?? " none")
+
     const [verificationCode, setVerificationCode] = useState("")
     const [verificationCodeError, setVerificationCodeError] = useState("")
-    const [currentVerificationOtp, setCurrentVerificationOtp] = useState(verificationOtp)
+    const [currentVerificationOtp, setCurrentVerificationOtp] = useState("")
     const [verificationCodeLoading, setVerificationCodeLoading] = useState(false)
     const [signupLoading, setSignupLoading] = useState(false)
+
+    useEffect(() => {
+        if (email && phoneNumber && callingCode) {
+            const sendCustomerVerificationCodeFnc = async () => {
+                try {
+                    const { data } = await axios.post(`${BASE_URL}/customer/sendCustomerVerificationCode`, {
+                        email,
+                        mobileCountryCode: callingCode,
+                        mobileNumber: phoneNumber
+                    })
+
+                    console.log("UseEffect Code ", data)
+                    setCurrentVerificationOtp(data?.response)
+
+                } catch (error) {
+                    Toast.error(error?.response?.data?.message)
+                }
+            }
+
+            sendCustomerVerificationCodeFnc()
+        }
+    }, [email, phoneNumber, callingCode])
 
     const router = useRouter()
 
@@ -59,18 +85,36 @@ const verification = () => {
                 password
             }
 
+            const googleSignUpData = {
+                email,
+                name: `${firstName} ${lastName}`,
+                gender,
+                dateOfBirth: selectedDate,
+                mobileCountryCode: callingCode,
+                mobileNumber: phoneNumber,
+            }
+
             setSignupLoading(true)
 
-            const { data } = await axios.post(`${BASE_URL}/customer/signUp`, signUpData)
+            if (authType === "google") {
+                const { data } = await axios.post(`${BASE_URL}/customer/googleCustomerSignup`, googleSignUpData)
 
-            setSignupLoading(false)
+                setSignupLoading(false)
 
-            Toast.success(data?.message)
+                Toast.success(data?.message)
+
+            } else {
+                const { data } = await axios.post(`${BASE_URL}/customer/signUp`, signUpData)
+
+                setSignupLoading(false)
+
+                Toast.success(data?.message)
+            }
 
             router.replace("/signin")
 
         } catch (error) {
-
+            console.log(error?.data)
             setSignupLoading(false)
             Toast.error(error?.response?.data?.message)
         }
@@ -86,6 +130,7 @@ const verification = () => {
             })
             setVerificationCodeLoading(false)
             setCurrentVerificationOtp(data?.response)
+            console.log("Resend verification Code ", data?.response)
 
         } catch (error) {
             setVerificationCodeLoading(false)

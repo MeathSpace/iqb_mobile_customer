@@ -137,7 +137,12 @@ const account = () => {
         >
           <Pressable
             onPress={() => router.push("/editProfile")}
-            style={styles.profileItem}>
+            style={[
+              styles.profileItem, {
+                borderBottomColor: colors.borderBottomColor,
+                borderBottomWidth: scale(1)
+              }
+            ]}>
             <View style={{
               flexDirection: "row",
               alignItems: "center",
@@ -157,7 +162,12 @@ const account = () => {
 
           <Pressable
             onPress={() => router.push("/myFavourites")}
-            style={styles.profileItem}>
+            style={[
+              styles.profileItem, {
+                borderBottomColor: colors.borderBottomColor,
+                borderBottomWidth: scale(1)
+              }
+            ]}>
             <View style={{
               flexDirection: "row",
               alignItems: "center",
@@ -179,7 +189,12 @@ const account = () => {
 
           {authenticatedUser?.salonId ? (
             <Pressable
-              style={styles.profileItem}
+              style={[
+                styles.profileItem, {
+                  borderBottomColor: colors.borderBottomColor,
+                  borderBottomWidth: scale(1)
+                }
+              ]}
               onPress={() => router.push("/connectSalon")}
             >
               <View
@@ -207,7 +222,12 @@ const account = () => {
 
           <Pressable
             onPress={() => router.push("/about")}
-            style={styles.profileItem}>
+            style={[
+              styles.profileItem, {
+                borderBottomColor: colors.borderBottomColor,
+                borderBottomWidth: scale(1)
+              }
+            ]}>
             <View style={{
               flexDirection: "row",
               alignItems: "center",
@@ -337,6 +357,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
+
     // backgroundColor: "red"
   }
 })

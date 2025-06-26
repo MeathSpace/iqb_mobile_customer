@@ -12,7 +12,7 @@ const BarberCard = ({ item }) => {
     const { colors } = useTheme()
 
     return (
-        <View style={[styles.cardWrapper, {  }]}>
+        <View style={[styles.cardWrapper, {}]}>
             <Image
                 style={styles.cardImage}
                 source={{ uri: item?.profile?.[0]?.url }}
@@ -24,7 +24,7 @@ const BarberCard = ({ item }) => {
                     style={{
                         width: scale(40),
                         height: verticalScale(15),
-                        backgroundColor: "#00B0901A",
+                        backgroundColor: item?.isOnline ? "#00B0901A" : "#E11D481A",
                         justifyContent: "center",
                         alignItems: "center",
                         borderRadius: scale(4)
@@ -33,9 +33,9 @@ const BarberCard = ({ item }) => {
                     <CustomText
                         style={{
                             fontSize: scale(10),
-                            color: "#00B090",
+                            color: item?.isOnline ? "#00B090" : "#E11D48",
                         }}
-                    >Online</CustomText>
+                    >{item?.isOnline ? "Online" : "Offline"}</CustomText>
                 </View>
             </View>
             <CustomText style={{ fontSize: scale(12) }}>{item.name}</CustomText>

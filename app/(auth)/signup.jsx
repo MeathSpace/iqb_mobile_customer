@@ -138,13 +138,15 @@ const signup = () => {
                     router.push({
                         pathname: "/personalInfo",
                         params: {
-                            email: user?.primaryEmailAddress?.emailAddress
+                            email: user?.primaryEmailAddress?.emailAddress,
+                            authType: "google"
                         }
                     });
 
                     signOut()
 
                 } catch (error) {
+                    signOut()
                     Toast.error(error?.response?.data?.message)
                 }
             }

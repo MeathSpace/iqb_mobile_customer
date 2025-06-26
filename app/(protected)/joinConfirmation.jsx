@@ -678,7 +678,7 @@ const joinConfirmation = () => {
               }
             </View>
             <View style={{ gap: scale(6) }}>
-              <CustomText style={{ textAlign: "center", fontSize: moderateScale(18) }}>$ {selectCustomerServicesParse.reduce((acc, item) => acc + item.servicePrice, 0)}</CustomText>
+              <CustomText style={{ textAlign: "center", fontSize: moderateScale(18) }}>{authenticatedUser?.currency} {selectCustomerServicesParse.reduce((acc, item) => acc + item.servicePrice, 0)}</CustomText>
               <View style={{ flexDirection: "row", alignItems: "center", gap: scale(5), }}>
                 <ClockIcon size={moderateScale(14)} color={colors.secondaryText} />
                 {

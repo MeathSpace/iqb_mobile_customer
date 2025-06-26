@@ -70,7 +70,8 @@ const RootLayout = () => {
       tabBackground: '#efefef',
       text: "#000000",
       secondaryText: "#808080",
-      secondaryInputBackground: "#efefef"
+      secondaryInputBackground: "#efefef",
+      borderBottomColor: "#efefef"
     },
   };
 
@@ -83,7 +84,8 @@ const RootLayout = () => {
       tabBackground: '#151718',
       text: "#ffffff",
       secondaryText: "#F4F4F5B2",
-      secondaryInputBackground: "#000000"
+      secondaryInputBackground: "#000000",
+      borderBottomColor: "#101010"
     },
   };
 

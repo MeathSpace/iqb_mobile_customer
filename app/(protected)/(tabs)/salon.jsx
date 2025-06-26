@@ -1,4 +1,4 @@
-import { FlatList, Platform, Pressable, ScrollView, StyleSheet, Text, useColorScheme, View } from 'react-native'
+import { FlatList, Linking, Platform, Pressable, ScrollView, StyleSheet, Text, useColorScheme, View } from 'react-native'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import BottomSheet, { BottomSheetScrollView, BottomSheetView } from '@gorhom/bottom-sheet';
@@ -15,6 +15,7 @@ import CustomTabView from '../../../components/CustomTabView';
 import axios from 'axios';
 import { BASE_URL } from '@/utils/api';
 import { useAuth } from '../../../context/AuthContext';
+import Skeleton from '../../../components/Skeleton';
 
 const SalonItem = ({ item }) => {
 
@@ -24,7 +25,7 @@ const SalonItem = ({ item }) => {
         <View style={[styles.cardWrapper, { backgroundColor: colors.background }]} >
             <Image
                 style={styles.cardImage}
-                source={{ uri: item.image }}
+                source={{ uri: item.url }}
                 contentFit="cover"
                 transition={300}
             />
@@ -48,17 +49,20 @@ const salon = () => {
         useCallback(() => {
             const fetchSalonInfo = async () => {
                 try {
+
+                    setSalonInfoData((prev) => ({ ...prev, loading: true }))
+
                     const { data } = await axios.get(`${BASE_URL}/mobileRoutes/getSalonInfoBySalonId`, {
                         params: {
                             salonId: authenticatedUser?.salonId
                         }
                     })
 
-                    // console.log("Salon Info Data ", data)
-
-                    // arghyas api not working
+                    setSalonInfoData((prev) => ({ ...prev, loading: false, data: data?.response, success: true, error: null }))
 
                 } catch (error) {
+
+                    setSalonInfoData((prev) => ({ ...prev, loading: false, data: null, success: false, error: error }))
                     console.log("Error fetching salon Info ", error)
                 }
             }
@@ -68,21 +72,10 @@ const salon = () => {
         }, [])
     )
 
+    // console.log("salonInfoData ", salonInfoData?.data?.salonInfo?.gallery)
+
     const flatlistRef = useRef()
     const [currentIndex, setCurrentIndex] = useState(0)
-
-    const scrollToIndex = () => {
-        flatlistRef.current.scrollToIndex({ animated: true, index: currentIndex })
-    }
-
-    useFocusEffect(
-        useCallback(() => {
-            if (flatlistRef?.current) {
-                scrollToIndex(currentIndex)
-            }
-        }, [currentIndex])
-    )
-
 
     // hooks
     const sheetRef = useRef(null);
@@ -106,30 +99,6 @@ const salon = () => {
         ),
         []
     );
-
-
-    const advertisementData = [
-        {
-            id: 1,
-            image: "https://images.unsplash.com/photo-1600948836101-f9ffda59d250?q=80&w=2936&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        },
-        {
-            id: 2,
-            image: "https://img1.wsimg.com/isteam/ip/ecf2eb3f-f55b-4193-9e98-7c1b626bf779/Hero%20Picture.png"
-        },
-        {
-            id: 3,
-            image: "https://cdn.wellnessta.com/vendors/5ff2c570edfc6c776857fe44/outlet/Hair-And-Care-Men's-Salon-202105121952400.webp"
-        },
-        {
-            id: 4,
-            image: "https://images.pexels.com/photos/705255/pexels-photo-705255.jpeg"
-        },
-        {
-            id: 5,
-            image: "https://images.unsplash.com/photo-1600948836101-f9ffda59d250?q=80&w=2936&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-        },
-    ]
 
     const [tabData, setTabData] = useState([
         "Details",
@@ -419,7 +388,10 @@ const salon = () => {
 
     ]
 
-    const [serviceCategorySelected, setServiceCategorySelected] = useState(false)
+    const [serviceCategorySelected, setServiceCategorySelected] = useState({
+        categoryName: "",
+        selected: false
+    })
 
     const barbersData = [
         {
@@ -472,6 +444,53 @@ const salon = () => {
     const { colors } = useTheme()
     const colorScheme = useColorScheme();
 
+    // console.log(salonInfoData?.data?.salonInfo?.location?.coordinates?.latitude)
+
+    const latitude = salonInfoData?.data?.salonInfo?.location?.coordinates?.latitude
+    const longitude = salonInfoData?.data?.salonInfo?.location?.coordinates?.longitude
+
+    const openLink = async (url) => {
+        const supported = await Linking.canOpenURL(url);
+        if (supported) {
+            await Linking.openURL(url);
+        } else {
+            console.warn("Can't open URL:", url);
+        }
+    };
+
+
+    const [serviceCategoryData, setServiceCategoryData] = useState({
+        data: null,
+        loading: false,
+        error: null,
+        success: false
+    })
+
+    useFocusEffect(
+        useCallback(() => {
+            const fetchServiceCategoryData = async () => {
+                try {
+
+                    setServiceCategoryData((prev) => ({ ...prev, loading: true }))
+
+                    const { data } = await axios.get(`${BASE_URL}/mobileRoutes/getAllServiceCategories`)
+
+                    setServiceCategoryData((prev) => ({ ...prev, loading: false, data: data?.response, success: true, error: null }))
+
+                } catch (error) {
+                    setServiceCategoryData((prev) => ({ ...prev, loading: false, data: null, success: false, error: error }))
+                    console.error("Error fetching service category data: ", error)
+                }
+            }
+
+            fetchServiceCategoryData()
+
+        }, [authenticatedUser])
+    )
+
+
+    console.log("Barbers ", salonInfoData?.data?.barbers)
+
     return (
         <CustomTabView
             style={{
@@ -482,58 +501,92 @@ const salon = () => {
             <GestureHandlerRootView style={[styles.container, {
                 backgroundColor: colors.background
             }]}>
-                <View>
-                    <FlatList
-                        data={advertisementData}
-                        style={{
-                            position: "relative"
-                        }}
-                        renderItem={({ item }) => <SalonItem item={item} />}
-                        keyExtractor={item => item.id.toString()}
-                        ref={flatlistRef}
-                        horizontal={true}
-                        showsHorizontalScrollIndicator={false}
-                        // snapToAlignment="start"
-                        decelerationRate="fast"
-                        snapToInterval={scale(400)}
-                        pagingEnabled={true}
-                        onMomentumScrollEnd={(event) => {
-                            const offsetX = event.nativeEvent.contentOffset.x;
-                            const index = Math.round(offsetX / scale(400));
-                            setCurrentIndex(index);
-                        }}
-                        initialNumToRender={3}
-                        maxToRenderPerBatch={3}
-                    />
-                    <View
-                        style={{
-                            position: "absolute",
-                            bottom: Platform.OS === "ios" ? verticalScale(40) : verticalScale(30),
-                            alignSelf: "center",
-                            flexDirection: "row",
-                            gap: scale(8),
-                            alignItems: "center"
-                        }}
-                    >
-                        {
-                            advertisementData.map((item, index) => {
-                                return (
-                                    <Pressable
-                                        onPress={() => setCurrentIndex(index)}
-                                        key={index}
-                                        style={{
-                                            width: index === currentIndex ? scale(25) : scale(10),
-                                            height: scale(10),
-                                            borderRadius: scale(30),
-                                            backgroundColor: index === currentIndex ? Colors.modeColor.colorCode : "#fff"
-                                        }}
-                                    ></Pressable>
-                                )
-                            })
-                        }
 
-                    </View>
-                </View>
+                {
+                    salonInfoData?.loading ? (
+                        <Skeleton
+                            height={verticalScale(200)}
+                            width={scale(400)}
+                        />
+                    ) : salonInfoData?.data?.salonInfo?.gallery?.length > 0 ? (
+                        <View>
+                            <FlatList
+                                data={salonInfoData?.data?.salonInfo?.gallery?.slice(0, 5)}
+                                style={{
+                                    position: "relative"
+                                }}
+                                renderItem={({ item }) => <SalonItem item={item} />}
+                                keyExtractor={item => item._id}
+                                ref={flatlistRef}
+                                horizontal={true}
+                                showsHorizontalScrollIndicator={false}
+                                // snapToAlignment="start"
+                                decelerationRate="fast"
+                                snapToInterval={scale(400)}
+                                pagingEnabled={true}
+                                onMomentumScrollEnd={(event) => {
+                                    const offsetX = event.nativeEvent.contentOffset.x;
+                                    const index = Math.round(offsetX / scale(400));
+                                    setCurrentIndex(index);
+                                }}
+                                initialNumToRender={3}
+                                maxToRenderPerBatch={3}
+                            />
+                            <View
+                                style={{
+                                    position: "absolute",
+                                    bottom: Platform.OS === "ios" ? verticalScale(40) : verticalScale(30),
+                                    alignSelf: "center",
+                                    flexDirection: "row",
+                                    gap: scale(8),
+                                    alignItems: "center"
+                                }}
+                            >
+                                {
+                                    salonInfoData?.data?.salonInfo?.gallery?.slice(0, 5)?.map((item, index) => {
+                                        return (
+                                            <Pressable
+                                                onPress={() => {
+                                                    setCurrentIndex(index);
+                                                    flatlistRef.current?.scrollToIndex({ animated: true, index });
+                                                }}
+                                                key={index}
+                                                style={{
+                                                    width: index === currentIndex ? scale(25) : scale(10),
+                                                    height: scale(10),
+                                                    borderRadius: scale(30),
+                                                    backgroundColor: index === currentIndex ? Colors.modeColor.colorCode : "#fff"
+                                                }}
+                                            ></Pressable>
+                                        )
+                                    })
+                                }
+
+                            </View>
+                        </View>
+
+                    ) : (
+                        <View
+                            style={{
+                                width: "100%",
+                                height: verticalScale(200),
+                                paddingVertical: verticalScale(20),
+                            }}
+                        >
+                            <Image
+                                style={{
+                                    width: "100%",
+                                    height: "100%",
+                                }}
+                                source={require('@/assets/images/dummygallery.jpg')}
+                                contentFit="cover"
+                                transition={300}
+                            />
+                        </View>
+                    )
+                }
+
+
                 <BottomSheet
                     ref={sheetRef}
                     index={0}
@@ -621,7 +674,7 @@ const salon = () => {
                                                 fontSize: scale(14),
                                                 color: "gray"
                                             }}
-                                        >At our salon, we believe that beauty is personal and every client deserves a tailored experience. From classic cuts to modern styling, our skilled professionals are here to provide high-quality hair, skin, and grooming services in a clean, relaxing environment.</CustomText>
+                                        >{salonInfoData?.data?.salonInfo?.salonDesc}</CustomText>
                                     </View>
 
                                     <View
@@ -669,6 +722,9 @@ const salon = () => {
                                                     alignItems: "center",
                                                     borderRadius: scale(4)
                                                 }}
+                                                onPress={() => {
+                                                    openLink(`tel:${salonInfoData?.data?.salonInfo?.mobileCountryCode}${salonInfoData?.data?.salonInfo?.contactTel}`)
+                                                }}
                                             >
                                                 <ContactIcon size={scale(18)} color={"#4285F4"} />
                                             </Pressable>
@@ -681,6 +737,9 @@ const salon = () => {
                                                     justifyContent: "center",
                                                     alignItems: "center",
                                                     borderRadius: scale(4)
+                                                }}
+                                                onPress={() => {
+                                                    openLink(``)
                                                 }}
                                             >
                                                 <WhatsappIcon size={scale(18)} color={"#25D366"} />
@@ -695,6 +754,9 @@ const salon = () => {
                                                     alignItems: "center",
                                                     borderRadius: scale(4)
                                                 }}
+                                                onPress={() => {
+                                                    openLink(`mailto:${salonInfoData?.data?.salonInfo?.salonEmail}`)
+                                                }}
                                             >
                                                 <EmailIcon size={scale(18)} color={"#EA4335"} />
                                             </Pressable>
@@ -704,29 +766,35 @@ const salon = () => {
                                     </View>
 
                                     <View>
-                                        <MapView
-                                            provider={PROVIDER_GOOGLE}
-                                            initialCamera={{
-                                                center: {
-                                                    latitude: 37.78825,
-                                                    longitude: -122.4324,
-                                                },
-                                                zoom: 15, // 0 (world view) to ~20 (very close)
-                                                pitch: 0,
-                                                heading: 0,
-                                            }}
-                                            scrollEnabled={false}
-                                            zoomEnabled={false}
-                                            rotateEnabled={false}
-                                            pitchEnabled={false}
-                                            style={[styles.map,
-                                            {
-                                                // borderColor: "#efefef", 
-                                                // borderWidth: scale(1) 
-                                            }
-                                            ]}
-                                            customMapStyle={colorScheme === "dark" ? darkMapStyle : []}
-                                        />
+
+                                        {
+                                            latitude && longitude && (
+                                                <MapView
+                                                    provider={PROVIDER_GOOGLE}
+                                                    initialCamera={{
+                                                        center: {
+                                                            latitude: latitude,
+                                                            longitude: longitude
+                                                        },
+                                                        zoom: 15, // 0 (world view) to ~20 (very close)
+                                                        pitch: 0,
+                                                        heading: 0,
+                                                    }}
+                                                    scrollEnabled={false}
+                                                    zoomEnabled={false}
+                                                    rotateEnabled={false}
+                                                    pitchEnabled={false}
+                                                    style={[styles.map,
+                                                    {
+                                                        // borderColor: "#efefef", 
+                                                        // borderWidth: scale(1) 
+                                                    }
+                                                    ]}
+                                                    customMapStyle={colorScheme === "dark" ? darkMapStyle : []}
+                                                />
+                                            )
+                                        }
+
                                         <View
                                             style={{
                                                 backgroundColor: "#0BA3AD1A",
@@ -754,7 +822,7 @@ const salon = () => {
                                                         maxWidth: "85%"
                                                     }}
                                                 >
-                                                    30 Elliot Rd, Selly Oak, Birmingham, UK, B29 4AQ
+                                                    {`${salonInfoData?.data?.salonInfo?.address}, ${salonInfoData?.data?.salonInfo?.city}, ${salonInfoData?.data?.salonInfo?.country}`}
                                                 </CustomText>
                                             </View>
 
@@ -775,6 +843,7 @@ const salon = () => {
                                                         alignItems: "center",
                                                         borderRadius: scale(4)
                                                     }}
+                                                    onPress={() => openLink(`https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`)}
                                                 >
                                                     <MapIcon size={scale(18)} color={"#fbbf24"} />
                                                 </Pressable>
@@ -830,6 +899,7 @@ const salon = () => {
                                                     alignItems: "center",
                                                     borderRadius: scale(4)
                                                 }}
+                                                onPress={() => openLink(salonInfoData?.data?.salonInfo?.instraLink)}
                                             >
                                                 <InstagramIcon size={scale(18)} color={"#E1306C"} />
                                             </Pressable>
@@ -843,6 +913,7 @@ const salon = () => {
                                                     alignItems: "center",
                                                     borderRadius: scale(4)
                                                 }}
+                                                onPress={() => openLink(salonInfoData?.data?.salonInfo?.facebookLink)}
                                             >
                                                 <FacebookIcon size={scale(18)} color={"#1877F2"} />
                                             </Pressable>
@@ -855,11 +926,14 @@ const salon = () => {
 
                         {
                             selectedTab === "Services" && (
-                                serviceCategorySelected ? (
+                                serviceCategorySelected?.selected ? (
                                     <>
                                         <Pressable
                                             onPress={() => {
-                                                setServiceCategorySelected(false)
+                                                setServiceCategorySelected({
+                                                    selected: false,
+                                                    categoryName: ""
+                                                })
                                             }}
                                             style={{
                                                 flexDirection: "row",
@@ -1044,48 +1118,75 @@ const salon = () => {
                                     >
 
                                         {
-                                            serviceCategories.map((item, index) => {
-                                                return (
-                                                    <View
-                                                        key={index}
-                                                        style={{
-                                                            gap: verticalScale(10),
-                                                            width: scale(65),
-                                                            marginBottom: verticalScale(10)
-                                                            // paddingLeft: scale(5)
-                                                        }}
-                                                    >
-
-                                                        <Pressable
+                                            serviceCategoryData?.loading ? (
+                                                [0, 1, 2, 3, 4, 5, 6, 7].map((item, index) => {
+                                                    return (
+                                                        <View
+                                                            key={index}
                                                             style={{
-                                                                width: scale(60),
-                                                                height: scale(60),
-                                                                borderRadius: scale(30),
-                                                                backgroundColor: colors.background,
-                                                                marginHorizontal: "auto"
-                                                            }}
-                                                            onPress={() => {
-                                                                setServiceCategorySelected(true)
+                                                                gap: verticalScale(10),
+                                                                width: scale(65),
+                                                                // marginBottom: verticalScale(10)
                                                             }}
                                                         >
-                                                            <Image
-                                                                style={{ width: "100%", height: "100%", borderRadius: scale(30) }}
-                                                                source={item.image}
-                                                                contentFit="cover"
-                                                                transition={1000}
-                                                            />
-                                                        </Pressable>
-                                                        <CustomText
+
+                                                            <Skeleton
+                                                                width={scale(60)}
+                                                                height={scale(60)}
+                                                                borderRadius={scale(30)}
+                                                            >
+
+                                                            </Skeleton>
+
+                                                        </View>
+                                                    )
+                                                })
+                                            ) : (
+                                                serviceCategoryData?.data?.map((item, index) => {
+                                                    return (
+                                                        <View
+                                                            key={item?._id}
                                                             style={{
-                                                                fontFamily: "AirbnbCereal_W_Md",
-                                                                fontSize: scale(12),
-                                                                textAlign: "center",
-                                                                color: "gray",
+                                                                gap: verticalScale(10),
+                                                                width: scale(65),
+                                                                marginBottom: verticalScale(10)
                                                             }}
-                                                        >{item.name}</CustomText>
-                                                    </View>
-                                                )
-                                            })
+                                                        >
+
+                                                            <Pressable
+                                                                style={{
+                                                                    width: scale(60),
+                                                                    height: scale(60),
+                                                                    borderRadius: scale(30),
+                                                                    backgroundColor: colors.background,
+                                                                    marginHorizontal: "auto"
+                                                                }}
+                                                                onPress={() => {
+                                                                    setServiceCategorySelected({
+                                                                        categoryName: item.serviceCategoryName,
+                                                                        selected: true
+                                                                    })
+                                                                }}
+                                                            >
+                                                                <Image
+                                                                    style={{ width: "100%", height: "100%", borderRadius: scale(30) }}
+                                                                    source={{ uri: item?.serviceCategoryImage?.url.replace("http", "https") }}
+                                                                    contentFit="cover"
+                                                                    transition={1000}
+                                                                />
+                                                            </Pressable>
+                                                            <CustomText
+                                                                style={{
+                                                                    fontFamily: "AirbnbCereal_W_Md",
+                                                                    fontSize: scale(12),
+                                                                    textAlign: "center",
+                                                                    color: "gray",
+                                                                }}
+                                                            >{item.serviceCategoryName}</CustomText>
+                                                        </View>
+                                                    )
+                                                })
+                                            )
                                         }
 
                                     </View>
@@ -1118,8 +1219,8 @@ const salon = () => {
                                     >
 
                                         {
-                                            barbersData.map((item, index) => {
-                                                return (<BarberCard key={index} item={item} />)
+                                            salonInfoData?.data?.barbers?.map((item, index) => {
+                                                return (<BarberCard key={item?.barberId} item={item} />)
                                             })
                                         }
 

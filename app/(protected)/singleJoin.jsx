@@ -28,6 +28,8 @@ const SingleJoin = () => {
 
     const { authenticatedUser } = useAuth()
 
+    console.log("Authenticated Single User ", authenticatedUser)
+
     const [salonServices, setSalonServices] = useState({
         data: null,
         loading: false,
@@ -394,7 +396,7 @@ const SingleJoin = () => {
                                                             fontSize: scale(18),
                                                             color: Colors.modeColor.colorCode
                                                         }}
-                                                    >$ {item?.servicePrice}</CustomText>
+                                                    >{authenticatedUser?.currency} {item?.servicePrice}</CustomText>
                                                 </View>
                                             </View>
                                         </Pressable >
