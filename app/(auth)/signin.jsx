@@ -97,27 +97,8 @@ const signin = () => {
         } catch (error) {
             setSignInData((prev) => ({ ...prev, loading: false, user: null, success: false, error: error }))
             Toast.error(error?.response?.data?.message)
-            // console.error("Error during sign-in:", error);
         }
 
-
-
-
-        // if (rememberMe) {
-        //     await AsyncStorage.setItem("isAuthenticated", JSON.stringify(true))
-        // }
-        // await AsyncStorage.setItem("LoggedInUser", JSON.stringify({
-        //     name: "John Doe",
-        //     email: "john@gmail.com",
-        //     imageUrl: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-        // }))
-        // setAuthenticatedUser({
-        //     name: "John Doe",
-        //     email: "john@gmail.com",
-        //     imageUrl: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-        // })
-        // setIsAuthenticated(true)
-        // router.push("/home")
     }
 
 
@@ -165,35 +146,82 @@ const signin = () => {
 
         if (isSignedIn) {
             const handleAuth = async () => {
+                // try {
+                // if (rememberMe) {
+                //     await AsyncStorage.setItem("isAuthenticated", JSON.stringify(true));
+                //     await AsyncStorage.setItem("LoggedInUser", JSON.stringify({
+                //         name: user?.firstName,
+                //         email: user?.primaryEmailAddress?.emailAddress,
+                //         imageUrl: user?.imageUrl
+                //     }))
+                // } else {
+                //     signOut()
+                // }
+
+                //     setAuthenticatedUser({
+                //         name: user?.firstName,
+                //         email: user?.primaryEmailAddress?.emailAddress,
+                //         imageUrl: user?.imageUrl
+                //     })
+                //     setIsAuthenticated(true);
+                //     router.replace("/home");
+                // } catch (error) {
+                //     signOut()
+                //     console.error("Error saving to AsyncStorage", error);
+                // }
+
                 try {
+                    // setSignInData((prev) => ({ ...prev, loading: true }))
+
+                    const { data } = await axios.post(`${BASE_URL}/customer/googleCustomerSignIn`, {
+                        email: user?.primaryEmailAddress?.emailAddress,
+                    })
+
+                    setSignInData((prev) => ({
+                        ...prev, loading: false, user: {
+                            ...data?.response,
+                            profile: [
+                                { url: user?.imageUrl }
+                            ]
+                        }, success: true, error: null
+                    }))
+
+
                     if (rememberMe) {
-                        await AsyncStorage.setItem("isAuthenticated", JSON.stringify(true));
-                        await AsyncStorage.setItem("LoggedInUser", JSON.stringify({
-                            name: user?.firstName,
-                            email: user?.primaryEmailAddress?.emailAddress,
-                            imageUrl: user?.imageUrl
-                        }))
-                    } else {
+                        await AsyncStorage.setItem("isAuthenticated", JSON.stringify(true))
+                    }else{
                         signOut()
                     }
 
+                    await AsyncStorage.setItem("LoggedInUser", JSON.stringify({
+                        ...data?.response,
+                        profile: [
+                            { url: user?.imageUrl }
+                        ]
+                    }))
                     setAuthenticatedUser({
-                        name: user?.firstName,
-                        email: user?.primaryEmailAddress?.emailAddress,
-                        imageUrl: user?.imageUrl
+                        ...data?.response,
+                        profile: [
+                            { url: user?.imageUrl }
+                        ]
                     })
-                    setIsAuthenticated(true);
-                    router.replace("/home");
+                    setIsAuthenticated(true)
+                    router.push("/home")
+
                 } catch (error) {
-                    console.error("Error saving to AsyncStorage", error);
+                    signOut()
+                    setSignInData((prev) => ({ ...prev, loading: false, user: null, success: false, error: error }))
+                    Toast.error(error?.response?.data?.message)
                 }
             };
 
             handleAuth();
         }
 
+
     }, [isSignedIn, router, rememberMe, user]);
 
+    // console.log("Authenticated user ", user)
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -435,12 +463,12 @@ const styles = StyleSheet.create({
 //                     }}
 //                 />
 
-                // <Button
-                //     title='Show Error Toast'
-                //     onPress={() => {
-                //         Toast.error('Error message!')
-                //     }}
-                // />
+// <Button
+//     title='Show Error Toast'
+//     onPress={() => {
+//         Toast.error('Error message!')
+//     }}
+// />
 
 //                 <Button
 //                     title='Show Info Toast'

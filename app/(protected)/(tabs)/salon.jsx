@@ -489,7 +489,7 @@ const salon = () => {
     )
 
 
-    console.log("Barbers ", salonInfoData?.data?.barbers)
+    // console.log("Barbers ", salonInfoData?.data?.barbers)
 
     return (
         <CustomTabView
@@ -570,7 +570,6 @@ const salon = () => {
                             style={{
                                 width: "100%",
                                 height: verticalScale(200),
-                                paddingVertical: verticalScale(20),
                             }}
                         >
                             <Image

@@ -30,12 +30,12 @@ const personalInfo = () => {
 
     const router = useRouter()
 
-    const [firstName, setFirstName] = useState("werre");
-    const [lastName, setLastName] = useState("werwer");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
     const [genderOpen, setGenderOpen] = useState(false)
     const [gender, setGender] = useState("Male");
     const [date, setDate] = useState(new Date());
-    const [selectedDate, setSelectedDate] = useState("2025-02-15");
+    const [selectedDate, setSelectedDate] = useState("");
 
     const [calenderModal, setCalenderModal] = useState(false);
     // const [selectedCountry, setSelectedCountry] = useState({});

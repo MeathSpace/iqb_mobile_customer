@@ -28,8 +28,6 @@ const SingleJoin = () => {
 
     const { authenticatedUser } = useAuth()
 
-    console.log("Authenticated Single User ", authenticatedUser)
-
     const [salonServices, setSalonServices] = useState({
         data: null,
         loading: false,
@@ -75,8 +73,6 @@ const SingleJoin = () => {
         fetchSalonServices()
     }, [authenticatedUser])
 
-
-    // console.log("salonServices ", salonServices)
 
     const [selectCustomerServices, setSelectedCustomerServices] = useState([])
     const [selectedCustomerBarber, setSelectedCustomerBarber] = useState(null)
@@ -190,10 +186,9 @@ const SingleJoin = () => {
             params: {
                 selectCustomerServices: JSON.stringify(selectCustomerServices),
                 selectedCustomerBarber: JSON.stringify(selectedCustomerBarber),
-                join: true
+                singleJoin: true
             },
         });
-
     }
 
     const renderSection = (key, title, content) => {

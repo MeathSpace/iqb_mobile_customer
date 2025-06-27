@@ -14,9 +14,9 @@
 // import { SafeAreaView } from 'react-native-safe-area-context';
 // import { useGlobal } from '../../context/GlobalContext';
 
-// const joinConfirmation = () => {
+// const singleJoinConfirmation = () => {
 
-//   const { selectedBarber, selectedBarberServices, joinModes } = useGlobal();
+//   const { selectedBarber, selectedBarberServices, singleJoinModes } = useGlobal();
 
 //   const colorScheme = useColorScheme();
 //   // const confirmationData = useLocalSearchParams();
@@ -82,7 +82,7 @@
 //   }
 // ];
 
-//   // console.log("joinModes ", joinModes)
+//   // console.log("singleJoinModes ", singleJoinModes)
 
 //   console.log("selectedBarber ", selectedBarber)
 //   console.log("selectedBarberServices ", selectedBarberServices)
@@ -115,11 +115,11 @@
 //           gap: verticalScale(5),
 //         }}>
 //           <CustomText style={styles.heading}>
-//             {joinModes.appointment ? "Review and confirm below" : "Yah! Good to see you here"}
+//             {singleJoinModes.appointment ? "Review and confirm below" : "Yah! Good to see you here"}
 //           </CustomText>
 
 //           <CustomSecondaryText style={{ textAlign: "center", }}>
-//             {joinModes.appointment ? "You'll be notified once your appointment is scheduled" : "You will be notified when your time arrives"}
+//             {singleJoinModes.appointment ? "You'll be notified once your appointment is scheduled" : "You will be notified when your time arrives"}
 //           </CustomSecondaryText>
 //         </View>
 
@@ -152,7 +152,7 @@
 //               <View style={{ flexDirection: "row", alignItems: "center", gap: scale(5), }}>
 //                 <ClockIcon size={moderateScale(14)} color={colors.secondaryText} />
 //                 {
-//                   joinModes.appointment ? (
+//                   singleJoinModes.appointment ? (
 //                     <CustomSecondaryText style={{ fontSize: scale(9.16) }}>12:30 AM - 2:30 PM</CustomSecondaryText>
 //                   ) : (
 //                     <CustomSecondaryText style={{ fontSize: scale(9.16) }}> {selectedBarberServices.reduce((acc, item) => acc + item.barberServiceEWT, 0)} mins</CustomSecondaryText>
@@ -164,7 +164,7 @@
 //           </View>
 
 //           {
-//             joinModes.appointment && (
+//             singleJoinModes.appointment && (
 //               <View
 //                 style={[styles.appointmentCardContent, { borderTopColor: colors.border }]}
 //               >
@@ -396,7 +396,7 @@
 
 //         <Pressable
 //           onPress={() => {
-//             if (joinModes.appointment) {
+//             if (singleJoinModes.appointment) {
 //               router.push("/appointment")
 //             } else {
 //               router.push("/queuelist")
@@ -412,7 +412,7 @@
 //   )
 // }
 
-// export default joinConfirmation
+// export default singleJoinConfirmation
 
 // const styles = StyleSheet.create({
 //   heading: {
@@ -516,7 +516,7 @@ import { useAuth } from '../../context/AuthContext';
 import axios from 'axios';
 import { BASE_URL } from '@/utils/api';
 
-const joinConfirmation = () => {
+const singleJoinConfirmation = () => {
 
   const { colors } = useTheme()
   const { authenticatedUser } = useAuth()
@@ -524,8 +524,12 @@ const joinConfirmation = () => {
   const params = useLocalSearchParams();
   const router = useRouter()
 
-  const selectedCustomerBarberParse = JSON.parse(params?.selectedCustomerBarber)
-  const selectCustomerServicesParse = JSON.parse(params?.selectCustomerServices)
+  const selectedCustomerBarberParse = params?.selectedCustomerBarber ? JSON.parse(params?.selectedCustomerBarber) : {}
+  const selectCustomerServicesParse = params?.selectCustomerServices ? JSON.parse(params?.selectCustomerServices) : []
+  const selectedGroupMembers = params?.groupJoinMembers ? JSON.parse(params?.groupJoinMembers) : []
+
+  // console.log("selectedGroupMembers ", selectedGroupMembers)
+  // console.log("Single Join Value ", params?.singleJoin)
 
   // console.log("selectedCustomerBarberParse ddd ", selectedCustomerBarberParse)
 
@@ -592,7 +596,7 @@ const joinConfirmation = () => {
         salonId: authenticatedUser?.salonId,
         name: authenticatedUser?.name,
         customerEmail: authenticatedUser?.email,
-        joinedQType: "Single-Join",
+        singleJoinedQType: "Single-Join",
         methodUsed: "App",
         mobileCountryCode: authenticatedUser?.mobileCountryCode,
         mobileNumber: authenticatedUser?.mobileNumber.toString(),
@@ -617,6 +621,42 @@ const joinConfirmation = () => {
     }
   }
 
+  const [groupJoinLoader, setGroupJoinLoader] = useState(false)
+
+  const groupJoinPressed = async () => {
+    try {
+      const groupJoinData = {
+        salonId: authenticatedUser?.salonId,
+        groupInfo: selectedGroupMembers.map((item) => {
+          return {
+            barberId: item.selectedCustomerBarber.barberId,
+            barberName: item.selectedCustomerBarber.name,
+            customerEmail: authenticatedUser?.email,
+            joinedQType: "Group-Join",
+            methodUsed: "App",
+            mobileCountryCode: authenticatedUser?.mobileCountryCode,
+            mobileNumber: authenticatedUser?.mobileNumber,
+            name: item?.memberName,
+            services: item.selectCustomerServices
+          }
+        })
+      }
+
+      setGroupJoinLoader(true)
+
+      const { data } = await axios.post(`${BASE_URL}/mobileRoutes/groupJoinQueue`, groupJoinData)
+
+      Toast.success(data?.message)
+      setGroupJoinLoader(false)
+      router.replace("/queuelist")
+
+    } catch (error) {
+      setGroupJoinLoader(false)
+      Toast.error(error?.response?.data?.message)
+      console.log("Error doing group join ", error)
+    }
+  }
+
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -624,7 +664,7 @@ const joinConfirmation = () => {
       contentContainerStyle={{
         flexGrow: 1,
         paddingHorizontal: scale(15),
-        paddingVertical: Platform.OS === "ios" ? verticalScale(40) : verticalScale(15),
+        paddingVertical: Platform.OS === "ios" ? verticalScale(60) : verticalScale(15),
         justifyContent: "space-between",
       }}>
       <View style={{ gap: verticalScale(15) }}>
@@ -653,60 +693,119 @@ const joinConfirmation = () => {
           </CustomSecondaryText>
         </View>
 
-        <View style={[styles.card, { backgroundColor: "#0BA3AD1A", borderColor: colors.border }]}>
-          <View style={{ flexDirection: "row", alignItems: "center", gap: scale(10) }}>
-            <Image
-              style={{ height: moderateScale(55), width: moderateScale(55), borderRadius: moderateScale(30) }}
-              source={{ uri: selectedCustomerBarberParse?.profile?.[0]?.url }}
-              // placeholder={{ blurhash }}
-              contentFit="cover"
-              transition={300}
-            />
-            <CustomText>{selectedCustomerBarberParse?.name}</CustomText>
-          </View>
 
-          <View style={[styles.cardContent, {
-            // borderTopColor: colors.border 
-          }]}>
-            <View style={{ gap: scale(6) }}>
+        {
+          params?.singleJoin === "true" ? (
+            <View style={[styles.card, { backgroundColor: "#0BA3AD1A", borderColor: colors.border }]}>
+              <View style={{ flexDirection: "row", alignItems: "center", gap: scale(10) }}>
+                <Image
+                  style={{ height: moderateScale(55), width: moderateScale(55), borderRadius: moderateScale(30) }}
+                  source={{ uri: selectedCustomerBarberParse?.profile?.[0]?.url }}
+                  contentFit="cover"
+                  transition={300}
+                />
+                <CustomText>{selectedCustomerBarberParse?.name}</CustomText>
+              </View>
+
+
+              <View style={[styles.cardContent]}>
+                <View style={{ gap: scale(6) }}>
+                  {
+                    selectCustomerServicesParse?.map((ele, index) => {
+                      return (
+                        <CustomSecondaryText key={ele?.serviceId}>{index + 1}. {ele.serviceName}</CustomSecondaryText>
+                      )
+                    })
+                  }
+                </View>
+                <View style={{ gap: scale(6) }}>
+                  <CustomText style={{ textAlign: "center", fontSize: moderateScale(18) }}>{authenticatedUser?.currency} {selectCustomerServicesParse.reduce((acc, item) => acc + item.servicePrice, 0)}</CustomText>
+                  <View style={{ flexDirection: "row", alignItems: "center", gap: scale(5), }}>
+                    <ClockIcon size={moderateScale(14)} color={colors.secondaryText} />
+                    {
+                      params?.singleJoin ? (
+                        <CustomSecondaryText style={{ fontSize: scale(12) }}> {selectCustomerServicesParse.reduce((acc, item) => acc + item.serviceEWT, 0)} mins</CustomSecondaryText>
+                      ) : (
+                        <CustomSecondaryText style={{ fontSize: scale(12) }}>12:30 AM - 2:30 PM</CustomSecondaryText>
+                      )
+                    }
+
+                  </View>
+                </View>
+              </View>
+
+
               {
-                selectCustomerServicesParse?.map((ele, index) => {
+                !params?.singleJoin && (
+                  <View
+                    style={[styles.appointmentCardContent, { borderTopColor: colors.border }]}
+                  >
+                    <CustomText
+                      style={{
+                        fontSize: scale(9.16)
+                      }}
+                    >Hi! I’d like a quick haircut and beard trim. Please keep the sides short and tidy, and leave a bit of length on top. Looking forward to it!</CustomText>
+                  </View>
+                )
+              }
+            </View>
+          ) : (
+            <>
+              {
+                selectedGroupMembers?.map((item) => {
                   return (
-                    <CustomSecondaryText key={ele?.serviceId}>{index + 1}. {ele.serviceName}</CustomSecondaryText>
+                    <View
+                      key={item.id}
+                      style={[styles.card, { backgroundColor: "#0BA3AD1A", borderColor: colors.border }]}>
+                      <View style={{ flexDirection: "row", alignItems: "center", gap: scale(10) }}>
+                        <Image
+                          style={{ height: moderateScale(55), width: moderateScale(55), borderRadius: moderateScale(30) }}
+                          source={{ uri: item?.selectedCustomerBarber?.profile?.[0]?.url }}
+                          contentFit="cover"
+                          transition={300}
+                        />
+                        <View style={{ gap: verticalScale(5) }}>
+                          <CustomText>{item?.selectedCustomerBarber?.name}</CustomText>
+                          <CustomSecondaryText>{item.memberName}</CustomSecondaryText>
+                        </View>
+                      </View>
+
+
+                      <View style={[styles.cardContent]}>
+                        <View style={{ gap: scale(6) }}>
+                          {
+                            item?.selectCustomerServices?.map((ele, index) => {
+                              return (
+                                <CustomSecondaryText key={ele?.serviceId}>{index + 1}. {ele.serviceName}</CustomSecondaryText>
+                              )
+                            })
+                          }
+                        </View>
+                        <View style={{ gap: scale(6) }}>
+                          <CustomText style={{ textAlign: "center", fontSize: moderateScale(18) }}>{authenticatedUser?.currency} {item?.selectCustomerServices.reduce((acc, item) => acc + item.servicePrice, 0)}</CustomText>
+                          <View style={{ flexDirection: "row", alignItems: "center", gap: scale(5), }}>
+                            <ClockIcon size={moderateScale(14)} color={colors.secondaryText} />
+                            <CustomSecondaryText style={{ fontSize: scale(12) }}> {item?.selectCustomerServices.reduce((acc, item) => acc + item.serviceEWT, 0)} mins</CustomSecondaryText>
+                            {/* {
+                      params?.singleJoin ? (
+                        <CustomSecondaryText style={{ fontSize: scale(12) }}> {selectCustomerServicesParse.reduce((acc, item) => acc + item.serviceEWT, 0)} mins</CustomSecondaryText>
+                      ) : (
+                        <CustomSecondaryText style={{ fontSize: scale(12) }}>12:30 AM - 2:30 PM</CustomSecondaryText>
+                      )
+                    } */}
+
+                          </View>
+                        </View>
+                      </View>
+
+                    </View>
                   )
                 })
               }
-            </View>
-            <View style={{ gap: scale(6) }}>
-              <CustomText style={{ textAlign: "center", fontSize: moderateScale(18) }}>{authenticatedUser?.currency} {selectCustomerServicesParse.reduce((acc, item) => acc + item.servicePrice, 0)}</CustomText>
-              <View style={{ flexDirection: "row", alignItems: "center", gap: scale(5), }}>
-                <ClockIcon size={moderateScale(14)} color={colors.secondaryText} />
-                {
-                  params?.join ? (
-                    <CustomSecondaryText style={{ fontSize: scale(12) }}> {selectCustomerServicesParse.reduce((acc, item) => acc + item.serviceEWT, 0)} mins</CustomSecondaryText>
-                  ) : (
-                    <CustomSecondaryText style={{ fontSize: scale(12) }}>12:30 AM - 2:30 PM</CustomSecondaryText>
-                  )
-                }
 
-              </View>
-            </View>
-          </View>
-
-          {
-            !params?.join && (
-              <View
-                style={[styles.appointmentCardContent, { borderTopColor: colors.border }]}
-              >
-                <CustomText
-                  style={{
-                    fontSize: scale(9.16)
-                  }}
-                >Hi! I’d like a quick haircut and beard trim. Please keep the sides short and tidy, and leave a bit of length on top. Looking forward to it!</CustomText>
-              </View>
-            )
-          }
-        </View>
+            </>
+          )
+        }
 
         <View
           style={{
@@ -893,15 +992,16 @@ const joinConfirmation = () => {
           //   }
           // }}
 
-          onPress={singleJoinPressed}
+          onPress={params?.singleJoin === "true" ? singleJoinPressed : groupJoinPressed}
           style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode }]}>
           {
-            singleJoinLoader ? (
+            (singleJoinLoader || groupJoinLoader) ? (
               <ActivityIndicator size="small" color="#fff" />
             ) : (
               <CustomText style={{ color: "#fff" }}>Confirm</CustomText>
             )
           }
+
         </Pressable>
 
       </View>
@@ -910,7 +1010,7 @@ const joinConfirmation = () => {
   )
 }
 
-export default joinConfirmation
+export default singleJoinConfirmation
 
 const styles = StyleSheet.create({
   heading: {

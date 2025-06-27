@@ -44,8 +44,8 @@ const passwordConfirmation = () => {
     const [progressTwo, setProgressTwo] = useState(0.5)
     const [progressThree, setProgressThree] = useState(0)
 
-    const [password, setPassword] = useState("qwertyui")
-    const [confirmPassword, setConfirmPassword] = useState("qwertyui")
+    const [password, setPassword] = useState("")
+    const [confirmPassword, setConfirmPassword] = useState("")
 
     const [passwordError, setPasswordError] = useState("")
     const [confirmPasswordError, setConfirmPasswordError] = useState("")
