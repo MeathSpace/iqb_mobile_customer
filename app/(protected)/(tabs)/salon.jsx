@@ -16,6 +16,7 @@ import axios from 'axios';
 import { BASE_URL } from '@/utils/api';
 import { useAuth } from '../../../context/AuthContext';
 import Skeleton from '../../../components/Skeleton';
+import { Toast } from 'toastify-react-native'
 
 const SalonItem = ({ item }) => {
 
@@ -54,7 +55,8 @@ const salon = () => {
 
                     const { data } = await axios.get(`${BASE_URL}/mobileRoutes/getSalonInfoBySalonId`, {
                         params: {
-                            salonId: authenticatedUser?.salonId
+                            salonId: authenticatedUser?.salonId,
+                            customerEmail: authenticatedUser?.email
                         }
                     })
 
@@ -69,7 +71,7 @@ const salon = () => {
 
             fetchSalonInfo()
 
-        }, [])
+        }, [authenticatedUser])
     )
 
     // console.log("salonInfoData ", salonInfoData?.data?.salonInfo?.gallery)
@@ -466,6 +468,13 @@ const salon = () => {
         success: false
     })
 
+    const [salonServicesCategoryData, setSalonServicesCategoryData] = useState({
+        data: null,
+        loading: false,
+        error: null,
+        success: false
+    })
+
     useFocusEffect(
         useCallback(() => {
             const fetchServiceCategoryData = async () => {
@@ -485,11 +494,108 @@ const salon = () => {
 
             fetchServiceCategoryData()
 
-        }, [authenticatedUser])
+            if (serviceCategorySelected.selected && serviceCategorySelected.categoryName) {
+                const fetchSalonServicesByCategory = async () => {
+                    try {
+
+                        setSalonServicesCategoryData((prev) => ({ ...prev, loading: true }))
+
+                        const { data } = await axios.get(`${BASE_URL}/mobileRoutes/getSalonServicesByCategory`, {
+                            params: {
+                                salonId: authenticatedUser?.salonId,
+                                serviceCategoryName: serviceCategorySelected.categoryName
+                            }
+                        })
+
+                        setSalonServicesCategoryData((prev) => ({ ...prev, loading: false, data: data?.response, success: true, error: null }))
+
+                    } catch (error) {
+                        setSalonServicesCategoryData((prev) => ({ ...prev, loading: false, data: null, success: false, error: error }))
+                        console.error("Error fetching salon services category data: ", error)
+                    }
+                }
+
+                fetchSalonServicesByCategory()
+            }
+
+
+        }, [authenticatedUser, serviceCategorySelected])
     )
 
+    const [selectCustomerServices, setSelectedCustomerServices] = useState([])
+    const [selectedCustomerBarber, setSelectedCustomerBarber] = useState(null)
 
-    // console.log("Barbers ", salonInfoData?.data?.barbers)
+    const addServiceHandler = (service) => {
+        const updatedSalonServices = salonServicesCategoryData?.data?.map((item) => {
+            return item?.serviceId === service?.serviceId ? { ...service, selected: true } : item
+        })
+
+        setSalonServicesCategoryData({
+            data: updatedSalonServices,
+            loading: false,
+            error: null,
+            success: false
+        })
+
+        setSelectedCustomerServices([...selectCustomerServices, service])
+    }
+
+    const removeServiceHandler = (service) => {
+        const updatedSalonServices = salonServicesCategoryData?.data?.map((item) => {
+            return item?.serviceId === service?.serviceId ? { ...service, selected: false } : item
+        })
+
+        setSalonServicesCategoryData({
+            data: updatedSalonServices,
+            loading: false,
+            error: null,
+            success: false
+        })
+
+        setSelectedCustomerServices((prev) => {
+
+            const filteredArray = prev.filter((item) => {
+                return item?.serviceId !== service?.serviceId
+            })
+
+            return filteredArray
+        })
+    }
+
+    const [favouriteLoader, setFavouriteLoader] = useState(false)
+
+    const addToFavourites = async () => {
+        try {
+
+            setFavouriteLoader(true)
+
+            const { data } = await axios.post(`${BASE_URL}/customer/customerFavouriteSalon`, {
+                email: authenticatedUser?.email,
+                salonId: authenticatedUser?.salonId
+            })
+
+            setFavouriteLoader(false)
+
+            setSalonInfoData({
+                ...salonInfoData,
+                data: {
+                    ...salonInfoData.data,
+                    salonInfo: {
+                        ...salonInfoData.data.salonInfo,
+                        isFavourite: true
+                    }
+                }
+            });
+
+            Toast.success("Successfully added to favourites")
+
+        } catch (error) {
+            setFavouriteLoader(false)
+            Toast.show({ type: "error", text1: error?.response?.data?.message || "Something went wrong" });
+            console.log("Error in favourite salon ", error);
+        }
+    }
+
 
     return (
         <CustomTabView
@@ -609,16 +715,21 @@ const salon = () => {
                     >
                         <CustomText>Add to Favorites</CustomText>
                         <Pressable
+                            disabled={favouriteLoader}
+                            onPress={addToFavourites}
                             style={{
                                 width: scale(30),
                                 height: scale(30),
-                                backgroundColor: "#E11D481A",
+                                // backgroundColor: "#E11D481A",
                                 justifyContent: "center",
                                 alignItems: "center",
                                 borderRadius: scale(4)
                             }}
                         >
-                            <HeartFilledIcon size={scale(16)} color='#E11D48' />
+
+                            {
+                                salonInfoData?.data?.salonInfo?.isFavourite ? <HeartFilledIcon size={scale(16)} color='#E11D48' /> : <HeartIcon size={scale(16)} color='#E11D48' />
+                            }
                         </Pressable>
                     </View>
 
@@ -949,7 +1060,7 @@ const salon = () => {
                                             >Hair Cutting</CustomText>
                                         </Pressable>
 
-                                        {
+                                        {/* {
                                             [0, 1, 2, 3, 4, 5, 6, 7, 8].map((item, index) => {
                                                 return (
 
@@ -1091,6 +1202,160 @@ const salon = () => {
                                                                         color: Colors.modeColor.colorCode
                                                                     }}
                                                                 >$49.00</CustomText>
+                                                            </View>
+                                                        </View>
+                                                    </Pressable >
+                                                )
+                                            })
+                                        } */}
+
+                                        {
+                                            salonServicesCategoryData?.data?.map((item, index) => {
+                                                return (
+                                                    <Pressable
+                                                        key={item?.serviceId}
+                                                        style={{
+                                                            borderRadius: scale(10),
+                                                            backgroundColor: "#00B0901A",
+                                                            padding: scale(12),
+                                                            gap: verticalScale(10)
+                                                        }}
+                                                    >
+                                                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                                                            <View
+                                                                style={{
+                                                                    flexDirection: "row",
+                                                                    alignItems: "center",
+                                                                    gap: scale(10)
+                                                                }}
+                                                            >
+
+                                                                {
+                                                                    item?.selected ? (
+                                                                        <View
+                                                                            style={{
+                                                                                height: scale(50),
+                                                                                width: scale(50),
+                                                                                borderRadius: scale(80),
+                                                                                backgroundColor: "rgba(0,0,0,0.4)",
+                                                                                position: "relative"
+                                                                            }}
+                                                                        >
+                                                                            <Image
+                                                                                style={{ height: scale(50), width: scale(50), borderRadius: scale(80), zIndex: -1 }}
+                                                                                source={{ uri: item?.serviceIcon?.url }}
+                                                                                // placeholder={{ blurhash }}
+                                                                                contentFit="cover"
+                                                                                transition={300}
+                                                                            />
+                                                                            <CheckIcon
+                                                                                color='#fff'
+                                                                                style={{
+                                                                                    position: "absolute",
+                                                                                    top: scale(14),
+                                                                                    left: scale(14)
+                                                                                }}
+                                                                            />
+                                                                        </View>
+                                                                    ) : (
+                                                                        <Image
+                                                                            style={{ height: scale(50), width: scale(50), borderRadius: scale(80) }}
+                                                                            source={{ uri: item?.serviceIcon?.url }}
+                                                                            // placeholder={{ blurhash }}
+                                                                            contentFit="cover"
+                                                                            transition={300}
+                                                                        />
+                                                                    )
+                                                                }
+
+                                                                <View style={{ gap: verticalScale(5) }}>
+                                                                    <CustomText style={{
+                                                                        fontSize: scale(12),
+                                                                        fontFamily: "AirbnbCereal_W_Bd"
+                                                                    }}>{item?.serviceName}</CustomText>
+                                                                    <Pressable
+                                                                        style={{
+                                                                            height: verticalScale(15),
+                                                                            width: scale(50),
+                                                                            backgroundColor: "#00B0901A",
+                                                                            borderRadius: scale(4),
+                                                                            justifyContent: "center",
+                                                                            alignItems: "center"
+                                                                        }}
+                                                                    ><CustomText style={{ fontSize: scale(10), color: "#00B090" }}>{item?.serviceCategoryName}</CustomText></Pressable>
+                                                                </View>
+                                                            </View>
+
+                                                            {
+                                                                item?.selected ? (
+                                                                    <Pressable
+                                                                        onPress={() => removeServiceHandler(item)}
+                                                                        style={{
+                                                                            height: verticalScale(20),
+                                                                            width: scale(60),
+                                                                            backgroundColor: "#E11D48",
+                                                                            borderRadius: scale(4),
+                                                                            justifyContent: "center",
+                                                                            alignItems: "center"
+                                                                        }}
+                                                                    ><CustomText style={{ fontSize: scale(12), color: "#fff" }}>Remove</CustomText>
+                                                                    </Pressable>
+                                                                ) : (
+                                                                    <Pressable
+                                                                        onPress={() => addServiceHandler(item)}
+                                                                        style={{
+                                                                            height: verticalScale(20),
+                                                                            width: scale(55),
+                                                                            backgroundColor: "#1f2937",
+                                                                            borderRadius: scale(4),
+                                                                            justifyContent: "center",
+                                                                            alignItems: "center"
+                                                                        }}
+                                                                    ><CustomText style={{ fontSize: scale(12), color: "#fff" }}>Add</CustomText>
+                                                                    </Pressable>
+                                                                )
+                                                            }
+                                                        </View>
+
+                                                        <View style={{ marginTop: verticalScale(5), gap: verticalScale(5) }}>
+                                                            <CustomText
+                                                                style={{
+                                                                    color: "gray",
+                                                                    fontSize: scale(12)
+                                                                }}
+                                                            >{item?.serviceDesc}</CustomText>
+
+                                                            <View
+                                                                style={{
+                                                                    flexDirection: "row",
+                                                                    alignItems: "center",
+                                                                    justifyContent: "space-between"
+                                                                }}
+                                                            >
+                                                                <View style={{
+                                                                    flexDirection: "row",
+                                                                    alignItems: "center",
+                                                                    justifyContent: "space-between",
+                                                                    width: scale(75),
+                                                                    gap: scale(2),
+                                                                    backgroundColor: colors.background,
+                                                                    paddingHorizontal: scale(5),
+                                                                    borderRadius: scale(4)
+                                                                }}>
+                                                                    <ClockIcon size={scale(12)} color={Colors.modeColor.colorCode} />
+                                                                    <CustomText style={{ fontSize: scale(12), flex: 1, color: Colors.modeColor.colorCode }}>{item?.serviceEWT} mins</CustomText>
+                                                                </View>
+
+                                                                {/* Currency should also be added in authenticated user response */}
+                                                                {/* Service Price doesnot have point value */}
+
+                                                                <CustomText
+                                                                    style={{
+                                                                        fontFamily: "AirbnbCereal_W_Blk",
+                                                                        fontSize: scale(18),
+                                                                        color: Colors.modeColor.colorCode
+                                                                    }}
+                                                                >{authenticatedUser?.currency} {item?.servicePrice}</CustomText>
                                                             </View>
                                                         </View>
                                                     </Pressable >

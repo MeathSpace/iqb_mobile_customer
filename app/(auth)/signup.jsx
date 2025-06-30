@@ -152,9 +152,9 @@ const signup = () => {
             }
 
             checkEmail()
-
         }
     }, [isSignedIn, router, user])
+
 
 
     return (
@@ -224,8 +224,14 @@ const signup = () => {
                     </View>
 
                     <Pressable
-                        // onPress={() => googleSignUp}
-                        onPress={googleSignupPressed}
+                        onPress={async() => {
+                            if(isSignedIn){
+                                await signOut()
+                                googleSignupPressed()
+                            }else{
+                                googleSignupPressed()
+                            }
+                        }}
                         style={
                             [styles.auth_btn,
                             {

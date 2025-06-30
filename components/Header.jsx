@@ -62,7 +62,7 @@ const Header = () => {
 
     const router = useRouter()
 
-    console.log("authenticatedUser ", authenticatedUser)
+    // console.log("authenticatedUser ", authenticatedUser)
 
 
     return (

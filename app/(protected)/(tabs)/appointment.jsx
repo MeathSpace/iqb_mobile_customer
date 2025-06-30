@@ -1,13 +1,16 @@
 import { FlatList, Platform, Pressable, StyleSheet, Text, View } from 'react-native'
-import React, { useState } from 'react'
+import React, { useCallback, useState } from 'react'
 import CustomText from '../../../components/CustomText';
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 import { Colors } from '../../../constants/Colors';
-import { useRouter } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 import { useGlobal } from '../../../context/GlobalContext';
 import { Image } from 'expo-image';
 import { ClockIcon, FilterIcon } from '../../../constants/icons';
 import CustomTabView from '../../../components/CustomTabView';
+import { useAuth } from '../../../context/AuthContext';
+import axios from 'axios';
+import { BASE_URL } from '@/utils/api';
 
 const appointment = () => {
 
@@ -76,6 +79,42 @@ const appointment = () => {
       color: "#E11D48"
     },
   ]
+
+  const { authenticatedUser } = useAuth()
+
+  const [appointmentListData, setAppointmentListData] = useState({
+    data: null,
+    loading: false,
+    error: null,
+    success: false
+  })
+
+  useFocusEffect(
+    useCallback(() => {
+      const fetchAppointmentList = async () => {
+        try {
+
+          setAppointmentListData((prev) => ({ ...prev, loading: true }))
+
+          const { data } = await axios.post(`${BASE_URL}/mobileRoutes/getAllCustomerAppointments`, {
+            salonId: authenticatedUser?.salonId,
+            customerEmail: authenticatedUser?.email
+          })
+
+          console.log("Upcomming Appointment ", data)
+
+          // setAppointmentListData((prev) => ({ ...prev, loading: false, data: data?.response, success: true, error: null }))
+
+        } catch (error) {
+
+          setAppointmentListData((prev) => ({ ...prev, loading: false, data: null, success: false, error: error }))
+          console.log("Error fetching appointment list ", error)
+        }
+      }
+
+      fetchAppointmentList()
+    }, [authenticatedUser])
+  )
 
   return (
     <CustomTabView

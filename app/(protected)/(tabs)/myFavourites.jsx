@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useCallback, useState } from 'react';
 import {
+    Alert,
     FlatList,
     Platform,
     Pressable,
@@ -14,10 +15,51 @@ import CustomTabView from '../../../components/CustomTabView';
 import { ArrowLeftIcon, CarIcon, ExternalLinkIcon, HeartFilledIcon, HeartIcon } from '../../../constants/icons';
 import { Image } from 'expo-image';
 import CustomText from '../../../components/CustomText';
-import { useRouter } from 'expo-router';
+import { useFocusEffect, useRouter } from 'expo-router';
 import { useTheme } from '@react-navigation/native';
+import { useAuth } from '../../../context/AuthContext';
+import axios from 'axios';
+import { BASE_URL } from '@/utils/api';
+import { Toast } from 'toastify-react-native'
+import Skeleton from '../../../components/Skeleton';
 
 const MyFavourites = () => {
+
+    const { authenticatedUser } = useAuth()
+
+    const [favouriteSalonData, setFavouriteSalonData] = useState({
+        data: null,
+        loading: false,
+        error: null,
+        success: false
+    })
+
+
+    useFocusEffect(
+        useCallback(() => {
+            const fetchFavouriteSalons = async () => {
+                try {
+
+                    setFavouriteSalonData((prev) => ({ ...prev, loading: true }))
+
+                    const { data } = await axios.post(`${BASE_URL}/customer/getCustomerFavouriteSalon`, {
+                        customerEmail: authenticatedUser?.email
+                    })
+
+                    setFavouriteSalonData((prev) => ({ ...prev, loading: false, data: data?.response, success: true, error: null }))
+
+                } catch (error) {
+
+                    setFavouriteSalonData((prev) => ({ ...prev, loading: false, data: null, success: false, error: error }))
+                    console.log("Error fetching queue list ", error)
+                }
+            }
+
+            fetchFavouriteSalons()
+        }, [authenticatedUser])
+    )
+
+
     const salonData = [
         {
             id: '1',
@@ -53,63 +95,126 @@ const MyFavourites = () => {
 
     const { colors } = useTheme()
 
+    const confirmAndDeleteFavouriteSalon = (item) => {
+        Alert.alert(
+            "Remove Favourite Salon",
+            "Are you sure you want to remove this salon from your favourites?",
+            [
+                {
+                    text: "Cancel",
+                    style: "cancel"
+                },
+                {
+                    text: "Yes, Remove",
+                    onPress: () => deleteCustomerFavouriteSalon(item),
+                    style: "destructive"
+                }
+            ],
+            { cancelable: true }
+        );
+    }
+
+    const deleteCustomerFavouriteSalon = async (item) => {
+        try {
+            const { data } = await axios.post(`${BASE_URL}/customer/deleteCustomerFavouriteSalon`, {
+                salonId: item?.salonId,
+                email: authenticatedUser.email
+            });
+
+            Toast.success(data?.message);
+
+            setFavouriteSalonData((prev) => ({
+                loading: false,
+                data: prev?.data?.filter((salon) => salon._id !== item._id),
+                success: true,
+                error: null
+            }))
+
+        } catch (error) {
+            Toast.error(error?.response?.data?.message || "Something went wrong");
+            console.log("Error in favourite salon ", error);
+        }
+    }
+
+
     return (
         <CustomTabView
             style={{
                 paddingBottom: Platform.OS === "ios" ? verticalScale(80) : verticalScale(0)
             }}>
 
-            <FlatList
-                contentContainerStyle={styles.listContainer}
-                data={salonData}
-                renderItem={({ item }) => (
-                    <View
-                        style={{
-                            // height: verticalScale(270),
-                            width: "100%",
-                            borderRadius: scale(8),
-                            // borderColor: "#E11D48",
-                            // borderWidth: scale(1),
-                            borderColor: "gray",
-                            position: "relative",
+            {
+                favouriteSalonData?.loading ? (
+                    [0, 1, 2, 3, 4, 5].map((_, index) => {
+                        return (
+                            <Skeleton
+                                key={index}
+                                width='95%'
+                                height={verticalScale(140)}
+                                style={{
+                                    borderRadius: scale(8),
+                                    marginHorizontal: "auto",
+                                    marginBottom: verticalScale(10)
+                                }}
+                            />
+                        )
+                    })
+                ) : favouriteSalonData?.data?.length > 0 ? (
+                    <FlatList
+                        contentContainerStyle={styles.listContainer}
+                        data={favouriteSalonData?.data}
+                        renderItem={({ item }) => (
+                            <View
+                                style={{
+                                    width: "100%",
+                                    borderRadius: scale(8),
+                                    borderColor: "gray",
+                                    position: "relative",
 
-                        }}
-                    >
-                        <Image
-                            style={{
-                                height: verticalScale(130),
-                                borderTopLeftRadius: scale(7),
-                                borderTopRightRadius: scale(7),
-                            }}
-                            source={{ uri: item.image }}
-                            contentFit="cover"
-                            transition={1000}
-                        />
-                        <View style={{
-                            flex: 1,
-                            // paddingHorizontal: scale(15),
-                            flexDirection: "row",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                            backgroundColor: colors.background,
-                            padding: scale(10),
-                            borderBottomLeftRadius: scale(7),
-                            borderBottomRightRadius: scale(7),
-                        }}>
-                            <View style={{ gap: verticalScale(4) }}>
-                                <CustomText
+                                }}
+                            >
+                                <Image
                                     style={{
-                                        // fontFamily: "AirbnbCereal_W_"
+                                        height: verticalScale(130),
+                                        borderTopLeftRadius: scale(7),
+                                        borderTopRightRadius: scale(7),
                                     }}
-                                >The Beauty Lounge</CustomText>
-                                <CustomText
-                                    style={{
-                                        color: "gray",
-                                        fontSize: scale(12),
-                                        // width: "80%",
-                                    }}
-                                >30 Elliot Rd, Selly Oak, Birmingham, UK, B29 4AQ</CustomText>
-                                <View style={{ flexDirection: "row", alignItems: "center", gap: scale(10) }}>
+                                    source={{ uri: item?.gallery?.[0]?.url }}
+                                    contentFit="cover"
+                                    transition={1000}
+                                />
+                                <View style={{
+                                    flex: 1,
+                                    backgroundColor: colors.background,
+                                    padding: scale(10),
+                                    borderBottomLeftRadius: scale(7),
+                                    borderBottomRightRadius: scale(7),
+                                }}>
+                                    <View style={{ gap: verticalScale(4) }}>
+                                        <View
+                                            style={{ flexDirection: "row", alignItems: "center", gap: scale(5) }}
+                                        >
+                                            
+                                            <Image
+                                                style={{
+                                                    width: scale(35),
+                                                    height: scale(35),
+                                                    borderRadius: scale(40)
+                                                }}
+                                                source={{ uri: item?.salonLogo?.[0]?.url }}
+                                                contentFit="cover"
+                                                transition={300}
+                                            />
+                                            <CustomText>{item?.salonName}</CustomText>
+                                        </View>
+                                        <CustomText
+                                            style={{
+                                                color: "gray",
+                                                fontSize: scale(12),
+                                            }}
+                                        >{item?.address}, {item?.city}, {item?.country}</CustomText>
+
+                                        {/* <View style={{ flexDirection: "row", alignItems: "center", gap: scale(10) }}>
                                     <CarIcon size={scale(16)} color={colors.text} />
                                     <CustomText
                                         style={{
@@ -118,33 +223,49 @@ const MyFavourites = () => {
                                             fontSize: scale(12),
                                         }}
                                     >2.1 miles away</CustomText>
+                                </View> */}
+
+                                    </View>
+
                                 </View>
 
+                                <Pressable
+                                    onPress={() => {
+                                        confirmAndDeleteFavouriteSalon(item)
+                                    }}
+                                    style={{
+                                        position: "absolute",
+                                        top: verticalScale(10),
+                                        right: scale(10),
+                                        backgroundColor: colors.background,
+                                        borderRadius: scale(20),
+                                        padding: scale(8),
+                                        justifyContent: "center",
+                                        alignItems: "center",
+                                    }}
+                                ><HeartFilledIcon size={scale(16)} color={"#E11D48"} />
+                                </Pressable>
+
                             </View>
+                        )}
+                        keyExtractor={(item) => item._id}
+                        showsVerticalScrollIndicator={false}
+                    />
 
-                            {/* <View style={{ flexDirection: "row", alignItems: "center", gap: scale(20) }}>
-                                <ExternalLinkIcon size={scale(18)} color={"#E11D48"} />
-                            </View> */}
-                        </View>
-
-                        <View
-                            style={{
-                                position: "absolute",
-                                top: verticalScale(10),
-                                right: scale(10),
-                                backgroundColor: colors.background,
-                                borderRadius: scale(20),
-                                padding: scale(8),
-                                justifyContent: "center",
-                                alignItems: "center",
-                            }}
-                        ><HeartFilledIcon size={scale(16)} color={"#E11D48"} /></View>
-
+                ) : (
+                    <View
+                        style={{
+                            flex: 1,
+                            justifyContent: "center",
+                            alignItems: "center",
+                        }}
+                    >
+                        <CustomText>No Favourite salon available</CustomText>
                     </View>
-                )}
-                keyExtractor={(item) => item.id}
-                showsVerticalScrollIndicator={false}
-            />
+                )
+            }
+
+
         </CustomTabView>
     );
 };

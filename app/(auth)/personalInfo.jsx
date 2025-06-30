@@ -21,8 +21,8 @@ const personalInfo = () => {
 
     const { email, authType } = useLocalSearchParams();
 
-    console.log("email ", email)
-    console.log("authType ", authType ?? "none")
+    // console.log("email ", email)
+    // console.log("authType ", authType ?? "none")
 
     const colorScheme = useColorScheme()
 

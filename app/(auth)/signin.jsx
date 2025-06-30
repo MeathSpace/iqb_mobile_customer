@@ -84,6 +84,8 @@ const signin = () => {
                 password
             })
 
+            console.log("Signin dsvsd ", data)
+
             setSignInData((prev) => ({ ...prev, loading: false, user: data?.response, success: true, error: null }))
 
             if (rememberMe) {
@@ -146,30 +148,6 @@ const signin = () => {
 
         if (isSignedIn) {
             const handleAuth = async () => {
-                // try {
-                // if (rememberMe) {
-                //     await AsyncStorage.setItem("isAuthenticated", JSON.stringify(true));
-                //     await AsyncStorage.setItem("LoggedInUser", JSON.stringify({
-                //         name: user?.firstName,
-                //         email: user?.primaryEmailAddress?.emailAddress,
-                //         imageUrl: user?.imageUrl
-                //     }))
-                // } else {
-                //     signOut()
-                // }
-
-                //     setAuthenticatedUser({
-                //         name: user?.firstName,
-                //         email: user?.primaryEmailAddress?.emailAddress,
-                //         imageUrl: user?.imageUrl
-                //     })
-                //     setIsAuthenticated(true);
-                //     router.replace("/home");
-                // } catch (error) {
-                //     signOut()
-                //     console.error("Error saving to AsyncStorage", error);
-                // }
-
                 try {
                     // setSignInData((prev) => ({ ...prev, loading: true }))
 
@@ -189,7 +167,7 @@ const signin = () => {
 
                     if (rememberMe) {
                         await AsyncStorage.setItem("isAuthenticated", JSON.stringify(true))
-                    }else{
+                    } else {
                         signOut()
                     }
 
@@ -221,7 +199,8 @@ const signin = () => {
 
     }, [isSignedIn, router, rememberMe, user]);
 
-    // console.log("Authenticated user ", user)
+
+
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
