@@ -6,11 +6,14 @@ import { Colors } from '../../../constants/Colors';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useGlobal } from '../../../context/GlobalContext';
 import { Image } from 'expo-image';
-import { ClockIcon, FilterIcon } from '../../../constants/icons';
+import { CalendarIcon, ClockIcon, FilterIcon } from '../../../constants/icons';
 import CustomTabView from '../../../components/CustomTabView';
 import { useAuth } from '../../../context/AuthContext';
 import axios from 'axios';
 import { BASE_URL } from '@/utils/api';
+import Skeleton from '../../../components/Skeleton';
+import { useTheme } from '@react-navigation/native';
+import CustomSecondaryText from '../../../components/CustomSecondaryText';
 
 const appointment = () => {
 
@@ -28,7 +31,7 @@ const appointment = () => {
   ])
 
   const router = useRouter()
-  const { setJoinModes, joinModes } = useGlobal();
+  const { setJoinModes, joinModes, applyAppointmentFilter, setApplyAppointmentFilter } = useGlobal();
 
   const appData = [
     {
@@ -91,30 +94,38 @@ const appointment = () => {
 
   useFocusEffect(
     useCallback(() => {
-      const fetchAppointmentList = async () => {
-        try {
 
-          setAppointmentListData((prev) => ({ ...prev, loading: true }))
+      if (applyAppointmentFilter.open) {
+        const fetchAppointmentList = async () => {
+          try {
 
-          const { data } = await axios.post(`${BASE_URL}/mobileRoutes/getAllCustomerAppointments`, {
-            salonId: authenticatedUser?.salonId,
-            customerEmail: authenticatedUser?.email
-          })
+            setAppointmentListData((prev) => ({ ...prev, loading: true }))
 
-          console.log("Upcomming Appointment ", data)
+            const { data } = await axios.post(`${BASE_URL}/mobileRoutes/getAllCustomerAppointments`, {
+              salonId: authenticatedUser?.salonId,
+              customerEmail: authenticatedUser?.email,
+              status: applyAppointmentFilter.selectedTab
+            })
 
-          // setAppointmentListData((prev) => ({ ...prev, loading: false, data: data?.response, success: true, error: null }))
+            console.log("Upcomming Appointment ", data)
 
-        } catch (error) {
+            setAppointmentListData((prev) => ({ ...prev, loading: false, data: data?.response, success: true, error: null }))
 
-          setAppointmentListData((prev) => ({ ...prev, loading: false, data: null, success: false, error: error }))
-          console.log("Error fetching appointment list ", error)
+          } catch (error) {
+
+            setAppointmentListData((prev) => ({ ...prev, loading: false, data: null, success: false, error: error }))
+            console.log("Error fetching appointment list ", error)
+          }
         }
+
+        fetchAppointmentList()
       }
 
-      fetchAppointmentList()
-    }, [authenticatedUser])
+
+    }, [authenticatedUser, applyAppointmentFilter])
   )
+
+  const { colors } = useTheme()
 
   return (
     <CustomTabView
@@ -139,141 +150,203 @@ const appointment = () => {
 
             case 'header':
               return (
-                <View style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  gap: scale(10)
-                }}>
-                  <Pressable
-                    style={{
-                      height: verticalScale(40),
-                      flex: 1,
-                      backgroundColor: Colors.modeColor.colorCode,
-                      marginHorizontal: "auto",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      borderRadius: scale(4),
-                      marginTop: verticalScale(10)
-                    }}
-                    onPress={() => {
-                      setJoinModes((prev) => ({ ...prev, appointment: true, appointmentType: "Book" }))
-                      router.push("/appointmentCalendar")
-                      // router.push("/appointmentCalender")
-                    }}
-                  >
-                    <CustomText style={{ color: "#fff" }}>Book Appointment</CustomText>
-                  </Pressable>
-                  <Pressable
-                    onPress={() => router.push("/appointmentFilter")}
-                    style={{
-                      height: verticalScale(40),
-                      width: verticalScale(40),
-                      backgroundColor: "#0BA3AD1A",
-                      marginHorizontal: "auto",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      borderRadius: scale(4),
-                      marginTop: verticalScale(10)
-                    }}
-                  >
-                    <FilterIcon color={Colors.modeColor.colorCode} />
-                  </Pressable>
-                </View>
+                appointmentListData?.data?.length > 0 ? (
+                  <View style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: scale(10)
+                  }}>
+                    <Pressable
+                      style={{
+                        height: verticalScale(40),
+                        flex: 1,
+                        backgroundColor: Colors.modeColor.colorCode,
+                        marginHorizontal: "auto",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        borderRadius: scale(4),
+                        marginTop: verticalScale(10)
+                      }}
+                      onPress={() => {
+                        setJoinModes((prev) => ({ ...prev, appointment: true, appointmentType: "Book" }))
+                        router.push("/appointmentCalendar")
+                        // router.push("/appointmentCalender")
+                      }}
+                    >
+                      <CustomText style={{ color: "#fff" }}>Book Appointment</CustomText>
+                    </Pressable>
+                    <Pressable
+                      onPress={() => router.push("/appointmentFilter")}
+                      style={{
+                        height: verticalScale(40),
+                        width: verticalScale(40),
+                        backgroundColor: "#0BA3AD1A",
+                        marginHorizontal: "auto",
+                        justifyContent: "center",
+                        alignItems: "center",
+                        borderRadius: scale(4),
+                        marginTop: verticalScale(10)
+                      }}
+                    >
+                      <FilterIcon color={Colors.modeColor.colorCode} />
+                    </Pressable>
+                  </View>
+                ) : null
+
               )
 
             case 'list':
               return (
                 <View style={{
-                  flexGrow: 1
+                  flex: 1,
                 }}>
+
                   {
-                    appData.map((item, index) => {
-                      return (
-                        <View
-                          key={index}
-                          style={{
-                            flexDirection: "row",
-                            justifyContent: "space-between",
-                            alignItems: "center",
-                            minHeight: verticalScale(75),
-                            // borderBottomColor: appData.length - 1 !== index && "#0BA3AD1A",
-                            // borderBottomWidth: appData.length - 1 !== index && scale(1)
-                          }}>
+                    appointmentListData?.loading ? (
 
-                          <View style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            gap: scale(10)
-                          }}>
-                            <View style={{
-                              position: "relative"
+                      [0, 1, 2, 3, 4, 5].map((item) => {
+                        return (
+                          <Skeleton
+                            key={item}
+                            height={verticalScale(80)}
+                            borderRadius={scale(4)}
+                            style={{
+                              marginVertical: verticalScale(5)
+                            }}
+                          />
+                        )
+                      })
+
+                    ) : appointmentListData?.data?.length > 0 ? (
+                      appointmentListData?.data?.map((item, index) => {
+                        return (
+                          <View
+                            key={item?._id}
+                            style={{
+                              flexDirection: "row",
+                              justifyContent: "space-between",
+                              alignItems: "center",
+                              minHeight: verticalScale(75),
+                              // borderBottomColor: appData.length - 1 !== index && "#0BA3AD1A",
+                              // borderBottomWidth: appData.length - 1 !== index && scale(1)
                             }}>
-                              <Image
-                                style={{ height: scale(50), width: scale(50), borderRadius: moderateScale(30) }}
-                                source={{ uri: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg" }}
-                                // placeholder={{ blurhash }}
-                                contentFit="cover"
-                                transition={300}
-                              />
-                              {/* <View
-                              style={{
-                                position: "absolute",
-                                bottom: verticalScale(-5),
-                                right: scale(-15),
-                                height: verticalScale(12),
-                                paddingInline: scale(3),
-                                backgroundColor: "#fff",
-                                borderRadius: scale(20),
-                                borderColor: Colors.modeColor.colorCode,
-                                borderWidth: scale(1),
-                                justifyContent: "center",
-                                alignItems: "center"
-                              }}
-                            >
-                              <CustomText style={{ fontSize: scale(8), color: Colors.modeColor.colorCode }}>Upcoming</CustomText>
-                            </View> */}
-                            </View>
 
-
-                            <View style={{ gap: verticalScale(8) }}>
-                              <CustomText style={{ fontSize: scale(14) }}>Michael Swath</CustomText>
-                              <View
-                                style={{
-                                  height: verticalScale(15),
-                                  paddingHorizontal: scale(5),
-                                  borderRadius: scale(4),
-                                  backgroundColor: item.backgroundColor,
-                                  justifyContent: "center",
-                                  alignItems: "center",
-                                  alignSelf: "flex-start"
-                                }}
-                              ><CustomText style={{
-                                color: item.color,
-                                fontSize: scale(10),
-                              }}>{item.type}</CustomText></View>
-                            </View>
-
-                          </View>
-
-                          <View style={{ gap: verticalScale(5) }}>
                             <View style={{
                               flexDirection: "row",
                               alignItems: "center",
-                              gap: scale(2),
-                              // flex: 1
+                              gap: scale(10)
                             }}>
-                              <ClockIcon size={scale(12)} color='gray' />
-                              <CustomText style={{ fontSize: scale(12), color: "gray" }}>11:00 AM</CustomText>
+                              <View style={{
+                                position: "relative"
+                              }}>
+                                <Image
+                                  style={{ height: scale(50), width: scale(50), borderRadius: moderateScale(30) }}
+                                  source={{ uri: item?.barberProfile?.[0]?.url }}
+                                  // placeholder={{ blurhash }}
+                                  contentFit="cover"
+                                  transition={300}
+                                />
+                              </View>
+
+
+                              <View style={{ gap: verticalScale(8) }}>
+                                <CustomText style={{ fontSize: scale(14) }}>Michael Swath</CustomText>
+                                <View
+                                  style={{
+                                    height: verticalScale(15),
+                                    paddingHorizontal: scale(5),
+                                    borderRadius: scale(4),
+                                    backgroundColor: item.status === "served" ? "#00B0901A" :
+                                      item.status === "upcoming" ? "#EAA8241A" : "#E11D481A",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    alignSelf: "flex-start"
+                                  }}
+                                ><CustomText style={{
+                                  color: item.status === "served" ? "#00B090" :
+                                    item.status === "upcoming" ? "#EAA824" : "#E11D48",
+                                  fontSize: scale(10),
+                                }}>{item.status}</CustomText></View>
+                              </View>
+
                             </View>
 
-                            <CustomText style={{ fontSize: scale(14), fontFamily: "AirbnbCereal_W_Bd" }}>31 Mar, 2025</CustomText>
+                            <View style={{ gap: verticalScale(5) }}>
+                              <View style={{
+                                flexDirection: "row",
+                                alignItems: "center",
+                                gap: scale(2),
+                                // flex: 1
+                              }}>
+                                <ClockIcon size={scale(12)} color='gray' />
+                                <CustomText style={{ fontSize: scale(12), color: "gray" }}>{item?.timeSlots}</CustomText>
+                              </View>
+
+                              <CustomText style={{ fontSize: scale(14), fontFamily: "AirbnbCereal_W_Bd" }}>{item?.appointmentDate?.split("T")[0]}</CustomText>
+
+                            </View>
 
                           </View>
-
+                        )
+                      })
+                    ) : (
+                      <View style={{
+                        flex: 1,
+                        justifyContent: "center",
+                        alignItems: "center",
+                        minHeight: verticalScale(400)
+                      }}>
+                        <View
+                          style={{
+                            gap: verticalScale(12)
+                          }}
+                        >
+                          <View
+                            style={{
+                              width: scale(60),
+                              height: scale(60),
+                              backgroundColor: colors.background,
+                              marginHorizontal: "auto",
+                              borderRadius: scale(50),
+                              justifyContent: "center",
+                              alignItems: "center"
+                            }}
+                          >
+                            <CalendarIcon
+                              color={colors.text}
+                              size={scale(40)}
+                            />
+                          </View>
+                          <CustomText
+                            style={{
+                              textAlign: "center",
+                              fontSize: scale(16)
+                            }}
+                          >No Appointments Scheduled</CustomText>
+                          <CustomSecondaryText
+                            style={{
+                              textAlign: "center"
+                            }}
+                          >You haven’t booked any appointments yet. Schedule your appointment today to ensure a convenient time that fits your schedule.</CustomSecondaryText>
+                          <Pressable
+                            onPress={() => router.push("/appointmentCalendar")}
+                            style={{
+                              height: verticalScale(40),
+                              paddingInline: scale(30),
+                              backgroundColor: Colors.modeColor.colorCode,
+                              marginHorizontal: "auto",
+                              justifyContent: "center",
+                              alignItems: "center",
+                              borderRadius: scale(4),
+                            }}
+                          ><CustomText style={{
+                            color: "#fff"
+                          }}>Book Appointment</CustomText></Pressable>
                         </View>
-                      )
-                    })
+                      </View>
+                    )
                   }
+
 
                 </View>
               );

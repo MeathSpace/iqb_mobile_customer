@@ -18,28 +18,12 @@ const notification = () => {
                 paddingTop: verticalScale(10),
                 paddingBottom: Platform.OS === "ios" ? verticalScale(80) : verticalScale(20)
             }}>
-            {/* <Pressable
-                onPress={() => router.push("/home")}
-                style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: scale(10),
-                    height: verticalScale(60)
-                }}
-            >
-                <ArrowLeftIcon size={scale(18)} />
-                <CustomText>Notifcation</CustomText>
-            </Pressable> */}
-
             {
                 [0, 1, 2].map((item, index) => {
                     return (
                         <View
                             key={index}
                             style={{
-                                // minHeight: verticalScale(90),
-                                // borderBottomWidth: scale(1),
-                                // borderBottomColor: "#DDDDDD",
                                 paddingVertical: verticalScale(15),
                                 flexDirection: "row",
                                 alignItems: "center",

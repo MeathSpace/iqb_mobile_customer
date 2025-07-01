@@ -19,6 +19,8 @@ export const GlobalProvider = ({ children }) => {
         success: false
     })
 
+    const [selectedTab, setSelectedTab] = useState("All")
+
     const [selectedSalonLocation, setSelectedSalonLocation] = useState("")
 
     const { authenticatedUser } = useAuth()
@@ -47,6 +49,10 @@ export const GlobalProvider = ({ children }) => {
         appointmentType: "Book"
     })
     const [appointmentCalenderData, setAppointmentCalenderData] = useState([])
+    const [applyAppointmentFilter, setApplyAppointmentFilter] = useState({
+        selectedTab: "",
+        open: true
+    })
 
     const value = {
         selectedBarber,
@@ -68,7 +74,11 @@ export const GlobalProvider = ({ children }) => {
         searchCitySalons,
         setSearchCitySalons,
         selectedSalonLocation,
-        setSelectedSalonLocation
+        setSelectedSalonLocation,
+        selectedTab,
+        setSelectedTab,
+        applyAppointmentFilter,
+        setApplyAppointmentFilter
     };
 
     return (
