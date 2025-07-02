@@ -64,7 +64,7 @@ const appointmentFilter = () => {
                         tabs.map((item, index) => {
                             return (
                                 <Pressable
-                                    index={index}
+                                    key={index}
                                     style={{
                                         alignSelf: "flex-start",
                                         paddingHorizontal: scale(20),

@@ -528,10 +528,22 @@ const singleJoinConfirmation = () => {
   const selectCustomerServicesParse = params?.selectCustomerServices ? JSON.parse(params?.selectCustomerServices) : []
   const selectedGroupMembers = params?.groupJoinMembers ? JSON.parse(params?.groupJoinMembers) : []
 
-  // console.log("selectedGroupMembers ", selectedGroupMembers)
-  // console.log("Single Join Value ", params?.singleJoin)
 
-  // console.log("selectedCustomerBarberParse ddd ", selectedCustomerBarberParse)
+  const selectedCustomerBookAppointmentBarberParse = params?.selectedCustomerBookAppointmentBarber ? JSON.parse(params?.selectedCustomerBookAppointmentBarber) : {}
+  const selectedCustomerBookAppointmentServicesParse = params?.selectedCustomerBookAppointmentServices ? JSON.parse(params?.selectedCustomerBookAppointmentServices) : []
+  const selectedBookCalenderTimeslotParse = params?.selectedBookCalenderTimeslot ? JSON.parse(params?.selectedBookCalenderTimeslot) : ""
+  const selectedBookCalenderDateParse = params?.selectedBookCalenderDate ? JSON.parse(params?.selectedBookCalenderDate) : ""
+  const selectedBookAppointmentNoteParse = params?.selectedBookAppointmentNote ? JSON.parse(params?.selectedBookAppointmentNote) : ""
+
+  // console.log("selectedCustomerBookAppointmentBarberParse ", selectedCustomerBookAppointmentBarberParse)
+
+  // console.log({
+  //   selectedCustomerBookAppointmentBarberParse,
+  //   selectedCustomerBookAppointmentServicesParse,
+  //   selectedBookCalenderTimeslotParse,
+  //   selectedBookAppointmentNoteParse
+  // })
+
 
   const darkMapStyle = [
     {
@@ -657,6 +669,41 @@ const singleJoinConfirmation = () => {
     }
   }
 
+  const [bookAppointmentLoader, setBookAppointmentLoader] = useState(false)
+
+  const bookAppointmentPressed = async () => {
+    // console.log("Book Appointment ")
+
+    const appData = {
+      salonId: authenticatedUser?.salonId,
+      barberId: selectedCustomerBookAppointmentBarberParse?.barberId,
+      serviceId: selectedCustomerBookAppointmentServicesParse.map((item) => item.serviceId),
+      appointmentDate: selectedBookCalenderDateParse,
+      appointmentNotes: selectedBookAppointmentNoteParse,
+      startTime: selectedBookCalenderTimeslotParse,
+      customerEmail: authenticatedUser?.email,
+      customerName: authenticatedUser?.name,
+      customerType: "Walk-In",
+      methodUsed: "App"
+    }
+
+    try {
+
+      setBookAppointmentLoader(true)
+
+      const { data } = await axios.post(`${BASE_URL}/mobileRoutes/createAppointment`, appData)
+
+      Toast.success(data?.message)
+      setBookAppointmentLoader(false)
+      router.replace("/appointment")
+
+    } catch (error) {
+      setBookAppointmentLoader(false)
+      Toast.error(error?.response?.data?.message)
+      console.log("Error doing book appointment ", error)
+    }
+  }
+
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -749,7 +796,7 @@ const singleJoinConfirmation = () => {
                 )
               }
             </View>
-          ) : (
+          ) : params?.singleJoin === "false" ? (
             <>
               {
                 selectedGroupMembers?.map((item) => {
@@ -804,6 +851,50 @@ const singleJoinConfirmation = () => {
               }
 
             </>
+          ) : params?.bookAppointment === "true" && (
+            <View style={[styles.card, { backgroundColor: "#0BA3AD1A", borderColor: colors.border }]}>
+              <View style={{ flexDirection: "row", alignItems: "center", gap: scale(10) }}>
+                <Image
+                  style={{ height: moderateScale(55), width: moderateScale(55), borderRadius: moderateScale(30) }}
+                  source={{ uri: selectedCustomerBookAppointmentBarberParse?.profile?.[0]?.url }}
+                  contentFit="cover"
+                  transition={300}
+                />
+                <CustomText>{selectedCustomerBookAppointmentBarberParse?.name}</CustomText>
+              </View>
+
+
+              <View style={[styles.cardContent]}>
+                <View style={{ gap: scale(6) }}>
+                  {
+                    selectedCustomerBookAppointmentServicesParse?.map((ele, index) => {
+                      return (
+                        <CustomSecondaryText key={ele?.serviceId}>{index + 1}. {ele.serviceName}</CustomSecondaryText>
+                      )
+                    })
+                  }
+                </View>
+                <View style={{ gap: scale(6) }}>
+                  <CustomText style={{ textAlign: "center", fontSize: moderateScale(18) }}>{authenticatedUser?.currency} {selectedCustomerBookAppointmentServicesParse.reduce((acc, item) => acc + item.servicePrice, 0)}</CustomText>
+                  <View style={{ flexDirection: "row", alignItems: "center", gap: scale(5), }}>
+                    <ClockIcon size={moderateScale(14)} color={colors.secondaryText} />
+                    <CustomSecondaryText style={{ fontSize: scale(12) }}>{selectedBookCalenderTimeslotParse}</CustomSecondaryText>
+                  </View>
+                </View>
+              </View>
+
+
+              <View
+                style={[styles.appointmentCardContent, { borderTopColor: colors.border }]}
+              >
+                <CustomText
+                  style={{
+                    fontSize: scale(12)
+                  }}
+                >{selectedBookAppointmentNoteParse}</CustomText>
+              </View>
+
+            </View>
           )
         }
 
@@ -977,36 +1068,52 @@ const singleJoinConfirmation = () => {
       }}>
         <Pressable
           onPress={() => {
-            router.push("/queuelist")
+            if (params?.bookAppointment === "true") {
+              router.push("/appointment")
+            } else {
+              router.push("/queuelist")
+            }
+
           }}
           style={[styles.btn, { backgroundColor: "#E11D481A" }]}>
           <CustomText style={{ color: "#E11D48" }}>Cancel</CustomText>
         </Pressable>
 
-        <Pressable
-          // onPress={() => {
-          //   if (params?.appointment) {
-          //     router.push("/appointment")
-          //   } else {
-          //     router.push("/queuelist")
-          //   }
-          // }}
+        {
+          params?.bookAppointment === "true" ? (
+            <Pressable
+              onPress={() => bookAppointmentPressed()}
+              style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode }]}>
+              {
+                (bookAppointmentLoader || false) ? (
+                  <ActivityIndicator size="small" color="#fff" />
+                ) : (
+                  <CustomText style={{ color: "#fff" }}>Confirm</CustomText>
+                )
+              }
 
-          onPress={params?.singleJoin === "true" ? singleJoinPressed : groupJoinPressed}
-          style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode }]}>
-          {
-            (singleJoinLoader || groupJoinLoader) ? (
-              <ActivityIndicator size="small" color="#fff" />
-            ) : (
-              <CustomText style={{ color: "#fff" }}>Confirm</CustomText>
-            )
-          }
+            </Pressable>
+          ) : (
+            <Pressable
+              onPress={params?.singleJoin === "true" ? singleJoinPressed : groupJoinPressed}
+              style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode }]}>
+              {
+                (singleJoinLoader || groupJoinLoader) ? (
+                  <ActivityIndicator size="small" color="#fff" />
+                ) : (
+                  <CustomText style={{ color: "#fff" }}>Confirm</CustomText>
+                )
+              }
 
-        </Pressable>
+            </Pressable>
+          )
+        }
+
+
 
       </View>
 
-    </ScrollView>
+    </ScrollView >
   )
 }
 
@@ -1032,6 +1139,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between"
   },
   appointmentCardContent: {
+    marginTop: verticalScale(5),
     borderTopWidth: moderateScale(1),
     paddingTop: verticalScale(10),
   },

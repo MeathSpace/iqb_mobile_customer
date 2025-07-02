@@ -87,7 +87,7 @@ const appointmentCalendar = () => {
 
                     setSalonBarber((prev) => ({ ...prev, loading: true }))
 
-                    const { data } = await axios.post(`${BASE_URL}/mobileRoutes/getBarberByMultipleServiceId`, {
+                    const { data } = await axios.post(`${BASE_URL}/mobileRoutes/bookAppointmentBarbers`, {
                         salonId: authenticatedUser.salonId,
                         serviceIds: selectCustomerServices.map((item) => item.serviceId)
                     })
@@ -145,9 +145,96 @@ const appointmentCalendar = () => {
         })
     }
 
-    // console.log("selectCustomerServices ", selectCustomerServices)
-    // console.log("selectedCustomerBarber ", selectedCustomerBarber)
+    const [engageTimeslotsData, setEngageTimeslotsData] = useState({
+        data: null,
+        loading: false,
+        error: null,
+        success: false
+    })
 
+    const [selectedCalenderDate, setSelectedCalenderDate] = useState("")
+    const [appointmentNote, setAppointmentNote] = useState("")
+    const [selectedEngageTimeSlot, setSelectedEngageTimeSlot] = useState("")
+    const [disableDates, setDisbaleDates] = useState([])
+
+    // console.log("selectedEngageTimeSlot ", selectedEngageTimeSlot)
+
+    useEffect(() => {
+        if (selectedCalenderDate && selectedCustomerBarber) {
+            const fetchBarberTimeSlots = async () => {
+                try {
+
+                    setEngageTimeslotsData((prev) => ({ ...prev, loading: true }))
+
+                    const { data } = await axios.post(`${BASE_URL}/mobileRoutes/getEngageBarberTimeSlots`, {
+                        salonId: selectedCustomerBarber?.salonId,
+                        barberId: selectedCustomerBarber?.barberId,
+                        date: selectedCalenderDate
+                    })
+
+                    setEngageTimeslotsData((prev) => ({ ...prev, loading: false, data: data?.response, success: true, error: null }))
+
+                } catch (error) {
+
+                    setEngageTimeslotsData((prev) => ({ ...prev, loading: false, data: null, success: false, error: error }))
+                    console.log("Error fetching timeslots ", error?.response?.data)
+                }
+            }
+
+            fetchBarberTimeSlots()
+        }
+    }, [selectedCalenderDate, selectedCustomerBarber])
+
+    useEffect(() => {
+        if (selectedCustomerBarber) {
+
+            const fetchFullyBookedDates = async () => {
+                try {
+
+                    const { data } = await axios.post(`${BASE_URL}/mobileRoutes/getFullyBookedDatesBySalonIdBarberId`, {
+                        salonId: selectedCustomerBarber?.salonId,
+                        barberId: selectedCustomerBarber?.barberId,
+                    })
+
+                    setDisbaleDates(prev => [...prev, ...data.response])
+
+                    // console.log("Get fully booked dates ", data)
+
+                } catch (error) {
+                    console.log("Error fetching fully booked dates ", error?.response?.data)
+                }
+            }
+
+            const fetchBarberDisableAppointmentDates = async () => {
+                try {
+
+                    const { data } = await axios.post(`${BASE_URL}/mobileRoutes/getBarberDisabledAppointmentDates`, {
+                        salonId: selectedCustomerBarber?.salonId,
+                        barberId: selectedCustomerBarber?.barberId,
+                    })
+
+                    setDisbaleDates(prev => [...prev, ...data.response])
+
+                    // console.log("Get barber disable appointment dates ", data)
+
+                } catch (error) {
+                    console.log("Error fetching barber disable appointment dates ", error?.response?.data)
+                }
+            }
+
+            fetchFullyBookedDates()
+            fetchBarberDisableAppointmentDates()
+        }
+    }, [selectedCustomerBarber])
+
+    //=================
+
+    // console.log("selectCustomerServices ", selectCustomerServices)
+    // console.log("selectedCustomerBarber ", selectedCustomerBarber)v
+
+    // console.log("engageTimeslotsData ", engageTimeslotsData)
+
+    console.log("disableDates sdvwwb ", disableDates)
 
     const [activeSection, setActiveSection] = useState('services')
     const [scrolling, setScrolling] = useState(false)
@@ -225,6 +312,31 @@ const appointmentCalendar = () => {
             useNativeDriver: false, // layout props like flex can't use native driver
         }).start();
     }, [scrolling]);
+
+
+    const continueHandler = () => {
+        // const appData = {
+        //     selectCustomerServices,
+        //     selectedCustomerBarber,
+        //     selectedCalenderDate,
+        //     appointmentNote
+        // }
+
+        // console.log(appData)
+
+        router.push({
+            pathname: "/joinConfirmation",
+            params: {
+                selectedCustomerBookAppointmentServices: JSON.stringify(selectCustomerServices),
+                selectedCustomerBookAppointmentBarber: JSON.stringify(selectedCustomerBarber),
+                selectedBookCalenderTimeslot: JSON.stringify(selectedEngageTimeSlot),
+                selectedBookCalenderDate: JSON.stringify(selectedCalenderDate),
+                selectedBookAppointmentNote: JSON.stringify(appointmentNote),
+                bookAppointment: true
+            },
+        });
+    }
+
 
     const renderSection = (key, title, content) => {
         const isActive = activeSection === key
@@ -461,10 +573,11 @@ const appointmentCalendar = () => {
                                                 padding: scale(10)
                                             }}
                                             onPress={() => {
-                                                setContinueService(true)
+                                                setSelectedCustomerBarber(item)
                                                 setScrolling(false)
                                                 setActiveSection("calendar")
                                                 setAddIconPressCount(0)
+                                                // setDisbaleDates([])
                                             }}
                                         >
                                             <View
@@ -535,10 +648,7 @@ const appointmentCalendar = () => {
                                 >
                                     <View
                                         style={{
-                                            // borderColor: "#DDDDDD",
-                                            // borderWidth: scale(0.6),
                                             paddingVertical: verticalScale(4),
-                                            // paddingHorizontal: scale(10),
                                             alignSelf: 'flex-start',
                                             justifyContent: "center",
                                             alignItems: "center",
@@ -570,24 +680,31 @@ const appointmentCalendar = () => {
                                 >
                                     {dates.map((day, index) => (
                                         <Pressable
-                                            onPress={() => console.log(day)}
-                                            key={day.fullDate} style={[styles.dayBox, {
-                                                backgroundColor: index === 2 && "#e5e5e5"
+                                            disabled={disableDates?.includes(day?.fullDate)}
+                                            onPress={() => {
+                                                setSelectedCalenderDate(day?.fullDate)
+                                            }}
+                                            key={day.fullDate}
+                                            style={[styles.dayBox, {
+                                                // backgroundColor:selectedCalenderDate === day?.fullDate ? "red" : "blue"
+                                                backgroundColor: disableDates?.includes(day?.fullDate) && "#e5e5e5",
+                                                borderColor: selectedCalenderDate === day?.fullDate ? "#0BA3AD" : null,
+                                                borderWidth: selectedCalenderDate === day?.fullDate ? scale(1) : null
                                             }]}>
                                             <CustomText
                                                 style={{
                                                     fontSize: scale(15),
-                                                    color: index === 2 && "#000"
+                                                    color: disableDates?.includes(day?.fullDate) && "#000"
                                                 }}
                                             >{day.dayName}</CustomText>
                                             <CustomText
                                                 style={{
                                                     fontSize: scale(16),
-                                                    color: index === 2 ? "#000" : Colors.modeColor.colorCode,
+                                                    color: disableDates?.includes(day?.fullDate) ? "#000" : Colors.modeColor.colorCode,
                                                 }}
                                             >{day.date}</CustomText>
                                             {
-                                                index === 2 ? (
+                                                disableDates?.includes(day?.fullDate) ? (
                                                     <CustomText
                                                         style={{
                                                             fontSize: scale(13),
@@ -639,19 +756,20 @@ const appointmentCalendar = () => {
                                     gap: scale(10)
                                 }}>
                                     {
-                                        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9].map((item, index) => {
+                                        engageTimeslotsData?.data?.map((item, index) => {
                                             return (
                                                 <Pressable
                                                     onPress={() => {
-                                                        if (addIconPressCount === 1) {
+                                                        if (addIconPressCount === 1 && !item?.disabled) {
                                                             setScrolling(false)
                                                             setActiveSection("appointmentnote")
                                                             setAddIconPressCount(0)
+                                                            setSelectedEngageTimeSlot(item?.timeInterval)
                                                         }
                                                     }}
                                                     key={index}
                                                     style={{
-                                                        backgroundColor: "#00B0901A",
+                                                        backgroundColor: item?.disabled ? "#e5e5e5" : "#00B0901A",
                                                         alignSelf: "flex-start",
                                                         width: scrolling ? "31%" : "48%",
                                                         height: verticalScale(40),
@@ -664,7 +782,7 @@ const appointmentCalendar = () => {
                                                     <CustomText style={{
                                                         color: Colors.modeColor.colorCode,
                                                         fontSize: moderateScale(12)
-                                                    }}>09: 00 A.M</CustomText>
+                                                    }}>{item?.timeInterval}</CustomText>
                                                 </Pressable>
                                             )
                                         })
@@ -694,6 +812,8 @@ const appointmentCalendar = () => {
                                     multiline
                                     placeholderTextColor={"gray"}
                                     placeholder='Enter your appointment note'
+                                    value={appointmentNote}
+                                    onChangeText={(text) => setAppointmentNote(text)}
                                 />
                                 <Pressable
                                     onPress={() => {
@@ -845,7 +965,9 @@ const appointmentCalendar = () => {
                                 style={styles.searchButton}>
                                 <CustomText style={{ color: '#fff' }}>Back</CustomText>
                             </Pressable>
-                            <Pressable style={styles.searchButton}>
+                            <Pressable
+                                onPress={continueHandler}
+                                style={styles.searchButton}>
                                 <CustomText style={{ color: '#fff' }}>Next</CustomText>
                             </Pressable>
                         </View>

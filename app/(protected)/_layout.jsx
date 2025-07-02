@@ -61,6 +61,15 @@ const ProtectedLayout = () => {
                     presentation: 'transparentModal',
                     animation: 'fade',
                 }} />
+
+
+            <Stack.Screen
+                name="appointmentPop"
+                options={{
+                    presentation: 'transparentModal',
+                    animation: 'fade',
+                }} />
+
         </Stack>
     )
 }

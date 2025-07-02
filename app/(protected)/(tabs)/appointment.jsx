@@ -1,4 +1,4 @@
-import { FlatList, Platform, Pressable, StyleSheet, Text, View } from 'react-native'
+import { Alert, FlatList, Platform, Pressable, StyleSheet, Text, View } from 'react-native'
 import React, { useCallback, useState } from 'react'
 import CustomText from '../../../components/CustomText';
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
@@ -33,55 +33,55 @@ const appointment = () => {
   const router = useRouter()
   const { setJoinModes, joinModes, applyAppointmentFilter, setApplyAppointmentFilter } = useGlobal();
 
-  const appData = [
-    {
-      type: "upcomming",
-      backgroundColor: "#EAA8241A",
-      color: "#EAA824"
-    },
-    {
-      type: "served",
-      backgroundColor: "#00B0901A",
-      color: "#00B090"
-    },
-    {
-      type: "cancelled",
-      backgroundColor: "#E11D481A",
-      color: "#E11D48"
-    },
+  // const appData = [
+  //   {
+  //     type: "upcomming",
+  //     backgroundColor: "#EAA8241A",
+  //     color: "#EAA824"
+  //   },
+  //   {
+  //     type: "served",
+  //     backgroundColor: "#00B0901A",
+  //     color: "#00B090"
+  //   },
+  //   {
+  //     type: "cancelled",
+  //     backgroundColor: "#E11D481A",
+  //     color: "#E11D48"
+  //   },
 
-    {
-      type: "upcomming",
-      backgroundColor: "#EAA8241A",
-      color: "#EAA824"
-    },
-    {
-      type: "served",
-      backgroundColor: "#00B0901A",
-      color: "#00B090"
-    },
-    {
-      type: "cancelled",
-      backgroundColor: "#E11D481A",
-      color: "#E11D48"
-    },
+  //   {
+  //     type: "upcomming",
+  //     backgroundColor: "#EAA8241A",
+  //     color: "#EAA824"
+  //   },
+  //   {
+  //     type: "served",
+  //     backgroundColor: "#00B0901A",
+  //     color: "#00B090"
+  //   },
+  //   {
+  //     type: "cancelled",
+  //     backgroundColor: "#E11D481A",
+  //     color: "#E11D48"
+  //   },
 
-    {
-      type: "upcomming",
-      backgroundColor: "#EAA8241A",
-      color: "#EAA824"
-    },
-    {
-      type: "served",
-      backgroundColor: "#00B0901A",
-      color: "#00B090"
-    },
-    {
-      type: "cancelled",
-      backgroundColor: "#E11D481A",
-      color: "#E11D48"
-    },
-  ]
+  //   {
+  //     type: "upcomming",
+  //     backgroundColor: "#EAA8241A",
+  //     color: "#EAA824"
+  //   },
+  //   {
+  //     type: "served",
+  //     backgroundColor: "#00B0901A",
+  //     color: "#00B090"
+  //   },
+  //   {
+  //     type: "cancelled",
+  //     backgroundColor: "#E11D481A",
+  //     color: "#E11D48"
+  //   },
+  // ]
 
   const { authenticatedUser } = useAuth()
 
@@ -107,7 +107,7 @@ const appointment = () => {
               status: applyAppointmentFilter.selectedTab
             })
 
-            console.log("Upcomming Appointment ", data)
+            // console.log("Upcomming Appointment ", data)
 
             setAppointmentListData((prev) => ({ ...prev, loading: false, data: data?.response, success: true, error: null }))
 
@@ -220,15 +220,34 @@ const appointment = () => {
                     ) : appointmentListData?.data?.length > 0 ? (
                       appointmentListData?.data?.map((item, index) => {
                         return (
-                          <View
+                          <Pressable
+                            onPress={() => {
+                              if (item.status === "upcoming") {
+                                router.push({
+                                  pathname: "/appointmentPop",
+                                  params: {
+                                    selectedAppointment: JSON.stringify(item)
+                                  },
+                                });
+                              } else {
+                                Alert.alert(
+                                  "Warning",
+                                  `This appointment is already ${item.status}`,
+                                  [
+                                    { text: "OK", onPress: () => { } }
+                                  ],
+                                  { cancelable: true }
+                                )
+                              }
+
+                            }
+                            }
                             key={item?._id}
                             style={{
                               flexDirection: "row",
                               justifyContent: "space-between",
                               alignItems: "center",
                               minHeight: verticalScale(75),
-                              // borderBottomColor: appData.length - 1 !== index && "#0BA3AD1A",
-                              // borderBottomWidth: appData.length - 1 !== index && scale(1)
                             }}>
 
                             <View style={{
@@ -250,7 +269,7 @@ const appointment = () => {
 
 
                               <View style={{ gap: verticalScale(8) }}>
-                                <CustomText style={{ fontSize: scale(14) }}>Michael Swath</CustomText>
+                                <CustomText style={{ fontSize: scale(14) }}>{item?.barbername}</CustomText>
                                 <View
                                   style={{
                                     height: verticalScale(15),
@@ -286,7 +305,7 @@ const appointment = () => {
 
                             </View>
 
-                          </View>
+                          </Pressable>
                         )
                       })
                     ) : (
