@@ -1027,9 +1027,13 @@ const singleJoinConfirmation = () => {
                 alignItems: "center",
                 borderRadius: scale(4)
               }}
+
               onPress={() => {
-                openLink(`tel:${authenticatedUser.mobileCountryCode}${authenticatedUser?.contactTel}`)
+                Linking.openURL(
+                  `tel:${authenticatedUser.mobileCountryCode}${authenticatedUser?.contactTel}`
+                );
               }}
+
             >
               <ContactIcon size={scale(18)} color={"#4285F4"} />
             </Pressable>

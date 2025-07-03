@@ -16,7 +16,7 @@ const appointmentFilter = () => {
 
     const [tabs, setTabs] = useState([
         "All",
-        "Upcomming",
+        "Upcoming",
         "Served",
         "Cancelled"
     ])

@@ -17,6 +17,7 @@ import { BASE_URL } from '@/utils/api';
 import { useAuth } from '../../../context/AuthContext';
 import Skeleton from '../../../components/Skeleton';
 import { Toast } from 'toastify-react-native'
+import { Alert } from 'react-native';
 
 const SalonItem = ({ item }) => {
 
@@ -597,6 +598,19 @@ const salon = () => {
     }
 
 
+    const handleCall = async () => {
+        const phoneNumber = '+919876543210'; // Include country code if needed
+        const url = `tel:${phoneNumber}`;
+
+        const supported = await Linking.canOpenURL(url);
+        if (supported) {
+            await Linking.openURL(url);
+        } else {
+            Alert.alert("Can't open dialer");
+        }
+    };
+
+
     return (
         <CustomTabView
             style={{
@@ -832,8 +846,11 @@ const salon = () => {
                                                     alignItems: "center",
                                                     borderRadius: scale(4)
                                                 }}
+
                                                 onPress={() => {
-                                                    openLink(`tel:${salonInfoData?.data?.salonInfo?.mobileCountryCode}${salonInfoData?.data?.salonInfo?.contactTel}`)
+                                                    Linking.openURL(
+                                                        `tel:${salonInfoData?.data?.salonInfo?.mobileCountryCode}${salonInfoData?.data?.salonInfo?.contactTel}`
+                                                    );
                                                 }}
                                             >
                                                 <ContactIcon size={scale(18)} color={"#4285F4"} />

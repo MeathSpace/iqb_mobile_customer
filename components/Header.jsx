@@ -79,7 +79,7 @@ const Header = () => {
                         borderRadius: scale(20),
                         position: "relative"
                     }}
-                    source={authenticatedUser?.salonlogo?.[0]?.url}
+                    source={authenticatedUser?.salonLogo?.[0]?.url}
                     placeholder={{ blurhash }}
                     contentFit="cover"
                     transition={1000}

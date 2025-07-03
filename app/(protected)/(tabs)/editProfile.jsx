@@ -1,4 +1,4 @@
-import { ActivityIndicator, Alert, Keyboard, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
+import { ActivityIndicator, Alert, Keyboard, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import CustomScrollView from '../../../components/CustomScrollView'
 import { useTheme } from '@react-navigation/native'
@@ -37,22 +37,21 @@ const editProfile = () => {
     useFocusEffect(
         useCallback(() => {
             if (authenticatedUser) {
-                setFirstName(authenticatedUser?.name && authenticatedUser?.name?.split(" ")[0])
-                setLastName(authenticatedUser?.name && authenticatedUser?.name?.split(" ")[1])
-                setSelectedCountry({ "cca2": authenticatedUser?.countryCca2, "callingCode": [`+${authenticatedUser?.mobileCountryCode}`] })
+                setFirstName(authenticatedUser?.name?.split(" ")[0])
+                setLastName(authenticatedUser?.name?.trim()?.split(" ")?.slice(1).join(" "))
+                setSelectedCountry({ "cca2": authenticatedUser?.countryCca2, "callingCode": [`${authenticatedUser?.customerMobileCountryCode}`] })
 
                 if (phoneRef.current) {
-                    phoneRef.current.setValue(`${authenticatedUser?.mobileNumber}`);
+                    phoneRef.current.setValue(`${authenticatedUser?.customerMobileCountryCode}${authenticatedUser?.mobileNumber}`);
                 }
-                setPhoneNumber(authenticatedUser?.mobileNumber)
+                
+                setGender(authenticatedUser?.gender)
                 setSelectedDate(authenticatedUser?.dateOfBirth?.split("T")[0])
-                // setPhoneNumber(authenticatedUser?.mobileNumber && authenticatedUser?.mobileNumber)
+                setPhoneNumber(`+${authenticatedUser?.customerMobileCountryCode}${authenticatedUser?.mobileNumber}`)
             }
 
         }, [authenticatedUser])
     )
-
-
 
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
@@ -94,11 +93,10 @@ const editProfile = () => {
         }
     };
 
-
     const [phoneNumber, setPhoneNumber] = useState('');
 
     const [selectedCountry, setSelectedCountry] =
-        useState({ "cca2": "GB", "callingCode": ["44"] });
+        useState({ "callingCode": ["44"], "cca2": "GB", "currency": ["GBP"], "flag": "flag-gb", "name": "United Kingdom", "region": "Europe", "subregion": "Northern Europe" });
     const [countryPickerVisible, setCountryPickerVisible] =
         useState(false);
 
@@ -114,9 +112,11 @@ const editProfile = () => {
 
     useEffect(() => {
         if (selectedCountry && phoneRef.current) {
-            phoneRef.current.selectCountry(selectedCountry.cca2.toLowerCase());
+            phoneRef.current.selectCountry(selectedCountry?.cca2?.toLowerCase());
         }
     }, [selectedCountry]);
+
+    const [inValid, setInValid] = useState(false)
 
     const phoneNumberHandler = (phoneNumber) => {
 
@@ -124,8 +124,10 @@ const editProfile = () => {
         if (isValid) {
             setPhoneNumber(phoneNumber);
             setPhoneNumberError("")
+            setInValid(false)
         } else {
             setPhoneNumberError("Invalid phone number");
+            setInValid(true)
         }
     }
 
@@ -160,13 +162,25 @@ const editProfile = () => {
                 return;
             }
 
+            if (inValid) {
+                setPhoneNumberError("Invalid phone number");
+                return;
+            }
+
             if (!selectedDate) {
                 setDateOfBirthError("Date of birth is required");
                 return;
             }
 
-            const updatedCallingCode = selectedCountry?.callingCode?.[0]?.replace("+", "")
-            const updateMobileNumber = phoneNumber?.toString()
+            const updatedCallingCode = Number(selectedCountry?.callingCode?.[0]);
+            let sanitizedPhoneNumber = phoneNumber.replace(/\D/g, ''); // Remove all non-digit characters
+
+            const callingCodeStr = updatedCallingCode.toString();
+
+            // Keep removing the calling code prefix as long as it repeats at the start
+            while (sanitizedPhoneNumber.startsWith(callingCodeStr)) {
+                sanitizedPhoneNumber = sanitizedPhoneNumber.slice(callingCodeStr.length);
+            }
 
             const editProfileData = {
                 email: authenticatedUser?.email,
@@ -174,7 +188,8 @@ const editProfile = () => {
                 dateOfBirth: selectedDate,
                 gender,
                 mobileCountryCode: updatedCallingCode,
-                mobileNumber: updateMobileNumber.startsWith(updatedCallingCode) ? updateMobileNumber.slice(updatedCallingCode.length) : updateMobileNumber
+                mobileNumber: Number(sanitizedPhoneNumber),
+                countryCca2: selectedCountry?.cca2
             };
 
             setUpdateProfileLoader(true)
@@ -187,8 +202,9 @@ const editProfile = () => {
                 email: editProfileData?.email,
                 dateOfBirth: `${editProfileData?.dateOfBirth}T00:00:00.000Z`,
                 gender: editProfileData?.gender,
-                mobileCountryCode: editProfileData?.mobileCountryCode,
-                mobileNumber: editProfileData?.mobileNumber
+                customerMobileCountryCode: editProfileData?.mobileCountryCode,
+                mobileNumber: editProfileData?.mobileNumber,
+                countryCca2: editProfileData?.countryCca2
             }))
 
             setUpdateProfileLoader(false)
@@ -199,8 +215,9 @@ const editProfile = () => {
                 email: editProfileData?.email,
                 dateOfBirth: `${editProfileData?.dateOfBirth}T00:00:00.000Z`,
                 gender: editProfileData?.gender,
-                mobileCountryCode: editProfileData?.mobileCountryCode,
-                mobileNumber: editProfileData?.mobileNumber
+                customerMobileCountryCode: editProfileData?.mobileCountryCode,
+                mobileNumber: editProfileData?.mobileNumber,
+                countryCca2: editProfileData?.countryCca2
             })
 
             Toast.success("Profile updated successfully")
@@ -287,299 +304,306 @@ const editProfile = () => {
     };
 
     return (
-        <ScrollView
-            style={{
-                flex: 1,
-                backgroundColor: "#00B0901A"
-            }}
-
-            contentContainerStyle={{
-                paddingTop: verticalScale(10),
-                paddingHorizontal: scale(10),
-                paddingBottom: Platform.OS === "ios" ? verticalScale(80) : verticalScale(10)
-            }}
-            showsVerticalScrollIndicator={false}
+        <KeyboardAvoidingView
+            style={{ flex: 1 }}
+            behavior={Platform.OS === 'ios' ? 'padding' : undefined}
+            keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0} // adjust as needed
         >
-            <TouchableWithoutFeedback onPress={() => {
-                Keyboard.dismiss();
-                setGenderOpen(false);
-            }}>
-                <View
-                    style={{
-                        flex: 1,
-                        justifyContent: "space-around",
-                        gap: verticalScale(15)
-                    }}
-                >
+            <ScrollView
+                style={{
+                    flex: 1,
+                    backgroundColor: "#00B0901A"
+                }}
 
+                contentContainerStyle={{
+                    paddingTop: verticalScale(10),
+                    paddingHorizontal: scale(10),
+                    paddingBottom: Platform.OS === "ios" ? verticalScale(80) : verticalScale(10)
+                }}
+                keyboardShouldPersistTaps="handled"
+                showsVerticalScrollIndicator={false}
+            >
+                <TouchableWithoutFeedback onPress={() => {
+                    Keyboard.dismiss();
+                    setGenderOpen(false);
+                }}>
                     <View
-                        style={[styles.profileCard, { backgroundColor: colors.background }]}>
-                        <View style={{ gap: moderateScale(5) }}>
-                            <CustomText style={{ fontFamily: "AirbnbCereal_W_Bd", fontSize: scale(22) }}>{authenticatedUser?.name}</CustomText>
-                            <CustomText style={{ fontSize: scale(14), color: "gray" }}>{authenticatedUser?.email}</CustomText>
-                        </View>
+                        style={{
+                            flex: 1,
+                            justifyContent: "space-around",
+                            gap: verticalScale(15)
+                        }}
+                    >
 
                         <View
-                            style={{
-                                position: "relative"
-                            }}
-                        >
+                            style={[styles.profileCard, { backgroundColor: colors.background }]}>
+                            <View style={{ gap: moderateScale(5) }}>
+                                <CustomText style={{ fontFamily: "AirbnbCereal_W_Bd", fontSize: scale(22) }}>{authenticatedUser?.name}</CustomText>
+                                <CustomText style={{ fontSize: scale(14), color: "gray" }}>{authenticatedUser?.email}</CustomText>
+                            </View>
+
+                            <View
+                                style={{
+                                    position: "relative"
+                                }}
+                            >
+                                {
+                                    uploadImageLoader ? (
+                                        <Skeleton
+                                            height={scale(80)}
+                                            width={scale(80)}
+                                            borderRadius={scale(80)}
+                                        />
+                                    ) : (
+                                        <Image
+                                            style={{ height: scale(80), width: scale(80), borderRadius: scale(80) }}
+                                            source={{ uri: authenticatedUser?.profile?.[0]?.url }}
+                                            // placeholder={{ blurhash }}
+                                            contentFit="cover"
+                                            transition={300}
+                                        />
+                                    )
+                                }
+
+
+                                <Pressable
+                                    disabled={uploadImageLoader}
+                                    style={{
+                                        position: "absolute",
+                                        bottom: moderateScale(0),
+                                        right: moderateScale(-6),
+                                        backgroundColor: Colors.modeColor.colorCode,
+                                        padding: scale(6),
+                                        borderRadius: moderateScale(20),
+                                    }}
+                                    onPress={pickImage}>
+                                    <CameraIcon color={"#fff"} size={moderateScale(16)} />
+                                </Pressable>
+                            </View>
+                        </View>
+
+
+                        <View style={styles.inputWrapper}>
+                            <CustomText>First Name</CustomText>
+
+                            <TextInput
+                                editable
+                                placeholder="Enter your first name"
+                                placeholderTextColor={colors.secondaryText}
+                                style={[false ? styles.inputFielderror : styles.inputField, { backgroundColor: colors.background, fontFamily: "AirbnbCereal_W_Bk", color: colors.text }]}
+                                onChangeText={(text) => {
+                                    setFirstNameError("")
+                                    setFirstName(text)
+                                }}
+                                value={firstName}
+                            />
+
                             {
-                                uploadImageLoader ? (
-                                    <Skeleton
-                                        height={scale(80)}
-                                        width={scale(80)}
-                                        borderRadius={scale(80)}
-                                    />
-                                ) : (
-                                    <Image
-                                        style={{ height: scale(80), width: scale(80), borderRadius: scale(80) }}
-                                        source={{ uri: authenticatedUser?.profile?.[0]?.url }}
-                                        // placeholder={{ blurhash }}
-                                        contentFit="cover"
-                                        transition={300}
-                                    />
+                                firstNameError && (
+                                    <View style={{
+                                        flexDirection: "row",
+                                        alignItems: "center",
+                                        gap: scale(5),
+                                    }}>
+                                        <ErrorIcon color='red' size={scale(16)} />
+                                        <CustomText style={{ fontSize: scale(12), color: "red" }}>{firstNameError}</CustomText>
+                                    </View>
+                                )
+                            }
+
+                        </View>
+
+                        <View style={styles.inputWrapper}>
+                            <CustomText>Last Name</CustomText>
+
+                            <TextInput
+                                editable
+                                placeholder="Enter your last name"
+                                placeholderTextColor={colors.secondaryText}
+                                style={[false ? styles.inputFielderror : styles.inputField, { backgroundColor: colors.background, fontFamily: "AirbnbCereal_W_Bk", color: colors.text }]}
+                                onChangeText={(text) => {
+                                    setLastNameError("")
+                                    setLastName(text)
+                                }}
+                                value={lastName}
+                            />
+
+                            {
+                                lastNameError && (
+                                    <View style={{
+                                        flexDirection: "row",
+                                        alignItems: "center",
+                                        gap: scale(5),
+                                    }}>
+                                        <ErrorIcon color='red' size={scale(16)} />
+                                        <CustomText style={{ fontSize: scale(12), color: "red" }}>{lastNameError}</CustomText>
+                                    </View>
+                                )
+                            }
+
+                        </View>
+
+                        <View style={styles.inputWrapper}>
+                            <CustomText>Select Gender</CustomText>
+
+                            <DropDownPicker
+                                listMode="SCROLLVIEW"
+                                // dropDownMaxHeight={240}
+                                open={genderOpen}
+                                value={gender}
+                                items={genderItems}
+                                setOpen={setGenderOpen}
+                                setValue={setGender}
+                                setItems={setGenderItems}
+                                itemSeparator={true}
+                                itemSeparatorStyle={{
+                                    backgroundColor: "#0BA3AD1A"
+                                }}
+                                placeholder="Select a gender"
+                                style={[
+                                    styles.dropdown,
+                                    {
+                                        borderColor: "transparent",
+                                        backgroundColor: colors.background
+                                        // borderWidth: scale(1),
+                                        // borderColor: "#d3d3d3"
+                                    },
+                                ]}
+                                dropDownContainerStyle={[
+                                    styles.dropdownContainer,
+                                    {
+                                        borderColor: "#0BA3AD1A",
+                                        backgroundColor: colors.background
+                                    }
+                                ]}
+                                textStyle={{
+                                    fontSize: moderateScale(14),
+                                    fontFamily: 'AirbnbCereal_W_Bk',
+                                    color: colors.text
+                                }}
+                                listItemLabelStyle={{
+                                    fontSize: moderateScale(14),
+                                    fontFamily: 'AirbnbCereal_W_Bk',
+                                    color: colors.text,
+                                }}
+                                arrowIconStyle={{
+                                    tintColor: colors.text,
+                                }}
+                                tickIconStyle={{
+                                    tintColor: "#00A36C"
+                                }}
+                            />
+                        </View>
+
+
+                        <View style={styles.inputWrapper}>
+                            <CustomText>Mobile Number</CustomText>
+                            <PhoneInput
+                                ref={phoneRef}
+                                initialValue={phoneNumber}
+                                onChangePhoneNumber={(number) => phoneNumberHandler(number)}
+                                onPressFlag={toggleCountryPicker}
+                                textStyle={{ color: colors.text, fontSize: moderateScale(14) }}
+                                style={[styles.inputField, { backgroundColor: colors.background, fontFamily: "AirbnbCereal_W_Bk", color: colors.text }]}
+                            />
+
+                            {
+                                phoneNumberError && (
+                                    <View style={{
+                                        flexDirection: "row",
+                                        alignItems: "center",
+                                        gap: scale(5),
+                                    }}>
+                                        <ErrorIcon color='red' size={scale(16)} />
+                                        <CustomText style={{ fontSize: scale(12), color: "red" }}>{phoneNumberError}</CustomText>
+                                    </View>
                                 )
                             }
 
 
-                            <Pressable
-                                disabled={uploadImageLoader}
-                                style={{
-                                    position: "absolute",
-                                    bottom: moderateScale(0),
-                                    right: moderateScale(-6),
-                                    backgroundColor: Colors.modeColor.colorCode,
-                                    padding: scale(6),
-                                    borderRadius: moderateScale(20),
-                                }}
-                                onPress={pickImage}>
-                                <CameraIcon color={"#fff"} size={moderateScale(16)} />
-                            </Pressable>
+                            {countryPickerVisible && (
+                                <CountryPicker
+                                    withFilter={true}
+                                    withFlagButton={true}
+                                    withFlag={true}
+                                    withCountryNameButton={false}
+                                    withEmoji={true}
+                                    withCallingCode
+                                    onSelect={onSelectCountry}
+                                    onClose={() => setCountryPickerVisible(false)}
+                                    visible={countryPickerVisible}
+                                    containerButtonStyle={styles.countryPickerButton}
+                                    theme={{
+                                        ...((colorScheme === 'dark' && DARK_THEME) || {}),
+                                        fontFamily: 'AirbnbCereal_W_Bk',
+                                    }}
+                                />
+                            )}
                         </View>
-                    </View>
 
+                        <View style={[styles.inputWrapper, { position: "relative" }]}>
+                            <CustomText>Date of Birth</CustomText>
 
-                    <View style={styles.inputWrapper}>
-                        <CustomText>First Name</CustomText>
+                            <Pressable
+                                style={[
+                                    false ? styles.inputFielderror : styles.inputDateField,
+                                    {
+                                        backgroundColor: colors.background,
+                                        fontFamily: "AirbnbCereal_W_Bk",
+                                        color: colors.text,
+                                        justifyContent: "center", // Ensures CalendarIcon stays aligned
+                                    }
+                                ]}
+                                onPress={() => setCalenderModal(true)}
+                            >
+                                {!calenderModal && !selectedDate && <CustomText style={{ color: colors.secondaryText, fontFamily: "AirbnbCereal_W_Bk" }}>YYYY-MM-DD</CustomText>}
+                                {!calenderModal && selectedDate && <CustomText style={{ fontFamily: "AirbnbCereal_W_Bk" }}>{selectedDate}</CustomText>}
+                                <CalendarIcon style={[styles.dateIcon, { color: colors.text }]} />
+                            </Pressable>
 
-                        <TextInput
-                            editable
-                            placeholder="Enter your first name"
-                            placeholderTextColor={colors.secondaryText}
-                            style={[false ? styles.inputFielderror : styles.inputField, { backgroundColor: colors.background, fontFamily: "AirbnbCereal_W_Bk", color: colors.text }]}
-                            onChangeText={(text) => {
-                                setFirstNameError("")
-                                setFirstName(text)
-                            }}
-                            value={firstName}
-                        />
+                            {
+                                dateOfBirthError && (
+                                    <View style={{
+                                        flexDirection: "row",
+                                        alignItems: "center",
+                                        gap: scale(5),
+                                    }}>
+                                        <ErrorIcon color='red' size={scale(16)} />
+                                        <CustomText style={{ fontSize: scale(12), color: "red", }}>{dateOfBirthError}</CustomText>
+                                    </View>
+                                )
+                            }
 
-                        {
-                            firstNameError && (
-                                <View style={{
-                                    flexDirection: "row",
-                                    alignItems: "center",
-                                    gap: scale(5),
-                                }}>
-                                    <ErrorIcon color='red' size={scale(16)} />
-                                    <CustomText style={{ fontSize: scale(12), color: "red" }}>{firstNameError}</CustomText>
+                            {calenderModal && (
+                                <View style={{ position: "absolute", top: verticalScale(34), left: 0, zIndex: 100 }}>
+                                    <DateTimePicker
+                                        mode="date"
+                                        maximumDate={new Date()}
+                                        value={date}
+                                        display="default"
+                                        accentColor={Colors.modeColor.colorCode}
+                                        onChange={onChange}
+                                    />
                                 </View>
-                            )
-                        }
-
-                    </View>
-
-                    <View style={styles.inputWrapper}>
-                        <CustomText>Last Name</CustomText>
-
-                        <TextInput
-                            editable
-                            placeholder="Enter your last name"
-                            placeholderTextColor={colors.secondaryText}
-                            style={[false ? styles.inputFielderror : styles.inputField, { backgroundColor: colors.background, fontFamily: "AirbnbCereal_W_Bk", color: colors.text }]}
-                            onChangeText={(text) => {
-                                setLastNameError("")
-                                setLastName(text)
-                            }}
-                            value={lastName}
-                        />
-
-                        {
-                            lastNameError && (
-                                <View style={{
-                                    flexDirection: "row",
-                                    alignItems: "center",
-                                    gap: scale(5),
-                                }}>
-                                    <ErrorIcon color='red' size={scale(16)} />
-                                    <CustomText style={{ fontSize: scale(12), color: "red" }}>{lastNameError}</CustomText>
-                                </View>
-                            )
-                        }
-
-                    </View>
-
-                    <View style={styles.inputWrapper}>
-                        <CustomText>Select Gender</CustomText>
-
-                        <DropDownPicker
-                            listMode="SCROLLVIEW"
-                            // dropDownMaxHeight={240}
-                            open={genderOpen}
-                            value={gender}
-                            items={genderItems}
-                            setOpen={setGenderOpen}
-                            setValue={setGender}
-                            setItems={setGenderItems}
-                            itemSeparator={true}
-                            itemSeparatorStyle={{
-                                backgroundColor: "#0BA3AD1A"
-                            }}
-                            placeholder="Select a gender"
-                            style={[
-                                styles.dropdown,
-                                {
-                                    borderColor: "transparent",
-                                    backgroundColor: colors.background
-                                    // borderWidth: scale(1),
-                                    // borderColor: "#d3d3d3"
-                                },
-                            ]}
-                            dropDownContainerStyle={[
-                                styles.dropdownContainer,
-                                {
-                                    borderColor: "#0BA3AD1A",
-                                    backgroundColor: colors.background
-                                }
-                            ]}
-                            textStyle={{
-                                fontSize: moderateScale(14),
-                                fontFamily: 'AirbnbCereal_W_Bk',
-                                color: colors.text
-                            }}
-                            listItemLabelStyle={{
-                                fontSize: moderateScale(14),
-                                fontFamily: 'AirbnbCereal_W_Bk',
-                                color: colors.text,
-                            }}
-                            arrowIconStyle={{
-                                tintColor: colors.text,
-                            }}
-                            tickIconStyle={{
-                                tintColor: "#00A36C"
-                            }}
-                        />
-                    </View>
-
-
-                    <View style={styles.inputWrapper}>
-                        <CustomText>Mobile Number</CustomText>
-                        <PhoneInput
-                            ref={phoneRef}
-                            initialValue={phoneNumber}
-                            onChangePhoneNumber={(number) => phoneNumberHandler(number)}
-                            onPressFlag={toggleCountryPicker}
-                            textStyle={{ color: colors.text, fontSize: moderateScale(14) }}
-                            style={[styles.inputField, { backgroundColor: colors.background, fontFamily: "AirbnbCereal_W_Bk", color: colors.text }]}
-                        />
-
-                        {
-                            phoneNumberError && (
-                                <View style={{
-                                    flexDirection: "row",
-                                    alignItems: "center",
-                                    gap: scale(5),
-                                }}>
-                                    <ErrorIcon color='red' size={scale(16)} />
-                                    <CustomText style={{ fontSize: scale(12), color: "red" }}>{phoneNumberError}</CustomText>
-                                </View>
-                            )
-                        }
-
-
-                        {countryPickerVisible && (
-                            <CountryPicker
-                                withFilter={true}
-                                withFlagButton={true}
-                                withFlag={true}
-                                withCountryNameButton={false}
-                                withEmoji={true}
-                                withCallingCode
-                                onSelect={onSelectCountry}
-                                onClose={() => setCountryPickerVisible(false)}
-                                visible={countryPickerVisible}
-                                containerButtonStyle={styles.countryPickerButton}
-                                theme={{
-                                    ...((colorScheme === 'dark' && DARK_THEME) || {}),
-                                    fontFamily: 'AirbnbCereal_W_Bk',
-                                }}
-                            />
-                        )}
-                    </View>
-
-                    <View style={[styles.inputWrapper, { position: "relative" }]}>
-                        <CustomText>Date of Birth</CustomText>
+                            )}
+                        </View>
 
                         <Pressable
-                            style={[
-                                false ? styles.inputFielderror : styles.inputDateField,
-                                {
-                                    backgroundColor: colors.background,
-                                    fontFamily: "AirbnbCereal_W_Bk",
-                                    color: colors.text,
-                                    justifyContent: "center", // Ensures CalendarIcon stays aligned
-                                }
-                            ]}
-                            onPress={() => setCalenderModal(true)}
-                        >
-                            {!calenderModal && !selectedDate && <CustomText style={{ color: colors.secondaryText, fontFamily: "AirbnbCereal_W_Bk" }}>YYYY-MM-DD</CustomText>}
-                            {!calenderModal && selectedDate && <CustomText style={{ fontFamily: "AirbnbCereal_W_Bk" }}>{selectedDate}</CustomText>}
-                            <CalendarIcon style={[styles.dateIcon, { color: colors.text }]} />
+                            onPress={() => saveHandler()}
+                            style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode }]}>
+
+                            {
+                                updateProfileLoader ? (
+                                    <ActivityIndicator size="small" color="#fff" />
+                                ) : (
+                                    <CustomText style={{ color: "#fff" }}>Edit & Save</CustomText>
+                                )
+                            }
                         </Pressable>
-
-                        {
-                            dateOfBirthError && (
-                                <View style={{
-                                    flexDirection: "row",
-                                    alignItems: "center",
-                                    gap: scale(5),
-                                }}>
-                                    <ErrorIcon color='red' size={scale(16)} />
-                                    <CustomText style={{ fontSize: scale(12), color: "red", }}>{dateOfBirthError}</CustomText>
-                                </View>
-                            )
-                        }
-
-                        {calenderModal && (
-                            <View style={{ position: "absolute", top: verticalScale(34), left: 0, zIndex: 100 }}>
-                                <DateTimePicker
-                                    mode="date"
-                                    maximumDate={new Date()}
-                                    value={date}
-                                    display="default"
-                                    accentColor={Colors.modeColor.colorCode}
-                                    onChange={onChange}
-                                />
-                            </View>
-                        )}
                     </View>
-
-                    <Pressable
-                        onPress={() => saveHandler()}
-                        style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode }]}>
-
-                         {
-                            updateProfileLoader ? (
-                                <ActivityIndicator size="small" color="#fff" />
-                            ) : (
-                                <CustomText style={{ color: "#fff" }}>Edit & Save</CustomText>
-                            )
-                        }
-                    </Pressable>
-                </View>
-            </TouchableWithoutFeedback>
-        </ScrollView>
+                </TouchableWithoutFeedback>
+            </ScrollView>
+        </KeyboardAvoidingView>
     )
 }
 
