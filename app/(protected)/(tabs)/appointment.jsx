@@ -226,7 +226,7 @@ const appointment = () => {
                                 router.push({
                                   pathname: "/appointmentPop",
                                   params: {
-                                    selectedAppointment: JSON.stringify(item)
+                                    selectedAppointment: JSON.stringify(item),
                                   },
                                 });
                               } else {

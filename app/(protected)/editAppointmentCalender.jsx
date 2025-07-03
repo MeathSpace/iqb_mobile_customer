@@ -25,7 +25,11 @@ import { BASE_URL } from '@/utils/api';
 import Skeleton from '../../components/Skeleton'
 import { Toast } from 'toastify-react-native'
 
-const appointmentCalendar = () => {
+const editAppointmentCalender = () => {
+
+    const params = useLocalSearchParams();
+    const selectedEditAppointmentData = params?.selectedAppointment ? JSON.parse(params?.selectedAppointment) : {}
+    // console.log("Selected Edit Appointment ", selectedEditAppointmentData)
 
     const { authenticatedUser } = useAuth()
 
@@ -43,6 +47,9 @@ const appointmentCalendar = () => {
         success: false
     })
 
+    const [selectCustomerServices, setSelectedCustomerServices] = useState([])
+    const [selectedCustomerBarber, setSelectedCustomerBarber] = useState(null)
+    const [continueService, setContinueService] = useState(false)
 
     useEffect(() => {
         const fetchSalonServices = async () => {
@@ -57,12 +64,39 @@ const appointmentCalendar = () => {
                 })
 
                 setSalonServices((prev) => ({
-                    ...prev, loading: false, data: data?.response?.map((item) => {
-                        return (
-                            { ...item, selected: false }
+                    ...prev,
+                    loading: false,
+                    data: data?.response?.map((item) => {
+                        const isSelected = selectedEditAppointmentData.services.some(
+                            (s) => s.serviceId === item.serviceId
                         )
-                    }), success: true, error: null
+
+                        return {
+                            ...item,
+                            selected: isSelected
+                        }
+                    }),
+                    success: true,
+                    error: null
                 }))
+
+                const selectedServices = data?.response
+                    ?.map((item) => {
+                        const isSelected = selectedEditAppointmentData?.services?.some(
+                            (s) => s.serviceId === item.serviceId
+                        )
+
+                        return {
+                            ...item,
+                            selected: isSelected
+                        }
+                    })
+                    ?.filter((item) => item.selected)
+
+                setSelectedCustomerServices(selectedServices)
+
+                setContinueService(true)
+                setAppointmentNote(selectedEditAppointmentData?.appointmentNotes)
 
             } catch (error) {
 
@@ -73,11 +107,6 @@ const appointmentCalendar = () => {
 
         fetchSalonServices()
     }, [authenticatedUser])
-
-
-    const [selectCustomerServices, setSelectedCustomerServices] = useState([])
-    const [selectedCustomerBarber, setSelectedCustomerBarber] = useState(null)
-    const [continueService, setContinueService] = useState(false)
 
 
     useEffect(() => {
@@ -107,7 +136,9 @@ const appointmentCalendar = () => {
 
     }, [authenticatedUser, selectCustomerServices, continueService])
 
+
     const addServiceHandler = (service) => {
+
         setContinueService(false)
         const updatedSalonServices = salonServices?.data?.map((item) => {
             return item?.serviceId === service?.serviceId ? { ...service, selected: true } : item
@@ -228,14 +259,8 @@ const appointmentCalendar = () => {
         }
     }, [selectedCustomerBarber])
 
-    //=================
 
     // console.log("selectCustomerServices ", selectCustomerServices)
-    // console.log("selectedCustomerBarber ", selectedCustomerBarber)v
-
-    // console.log("engageTimeslotsData ", engageTimeslotsData)
-
-    console.log("disableDates sdvwwb ", disableDates)
 
     const [activeSection, setActiveSection] = useState('services')
     const [scrolling, setScrolling] = useState(false)
@@ -308,6 +333,7 @@ const appointmentCalendar = () => {
         setDates(tempDates);
     };
 
+
     const getRandomColor = () => {
         const letters = '0123456789ABCDEF';
         let color = '#';
@@ -344,7 +370,6 @@ const appointmentCalendar = () => {
 
 
     const continueHandler = () => {
-
         if (selectCustomerServices.length === 0) {
             Toast.error("Please select a service")
             return
@@ -370,7 +395,8 @@ const appointmentCalendar = () => {
                 selectedBookCalenderTimeslot: JSON.stringify(selectedEngageTimeSlot),
                 selectedBookCalenderDate: JSON.stringify(selectedCalenderDate),
                 selectedBookAppointmentNote: JSON.stringify(appointmentNote),
-                bookAppointment: true
+                appointmentId: selectedEditAppointmentData?._id,
+                editAppointment: true
             },
         });
     }
@@ -463,7 +489,6 @@ const appointmentCalendar = () => {
                                                                 <Image
                                                                     style={{ height: scale(50), width: scale(50), borderRadius: scale(80), zIndex: -1 }}
                                                                     source={{ uri: item?.serviceIcon?.url }}
-                                                                    // placeholder={{ blurhash }}
                                                                     contentFit="cover"
                                                                     transition={300}
                                                                 />
@@ -480,7 +505,6 @@ const appointmentCalendar = () => {
                                                             <Image
                                                                 style={{ height: scale(50), width: scale(50), borderRadius: scale(80) }}
                                                                 source={{ uri: item?.serviceIcon?.url }}
-                                                                // placeholder={{ blurhash }}
                                                                 contentFit="cover"
                                                                 transition={300}
                                                             />
@@ -564,9 +588,6 @@ const appointmentCalendar = () => {
                                                         <ClockIcon size={scale(12)} color={Colors.modeColor.colorCode} />
                                                         <CustomText style={{ fontSize: scale(12), flex: 1, color: Colors.modeColor.colorCode }}>{item?.serviceEWT} mins</CustomText>
                                                     </View>
-
-                                                    {/* Currency should also be added in authenticated user response */}
-                                                    {/* Service Price doesnot have point value */}
 
                                                     <CustomText
                                                         style={{
@@ -713,6 +734,7 @@ const appointmentCalendar = () => {
                                                 size={scale(16)}
                                             />
                                         </Pressable>
+
                                         <Pressable onPress={goToNextMonth} style={styles.navButton}>
                                             <RightIcon color={Colors.modeColor.colorCode} size={scale(16)} />
                                         </Pressable>
@@ -750,6 +772,7 @@ const appointmentCalendar = () => {
                                                     color: disableDates?.includes(day?.fullDate) ? "#000" : Colors.modeColor.colorCode,
                                                 }}
                                             >{day.date}</CustomText>
+
                                             {/* {
                                                 disableDates?.includes(day?.fullDate) ? (
                                                     <CustomText
@@ -899,13 +922,13 @@ const appointmentCalendar = () => {
                                         fontSize: scale(18),
                                         fontFamily: "AirbnbCereal_W_Blk"
                                     }}
-                                >{authenticatedUser?.currency} {selectCustomerServices.reduce((acc, item) => acc + item.servicePrice, 0)}</CustomText>
+                                >{authenticatedUser?.currency} {selectCustomerServices?.reduce((acc, item) => acc + item.servicePrice, 0)}</CustomText>
                                 <CustomText
                                     style={{
                                         fontSize: scale(12),
                                         color: "gray"
                                     }}
-                                >{selectCustomerServices.length} services | {selectCustomerServices.reduce((acc, item) => acc + item.serviceEWT, 0)} mins</CustomText>
+                                >{selectCustomerServices.length} services | {selectCustomerServices?.reduce((acc, item) => acc + item.serviceEWT, 0)} mins</CustomText>
                             </View>
 
                             <Pressable
@@ -1025,7 +1048,7 @@ const appointmentCalendar = () => {
     )
 }
 
-export default appointmentCalendar
+export default editAppointmentCalender
 
 const styles = StyleSheet.create({
     container: {

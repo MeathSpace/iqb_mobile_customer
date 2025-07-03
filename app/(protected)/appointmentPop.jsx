@@ -21,6 +21,25 @@ const appointmentPop = () => {
     console.log("selectedAppointmentParse ", selectedAppointmentParse)
     const [deleteAppointmentLoader, setDeleteAppointmentLoader] = useState(false)
 
+    const confirmDeleteHandler = () => {
+        Alert.alert(
+            "Delete Appointment",
+            "Are you sure you want to delete this appointment?",
+            [
+                {
+                    text: "Cancel",
+                    style: "cancel"
+                },
+                {
+                    text: "Delete",
+                    style: "destructive",
+                    onPress: () => deleteHandler()
+                }
+            ],
+            { cancelable: true }
+        )
+    }
+
     const deleteHandler = async () => {
         try {
             setDeleteAppointmentLoader(true)
@@ -45,7 +64,6 @@ const appointmentPop = () => {
                 ],
                 { cancelable: false }
             )
-
 
         } catch (error) {
             setDeleteAppointmentLoader(false)
@@ -92,7 +110,7 @@ const appointmentPop = () => {
                     }}
                 >
                     <Pressable
-                        onPress={deleteHandler}
+                        onPress={confirmDeleteHandler}
                         style={{
                             height: verticalScale(35),
                             width: "48%",
@@ -112,6 +130,15 @@ const appointmentPop = () => {
 
                     </Pressable>
                     <Pressable
+                        onPress={() => {
+                            router.replace({
+                                pathname: "/editAppointmentCalender",
+                                params: {
+                                    selectedAppointment: JSON.stringify(selectedAppointmentParse),
+                                    editAppointment: true
+                                }
+                            })
+                        }}
                         style={{
                             height: verticalScale(35),
                             width: "48%",

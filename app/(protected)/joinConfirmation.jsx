@@ -496,7 +496,7 @@
 // })
 
 
-import { ActivityIndicator, Platform, Pressable, ScrollView, StyleSheet, Text, useColorScheme, View } from 'react-native'
+import { ActivityIndicator, Linking, Platform, Pressable, ScrollView, StyleSheet, Text, useColorScheme, View } from 'react-native'
 import React, { useState } from 'react'
 import CustomText from '../../components/CustomText'
 import CustomSecondaryText from '../../components/CustomSecondaryText'
@@ -704,6 +704,46 @@ const singleJoinConfirmation = () => {
     }
   }
 
+  const [editAppointmentLoader, setEditAppointmentLoader] = useState(false)
+
+  const editAppointmentPressed = async () => {
+    const appData = {
+      salonId: authenticatedUser?.salonId,
+      appointmentId: params?.appointmentId,
+      barberId: selectedCustomerBookAppointmentBarberParse?.barberId,
+      serviceId: selectedCustomerBookAppointmentServicesParse.map((item) => item.serviceId),
+      appointmentDate: selectedBookCalenderDateParse,
+      appointmentNotes: selectedBookAppointmentNoteParse,
+      startTime: selectedBookCalenderTimeslotParse,
+    }
+
+    try {
+
+      setEditAppointmentLoader(true)
+
+      const { data } = await axios.put(`${BASE_URL}/mobileRoutes/editAppointments`, appData)
+
+      Toast.success(data?.message)
+      setEditAppointmentLoader(false)
+      router.replace("/appointment")
+
+    } catch (error) {
+      setEditAppointmentLoader(false)
+      Toast.error(error?.response?.data?.message)
+      console.log("Error doing book appointment ", error)
+    }
+
+  }
+
+  const openLink = async (url) => {
+    const supported = await Linking.canOpenURL(url);
+    if (supported) {
+      await Linking.openURL(url);
+    } else {
+      console.warn("Can't open URL:", url);
+    }
+  };
+
   return (
     <ScrollView
       showsVerticalScrollIndicator={false}
@@ -851,7 +891,51 @@ const singleJoinConfirmation = () => {
               }
 
             </>
-          ) : params?.bookAppointment === "true" && (
+          ) : params?.bookAppointment === "true" ? (
+            <View style={[styles.card, { backgroundColor: "#0BA3AD1A", borderColor: colors.border }]}>
+              <View style={{ flexDirection: "row", alignItems: "center", gap: scale(10) }}>
+                <Image
+                  style={{ height: moderateScale(55), width: moderateScale(55), borderRadius: moderateScale(30) }}
+                  source={{ uri: selectedCustomerBookAppointmentBarberParse?.profile?.[0]?.url }}
+                  contentFit="cover"
+                  transition={300}
+                />
+                <CustomText>{selectedCustomerBookAppointmentBarberParse?.name}</CustomText>
+              </View>
+
+
+              <View style={[styles.cardContent]}>
+                <View style={{ gap: scale(6) }}>
+                  {
+                    selectedCustomerBookAppointmentServicesParse?.map((ele, index) => {
+                      return (
+                        <CustomSecondaryText key={ele?.serviceId}>{index + 1}. {ele.serviceName}</CustomSecondaryText>
+                      )
+                    })
+                  }
+                </View>
+                <View style={{ gap: scale(6) }}>
+                  <CustomText style={{ textAlign: "center", fontSize: moderateScale(18) }}>{authenticatedUser?.currency} {selectedCustomerBookAppointmentServicesParse.reduce((acc, item) => acc + item.servicePrice, 0)}</CustomText>
+                  <View style={{ flexDirection: "row", alignItems: "center", gap: scale(5), }}>
+                    <ClockIcon size={moderateScale(14)} color={colors.secondaryText} />
+                    <CustomSecondaryText style={{ fontSize: scale(12) }}>{selectedBookCalenderTimeslotParse}</CustomSecondaryText>
+                  </View>
+                </View>
+              </View>
+
+
+              <View
+                style={[styles.appointmentCardContent, { borderTopColor: colors.border }]}
+              >
+                <CustomText
+                  style={{
+                    fontSize: scale(12)
+                  }}
+                >{selectedBookAppointmentNoteParse}</CustomText>
+              </View>
+
+            </View>
+          ) : params?.editAppointment === "true" && (
             <View style={[styles.card, { backgroundColor: "#0BA3AD1A", borderColor: colors.border }]}>
               <View style={{ flexDirection: "row", alignItems: "center", gap: scale(10) }}>
                 <Image
@@ -943,6 +1027,9 @@ const singleJoinConfirmation = () => {
                 alignItems: "center",
                 borderRadius: scale(4)
               }}
+              onPress={() => {
+                openLink(`tel:${authenticatedUser.mobileCountryCode}${authenticatedUser?.contactTel}`)
+              }}
             >
               <ContactIcon size={scale(18)} color={"#4285F4"} />
             </Pressable>
@@ -955,6 +1042,9 @@ const singleJoinConfirmation = () => {
                 justifyContent: "center",
                 alignItems: "center",
                 borderRadius: scale(4)
+              }}
+              onPress={() => {
+                openLink(``)
               }}
             >
               <WhatsappIcon size={scale(18)} color={"#25D366"} />
@@ -969,6 +1059,9 @@ const singleJoinConfirmation = () => {
                 alignItems: "center",
                 borderRadius: scale(4)
               }}
+              onPress={() => {
+                openLink(`mailto:${authenticatedUser?.salonEmail}`)
+              }}
             >
               <EmailIcon size={scale(18)} color={"#EA4335"} />
             </Pressable>
@@ -978,29 +1071,34 @@ const singleJoinConfirmation = () => {
         </View>
 
         <View>
-          <MapView
-            provider={PROVIDER_GOOGLE}
-            initialCamera={{
-              center: {
-                latitude: 37.78825,
-                longitude: -122.4324,
-              },
-              zoom: 15, // 0 (world view) to ~20 (very close)
-              pitch: 0,
-              heading: 0,
-            }}
-            scrollEnabled={false}
-            zoomEnabled={false}
-            rotateEnabled={false}
-            pitchEnabled={false}
-            style={[styles.map,
-            {
-              // borderColor: "#efefef", 
-              // borderWidth: scale(1) 
-            }
-            ]}
-            customMapStyle={colorScheme === "dark" ? darkMapStyle : []}
-          />
+          {
+            authenticatedUser && (
+              <MapView
+                provider={PROVIDER_GOOGLE}
+                initialCamera={{
+                  center: {
+                    latitude: authenticatedUser?.location?.coordinates?.latitude,
+                    longitude: authenticatedUser?.location?.coordinates?.longitude,
+                  },
+                  zoom: 15, // 0 (world view) to ~20 (very close)
+                  pitch: 0,
+                  heading: 0,
+                }}
+                scrollEnabled={false}
+                zoomEnabled={false}
+                rotateEnabled={false}
+                pitchEnabled={false}
+                style={[styles.map,
+                {
+                  // borderColor: "#efefef", 
+                  // borderWidth: scale(1) 
+                }
+                ]}
+                customMapStyle={colorScheme === "dark" ? darkMapStyle : []}
+              />
+            )
+          }
+
           <View
             style={{
               backgroundColor: "#0BA3AD1A",
@@ -1028,7 +1126,7 @@ const singleJoinConfirmation = () => {
                   maxWidth: "85%"
                 }}
               >
-                30 Elliot Rd, Selly Oak, Birmingham, UK, B29 4AQ
+                {authenticatedUser?.address}, {authenticatedUser?.city}, {authenticatedUser?.country}
               </CustomText>
             </View>
 
@@ -1041,6 +1139,7 @@ const singleJoinConfirmation = () => {
               }}
             >
               <Pressable
+                onPress={() => openLink(`https://www.google.com/maps/search/?api=1&query=${authenticatedUser?.location?.coordinates?.latitude},${authenticatedUser?.location?.coordinates?.longitude}`)}
                 style={{
                   width: scale(30),
                   height: scale(30),
@@ -1080,12 +1179,19 @@ const singleJoinConfirmation = () => {
         </Pressable>
 
         {
-          params?.bookAppointment === "true" ? (
+          params?.bookAppointment === "true" || params?.editAppointment === "true" ? (
             <Pressable
-              onPress={() => bookAppointmentPressed()}
+              onPress={() => {
+                if (params?.bookAppointment === "true") {
+                  bookAppointmentPressed()
+                } else {
+                  editAppointmentPressed()
+                }
+
+              }}
               style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode }]}>
               {
-                (bookAppointmentLoader || false) ? (
+                (bookAppointmentLoader || editAppointmentLoader) ? (
                   <ActivityIndicator size="small" color="#fff" />
                 ) : (
                   <CustomText style={{ color: "#fff" }}>Confirm</CustomText>

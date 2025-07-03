@@ -23,6 +23,7 @@ import { BASE_URL } from '@/utils/api';
 import { useAuth } from '../../context/AuthContext'
 import Skeleton from '../../components/Skeleton'
 import joinConfirmation from './joinConfirmation'
+import { Toast } from 'toastify-react-native'
 
 const SingleJoin = () => {
 
@@ -181,6 +182,15 @@ const SingleJoin = () => {
     const { colors } = useTheme()
 
     const joinConfirmation = () => {
+
+        if (selectCustomerServices.length === 0) {
+            Toast.error("Please select a service")
+            return
+        } else if (!selectedCustomerBarber) {
+            Toast.error("Please select a barber")
+            return
+        }
+
         router.push({
             pathname: "/joinConfirmation",
             params: {
@@ -616,14 +626,15 @@ const SingleJoin = () => {
                                 <CustomText style={{ color: '#fff' }}>Back</CustomText>
                             </Pressable>
                             <Pressable
-                                disabled={selectCustomerServices?.length === 0 || !selectedCustomerBarber}
+                                // disabled={selectCustomerServices?.length === 0 || !selectedCustomerBarber}
                                 onPress={joinConfirmation}
                                 style={[
                                     styles.searchButton,
-                                    {
-                                        opacity: selectCustomerServices?.length === 0 || !selectedCustomerBarber ? 0.5 : 1
-                                    }
-                                ]}>
+                                    // {
+                                    //     opacity: selectCustomerServices?.length === 0 || !selectedCustomerBarber ? 0.5 : 1
+                                    // }
+                                ]}
+                                >
                                 <CustomText style={{ color: '#fff' }}>Next</CustomText>
                             </Pressable>
                         </View>

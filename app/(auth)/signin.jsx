@@ -84,8 +84,6 @@ const signin = () => {
                 password
             })
 
-            console.log("Signin dsvsd ", data)
-
             setSignInData((prev) => ({ ...prev, loading: false, user: data?.response, success: true, error: null }))
 
             if (rememberMe) {

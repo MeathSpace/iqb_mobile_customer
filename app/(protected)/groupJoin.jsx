@@ -202,6 +202,15 @@ const groupJoin = () => {
     }, [scrolling]);
 
     const joinConfirmation = () => {
+
+        if (groupJoinMembers.length === 0) {
+            Toast.error("Please select group members")
+            return
+        } else if (groupJoinMembers.length < 2) {
+            Toast.error("Please select atleast 2 members")
+            return
+        }
+
         router.push({
             pathname: "/joinConfirmation",
             params: {
@@ -903,10 +912,12 @@ const groupJoin = () => {
                                 <CustomText style={{ color: '#fff' }}>Back</CustomText>
                             </Pressable>
                             <Pressable
-                                disabled={groupJoinMembers?.length === 0}
-                                style={[styles.searchButton, {
-                                    opacity: groupJoinMembers?.length === 0 ? 0.5 : 1
-                                }]}
+                                // disabled={groupJoinMembers?.length === 0}
+                                style={[styles.searchButton,
+                                // {
+                                //     opacity: groupJoinMembers?.length === 0 ? 0.5 : 1
+                                // }
+                                ]}
                                 onPress={joinConfirmation}
                             >
                                 <CustomText style={{ color: '#fff' }}>Next</CustomText>
