@@ -203,3 +203,7 @@ export const EyeIcon = ({ size = moderateScale(24), color = 'black', style }) =>
 export const EyeOffIcon = ({ size = moderateScale(24), color = 'black', style }) => (
     <Ionicons name="eye-off" size={size} color={color} style={style} />
 );
+
+export const RefreshIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <MaterialCommunityIcons name="reload" size={size} color={color} style={style} />
+);

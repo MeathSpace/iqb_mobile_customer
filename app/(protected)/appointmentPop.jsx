@@ -122,7 +122,7 @@ const appointmentPop = () => {
                     >
                         {
                             (deleteAppointmentLoader) ? (
-                                <ActivityIndicator size="small" color="#fff" />
+                                <ActivityIndicator size="small" color="#E11D48" />
                             ) : (
                                 <CustomText style={{ color: "#E11D48" }}>delete</CustomText>
                             )

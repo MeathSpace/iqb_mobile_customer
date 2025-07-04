@@ -1127,36 +1127,36 @@ const singleJoinConfirmation = () => {
                 style={{
                   fontSize: scale(14),
                   color: "gray",
-                  maxWidth: "85%"
+                  maxWidth: "90%"
                 }}
               >
                 {authenticatedUser?.address}, {authenticatedUser?.city}, {authenticatedUser?.country}
               </CustomText>
             </View>
 
-            <View
+            {/* <View
               style={{
                 flexDirection: "row",
                 alignItems: "center",
                 gap: scale(10),
                 flex: 1
               }}
+            > */}
+            <Pressable
+              onPress={() => openLink(`https://www.google.com/maps/search/?api=1&query=${authenticatedUser?.location?.coordinates?.latitude},${authenticatedUser?.location?.coordinates?.longitude}`)}
+              style={{
+                width: scale(30),
+                height: scale(30),
+                backgroundColor: colors.background,
+                justifyContent: "center",
+                alignItems: "center",
+                borderRadius: scale(4)
+              }}
             >
-              <Pressable
-                onPress={() => openLink(`https://www.google.com/maps/search/?api=1&query=${authenticatedUser?.location?.coordinates?.latitude},${authenticatedUser?.location?.coordinates?.longitude}`)}
-                style={{
-                  width: scale(30),
-                  height: scale(30),
-                  backgroundColor: colors.background,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  borderRadius: scale(4)
-                }}
-              >
-                <MapIcon size={scale(18)} color={"#fbbf24"} />
-              </Pressable>
+              <MapIcon size={scale(18)} color={"#fbbf24"} />
+            </Pressable>
 
-            </View>
+            {/* </View> */}
 
           </View>
         </View>

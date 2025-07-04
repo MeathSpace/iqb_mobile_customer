@@ -50,7 +50,7 @@ export const GlobalProvider = ({ children }) => {
     })
     const [appointmentCalenderData, setAppointmentCalenderData] = useState([])
     const [applyAppointmentFilter, setApplyAppointmentFilter] = useState({
-        selectedTab: "",
+        selectedTab: "All",
         open: true
     })
 

@@ -6,7 +6,7 @@ import { Colors } from '../../../constants/Colors';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useGlobal } from '../../../context/GlobalContext';
 import { Image } from 'expo-image';
-import { CalendarIcon, ClockIcon, FilterIcon } from '../../../constants/icons';
+import { CalendarIcon, ClockIcon, FilterIcon, RefreshIcon } from '../../../constants/icons';
 import CustomTabView from '../../../components/CustomTabView';
 import { useAuth } from '../../../context/AuthContext';
 import axios from 'axios';
@@ -107,8 +107,6 @@ const appointment = () => {
               status: applyAppointmentFilter.selectedTab
             })
 
-            // console.log("Upcomming Appointment ", data)
-
             setAppointmentListData((prev) => ({ ...prev, loading: false, data: data?.response, success: true, error: null }))
 
           } catch (error) {
@@ -150,48 +148,112 @@ const appointment = () => {
 
             case 'header':
               return (
-                appointmentListData?.data?.length > 0 ? (
-                  <View style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: scale(10)
-                  }}>
-                    <Pressable
-                      style={{
-                        height: verticalScale(40),
-                        flex: 1,
-                        backgroundColor: Colors.modeColor.colorCode,
-                        marginHorizontal: "auto",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        borderRadius: scale(4),
-                        marginTop: verticalScale(10)
-                      }}
-                      onPress={() => {
-                        setJoinModes((prev) => ({ ...prev, appointment: true, appointmentType: "Book" }))
-                        router.push("/appointmentCalendar")
-                        // router.push("/appointmentCalender")
-                      }}
-                    >
-                      <CustomText style={{ color: "#fff" }}>Book Appointment</CustomText>
-                    </Pressable>
-                    <Pressable
-                      onPress={() => router.push("/appointmentFilter")}
-                      style={{
-                        height: verticalScale(40),
-                        width: verticalScale(40),
-                        backgroundColor: "#0BA3AD1A",
-                        marginHorizontal: "auto",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        borderRadius: scale(4),
-                        marginTop: verticalScale(10)
-                      }}
-                    >
-                      <FilterIcon color={Colors.modeColor.colorCode} />
-                    </Pressable>
-                  </View>
-                ) : null
+                // appointmentListData?.data?.length > 0 ? (
+                //   <View style={{
+                //     flexDirection: "row",
+                //     alignItems: "center",
+                //     gap: scale(10)
+                //   }}>
+                //     <Pressable
+                //       style={{
+                //         height: verticalScale(40),
+                //         flex: 1,
+                //         backgroundColor: Colors.modeColor.colorCode,
+                //         marginHorizontal: "auto",
+                //         justifyContent: "center",
+                //         alignItems: "center",
+                //         borderRadius: scale(4),
+                //         marginTop: verticalScale(10)
+                //       }}
+                //       onPress={() => {
+                //         setJoinModes((prev) => ({ ...prev, appointment: true, appointmentType: "Book" }))
+                //         router.push("/appointmentCalendar")
+                //         // router.push("/appointmentCalender")
+                //       }}
+                //     >
+                //       <CustomText style={{ color: "#fff" }}>Book Appointment</CustomText>
+                //     </Pressable>
+                //     <Pressable
+                //       onPress={() => router.push("/appointmentFilter")}
+                //       style={{
+                //         height: verticalScale(40),
+                //         width: verticalScale(40),
+                //         backgroundColor: "#0BA3AD1A",
+                //         marginHorizontal: "auto",
+                //         justifyContent: "center",
+                //         alignItems: "center",
+                //         borderRadius: scale(4),
+                //         marginTop: verticalScale(10)
+                //       }}
+                //     >
+                //       <FilterIcon color={Colors.modeColor.colorCode} />
+                //     </Pressable>
+                //   </View>
+                // ) : null
+
+                <View style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: scale(10)
+                }}>
+                  <Pressable
+                    style={{
+                      height: verticalScale(40),
+                      flex: 1,
+                      backgroundColor: Colors.modeColor.colorCode,
+                      marginHorizontal: "auto",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      borderRadius: scale(4),
+                      marginTop: verticalScale(10)
+                    }}
+                    onPress={() => {
+                      setJoinModes((prev) => ({ ...prev, appointment: true, appointmentType: "Book" }))
+                      router.push("/appointmentCalendar")
+                      // router.push("/appointmentCalender")
+                    }}
+                  >
+                    <CustomText style={{ color: "#fff" }}>Book Appointment</CustomText>
+                  </Pressable>
+
+                  <Pressable
+                    disabled={appointmentListData?.loading}
+                    onPress={() => {
+                      setApplyAppointmentFilter({
+                        selectedTab: "All",
+                        open: true
+                      })
+                    }}
+                    style={{
+                      height: verticalScale(40),
+                      width: verticalScale(40),
+                      backgroundColor: "#0BA3AD1A",
+                      marginHorizontal: "auto",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      borderRadius: scale(4),
+                      marginTop: verticalScale(10)
+                    }}
+                  >
+                    <RefreshIcon color={Colors.modeColor.colorCode} />
+                  </Pressable>
+
+                  <Pressable
+                    onPress={() => router.push("/appointmentFilter")}
+                    style={{
+                      height: verticalScale(40),
+                      width: verticalScale(40),
+                      backgroundColor: "#0BA3AD1A",
+                      marginHorizontal: "auto",
+                      justifyContent: "center",
+                      alignItems: "center",
+                      borderRadius: scale(4),
+                      marginTop: verticalScale(10)
+                    }}
+                  >
+                    <FilterIcon color={Colors.modeColor.colorCode} />
+                  </Pressable>
+                </View>
 
               )
 
@@ -310,10 +372,10 @@ const appointment = () => {
                       })
                     ) : (
                       <View style={{
-                        flex: 1,
                         justifyContent: "center",
                         alignItems: "center",
                         minHeight: verticalScale(400)
+                        // minHeight: verticalScale(550),
                       }}>
                         <View
                           style={{
@@ -347,7 +409,7 @@ const appointment = () => {
                               textAlign: "center"
                             }}
                           >You haven’t booked any appointments yet. Schedule your appointment today to ensure a convenient time that fits your schedule.</CustomSecondaryText>
-                          <Pressable
+                          {/* <Pressable
                             onPress={() => router.push("/appointmentCalendar")}
                             style={{
                               height: verticalScale(40),
@@ -360,7 +422,7 @@ const appointment = () => {
                             }}
                           ><CustomText style={{
                             color: "#fff"
-                          }}>Book Appointment</CustomText></Pressable>
+                          }}>Book Appointment</CustomText></Pressable> */}
                         </View>
                       </View>
                     )

@@ -41,12 +41,15 @@ const about = () => {
   const { colors } = useTheme()
 
   return (
-    <CustomTabView
+    <View
       style={{
-        // paddingVertical: verticalScale(0),
-        // paddingTop: verticalScale(10),
-        paddingBottom: Platform.OS === "ios" ? verticalScale(80) : verticalScale(20)
-      }}>
+        backgroundColor: "#00B0901A",
+        flex: 1,
+        paddingHorizontal: scale(10),
+        paddingTop: verticalScale(10),
+        paddingBottom: Platform.OS === "ios" ? verticalScale(80) : verticalScale(0)
+      }}
+    >
       {/* <Pressable
         onPress={() => router.back()}
         style={{
@@ -123,10 +126,10 @@ const about = () => {
             // fontFamily: "AirbnbCereal_W_MD",
 
           }}
-        >Version 1.0.0.1</CustomText>
+        >Version 1.0.0.19</CustomText>
       </View>
 
-    </CustomTabView>
+    </View>
   )
 }
 

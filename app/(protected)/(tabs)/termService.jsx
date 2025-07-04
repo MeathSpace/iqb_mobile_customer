@@ -62,12 +62,12 @@ const termService = () => {
         Contact us anytime from the app or at info@iqbook.io
       </CustomText>
 
-      <Pressable
+      {/* <Pressable
         onPress={() => router.back()}
         style={styles.agreeButton}
       >
         <CustomText style={{ color: "#fff", textAlign: 'center' }}>I Agree</CustomText>
-      </Pressable>
+      </Pressable> */}
     </ScrollView>
   )
 }

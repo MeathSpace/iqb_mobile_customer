@@ -7,12 +7,12 @@ import CustomSecondaryText from './CustomSecondaryText'
 import { useTheme } from '@react-navigation/native'
 import { ClockIcon } from '../constants/icons'
 import { useAuth } from '../context/AuthContext'
+import { Background } from '@react-navigation/elements'
 
 const QlistItem = ({ item, index, qlistLength }) => {
 
     const { colors } = useTheme()
     const { authenticatedUser } = useAuth()
-
 
     return (
         <View style={[styles.qlistItem, {
@@ -29,7 +29,7 @@ const QlistItem = ({ item, index, qlistLength }) => {
                     transition={300}
                 />
                 <View style={{ gap: verticalScale(5) }}>
-                    <CustomText style={{ fontFamily: "AirbnbCereal_W_Md", fontSize: scale(14) }}>{item.name}</CustomText>
+                    <CustomText style={{ fontFamily: "AirbnbCereal_W_Md", fontSize: scale(14) }}>{item.barberName}</CustomText>
                     <CustomSecondaryText style={{
                         fontFamily: "AirbnbCereal_W_Md",
                         fontSize: scale(12),
@@ -38,23 +38,46 @@ const QlistItem = ({ item, index, qlistLength }) => {
                 </View>
             </View>
 
-            <View style={{ gap: verticalScale(5) }}>
-                <CustomText style={{ fontFamily: "AirbnbCereal_W_Blk", textAlign: "center", fontSize: scale(16), minWidth: scale(50) }}>{item.qPosition}</CustomText>
+            <View style={{
+                gap: verticalScale(5),
+                minWidth: scale(80),
+                alignItems: "center",          
+                justifyContent: "center",     
+            }}>
+                <CustomText
+                    style={{
+                        fontFamily: "AirbnbCereal_W_Blk",
+                        fontSize: scale(16),
+                        minWidth: scale(50),
+                        textAlign: "center",   
+                    }}>
+                    {item.qPosition}
+                </CustomText>
+
                 {
-                    item.customerEWT === 0 ? <CustomText style={{ fontSize: scale(12), color: "gray", textAlign: "center" }}>-</CustomText> : (
+                    item.customerEWT === 0 ? (
+                        <CustomText style={{
+                            fontSize: scale(12),
+                            color: "gray",
+                            textAlign: "center"   
+                        }}>-</CustomText>
+                    ) : (
                         <View style={{
                             flexDirection: "row",
                             alignItems: "center",
                             gap: scale(2),
-                            // flex: 1
+                            justifyContent: "center" 
                         }}>
                             <ClockIcon size={scale(12)} color='gray' />
-                            <CustomText style={{ fontSize: scale(12), color: "gray" }}>{item.customerEWT} mins</CustomText>
+                            <CustomText style={{ fontSize: scale(12), color: "gray" }}>
+                                {item.customerEWT} mins
+                            </CustomText>
                         </View>
                     )
                 }
-
             </View>
+
+
         </View>
     )
 }

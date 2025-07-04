@@ -946,36 +946,26 @@ const salon = () => {
                                                     style={{
                                                         fontSize: scale(14),
                                                         color: "gray",
-                                                        maxWidth: "85%"
+                                                        maxWidth: "90%"
                                                     }}
                                                 >
                                                     {`${salonInfoData?.data?.salonInfo?.address}, ${salonInfoData?.data?.salonInfo?.city}, ${salonInfoData?.data?.salonInfo?.country}`}
                                                 </CustomText>
                                             </View>
 
-                                            <View
+                                            <Pressable
                                                 style={{
-                                                    flexDirection: "row",
+                                                    width: scale(30),
+                                                    height: scale(30),
+                                                    backgroundColor: colors.background,
+                                                    justifyContent: "center",
                                                     alignItems: "center",
-                                                    gap: scale(10),
-                                                    flex: 1
+                                                    borderRadius: scale(4)
                                                 }}
+                                                onPress={() => openLink(`https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`)}
                                             >
-                                                <Pressable
-                                                    style={{
-                                                        width: scale(30),
-                                                        height: scale(30),
-                                                        backgroundColor: colors.background,
-                                                        justifyContent: "center",
-                                                        alignItems: "center",
-                                                        borderRadius: scale(4)
-                                                    }}
-                                                    onPress={() => openLink(`https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`)}
-                                                >
-                                                    <MapIcon size={scale(18)} color={"#fbbf24"} />
-                                                </Pressable>
-
-                                            </View>
+                                                <MapIcon size={scale(18)} color={"#fbbf24"} />
+                                            </Pressable>
 
                                         </View>
                                     </View>
@@ -1077,307 +1067,166 @@ const salon = () => {
                                             >Hair Cutting</CustomText>
                                         </Pressable>
 
-                                        {/* {
-                                            [0, 1, 2, 3, 4, 5, 6, 7, 8].map((item, index) => {
-                                                return (
+                                        {
+                                            salonServicesCategoryData?.data?.length > 0 ? (
+                                                salonServicesCategoryData?.data?.map((item, index) => {
+                                                    return (
+                                                        <Pressable
+                                                            key={item?.serviceId}
+                                                            style={{
+                                                                borderRadius: scale(10),
+                                                                backgroundColor: "#00B0901A",
+                                                                padding: scale(12),
+                                                                gap: verticalScale(10)
+                                                            }}
+                                                        >
+                                                            <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                                                                <View
+                                                                    style={{
+                                                                        flexDirection: "row",
+                                                                        alignItems: "center",
+                                                                        gap: scale(10)
+                                                                    }}
+                                                                >
 
-                                                    <Pressable
-                                                        key={index}
-                                                        style={{
-                                                            // height: verticalScale(195),
-                                                            borderRadius: scale(10),
-                                                            backgroundColor: "#00B0901A",
-                                                            padding: scale(12),
-                                                            gap: verticalScale(10)
-                                                        }}
-                                                    >
-                                                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                                            <View
-                                                                style={{
-                                                                    flexDirection: "row",
-                                                                    alignItems: "center",
-                                                                    gap: scale(10)
-                                                                }}
-                                                            >
-
-                                                                {
-                                                                    index % 2 === 1 ? (
-                                                                        <Image
-                                                                            style={{ height: scale(50), width: scale(50), borderRadius: scale(80) }}
-                                                                            source={{ uri: "https://www.knksalon.in/assets-admin/upload/category_service/6595410e1a466.webp" }}
-                                                                            // placeholder={{ blurhash }}
-                                                                            contentFit="cover"
-                                                                            transition={300}
-                                                                        />
-                                                                    ) : (
-                                                                        <View
-                                                                            style={{
-                                                                                height: scale(50),
-                                                                                width: scale(50),
-                                                                                borderRadius: scale(80),
-                                                                                backgroundColor: "rgba(0,0,0,0.4)",
-                                                                                position: "relative"
-                                                                            }}
-                                                                        >
+                                                                    {
+                                                                        item?.selected ? (
+                                                                            <View
+                                                                                style={{
+                                                                                    height: scale(50),
+                                                                                    width: scale(50),
+                                                                                    borderRadius: scale(80),
+                                                                                    backgroundColor: "rgba(0,0,0,0.4)",
+                                                                                    position: "relative"
+                                                                                }}
+                                                                            >
+                                                                                <Image
+                                                                                    style={{ height: scale(50), width: scale(50), borderRadius: scale(80), zIndex: -1 }}
+                                                                                    source={{ uri: item?.serviceIcon?.url }}
+                                                                                    contentFit="cover"
+                                                                                    transition={300}
+                                                                                />
+                                                                                <CheckIcon
+                                                                                    color='#fff'
+                                                                                    style={{
+                                                                                        position: "absolute",
+                                                                                        top: scale(14),
+                                                                                        left: scale(14)
+                                                                                    }}
+                                                                                />
+                                                                            </View>
+                                                                        ) : (
                                                                             <Image
-                                                                                style={{ height: scale(50), width: scale(50), borderRadius: scale(80), zIndex: -1 }}
-                                                                                source={{ uri: "https://www.knksalon.in/assets-admin/upload/category_service/6595410e1a466.webp" }}
-                                                                                // placeholder={{ blurhash }}
+                                                                                style={{ height: scale(50), width: scale(50), borderRadius: scale(80) }}
+                                                                                source={{ uri: item?.serviceIcon?.url }}
                                                                                 contentFit="cover"
                                                                                 transition={300}
                                                                             />
-                                                                            <CheckIcon
-                                                                                color='#fff'
-                                                                                style={{
-                                                                                    position: "absolute",
-                                                                                    top: scale(14),
-                                                                                    left: scale(14)
-                                                                                }}
-                                                                            />
-                                                                        </View>
-                                                                    )
-                                                                }
+                                                                        )
+                                                                    }
 
-                                                                <View style={{ gap: verticalScale(5) }}>
-                                                                    <CustomText style={{
-                                                                        fontSize: scale(12),
-                                                                        fontFamily: "AirbnbCereal_W_Bd"
-                                                                    }}>Haircuts & Styling</CustomText>
-                                                                    <Pressable
-                                                                        style={{
-                                                                            height: verticalScale(15),
-                                                                            width: scale(50),
-                                                                            backgroundColor: "#00B0901A",
-                                                                            borderRadius: scale(4),
-                                                                            justifyContent: "center",
-                                                                            alignItems: "center"
-                                                                        }}
-                                                                    ><CustomText style={{ fontSize: scale(10), color: "#00B090" }}>Haircut</CustomText></Pressable>
+                                                                    <View style={{ gap: verticalScale(5) }}>
+                                                                        <CustomText style={{
+                                                                            fontSize: scale(12),
+                                                                            fontFamily: "AirbnbCereal_W_Bd"
+                                                                        }}>{item?.serviceName}</CustomText>
+                                                                        <Pressable
+                                                                            style={{
+                                                                                height: verticalScale(15),
+                                                                                width: scale(50),
+                                                                                backgroundColor: "#00B0901A",
+                                                                                borderRadius: scale(4),
+                                                                                justifyContent: "center",
+                                                                                alignItems: "center"
+                                                                            }}
+                                                                        ><CustomText style={{ fontSize: scale(10), color: "#00B090" }}>{item?.serviceCategoryName}</CustomText></Pressable>
+                                                                    </View>
                                                                 </View>
-                                                            </View>
-
-                                                            {
-                                                                index % 2 === 1 ? (
-                                                                    <Pressable
-                                                                        style={{
-                                                                            height: verticalScale(20),
-                                                                            width: scale(55),
-                                                                            backgroundColor: "#1f2937",
-                                                                            borderRadius: scale(4),
-                                                                            justifyContent: "center",
-                                                                            alignItems: "center"
-                                                                        }}
-                                                                    ><CustomText style={{ fontSize: scale(12), color: "#fff" }}>Add</CustomText>
-                                                                    </Pressable>
-                                                                ) : (<Pressable
-                                                                    style={{
-                                                                        height: verticalScale(20),
-                                                                        width: scale(60),
-                                                                        backgroundColor: "#E11D48",
-                                                                        borderRadius: scale(4),
-                                                                        justifyContent: "center",
-                                                                        alignItems: "center"
-                                                                    }}
-                                                                ><CustomText style={{ fontSize: scale(12), color: "#fff" }}>Remove</CustomText>
-                                                                </Pressable>)
-                                                            }
-                                                        </View>
-
-                                                        <View style={{ marginTop: verticalScale(5), gap: verticalScale(5) }}>
-                                                            <CustomText
-                                                                style={{
-                                                                    color: "gray",
-                                                                    fontSize: scale(12)
-                                                                }}
-                                                            >Lorem ipsum dolor sit amet, consectetur adipisicing elit. Modi in odit tenetur, exercitationem qui similique?</CustomText>
-
-                                                            <View
-                                                                style={{
-                                                                    flexDirection: "row",
-                                                                    alignItems: "center",
-                                                                    justifyContent: "space-between"
-                                                                }}
-                                                            >
-                                                                <View style={{
-                                                                    flexDirection: "row",
-                                                                    alignItems: "center",
-                                                                    justifyContent: "space-between",
-                                                                    width: scale(75),
-                                                                    gap: scale(2),
-                                                                    backgroundColor: colors.background,
-                                                                    paddingHorizontal: scale(5),
-                                                                    borderRadius: scale(4)
-                                                                }}>
-                                                                    <ClockIcon size={scale(12)} color={Colors.modeColor.colorCode} />
-                                                                    <CustomText style={{ fontSize: scale(12), flex: 1, color: Colors.modeColor.colorCode }}>120 mins</CustomText>
-                                                                </View>
-
-                                                                <CustomText
-                                                                    style={{
-                                                                        fontFamily: "AirbnbCereal_W_Blk",
-                                                                        fontSize: scale(18),
-                                                                        color: Colors.modeColor.colorCode
-                                                                    }}
-                                                                >$49.00</CustomText>
-                                                            </View>
-                                                        </View>
-                                                    </Pressable >
-                                                )
-                                            })
-                                        } */}
-
-                                        {
-                                            salonServicesCategoryData?.data?.map((item, index) => {
-                                                return (
-                                                    <Pressable
-                                                        key={item?.serviceId}
-                                                        style={{
-                                                            borderRadius: scale(10),
-                                                            backgroundColor: "#00B0901A",
-                                                            padding: scale(12),
-                                                            gap: verticalScale(10)
-                                                        }}
-                                                    >
-                                                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
-                                                            <View
-                                                                style={{
-                                                                    flexDirection: "row",
-                                                                    alignItems: "center",
-                                                                    gap: scale(10)
-                                                                }}
-                                                            >
 
                                                                 {
                                                                     item?.selected ? (
-                                                                        <View
+                                                                        <Pressable
+                                                                            onPress={() => removeServiceHandler(item)}
                                                                             style={{
-                                                                                height: scale(50),
-                                                                                width: scale(50),
-                                                                                borderRadius: scale(80),
-                                                                                backgroundColor: "rgba(0,0,0,0.4)",
-                                                                                position: "relative"
+                                                                                height: verticalScale(20),
+                                                                                width: scale(60),
+                                                                                backgroundColor: "#E11D48",
+                                                                                borderRadius: scale(4),
+                                                                                justifyContent: "center",
+                                                                                alignItems: "center"
                                                                             }}
-                                                                        >
-                                                                            <Image
-                                                                                style={{ height: scale(50), width: scale(50), borderRadius: scale(80), zIndex: -1 }}
-                                                                                source={{ uri: item?.serviceIcon?.url }}
-                                                                                // placeholder={{ blurhash }}
-                                                                                contentFit="cover"
-                                                                                transition={300}
-                                                                            />
-                                                                            <CheckIcon
-                                                                                color='#fff'
-                                                                                style={{
-                                                                                    position: "absolute",
-                                                                                    top: scale(14),
-                                                                                    left: scale(14)
-                                                                                }}
-                                                                            />
-                                                                        </View>
+                                                                        ><CustomText style={{ fontSize: scale(12), color: "#fff" }}>Remove</CustomText>
+                                                                        </Pressable>
                                                                     ) : (
-                                                                        <Image
-                                                                            style={{ height: scale(50), width: scale(50), borderRadius: scale(80) }}
-                                                                            source={{ uri: item?.serviceIcon?.url }}
-                                                                            // placeholder={{ blurhash }}
-                                                                            contentFit="cover"
-                                                                            transition={300}
-                                                                        />
+                                                                        <Pressable
+                                                                            onPress={() => addServiceHandler(item)}
+                                                                            style={{
+                                                                                height: verticalScale(20),
+                                                                                width: scale(55),
+                                                                                backgroundColor: "#1f2937",
+                                                                                borderRadius: scale(4),
+                                                                                justifyContent: "center",
+                                                                                alignItems: "center"
+                                                                            }}
+                                                                        ><CustomText style={{ fontSize: scale(12), color: "#fff" }}>Add</CustomText>
+                                                                        </Pressable>
                                                                     )
                                                                 }
-
-                                                                <View style={{ gap: verticalScale(5) }}>
-                                                                    <CustomText style={{
-                                                                        fontSize: scale(12),
-                                                                        fontFamily: "AirbnbCereal_W_Bd"
-                                                                    }}>{item?.serviceName}</CustomText>
-                                                                    <Pressable
-                                                                        style={{
-                                                                            height: verticalScale(15),
-                                                                            width: scale(50),
-                                                                            backgroundColor: "#00B0901A",
-                                                                            borderRadius: scale(4),
-                                                                            justifyContent: "center",
-                                                                            alignItems: "center"
-                                                                        }}
-                                                                    ><CustomText style={{ fontSize: scale(10), color: "#00B090" }}>{item?.serviceCategoryName}</CustomText></Pressable>
-                                                                </View>
                                                             </View>
 
-                                                            {
-                                                                item?.selected ? (
-                                                                    <Pressable
-                                                                        onPress={() => removeServiceHandler(item)}
-                                                                        style={{
-                                                                            height: verticalScale(20),
-                                                                            width: scale(60),
-                                                                            backgroundColor: "#E11D48",
-                                                                            borderRadius: scale(4),
-                                                                            justifyContent: "center",
-                                                                            alignItems: "center"
-                                                                        }}
-                                                                    ><CustomText style={{ fontSize: scale(12), color: "#fff" }}>Remove</CustomText>
-                                                                    </Pressable>
-                                                                ) : (
-                                                                    <Pressable
-                                                                        onPress={() => addServiceHandler(item)}
-                                                                        style={{
-                                                                            height: verticalScale(20),
-                                                                            width: scale(55),
-                                                                            backgroundColor: "#1f2937",
-                                                                            borderRadius: scale(4),
-                                                                            justifyContent: "center",
-                                                                            alignItems: "center"
-                                                                        }}
-                                                                    ><CustomText style={{ fontSize: scale(12), color: "#fff" }}>Add</CustomText>
-                                                                    </Pressable>
-                                                                )
-                                                            }
-                                                        </View>
-
-                                                        <View style={{ marginTop: verticalScale(5), gap: verticalScale(5) }}>
-                                                            <CustomText
-                                                                style={{
-                                                                    color: "gray",
-                                                                    fontSize: scale(12)
-                                                                }}
-                                                            >{item?.serviceDesc}</CustomText>
-
-                                                            <View
-                                                                style={{
-                                                                    flexDirection: "row",
-                                                                    alignItems: "center",
-                                                                    justifyContent: "space-between"
-                                                                }}
-                                                            >
-                                                                <View style={{
-                                                                    flexDirection: "row",
-                                                                    alignItems: "center",
-                                                                    justifyContent: "space-between",
-                                                                    width: scale(75),
-                                                                    gap: scale(2),
-                                                                    backgroundColor: colors.background,
-                                                                    paddingHorizontal: scale(5),
-                                                                    borderRadius: scale(4)
-                                                                }}>
-                                                                    <ClockIcon size={scale(12)} color={Colors.modeColor.colorCode} />
-                                                                    <CustomText style={{ fontSize: scale(12), flex: 1, color: Colors.modeColor.colorCode }}>{item?.serviceEWT} mins</CustomText>
-                                                                </View>
-
-                                                                {/* Currency should also be added in authenticated user response */}
-                                                                {/* Service Price doesnot have point value */}
-
+                                                            <View style={{ marginTop: verticalScale(5), gap: verticalScale(5) }}>
                                                                 <CustomText
                                                                     style={{
-                                                                        fontFamily: "AirbnbCereal_W_Blk",
-                                                                        fontSize: scale(18),
-                                                                        color: Colors.modeColor.colorCode
+                                                                        color: "gray",
+                                                                        fontSize: scale(12)
                                                                     }}
-                                                                >{authenticatedUser?.currency} {item?.servicePrice}</CustomText>
+                                                                >{item?.serviceDesc}</CustomText>
+
+                                                                <View
+                                                                    style={{
+                                                                        flexDirection: "row",
+                                                                        alignItems: "center",
+                                                                        justifyContent: "space-between"
+                                                                    }}
+                                                                >
+                                                                    <View style={{
+                                                                        flexDirection: "row",
+                                                                        alignItems: "center",
+                                                                        justifyContent: "space-between",
+                                                                        width: scale(75),
+                                                                        gap: scale(2),
+                                                                        backgroundColor: colors.background,
+                                                                        paddingHorizontal: scale(5),
+                                                                        borderRadius: scale(4)
+                                                                    }}>
+                                                                        <ClockIcon size={scale(12)} color={Colors.modeColor.colorCode} />
+                                                                        <CustomText style={{ fontSize: scale(12), flex: 1, color: Colors.modeColor.colorCode }}>{item?.serviceEWT} mins</CustomText>
+                                                                    </View>
+
+                                                                    <CustomText
+                                                                        style={{
+                                                                            fontFamily: "AirbnbCereal_W_Blk",
+                                                                            fontSize: scale(18),
+                                                                            color: Colors.modeColor.colorCode
+                                                                        }}
+                                                                    >{authenticatedUser?.currency} {item?.servicePrice}</CustomText>
+                                                                </View>
                                                             </View>
-                                                        </View>
-                                                    </Pressable >
-                                                )
-                                            })
+                                                        </Pressable >
+                                                    )
+                                                })
+                                            ) : (
+                                                <View
+                                                    style={{
+                                                        height: verticalScale(180),
+                                                        justifyContent: "center",
+                                                        alignItems: "center",
+                                                    }}
+                                                >
+                                                    <CustomText>No services available</CustomText>
+                                                </View>
+                                            )
+
                                         }
                                     </>
                                 ) : <>
@@ -1485,27 +1334,34 @@ const salon = () => {
                                         }}
                                     >Explore all stylists</CustomText>
 
-                                    <View
-                                        style={{
-                                            // flexDirection: "row",
-                                            // alignItems: "center",
-                                            // flexDirection: "row",
-                                            // flexWrap: "wrap",
-                                            // // paddingVertical: verticalScale(10),
-                                            // gap: scale(20),
-                                            flexDirection: "row",
-                                            flexWrap: "wrap",
-                                            gap: scale(10)
-                                        }}
-                                    >
+                                    {
+                                        salonInfoData?.data?.barbers?.length > 0 ? (
+                                            <View
+                                                style={{
+                                                    flexDirection: "row",
+                                                    flexWrap: "wrap",
+                                                    gap: scale(10)
+                                                }}
+                                            >
 
-                                        {
-                                            salonInfoData?.data?.barbers?.map((item, index) => {
-                                                return (<BarberCard key={item?.barberId} item={item} />)
-                                            })
-                                        }
+                                                {
+                                                    salonInfoData?.data?.barbers?.map((item, index) => {
+                                                        return (<BarberCard key={item?.barberId} item={item} />)
+                                                    })
+                                                }
 
-                                    </View>
+                                            </View>
+                                        ) : (
+                                            <View style={{
+                                                height: verticalScale(180),
+                                                justifyContent: "center",
+                                                alignItems: "center",
+                                            }}>
+                                                <CustomText>No barbers available</CustomText>
+                                            </View>
+                                        )
+                                    }
+
                                 </>
                             )
                         }

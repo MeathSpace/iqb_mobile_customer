@@ -138,10 +138,15 @@ const MyFavourites = () => {
 
 
     return (
-        <CustomTabView
+        <View
             style={{
+                backgroundColor: "#00B0901A",
+                flex: 1,
+                paddingHorizontal: scale(10),
+                paddingTop: verticalScale(10),
                 paddingBottom: Platform.OS === "ios" ? verticalScale(80) : verticalScale(0)
-            }}>
+            }}
+        >
 
             {
                 favouriteSalonData?.loading ? (
@@ -194,7 +199,7 @@ const MyFavourites = () => {
                                         <View
                                             style={{ flexDirection: "row", alignItems: "center", gap: scale(5) }}
                                         >
-                                            
+
                                             <Image
                                                 style={{
                                                     width: scale(35),
@@ -264,9 +269,7 @@ const MyFavourites = () => {
                     </View>
                 )
             }
-
-
-        </CustomTabView>
+        </View>
     );
 };
 

@@ -89,6 +89,7 @@ const signin = () => {
             if (rememberMe) {
                 await AsyncStorage.setItem("isAuthenticated", JSON.stringify(true))
             }
+            
             await AsyncStorage.setItem("LoggedInUser", JSON.stringify(data?.response))
             setAuthenticatedUser(data?.response)
             setIsAuthenticated(true)
@@ -156,9 +157,9 @@ const signin = () => {
                     setSignInData((prev) => ({
                         ...prev, loading: false, user: {
                             ...data?.response,
-                            profile: [
-                                { url: user?.imageUrl }
-                            ]
+                            // profile: [
+                            //     { url: user?.imageUrl }
+                            // ]
                         }, success: true, error: null
                     }))
 
@@ -171,15 +172,15 @@ const signin = () => {
 
                     await AsyncStorage.setItem("LoggedInUser", JSON.stringify({
                         ...data?.response,
-                        profile: [
-                            { url: user?.imageUrl }
-                        ]
+                        // profile: [
+                        //     { url: user?.imageUrl }
+                        // ]
                     }))
                     setAuthenticatedUser({
                         ...data?.response,
-                        profile: [
-                            { url: user?.imageUrl }
-                        ]
+                        // profile: [
+                        //     { url: user?.imageUrl }
+                        // ]
                     })
                     setIsAuthenticated(true)
                     router.push("/home")

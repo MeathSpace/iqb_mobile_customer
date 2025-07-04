@@ -28,15 +28,15 @@ const account = () => {
 
   const logoutPressed = async () => {
     if (isSignedIn) {
-      signOut()
+      await signOut()
     }
     setSelectedBarber({})
     setSelectedBarberServices([])
     setCustomerName("")
-    setIsAuthenticated(false)
-    setAuthenticatedUser(null)
     await AsyncStorage.removeItem("LoggedInUser")
     await AsyncStorage.removeItem("isAuthenticated")
+    setIsAuthenticated(false)
+    setAuthenticatedUser(null)
     router.replace("/")
   }
 

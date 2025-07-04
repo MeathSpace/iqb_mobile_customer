@@ -10,8 +10,10 @@ const privacyPolicy = () => {
   const router = useRouter()
 
   return (
-    <CustomTabView
+    <View
       style={{
+        backgroundColor: "#00B0901A",
+        flex: 1,
         paddingVertical: verticalScale(0),
         paddingTop: verticalScale(10),
         paddingBottom: Platform.OS === "ios" ? verticalScale(80) : verticalScale(20),
@@ -105,15 +107,8 @@ const privacyPolicy = () => {
         <CustomText style={styles.bullet}>• We will notify users of significant changes via the app</CustomText>
         <CustomText style={styles.bullet}>• Continued use of the app means you accept the updated policy</CustomText>
 
-        <CustomText style={styles.subHeading}>8. Contact Us</CustomText>
-        <CustomText style={styles.paragraph}>
-          If you have any questions, feedback, or requests related to your privacy, reach out to us:
-        </CustomText>
-        <CustomText style={styles.bullet}>📧 Email: [Your Support Email]</CustomText>
-        <CustomText style={styles.bullet}>📞 Phone: [Salon Contact Number]</CustomText>
-        <CustomText style={styles.bullet}>📍 Address: [Salon Address, optional]</CustomText>
       </ScrollView>
-    </CustomTabView>
+    </View>
   )
 }
 

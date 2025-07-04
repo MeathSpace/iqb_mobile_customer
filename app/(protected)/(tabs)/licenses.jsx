@@ -10,8 +10,10 @@ const licenses = () => {
   const router = useRouter()
 
   return (
-    <CustomTabView
+    <View
       style={{
+        backgroundColor: "#00B0901A",
+        flex: 1,
         paddingVertical: verticalScale(0),
         paddingTop: verticalScale(10),
         paddingBottom: Platform.OS === 'ios' ? verticalScale(80) : verticalScale(20),
@@ -21,17 +23,14 @@ const licenses = () => {
         <CustomText style={styles.heading}>End User License Agreement (EULA)</CustomText>
 
         <CustomText style={styles.paragraph}>
-          <CustomText style={styles.bold}>Effective Date:</CustomText> [Insert Date]
+          <CustomText style={styles.bold}>Effective Date:</CustomText> 04-07-2025
         </CustomText>
         <CustomText style={styles.paragraph}>
-          <CustomText style={styles.bold}>App Name:</CustomText> [Your Salon App Name]
-        </CustomText>
-        <CustomText style={styles.paragraph}>
-          <CustomText style={styles.bold}>Developer/Owner:</CustomText> [Your Company or Salon Name]
+          <CustomText style={styles.bold}>App Name:</CustomText> iqbook
         </CustomText>
 
         <CustomText style={styles.paragraph}>
-          This End User License Agreement (“Agreement”) is a legal agreement between you (“User”, “you”, or “your”) and <CustomText style={styles.italic}>[Your Company Name]</CustomText>, governing your use of the <CustomText style={styles.italic}>[Salon App Name]</CustomText> mobile application (“App”).
+          This End User License Agreement (“Agreement”) is a legal agreement between you (“User”, “you”, or “your”) and <CustomText style={styles.italic}>iqbook</CustomText>, governing your use of the <CustomText style={styles.italic}>iqbook</CustomText> mobile application (“App”).
         </CustomText>
 
         <CustomText style={styles.paragraph}>
@@ -49,7 +48,7 @@ const licenses = () => {
 
         <CustomText style={styles.subHeading}>2. Ownership and Intellectual Property</CustomText>
         <CustomText style={styles.paragraph}>
-          All content, design, code, and trademarks within the app are owned by <CustomText style={styles.italic}>[Your Company Name]</CustomText> or its licensors. This license does not grant you ownership of the app or its content—only the right to use it under the conditions of this Agreement.
+          All content, design, code, and trademarks within the app are owned by <CustomText style={styles.italic}>iqbook</CustomText> or its licensors. This license does not grant you ownership of the app or its content—only the right to use it under the conditions of this Agreement.
         </CustomText>
 
         <CustomText style={styles.subHeading}>3. Updates and Modifications</CustomText>
@@ -85,16 +84,8 @@ const licenses = () => {
         <CustomText style={styles.bullet}>• Any indirect or consequential damages</CustomText>
         <CustomText style={styles.paragraph}>Your use of the app is at your own risk.</CustomText>
 
-        <CustomText style={styles.subHeading}>7. Governing Law</CustomText>
-        <CustomText style={styles.paragraph}>
-          This agreement is governed by the laws of <CustomText style={styles.italic}>[Your Country/State]</CustomText>. Any legal disputes must be resolved in courts located in <CustomText style={styles.italic}>[Your Jurisdiction]</CustomText>.
-        </CustomText>
-
-        <CustomText style={styles.subHeading}>8. Contact Information</CustomText>
-        <CustomText style={styles.bullet}>📧 Email: [Your Support Email]</CustomText>
-        <CustomText style={styles.bullet}>📍 Address: [Your Company Address]</CustomText>
       </ScrollView>
-    </CustomTabView>
+    </View>
   )
 }
 
