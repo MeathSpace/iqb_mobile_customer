@@ -14,7 +14,7 @@ import axios from 'axios';
 import { BASE_URL } from '@/utils/api';
 import Skeleton from '../../../components/Skeleton';
 import { PeopleIcon, RefreshIcon } from '../../../constants/icons';
-
+import { io } from "socket.io-client";
 
 const QueueList = () => {
 
@@ -48,10 +48,21 @@ const QueueList = () => {
         }
     }
 
+    const socket = io("https://iqb-final.onrender.com", {
+        transports: ['websocket'],
+    });
+
     useFocusEffect(
         useCallback(() => {
 
             fetchQlist()
+
+            socket.emit("joinSalon", authenticatedUser?.salonId);
+
+            socket.on("queueUpdated", (queueData) => {
+                setQlistData((prev) => ({ ...prev, loading: false, data: queueData, success: true, error: null }))
+            })
+
         }, [authenticatedUser])
     )
 

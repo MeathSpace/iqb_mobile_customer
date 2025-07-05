@@ -194,7 +194,6 @@ const personalInfo = () => {
                         gap: verticalScale(20)
                     }}
                 >
-
                     <ProgressHeader
                         progressOne={progressOne}
                         progressTwo={progressTwo}

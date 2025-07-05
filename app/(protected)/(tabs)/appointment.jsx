@@ -14,6 +14,7 @@ import { BASE_URL } from '@/utils/api';
 import Skeleton from '../../../components/Skeleton';
 import { useTheme } from '@react-navigation/native';
 import CustomSecondaryText from '../../../components/CustomSecondaryText';
+import { io } from "socket.io-client";
 
 const appointment = () => {
 
@@ -33,56 +34,6 @@ const appointment = () => {
   const router = useRouter()
   const { setJoinModes, joinModes, applyAppointmentFilter, setApplyAppointmentFilter } = useGlobal();
 
-  // const appData = [
-  //   {
-  //     type: "upcomming",
-  //     backgroundColor: "#EAA8241A",
-  //     color: "#EAA824"
-  //   },
-  //   {
-  //     type: "served",
-  //     backgroundColor: "#00B0901A",
-  //     color: "#00B090"
-  //   },
-  //   {
-  //     type: "cancelled",
-  //     backgroundColor: "#E11D481A",
-  //     color: "#E11D48"
-  //   },
-
-  //   {
-  //     type: "upcomming",
-  //     backgroundColor: "#EAA8241A",
-  //     color: "#EAA824"
-  //   },
-  //   {
-  //     type: "served",
-  //     backgroundColor: "#00B0901A",
-  //     color: "#00B090"
-  //   },
-  //   {
-  //     type: "cancelled",
-  //     backgroundColor: "#E11D481A",
-  //     color: "#E11D48"
-  //   },
-
-  //   {
-  //     type: "upcomming",
-  //     backgroundColor: "#EAA8241A",
-  //     color: "#EAA824"
-  //   },
-  //   {
-  //     type: "served",
-  //     backgroundColor: "#00B0901A",
-  //     color: "#00B090"
-  //   },
-  //   {
-  //     type: "cancelled",
-  //     backgroundColor: "#E11D481A",
-  //     color: "#E11D48"
-  //   },
-  // ]
-
   const { authenticatedUser } = useAuth()
 
   const [appointmentListData, setAppointmentListData] = useState({
@@ -92,10 +43,21 @@ const appointment = () => {
     success: false
   })
 
+  const socket = io("https://iqb-final.onrender.com", {
+    transports: ['websocket'],
+  });
+
   useFocusEffect(
     useCallback(() => {
 
       if (applyAppointmentFilter.open) {
+
+        socket.emit("joinSalon", authenticatedUser?.salonId);
+
+        socket.on("appointmentsUpdated", (appointmentData) => {
+          setAppointmentListData((prev) => ({ ...prev, loading: false, data: appointmentData, success: true, error: null }))
+        })
+
         const fetchAppointmentList = async () => {
           try {
 
@@ -124,6 +86,8 @@ const appointment = () => {
   )
 
   const { colors } = useTheme()
+
+  // console.log("applyAppointmentFilter ", applyAppointmentFilter)
 
   return (
     <CustomTabView
@@ -177,7 +141,7 @@ const appointment = () => {
                     disabled={appointmentListData?.loading}
                     onPress={() => {
                       setApplyAppointmentFilter({
-                        selectedTab: "All",
+                        selectedTab: "all",
                         open: true
                       })
                     }}
@@ -289,6 +253,7 @@ const appointment = () => {
 
                               <View style={{ gap: verticalScale(8) }}>
                                 <CustomText style={{ fontSize: scale(14) }}>{item?.barbername}</CustomText>
+
                                 <View
                                   style={{
                                     height: verticalScale(15),
@@ -305,6 +270,7 @@ const appointment = () => {
                                     item.status === "upcoming" ? "#EAA824" : "#E11D48",
                                   fontSize: scale(10),
                                 }}>{item.status}</CustomText></View>
+
                               </View>
 
                             </View>

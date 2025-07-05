@@ -914,9 +914,9 @@ const groupJoin = () => {
                             <Pressable
                                 // disabled={groupJoinMembers?.length === 0}
                                 style={[styles.searchButton,
-                                // {
-                                //     opacity: groupJoinMembers?.length === 0 ? 0.5 : 1
-                                // }
+                                    // {
+                                    //     opacity: groupJoinMembers?.length === 0 ? 0.5 : 1
+                                    // }
                                 ]}
                                 onPress={joinConfirmation}
                             >
@@ -976,7 +976,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginTop: verticalScale(10),
+        marginVertical: verticalScale(15),
     },
     clearAll: {
         textDecorationLine: 'underline',

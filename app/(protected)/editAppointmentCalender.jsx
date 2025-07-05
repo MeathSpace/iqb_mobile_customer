@@ -317,12 +317,13 @@ const editAppointmentCalender = () => {
         for (let i = 0; i < daysInMonth; i++) {
             const dayMoment = startOfMonth.clone().add(i, 'days');
 
-            if (dayMoment.isBefore(today)) continue; // 🔥 Skip dates before today
+            // 🔥 Skip today and past dates
+            if (dayMoment.isSameOrBefore(today)) continue;
 
             tempDates.push({
-                dayName: dayMoment.format('ddd'),      // e.g., "Mon"
-                date: dayMoment.format('DD'),          // e.g., "01"
-                month: dayMoment.format('MMM'),        // e.g., "Jul"
+                dayName: dayMoment.format('ddd'),
+                date: dayMoment.format('DD'),
+                month: dayMoment.format('MMM'),
                 year: dayMoment.format('YYYY'),
                 fullDate: dayMoment.format('YYYY-MM-DD'),
                 slots: Math.floor(Math.random() * 10),
@@ -332,7 +333,6 @@ const editAppointmentCalender = () => {
 
         setDates(tempDates);
     };
-
 
     const getRandomColor = () => {
         const letters = '0123456789ABCDEF';
@@ -1094,7 +1094,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginTop: verticalScale(10),
+        marginVertical: verticalScale(15),
     },
     clearAll: {
         textDecorationLine: 'underline',

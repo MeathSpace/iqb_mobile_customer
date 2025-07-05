@@ -258,28 +258,7 @@ const appointmentCalendar = () => {
         generateDatesForMonth(currentMonth);
     }, [currentMonth]);
 
-    // const generateDatesForMonth = (monthMoment) => {
-    //     // Get start and end of month
-    //     const startOfMonth = monthMoment.clone().startOf('month');
-    //     const endOfMonth = monthMoment.clone().endOf('month');
-    //     const daysInMonth = monthMoment.daysInMonth();
-
-    //     let tempDates = [];
-    //     for (let i = 0; i < daysInMonth; i++) {
-    //         const dayMoment = startOfMonth.clone().add(i, 'days');
-    //         tempDates.push({
-    //             dayName: dayMoment.format('ddd'), // Sun, Mon, ...
-    //             date: dayMoment.format('DD'), // 01, 02, ...
-    //             month: dayMoment.format('MMM'), // Jan, Feb, ...
-    //             year: dayMoment.format('YYYY'),
-    //             fullDate: dayMoment.format('YYYY-MM-DD'),
-    //             slots: Math.floor(Math.random() * 10),
-    //             bgcolor: getRandomColor()
-    //         });
-    //     }
-    //     setDates(tempDates);
-    // };
-
+   
     const generateDatesForMonth = (monthMoment) => {
         const startOfMonth = monthMoment.clone().startOf('month');
         const endOfMonth = monthMoment.clone().endOf('month');
@@ -292,12 +271,13 @@ const appointmentCalendar = () => {
         for (let i = 0; i < daysInMonth; i++) {
             const dayMoment = startOfMonth.clone().add(i, 'days');
 
-            if (dayMoment.isBefore(today)) continue; // 🔥 Skip dates before today
+            // 🔥 Skip today and past dates
+            if (dayMoment.isSameOrBefore(today)) continue;
 
             tempDates.push({
-                dayName: dayMoment.format('ddd'),      // e.g., "Mon"
-                date: dayMoment.format('DD'),          // e.g., "01"
-                month: dayMoment.format('MMM'),        // e.g., "Jul"
+                dayName: dayMoment.format('ddd'),
+                date: dayMoment.format('DD'),
+                month: dayMoment.format('MMM'),
                 year: dayMoment.format('YYYY'),
                 fullDate: dayMoment.format('YYYY-MM-DD'),
                 slots: Math.floor(Math.random() * 10),
@@ -307,6 +287,7 @@ const appointmentCalendar = () => {
 
         setDates(tempDates);
     };
+
 
     const getRandomColor = () => {
         const letters = '0123456789ABCDEF';
@@ -1071,7 +1052,7 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        marginTop: verticalScale(10),
+        marginVertical: verticalScale(15),
     },
     clearAll: {
         textDecorationLine: 'underline',

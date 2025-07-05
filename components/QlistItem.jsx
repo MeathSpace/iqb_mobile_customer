@@ -34,22 +34,24 @@ const QlistItem = ({ item, index, qlistLength }) => {
                         fontFamily: "AirbnbCereal_W_Md",
                         fontSize: scale(12),
                         color: authenticatedUser?.name === item?.name ? "#0BA3AD" : colors.secondaryText
-                    }}>{authenticatedUser?.name === item?.name ? authenticatedUser?.name : "client"}</CustomSecondaryText>
+                    }}>
+                        {authenticatedUser?.name === item?.name ? authenticatedUser?.name : "client"}
+                    </CustomSecondaryText>
                 </View>
             </View>
 
             <View style={{
                 gap: verticalScale(5),
                 minWidth: scale(80),
-                alignItems: "center",          
-                justifyContent: "center",     
+                alignItems: "center",
+                justifyContent: "center",
             }}>
                 <CustomText
                     style={{
                         fontFamily: "AirbnbCereal_W_Blk",
                         fontSize: scale(16),
                         minWidth: scale(50),
-                        textAlign: "center",   
+                        textAlign: "center",
                     }}>
                     {item.qPosition}
                 </CustomText>
@@ -59,14 +61,14 @@ const QlistItem = ({ item, index, qlistLength }) => {
                         <CustomText style={{
                             fontSize: scale(12),
                             color: "gray",
-                            textAlign: "center"   
+                            textAlign: "center"
                         }}>-</CustomText>
                     ) : (
                         <View style={{
                             flexDirection: "row",
                             alignItems: "center",
                             gap: scale(2),
-                            justifyContent: "center" 
+                            justifyContent: "center"
                         }}>
                             <ClockIcon size={scale(12)} color='gray' />
                             <CustomText style={{ fontSize: scale(12), color: "gray" }}>
