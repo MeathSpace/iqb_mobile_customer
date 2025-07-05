@@ -11,7 +11,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.iqbook.iqb",
-      "buildNumber": "18",
+      "buildNumber": "19",
       "config": {
         "googleMapsApiKey": "AIzaSyCFTy8N-ZV2Oji8QbpQjuzXHwuC-kNSdmU"
       },

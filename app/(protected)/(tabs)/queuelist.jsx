@@ -13,7 +13,7 @@ import { useAuth } from '../../../context/AuthContext';
 import axios from 'axios';
 import { BASE_URL } from '@/utils/api';
 import Skeleton from '../../../components/Skeleton';
-import { PeopleIcon } from '../../../constants/icons';
+import { PeopleIcon, RefreshIcon } from '../../../constants/icons';
 
 
 const QueueList = () => {
@@ -27,29 +27,29 @@ const QueueList = () => {
         success: false
     })
 
+    const fetchQlist = async () => {
+        try {
+
+            setQlistData((prev) => ({ ...prev, loading: true }))
+
+            const { data } = await axios.get(`${BASE_URL}/mobileRoutes/getQlistBySalonId`, {
+                params: {
+                    salonId: authenticatedUser?.salonId,
+                    customerEmail: authenticatedUser?.email
+                }
+            })
+
+            setQlistData((prev) => ({ ...prev, loading: false, data: data?.response, success: true, error: null }))
+
+        } catch (error) {
+
+            setQlistData((prev) => ({ ...prev, loading: false, data: null, success: false, error: error }))
+            console.log("Error fetching queue list ", error)
+        }
+    }
 
     useFocusEffect(
         useCallback(() => {
-            const fetchQlist = async () => {
-                try {
-
-                    setQlistData((prev) => ({ ...prev, loading: true }))
-
-                    const { data } = await axios.get(`${BASE_URL}/mobileRoutes/getQlistBySalonId`, {
-                        params: {
-                            salonId: authenticatedUser?.salonId,
-                            customerEmail: authenticatedUser?.email
-                        }
-                    })
-
-                    setQlistData((prev) => ({ ...prev, loading: false, data: data?.response, success: true, error: null }))
-
-                } catch (error) {
-
-                    setQlistData((prev) => ({ ...prev, loading: false, data: null, success: false, error: error }))
-                    console.log("Error fetching queue list ", error)
-                }
-            }
 
             fetchQlist()
         }, [authenticatedUser])
@@ -70,21 +70,46 @@ const QueueList = () => {
             <View style={{ flex: 1, paddingBottom: Platform.OS === 'ios' ? verticalScale(60) : 0 }}>
                 {
                     qlistData?.data?.length ? (
-                        <Pressable
-                            onPress={() => router.push("/joinpopup")}
+                        <View
                             style={{
-                                height: verticalScale(40),
-                                width: "100%",
-                                backgroundColor: Colors.modeColor.colorCode,
-                                marginHorizontal: "auto",
-                                justifyContent: "center",
+                                flexDirection: "row",
                                 alignItems: "center",
-                                borderRadius: scale(4),
-                                // marginVertical: verticalScale(10)
+                                gap: scale(10)
                             }}
                         >
-                            <CustomText style={{ color: "#fff" }}>Join Queue</CustomText>
-                        </Pressable>
+                            <Pressable
+                                onPress={() => router.push("/joinpopup")}
+                                style={{
+                                    height: verticalScale(40),
+                                    flex: 1,
+                                    backgroundColor: Colors.modeColor.colorCode,
+                                    marginHorizontal: "auto",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    borderRadius: scale(4),
+                                    // marginVertical: verticalScale(10)
+                                }}
+                            >
+                                <CustomText style={{ color: "#fff" }}>Join Queue</CustomText>
+                            </Pressable>
+
+                            <Pressable
+                                disabled={qlistData?.loading}
+                                onPress={fetchQlist}
+                                style={{
+                                    height: verticalScale(40),
+                                    width: verticalScale(40),
+                                    backgroundColor: "#0BA3AD1A",
+                                    marginHorizontal: "auto",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    borderRadius: scale(4),
+                                }}
+                            >
+                                <RefreshIcon color={Colors.modeColor.colorCode} />
+                            </Pressable>
+
+                        </View>
                     ) : null
                 }
 

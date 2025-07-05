@@ -148,49 +148,6 @@ const appointment = () => {
 
             case 'header':
               return (
-                // appointmentListData?.data?.length > 0 ? (
-                //   <View style={{
-                //     flexDirection: "row",
-                //     alignItems: "center",
-                //     gap: scale(10)
-                //   }}>
-                //     <Pressable
-                //       style={{
-                //         height: verticalScale(40),
-                //         flex: 1,
-                //         backgroundColor: Colors.modeColor.colorCode,
-                //         marginHorizontal: "auto",
-                //         justifyContent: "center",
-                //         alignItems: "center",
-                //         borderRadius: scale(4),
-                //         marginTop: verticalScale(10)
-                //       }}
-                //       onPress={() => {
-                //         setJoinModes((prev) => ({ ...prev, appointment: true, appointmentType: "Book" }))
-                //         router.push("/appointmentCalendar")
-                //         // router.push("/appointmentCalender")
-                //       }}
-                //     >
-                //       <CustomText style={{ color: "#fff" }}>Book Appointment</CustomText>
-                //     </Pressable>
-                //     <Pressable
-                //       onPress={() => router.push("/appointmentFilter")}
-                //       style={{
-                //         height: verticalScale(40),
-                //         width: verticalScale(40),
-                //         backgroundColor: "#0BA3AD1A",
-                //         marginHorizontal: "auto",
-                //         justifyContent: "center",
-                //         alignItems: "center",
-                //         borderRadius: scale(4),
-                //         marginTop: verticalScale(10)
-                //       }}
-                //     >
-                //       <FilterIcon color={Colors.modeColor.colorCode} />
-                //     </Pressable>
-                //   </View>
-                // ) : null
-
                 <View style={{
                   flexDirection: "row",
                   alignItems: "center",
