@@ -21,7 +21,7 @@ const account = () => {
   const { colors } = useTheme()
   const { signOut } = useClerk()
   const { isSignedIn } = useUser()
-  const { setSelectedBarber, setSelectedBarberServices, setCustomerName } = useGlobal();
+  const { setSelectedBarber, setSelectedBarberServices, setCustomerName, rememberMe, setRememberMe } = useGlobal();
 
   const { setIsAuthenticated, authenticatedUser, setAuthenticatedUser } = useAuth()
   const router = useRouter()
@@ -33,9 +33,15 @@ const account = () => {
     setSelectedBarber({})
     setSelectedBarberServices([])
     setCustomerName("")
-    await AsyncStorage.setItem("LoggedInUser", JSON.stringify({
-      email: authenticatedUser?.email
-    }))
+    if (rememberMe) {
+      await AsyncStorage.setItem("LoggedInUser", JSON.stringify({
+        email: authenticatedUser?.email,
+        userPassword: authenticatedUser?.userPassword
+      }))
+    } else {
+      await AsyncStorage.removeItem("LoggedInUser")
+    }
+
     await AsyncStorage.removeItem("isAuthenticated")
     setIsAuthenticated(false)
     setAuthenticatedUser(null)

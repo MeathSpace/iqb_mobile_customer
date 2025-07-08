@@ -53,6 +53,7 @@ export const GlobalProvider = ({ children }) => {
         selectedTab: "All",
         open: true
     })
+    const [rememberMe, setRememberMe] = useState(true);
 
     const value = {
         selectedBarber,
@@ -78,7 +79,9 @@ export const GlobalProvider = ({ children }) => {
         selectedTab,
         setSelectedTab,
         applyAppointmentFilter,
-        setApplyAppointmentFilter
+        setApplyAppointmentFilter,
+        rememberMe,
+        setRememberMe
     };
 
     return (

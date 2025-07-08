@@ -19,6 +19,7 @@ import { ErrorIcon, EyeIcon, EyeOffIcon } from '../../constants/icons';
 import axios from 'axios';
 import { BASE_URL } from '@/utils/api';
 import { Toast } from 'toastify-react-native'
+import { useGlobal } from '@/context/GlobalContext';
 
 export const useWarmUpBrowser = () => {
     useEffect(() => {
@@ -41,9 +42,8 @@ const signin = () => {
         const fetchRememberMeData = async () => {
             const data = await AsyncStorage.getItem("LoggedInUser")
             const parseData = JSON.parse(data)
-
-            console.log("Async Data ", parseData)
             setEmail(parseData?.email)
+            setPassword(parseData?.userPassword)
         }
 
         fetchRememberMeData()
@@ -65,7 +65,9 @@ const signin = () => {
 
     const router = useRouter()
 
-    const [rememberMe, setRememberMe] = useState(true);
+    // const [rememberMe, setRememberMe] = useState(true);
+
+    const { rememberMe, setRememberMe } = useGlobal()
 
     const { signOut } = useClerk()
 
@@ -102,8 +104,8 @@ const signin = () => {
                 await AsyncStorage.setItem("isAuthenticated", JSON.stringify(true))
             }
 
-            await AsyncStorage.setItem("LoggedInUser", JSON.stringify(data?.response))
-            setAuthenticatedUser(data?.response)
+            await AsyncStorage.setItem("LoggedInUser", JSON.stringify({ ...data?.response, userPassword: password }))
+            setAuthenticatedUser({ ...data?.response, userPassword: password })
             setIsAuthenticated(true)
             router.push("/home")
 
@@ -499,10 +501,12 @@ const styles = StyleSheet.create({
 
 // const styles = StyleSheet.create({
 //     passwordInputContainer: {
+//         marginTop: verticalScale(100),
 //         flexDirection: 'row',
 //         alignItems: 'center',
 //         borderRadius: scale(4),
 //         backgroundColor: "#0BA3AD1A",
+//         height: verticalScale(60),
 //         gap: scale(10),
 //         paddingRight: scale(10),
 //     },

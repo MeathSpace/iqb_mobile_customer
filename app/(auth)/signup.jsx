@@ -44,7 +44,7 @@ const signup = () => {
 
     const router = useRouter()
 
-    const [email, setEmail] = useState("");
+    const [email, setEmail] = useState("abcf@yopmail.com");
     const [emailError, setEmailError] = useState(false);
 
     const { setIsAuthenticated, setAuthenticatedUser, setSignUpData, signUpData } = useAuth()

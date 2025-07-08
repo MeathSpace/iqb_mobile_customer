@@ -55,21 +55,39 @@ const personalInfo = () => {
     const [phoneNumberError, setPhoneNumberError] = useState("");
     const [dateOfBirthError, setDateOfBirthError] = useState("");
 
+    const [tempDate, setTempDate] = useState(new Date());
+
     const onChange = (event, selectedDate) => {
-        setCalenderModal(false);
-        if (event.type === "set" && selectedDate) {
-            setDate(new Date(selectedDate));
-            setDateOfBirthError("");
+        // setCalenderModal(false);
+        if (Platform.OS === "android") {
+            if (event.type === "set" && selectedDate) {
+                setDate(new Date(selectedDate));
+                setDateOfBirthError("");
 
-            const year = selectedDate.getFullYear();
-            const month = String(selectedDate.getMonth() + 1).padStart(2, '0'); // month is 0-indexed
-            const day = String(selectedDate.getDate()).padStart(2, '0');
+                const year = selectedDate.getFullYear();
+                const month = String(selectedDate.getMonth() + 1).padStart(2, '0'); // month is 0-indexed
+                const day = String(selectedDate.getDate()).padStart(2, '0');
 
-            const formattedDate = `${year}-${month}-${day}`;
+                const formattedDate = `${year}-${month}-${day}`;
 
-            setSelectedDate(formattedDate);
+                setSelectedDate(formattedDate);
+                setCalenderModal(false);
+            }
+        } else {
+            // IOS CODE AND SAVE IN TEMO DATE
+
         }
+
     };
+
+    // const onDoneIOS = () => {
+    //     setDate(tempDate);
+    //     setSelectedDate(formatDate(tempDate));
+    //     setDateOfBirthError("");
+    //     setCalenderModal(false);
+    // };
+
+    console.log("selectedDate ", selectedDate)
 
     const [progressOne, setProgressOne] = useState(0.5)
     const [progressTwo, setProgressTwo] = useState(0)
@@ -411,7 +429,7 @@ const personalInfo = () => {
                             )
                         }
 
-                        {calenderModal && (
+                        {/* {calenderModal && (
                             <View style={{ position: "absolute", top: verticalScale(34), left: 0, zIndex: 100 }}>
                                 <DateTimePicker
                                     mode="date"
@@ -422,7 +440,64 @@ const personalInfo = () => {
                                     onChange={onChange}
                                 />
                             </View>
-                        )}
+                        )} */}
+
+
+                        <Modal
+                            transparent={true}
+                            visible={calenderModal}
+                        >
+                            <View
+                                style={{
+                                    flex: 1,
+                                    backgroundColor: "rgba(0,0,0, 0.8)",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    position: "relative"
+                                }}
+                            >
+                                <View
+                                    style={{
+                                        backgroundColor: "#fff",
+                                        padding: scale(10),
+                                        borderRadius: scale(10),
+                                        // iOS shadow
+                                        shadowColor: "#000",
+                                        shadowOffset: {
+                                            width: 0,
+                                            height: 2,
+                                        },
+                                        shadowOpacity: 0.1,
+                                        shadowRadius: 4,
+                                    }}
+                                >
+                                    <DateTimePicker
+                                        mode="date"
+                                        maximumDate={new Date()}
+                                        value={date}
+                                        display="inline"
+                                        accentColor={Colors.modeColor.colorCode}
+                                        onChange={onChange}
+                                    />
+                                </View>
+
+                                <Pressable
+                                    style={{
+                                        position: "absolute",
+                                        bottom: verticalScale(20),
+                                        height: verticalScale(40),
+                                        borderRadius: scale(4),
+                                        width: "80%",
+                                        marginHorizontal: "auto",
+                                        backgroundColor: Colors.modeColor.colorCode,
+                                        justifyContent: "center",
+                                        alignItems: "center"
+                                    }}
+                                ><CustomText style={{ color: "#fff" }}>Done</CustomText></Pressable>
+                            </View>
+                        </Modal>
+
+
                     </View>
 
                     <Pressable
