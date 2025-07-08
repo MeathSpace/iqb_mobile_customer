@@ -87,7 +87,7 @@ export const NextIcon = ({ size = moderateScale(24), color = 'black', style }) =
 );
 
 export const ContactIcon = ({ size = moderateScale(24), color = 'black', style }) => (
-    <Entypo name="phone" size={size} color={color} style={style} />
+    <FontAwesome name="phone" size={size} color={color} style={style} />
 );
 
 export const MapIcon = ({ size = moderateScale(24), color = 'black', style }) => (

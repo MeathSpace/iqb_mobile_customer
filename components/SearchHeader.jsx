@@ -84,7 +84,7 @@ const SearchHeader = () => {
 
                 fetchCityName()
 
-            }, 300)
+            }, 600)
 
             timeoutRef.current = timeId;
         }

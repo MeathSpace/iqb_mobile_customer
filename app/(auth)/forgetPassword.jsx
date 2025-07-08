@@ -37,11 +37,12 @@ const forgetPassword = () => {
             })
 
             router.push({
-                pathname: "/forgetPasswordConfirmation",
+                pathname: "/passwordVerification",
                 params: {
-                    email
+                    email,
+                    verificationCodeValue: data?.response?.verificationCode
                 }
-            });
+            })
 
         } catch (error) {
             Toast.error(error?.response?.data?.message)

@@ -387,7 +387,11 @@ const personalInfo = () => {
                                     justifyContent: "center", // Ensures CalendarIcon stays aligned
                                 }
                             ]}
-                            onPress={() => setCalenderModal(true)}
+                            onPress={() => {
+                                setSelectedDate("")
+                                setDateOfBirthError("")
+                                setCalenderModal(true)
+                            }}
                         >
                             {!calenderModal && !selectedDate && <CustomText style={{ color: colors.secondaryText, fontFamily: "AirbnbCereal_W_Bk" }}>YYYY-MM-DD</CustomText>}
                             {!calenderModal && selectedDate && <CustomText style={{ fontFamily: "AirbnbCereal_W_Bk" }}>{selectedDate}</CustomText>}

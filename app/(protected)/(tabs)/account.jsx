@@ -33,7 +33,9 @@ const account = () => {
     setSelectedBarber({})
     setSelectedBarberServices([])
     setCustomerName("")
-    await AsyncStorage.removeItem("LoggedInUser")
+    await AsyncStorage.setItem("LoggedInUser", JSON.stringify({
+      email: authenticatedUser?.email
+    }))
     await AsyncStorage.removeItem("isAuthenticated")
     setIsAuthenticated(false)
     setAuthenticatedUser(null)

@@ -445,8 +445,7 @@ const Map = () => {
 
     ]
 
-
-    console.log("selectedSalonLocation ", selectedSalonLocation)
+    // console.log("selectedSalonLocation ", selectedSalonLocation)
 
     return (
         <>

@@ -37,6 +37,18 @@ WebBrowser.maybeCompleteAuthSession()
 
 const signin = () => {
 
+    useEffect(() => {
+        const fetchRememberMeData = async () => {
+            const data = await AsyncStorage.getItem("LoggedInUser")
+            const parseData = JSON.parse(data)
+
+            console.log("Async Data ", parseData)
+            setEmail(parseData?.email)
+        }
+
+        fetchRememberMeData()
+    }, [])
+
     const [email, setEmail] = useState("")
     const [password, setPassword] = useState("")
     const [showPassword, setShowPassword] = useState(false);
@@ -89,7 +101,7 @@ const signin = () => {
             if (rememberMe) {
                 await AsyncStorage.setItem("isAuthenticated", JSON.stringify(true))
             }
-            
+
             await AsyncStorage.setItem("LoggedInUser", JSON.stringify(data?.response))
             setAuthenticatedUser(data?.response)
             setIsAuthenticated(true)
@@ -142,6 +154,7 @@ const signin = () => {
     }, []);
 
 
+    const [googleSigninLoader, setGoogleSigninLoader] = useState(false)
 
     useEffect(() => {
 
@@ -149,6 +162,8 @@ const signin = () => {
             const handleAuth = async () => {
                 try {
                     // setSignInData((prev) => ({ ...prev, loading: true }))
+
+                    setGoogleSigninLoader(true)
 
                     const { data } = await axios.post(`${BASE_URL}/customer/googleCustomerSignIn`, {
                         email: user?.primaryEmailAddress?.emailAddress,
@@ -162,6 +177,8 @@ const signin = () => {
                             // ]
                         }, success: true, error: null
                     }))
+
+                    setGoogleSigninLoader(false)
 
 
                     if (rememberMe) {
@@ -187,6 +204,7 @@ const signin = () => {
 
                 } catch (error) {
                     signOut()
+                    setGoogleSigninLoader(false)
                     setSignInData((prev) => ({ ...prev, loading: false, user: null, success: false, error: error }))
                     Toast.error(error?.response?.data?.message)
                 }
@@ -199,10 +217,9 @@ const signin = () => {
     }, [isSignedIn, router, rememberMe, user]);
 
 
-
-
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+
             <CustomView style={{ alignItems: "center", justifyContent: "center" }}>
                 <View style={{ width: "100%", gap: verticalScale(25) }}>
                     <Image
@@ -358,14 +375,21 @@ const signin = () => {
                                 gap: scale(10),
                             }
                             ]}>
-                        <Image
-                            source={require("../../assets/images/google.png")}
-                            height={30}
-                            width={30}
-                        />
-                        <CustomText>
-                            Sign in with Google
-                        </CustomText>
+                        {
+                            googleSigninLoader ? (
+                                <ActivityIndicator size="small" color="#000" />
+                            ) : (
+                                <>
+                                    <Image
+                                        source={require("../../assets/images/google.png")}
+                                        height={30}
+                                        width={30}
+                                    />
+                                    <CustomText>Sign in with Google</CustomText>
+                                </>
+                            )
+                        }
+
                     </Pressable>
                 </View>
             </CustomView>
@@ -422,3 +446,64 @@ const styles = StyleSheet.create({
     },
 })
 
+// import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
+// import React, { useState } from 'react'
+// import { useTheme } from '@react-navigation/native';
+// import { ErrorIcon, EyeIcon, EyeOffIcon } from '../../constants/icons';
+// import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+
+// const signin = () => {
+
+//     const [password, setPassword] = useState("")
+//     const [showPassword, setShowPassword] = useState(false);
+//     const [passwordError, setPasswordError] = useState(false);
+
+//     const { colors } = useTheme()
+
+//     return (
+//         <View>
+//             <Text>signin</Text>
+
+//             <View style={styles.passwordInputContainer}>
+//                 <TextInput
+//                     editable
+//                     placeholder="Enter your password"
+//                     placeholderTextColor={colors.secondaryText}
+//                     style={[
+//                         styles.inputField,
+//                         {
+//                             fontFamily: "AirbnbCereal_W_Md",
+//                             color: colors.text,
+//                             flex: 1,
+//                         }
+//                     ]}
+//                     onChangeText={(text) => {
+//                         setPasswordError("")
+//                         setPassword(text);
+//                     }}
+//                     value={password}
+//                     secureTextEntry={!showPassword}
+//                 />
+//                 <Pressable
+//                     onPress={() => setShowPassword(!showPassword)}
+//                     style={styles.eyeIcon}
+//                 >
+//                     {showPassword ? (<EyeOffIcon />) : (<EyeIcon />)}
+//                 </Pressable>
+//             </View>
+//         </View >
+//     )
+// }
+
+// export default signin
+
+// const styles = StyleSheet.create({
+//     passwordInputContainer: {
+//         flexDirection: 'row',
+//         alignItems: 'center',
+//         borderRadius: scale(4),
+//         backgroundColor: "#0BA3AD1A",
+//         gap: scale(10),
+//         paddingRight: scale(10),
+//     },
+// })

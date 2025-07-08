@@ -124,6 +124,8 @@ const signup = () => {
         }
     }, []);
 
+    const [googleSigninLoader, setGoogleSigninLoader] = useState(false)
+
     useEffect(() => {
         if (isSignedIn) {
             // console.log(user?.primaryEmailAddress?.emailAddress)
@@ -131,9 +133,13 @@ const signup = () => {
             const checkEmail = async () => {
                 try {
 
+                    setGoogleSigninLoader(true)
+
                     const { data } = await axios.post(`${BASE_URL}/customer/checkEmail`, {
                         email: user?.primaryEmailAddress?.emailAddress
                     })
+
+                    setGoogleSigninLoader(false)
 
                     router.push({
                         pathname: "/personalInfo",
@@ -147,6 +153,7 @@ const signup = () => {
 
                 } catch (error) {
                     signOut()
+                    setGoogleSigninLoader(false)
                     Toast.error(error?.response?.data?.message)
                 }
             }
@@ -224,11 +231,11 @@ const signup = () => {
                     </View>
 
                     <Pressable
-                        onPress={async() => {
-                            if(isSignedIn){
+                        onPress={async () => {
+                            if (isSignedIn) {
                                 await signOut()
                                 googleSignupPressed()
-                            }else{
+                            } else {
                                 googleSignupPressed()
                             }
                         }}
@@ -242,14 +249,23 @@ const signup = () => {
                                 gap: scale(10),
                             }
                             ]}>
-                        <Image
-                            source={require("../../assets/images/google.png")}
-                            height={30}
-                            width={30}
-                        />
-                        <CustomText>
-                            Sign up with Google
-                        </CustomText>
+
+                        {
+                            googleSigninLoader ? (
+                                <ActivityIndicator size="small" color="#000" />
+                            ) : (
+                                <>
+                                    <Image
+                                        source={require("../../assets/images/google.png")}
+                                        height={30}
+                                        width={30}
+                                    />
+                                    <CustomText>
+                                        Sign up with Google
+                                    </CustomText>
+                                </>
+                            )
+                        }
                     </Pressable>
 
                 </View>

@@ -41,6 +41,8 @@ const Dashboard = () => {
         success: false
     })
 
+    // console.log("homeDashboardData ", homeDashboardData)
+
     useFocusEffect(
         useCallback(() => {
             if (authenticatedUser) {
@@ -169,9 +171,9 @@ const Dashboard = () => {
             id: 1,
             title: "System Status",
             icon: SettingsIcon,
-            value: homeDashboardData?.dashboardData?.mobileBookingAvailability ? "ON" : "OFF",
-            color1: homeDashboardData?.dashboardData?.mobileBookingAvailability ? "#00B090" : "#E11D48",
-            color2: homeDashboardData?.dashboardData?.mobileBookingAvailability ? "#CCEFE9" : "#E11D481A"
+            value: homeDashboardData?.dashboardData?.salonInfo?.mobileBookingAvailability ? "ON" : "OFF",
+            color1: homeDashboardData?.dashboardData?.salonInfo?.mobileBookingAvailability ? "#00B090" : "#E11D48",
+            color2: homeDashboardData?.dashboardData?.salonInfo?.mobileBookingAvailability ? "#CCEFE9" : "#E11D481A"
         },
         {
             id: 2,

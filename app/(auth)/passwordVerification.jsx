@@ -1,159 +1,34 @@
-import { ActivityIndicator, Keyboard, Pressable, StyleSheet, Text, TextInput, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
+import { ActivityIndicator, Keyboard, Pressable, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import { useLocalSearchParams, useRouter } from 'expo-router'
-import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import CustomView from '../../components/CustomView';
-import ProgressHeader from '../../components/ProgressHeader';
+import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+import { useLocalSearchParams, useRouter } from 'expo-router';
 import CustomText from '../../components/CustomText';
 import CustomSecondaryText from '../../components/CustomSecondaryText';
 import { useTheme } from '@react-navigation/native';
-import { Colors } from '@/constants/Colors';
 import { ErrorIcon } from '../../constants/icons';
 import axios from 'axios';
 import { BASE_URL } from '@/utils/api';
-import { Toast } from 'toastify-react-native'
-import { useAuth } from '../../context/AuthContext'
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Toast } from 'toastify-react-native';
+import { Colors } from '@/constants/Colors';
 
-const verification = () => {
-
-    const { email,
-        firstName,
-        lastName,
-        gender,
-        callingCode,
-        phoneNumber,
-        // verificationOtp,
-        selectedDate,
-        authType,
-        password } = useLocalSearchParams();
+const passwordVerification = () => {
 
     const { colors } = useTheme()
-
-    // console.log("Current Email ", email)
-    // console.log("Auth Type Verification ", authType ?? " none")
+    const { email, verificationCodeValue } = useLocalSearchParams();
 
     const [verificationCode, setVerificationCode] = useState("")
     const [verificationCodeError, setVerificationCodeError] = useState("")
-    const [currentVerificationOtp, setCurrentVerificationOtp] = useState("")
+    const [currentVerificationOtp, setCurrentVerificationOtp] = useState(verificationCodeValue)
     const [verificationCodeLoading, setVerificationCodeLoading] = useState(false)
-    const [signupLoading, setSignupLoading] = useState(false)
 
-    useEffect(() => {
-        if (email && phoneNumber && callingCode) {
-            const sendCustomerVerificationCodeFnc = async () => {
-                try {
-                    const { data } = await axios.post(`${BASE_URL}/customer/sendCustomerVerificationCode`, {
-                        email,
-                        mobileCountryCode: callingCode,
-                        mobileNumber: phoneNumber
-                    })
-
-                    console.log("UseEffect Code ", data)
-                    setCurrentVerificationOtp(data?.response)
-
-                } catch (error) {
-                    Toast.error(error?.response?.data?.message)
-                }
-            }
-
-            sendCustomerVerificationCodeFnc()
-        }
-    }, [email, phoneNumber, callingCode])
-
-    const router = useRouter()
-
-    const [progressOne, setProgressOne] = useState(1)
-    const [progressTwo, setProgressTwo] = useState(1)
-    const [progressThree, setProgressThree] = useState(0.5)
-
-    const { setIsAuthenticated, setAuthenticatedUser, setSignInData, signInData } = useAuth()
-
-    const signupHandler = async () => {
-        try {
-            if (!verificationCode) {
-                setVerificationCodeError("Verification code is required")
-                return;
-            } else if (Number(verificationCode) !== Number(currentVerificationOtp)) {
-                setVerificationCodeError("Verification code does not match")
-                return;
-            }
-
-            const signUpData = {
-                email,
-                name: `${firstName} ${lastName}`,
-                gender,
-                dateOfBirth: selectedDate,
-                mobileCountryCode: callingCode,
-                mobileNumber: phoneNumber,
-                password
-            }
-
-            const googleSignUpData = {
-                email,
-                name: `${firstName} ${lastName}`,
-                gender,
-                dateOfBirth: selectedDate,
-                mobileCountryCode: callingCode,
-                mobileNumber: phoneNumber,
-            }
-
-            setSignupLoading(true)
-
-            // if (authType === "google") {
-            //     const { data } = await axios.post(`${BASE_URL}/customer/googleCustomerSignup`, googleSignUpData)
-
-            //     setSignupLoading(false)
-
-            //     Toast.success(data?.message)
-
-            // } else {
-            //     const { data } = await axios.post(`${BASE_URL}/customer/signUp`, signUpData)
-
-            //     setSignupLoading(false)
-
-            //     Toast.success(data?.message)
-            // }
-
-            // router.replace("/signin")
+    console.log("Email ", email)
+    console.log("currentVerificationOtp Code ", currentVerificationOtp)
 
 
-
-            if (authType === "google") {
-                const { data } = await axios.post(`${BASE_URL}/customer/googleCustomerSignup`, googleSignUpData)
-
-                // console.log("Sign up data ", data)
-
-                setSignInData((prev) => ({ ...prev, loading: false, user: data?.response, success: true, error: null }))
-
-                await AsyncStorage.setItem("isAuthenticated", JSON.stringify(true))
-                await AsyncStorage.setItem("LoggedInUser", JSON.stringify(data?.response))
-                setAuthenticatedUser(data?.response)
-                setIsAuthenticated(true)
-                router.push("/home")
-
-            } else {
-                const { data } = await axios.post(`${BASE_URL}/customer/signUp`, signUpData)
-
-                setSignInData((prev) => ({ ...prev, loading: false, user: data?.response, success: true, error: null }))
-
-                await AsyncStorage.setItem("isAuthenticated", JSON.stringify(true))
-                await AsyncStorage.setItem("LoggedInUser", JSON.stringify(data?.response))
-                setAuthenticatedUser(data?.response)
-                setIsAuthenticated(true)
-                router.push("/home")
-            }
-
-        } catch (error) {
-            console.log(error?.data)
-            setSignupLoading(false)
-            Toast.error(error?.response?.data?.message)
-        }
-    }
-
-
-    const [verificationTime, setVerificationTime] = useState(0); // countdown timer
+    const [verificationTime, setVerificationTime] = useState(0);
     const [isCooldown, setIsCooldown] = useState(false);
+    const router = useRouter()
 
     useEffect(() => {
         let interval;
@@ -171,7 +46,6 @@ const verification = () => {
         return () => clearInterval(interval);
     }, [isCooldown, verificationTime]);
 
-
     const resendVerification = async () => {
 
         if (isCooldown) {
@@ -180,14 +54,14 @@ const verification = () => {
         }
 
         try {
+
             setVerificationCodeLoading(true)
-            const { data } = await axios.post(`${BASE_URL}/customer/sendCustomerVerificationCode`, {
+            const { data } = await axios.post(`${BASE_URL}/customer/forgetPassword`, {
                 email,
-                mobileCountryCode: callingCode,
-                mobileNumber: phoneNumber
             })
+
             setVerificationCodeLoading(false)
-            setCurrentVerificationOtp(data?.response)
+            setCurrentVerificationOtp(data?.response?.verificationCode)
             console.log("Resend verification Code ", data?.response)
 
             // ✅ Start cooldown here
@@ -201,18 +75,30 @@ const verification = () => {
         }
     }
 
+    const continueHandler = () => {
+        if (!verificationCode) {
+            setVerificationCodeError("Verification code is required")
+            return;
+        } else if (Number(verificationCode) !== Number(currentVerificationOtp)) {
+            setVerificationCodeError("Verification code does not match")
+            return;
+        }
+
+        router.push({
+            pathname: "/forgetPasswordConfirmation",
+            params: {
+                email
+            }
+        });
+
+    }
+
     return (
         <TouchableWithoutFeedback onPress={() => {
             Keyboard.dismiss();
         }}>
             <CustomView style={{ justifyContent: "space-between" }}>
                 <View style={{ gap: verticalScale(20) }}>
-                    <ProgressHeader
-                        progressOne={progressOne}
-                        progressTwo={progressTwo}
-                        progressThree={progressThree}
-                    />
-
                     <View>
                         <CustomText style={styles.heading}>
                             You're all set!
@@ -286,7 +172,15 @@ const verification = () => {
 
 
                 </View>
+
                 <Pressable
+                    onPress={continueHandler}
+                    style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode }]}
+                >
+                    <CustomText style={{ color: "#fff" }}>Continue</CustomText>
+                </Pressable>
+
+                {/* <Pressable
                     disabled={signupLoading}
                     onPress={() => signupHandler()}
                     style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode }]}>
@@ -297,13 +191,14 @@ const verification = () => {
                             <CustomText style={{ color: "#fff" }}>Done</CustomText>
                         )
                     }
-                </Pressable>
+                </Pressable> */}
             </CustomView>
         </TouchableWithoutFeedback>
     )
+
 }
 
-export default verification
+export default passwordVerification
 
 const styles = StyleSheet.create({
     heading: {
@@ -335,3 +230,5 @@ const styles = StyleSheet.create({
         marginBlock: verticalScale(0)
     },
 })
+
+
