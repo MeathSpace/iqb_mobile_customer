@@ -475,7 +475,12 @@ const Dashboard = () => {
     ]
 
     return (
-        <CustomTabView>
+        <CustomTabView
+            style={{
+                paddingTop: verticalScale(0),
+                paddingBottom: Platform.OS === "ios" ? verticalScale(60) : verticalScale(10)
+            }}
+        >
             <FlatList
                 data={pageData}
                 showsVerticalScrollIndicator={false}

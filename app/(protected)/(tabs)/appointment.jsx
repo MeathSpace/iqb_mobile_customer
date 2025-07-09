@@ -1,4 +1,4 @@
-import { Alert, FlatList, Platform, Pressable, StyleSheet, Text, View } from 'react-native'
+import { Alert, FlatList, Platform, Pressable, RefreshControl, StyleSheet, Text, View } from 'react-native'
 import React, { useCallback, useState } from 'react'
 import CustomText from '../../../components/CustomText';
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
@@ -87,15 +87,70 @@ const appointment = () => {
 
   const { colors } = useTheme()
 
-  // console.log("applyAppointmentFilter ", applyAppointmentFilter)
+  const [refreshing, setRefreshing] = useState(false);
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    setTimeout(() => {
+      setApplyAppointmentFilter({
+        selectedTab: "all",
+        open: true
+      })
+      setRefreshing(false);
+    }, 2000);
+  };
 
   return (
     <CustomTabView
       style={{
         paddingHorizontal: scale(0),
         paddingTop: verticalScale(0),
+        backgroundColor: "#00B0901A"
       }}
     >
+      <View style={{
+        flexDirection: "row",
+        alignItems: "center",
+        gap: scale(10),
+        paddingInline: scale(10)
+      }}>
+        {/* Header Button */}
+        <Pressable
+          style={{
+            height: verticalScale(40),
+            flex: 1,
+            backgroundColor: Colors.modeColor.colorCode,
+            marginHorizontal: "auto",
+            justifyContent: "center",
+            alignItems: "center",
+            borderRadius: scale(4),
+            marginTop: verticalScale(10),
+          }}
+          onPress={() => {
+            setJoinModes((prev) => ({ ...prev, appointment: true, appointmentType: "Book" }));
+            router.push("/appointmentCalendar");
+          }}
+        >
+          <CustomText style={{ color: "#fff" }}>Book Appointment</CustomText>
+        </Pressable>
+
+        <Pressable
+          onPress={() => router.push("/appointmentFilter")}
+          style={{
+            height: verticalScale(40),
+            width: verticalScale(40),
+            backgroundColor: "#0BA3AD1A",
+            marginHorizontal: "auto",
+            justifyContent: "center",
+            alignItems: "center",
+            borderRadius: scale(4),
+            marginTop: verticalScale(10),
+          }}
+        >
+          <FilterIcon color={Colors.modeColor.colorCode} />
+        </Pressable>
+      </View>
+
       <FlatList
         data={customPageData}
         style={{
@@ -107,81 +162,15 @@ const appointment = () => {
           paddingBottom: Platform.OS === 'ios' ? verticalScale(80) : 0
         }}
         showsVerticalScrollIndicator={false}
+
         renderItem={({ item }) => {
           switch (item) {
-
-            case 'header':
-              return (
-                <View style={{
-                  flexDirection: "row",
-                  alignItems: "center",
-                  gap: scale(10)
-                }}>
-                  <Pressable
-                    style={{
-                      height: verticalScale(40),
-                      flex: 1,
-                      backgroundColor: Colors.modeColor.colorCode,
-                      marginHorizontal: "auto",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      borderRadius: scale(4),
-                      marginTop: verticalScale(10)
-                    }}
-                    onPress={() => {
-                      setJoinModes((prev) => ({ ...prev, appointment: true, appointmentType: "Book" }))
-                      router.push("/appointmentCalendar")
-                      // router.push("/appointmentCalender")
-                    }}
-                  >
-                    <CustomText style={{ color: "#fff" }}>Book Appointment</CustomText>
-                  </Pressable>
-
-                  <Pressable
-                    disabled={appointmentListData?.loading}
-                    onPress={() => {
-                      setApplyAppointmentFilter({
-                        selectedTab: "all",
-                        open: true
-                      })
-                    }}
-                    style={{
-                      height: verticalScale(40),
-                      width: verticalScale(40),
-                      backgroundColor: "#0BA3AD1A",
-                      marginHorizontal: "auto",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      borderRadius: scale(4),
-                      marginTop: verticalScale(10)
-                    }}
-                  >
-                    <RefreshIcon color={Colors.modeColor.colorCode} />
-                  </Pressable>
-
-                  <Pressable
-                    onPress={() => router.push("/appointmentFilter")}
-                    style={{
-                      height: verticalScale(40),
-                      width: verticalScale(40),
-                      backgroundColor: "#0BA3AD1A",
-                      marginHorizontal: "auto",
-                      justifyContent: "center",
-                      alignItems: "center",
-                      borderRadius: scale(4),
-                      marginTop: verticalScale(10)
-                    }}
-                  >
-                    <FilterIcon color={Colors.modeColor.colorCode} />
-                  </Pressable>
-                </View>
-
-              )
 
             case 'list':
               return (
                 <View style={{
                   flex: 1,
+                  marginTop: verticalScale(10)
                 }}>
 
                   {
@@ -201,8 +190,108 @@ const appointment = () => {
                       })
 
                     ) : appointmentListData?.data?.length > 0 ? (
-                      appointmentListData?.data?.map((item, index) => {
-                        return (
+                      // appointmentListData?.data?.map((item, index) => {
+                      //   return (
+                      //     <Pressable
+                      //       onPress={() => {
+                      //         if (item.status === "upcoming") {
+                      //           router.push({
+                      //             pathname: "/appointmentPop",
+                      //             params: {
+                      //               selectedAppointment: JSON.stringify(item),
+                      //             },
+                      //           });
+                      //         } else {
+                      //           Alert.alert(
+                      //             "Warning",
+                      //             `This appointment is already ${item.status}`,
+                      //             [
+                      //               { text: "OK", onPress: () => { } }
+                      //             ],
+                      //             { cancelable: true }
+                      //           )
+                      //         }
+
+                      //       }
+                      //       }
+                      //       key={item?._id}
+                      //       style={{
+                      //         flexDirection: "row",
+                      //         justifyContent: "space-between",
+                      //         alignItems: "center",
+                      //         minHeight: verticalScale(75),
+                      //         backgroundColor: "#fff",
+                      //         marginBottom: verticalScale(10),
+                      //         paddingInline: scale(15),
+                      //         borderRadius: scale(10),
+                      //       }}>
+
+                      //       <View style={{
+                      //         flexDirection: "row",
+                      //         alignItems: "center",
+                      //         gap: scale(10)
+                      //       }}>
+                      //         <View style={{
+                      //           position: "relative"
+                      //         }}>
+                      //           <Image
+                      //             style={{ height: scale(50), width: scale(50), borderRadius: moderateScale(30) }}
+                      //             source={{ uri: item?.barberProfile?.[0]?.url }}
+                      //             // placeholder={{ blurhash }}
+                      //             contentFit="cover"
+                      //             transition={300}
+                      //           />
+                      //         </View>
+
+
+                      //         <View style={{ gap: verticalScale(8) }}>
+                      //           <CustomText style={{ fontSize: scale(14) }}>{item?.barbername}</CustomText>
+
+                      //           <View
+                      //             style={{
+                      //               height: verticalScale(15),
+                      //               paddingHorizontal: scale(5),
+                      //               borderRadius: scale(4),
+                      //               backgroundColor: item.status === "served" ? "#00B0901A" :
+                      //                 item.status === "upcoming" ? "#EAA8241A" : "#E11D481A",
+                      //               justifyContent: "center",
+                      //               alignItems: "center",
+                      //               alignSelf: "flex-start"
+                      //             }}
+                      //           ><CustomText style={{
+                      //             color: item.status === "served" ? "#00B090" :
+                      //               item.status === "upcoming" ? "#EAA824" : "#E11D48",
+                      //             fontSize: scale(10),
+                      //           }}>{item.status}</CustomText></View>
+
+                      //         </View>
+
+                      //       </View>
+
+                      //       <View style={{ gap: verticalScale(5) }}>
+                      //         <View style={{
+                      //           flexDirection: "row",
+                      //           alignItems: "center",
+                      //           gap: scale(2),
+                      //           // flex: 1
+                      //         }}>
+                      //           <ClockIcon size={scale(12)} color='gray' />
+                      //           <CustomText style={{ fontSize: scale(12), color: "gray" }}>{item?.timeSlots}</CustomText>
+                      //         </View>
+
+                      //         <CustomText style={{ fontSize: scale(14), fontFamily: "AirbnbCereal_W_Bd", textAlign: "center" }}>{item?.appointmentDate?.split("T")[0]}</CustomText>
+
+                      //       </View>
+
+                      //     </Pressable>
+                      //   )
+                      // })
+
+                      <FlatList
+                        data={appointmentListData?.data}
+                        keyExtractor={(item) => item?._id}
+                        contentContainerStyle={{ paddingBottom: verticalScale(20) }}
+                        renderItem={({ item }) => (
                           <Pressable
                             onPress={() => {
                               if (item.status === "upcoming") {
@@ -216,40 +305,36 @@ const appointment = () => {
                                 Alert.alert(
                                   "Warning",
                                   `This appointment is already ${item.status}`,
-                                  [
-                                    { text: "OK", onPress: () => { } }
-                                  ],
+                                  [{ text: "OK", onPress: () => { } }],
                                   { cancelable: true }
-                                )
+                                );
                               }
-
-                            }
-                            }
-                            key={item?._id}
+                            }}
                             style={{
                               flexDirection: "row",
                               justifyContent: "space-between",
                               alignItems: "center",
                               minHeight: verticalScale(75),
-                            }}>
-
-                            <View style={{
-                              flexDirection: "row",
-                              alignItems: "center",
-                              gap: scale(10)
-                            }}>
-                              <View style={{
-                                position: "relative"
-                              }}>
+                              backgroundColor: "#fff",
+                              marginBottom: verticalScale(10),
+                              paddingHorizontal: scale(15),
+                              borderRadius: scale(10),
+                            }}
+                          >
+                            {/* Left section */}
+                            <View style={{ flexDirection: "row", alignItems: "center", gap: scale(10) }}>
+                              <View style={{ position: "relative" }}>
                                 <Image
-                                  style={{ height: scale(50), width: scale(50), borderRadius: moderateScale(30) }}
+                                  style={{
+                                    height: scale(50),
+                                    width: scale(50),
+                                    borderRadius: moderateScale(30),
+                                  }}
                                   source={{ uri: item?.barberProfile?.[0]?.url }}
-                                  // placeholder={{ blurhash }}
                                   contentFit="cover"
                                   transition={300}
                                 />
                               </View>
-
 
                               <View style={{ gap: verticalScale(8) }}>
                                 <CustomText style={{ fontSize: scale(14) }}>{item?.barbername}</CustomText>
@@ -259,46 +344,61 @@ const appointment = () => {
                                     height: verticalScale(15),
                                     paddingHorizontal: scale(5),
                                     borderRadius: scale(4),
-                                    backgroundColor: item.status === "served" ? "#00B0901A" :
-                                      item.status === "upcoming" ? "#EAA8241A" : "#E11D481A",
+                                    backgroundColor:
+                                      item.status === "served"
+                                        ? "#00B0901A"
+                                        : item.status === "upcoming"
+                                          ? "#EAA8241A"
+                                          : "#E11D481A",
                                     justifyContent: "center",
                                     alignItems: "center",
-                                    alignSelf: "flex-start"
+                                    alignSelf: "flex-start",
                                   }}
-                                ><CustomText style={{
-                                  color: item.status === "served" ? "#00B090" :
-                                    item.status === "upcoming" ? "#EAA824" : "#E11D48",
-                                  fontSize: scale(10),
-                                }}>{item.status}</CustomText></View>
-
+                                >
+                                  <CustomText
+                                    style={{
+                                      color:
+                                        item.status === "served"
+                                          ? "#00B090"
+                                          : item.status === "upcoming"
+                                            ? "#EAA824"
+                                            : "#E11D48",
+                                      fontSize: scale(10),
+                                    }}
+                                  >
+                                    {item.status}
+                                  </CustomText>
+                                </View>
                               </View>
-
                             </View>
 
+                            {/* Right section */}
                             <View style={{ gap: verticalScale(5) }}>
-                              <View style={{
-                                flexDirection: "row",
-                                alignItems: "center",
-                                gap: scale(2),
-                                // flex: 1
-                              }}>
-                                <ClockIcon size={scale(12)} color='gray' />
-                                <CustomText style={{ fontSize: scale(12), color: "gray" }}>{item?.timeSlots}</CustomText>
+                              <View style={{ flexDirection: "row", alignItems: "center", gap: scale(2) }}>
+                                <ClockIcon size={scale(12)} color="gray" />
+                                <CustomText style={{ fontSize: scale(12), color: "gray" }}>
+                                  {item?.timeSlots}
+                                </CustomText>
                               </View>
-
-                              <CustomText style={{ fontSize: scale(14), fontFamily: "AirbnbCereal_W_Bd" }}>{item?.appointmentDate?.split("T")[0]}</CustomText>
-
+                              <CustomText
+                                style={{
+                                  fontSize: scale(14),
+                                  fontFamily: "AirbnbCereal_W_Bd",
+                                  textAlign: "center",
+                                }}
+                              >
+                                {item?.appointmentDate?.split("T")[0]}
+                              </CustomText>
                             </View>
-
                           </Pressable>
-                        )
-                      })
+                        )}
+
+                      />
                     ) : (
                       <View style={{
                         justifyContent: "center",
                         alignItems: "center",
                         minHeight: verticalScale(400)
-                        // minHeight: verticalScale(550),
                       }}>
                         <View
                           style={{
@@ -359,6 +459,15 @@ const appointment = () => {
           }
         }}
         keyExtractor={item => item}
+
+        refreshControl={
+          <RefreshControl
+            refreshing={refreshing}
+            onRefresh={onRefresh}
+            colors={['black']}
+            progressBackgroundColor={'#fff'}
+          />
+        }
       />
     </CustomTabView>
   )

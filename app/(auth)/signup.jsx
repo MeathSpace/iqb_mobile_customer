@@ -44,7 +44,7 @@ const signup = () => {
 
     const router = useRouter()
 
-    const [email, setEmail] = useState("abcf@yopmail.com");
+    const [email, setEmail] = useState("");
     const [emailError, setEmailError] = useState(false);
 
     const { setIsAuthenticated, setAuthenticatedUser, setSignUpData, signUpData } = useAuth()
@@ -149,10 +149,10 @@ const signup = () => {
                         }
                     });
 
-                    signOut()
+                    await signOut()
 
                 } catch (error) {
-                    signOut()
+                    await signOut()
                     setGoogleSigninLoader(false)
                     Toast.error(error?.response?.data?.message)
                 }

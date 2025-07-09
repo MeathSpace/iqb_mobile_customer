@@ -917,6 +917,7 @@ const salon = () => {
                                                         // borderWidth: scale(1) 
                                                     }
                                                     ]}
+                                                    pointerEvents={Platform.OS === "ios" ? "none" : "auto"}
                                                     customMapStyle={colorScheme === "dark" ? darkMapStyle : []}
                                                 />
                                             )

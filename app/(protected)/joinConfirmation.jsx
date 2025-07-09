@@ -1099,6 +1099,7 @@ const singleJoinConfirmation = () => {
                 }
                 ]}
                 customMapStyle={colorScheme === "dark" ? darkMapStyle : []}
+                pointerEvents={Platform.OS === "ios" ? "none" : "auto"}
               />
             )
           }

@@ -105,7 +105,7 @@ const passwordVerification = () => {
                         </CustomText>
 
                         <CustomSecondaryText>
-                            Enter the 4 digit code sent to your mail
+                            Enter the 4 digit code sent to your mobile number
                         </CustomSecondaryText>
                     </View>
 
@@ -115,7 +115,7 @@ const passwordVerification = () => {
                         <TextInput
                             editable
                             keyboardType="numeric"
-                            placeholder="Enter your password"
+                            placeholder="Enter your otp"
                             placeholderTextColor={colors.secondaryText}
                             style={[false ? styles.inputFielderror : styles.inputField, {
                                 backgroundColor: "#0BA3AD1A",

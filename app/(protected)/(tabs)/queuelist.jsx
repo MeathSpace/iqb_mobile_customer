@@ -1,4 +1,4 @@
-import { FlatList, Platform, Pressable, StyleSheet, View } from 'react-native';
+import { FlatList, Platform, Pressable, RefreshControl, StyleSheet, View } from 'react-native';
 import React, { useCallback, useState } from 'react';
 import CustomTabView from '../../../components/CustomTabView';
 import CustomText from '../../../components/CustomText';
@@ -69,14 +69,26 @@ const QueueList = () => {
     const { colors } = useTheme()
 
     const router = useRouter()
-    const { joinModes, setJoinModes, setSelectedBarber, setSelectedBarberServices } = useGlobal();
+
+    // console.log("Queue List Data ", qlistData?.data)
+
+    const [refreshing, setRefreshing] = useState(false);
+
+    const onRefresh = () => {
+        setRefreshing(true);
+        setTimeout(() => {
+            fetchQlist()
+            setRefreshing(false);
+        }, 2000);
+    };
 
     return (
         <CustomTabView
             style={{
                 justifyContent: "space-between",
                 paddingVertical: verticalScale(0),
-                paddingTop: verticalScale(10)
+                paddingTop: verticalScale(10),
+                backgroundColor: "#00B0901A"
             }}>
             <View style={{ flex: 1, paddingBottom: Platform.OS === 'ios' ? verticalScale(60) : 0 }}>
                 {
@@ -104,7 +116,7 @@ const QueueList = () => {
                                 <CustomText style={{ color: "#fff" }}>Join Queue</CustomText>
                             </Pressable>
 
-                            <Pressable
+                            {/* <Pressable
                                 disabled={qlistData?.loading}
                                 onPress={fetchQlist}
                                 style={{
@@ -118,7 +130,7 @@ const QueueList = () => {
                                 }}
                             >
                                 <RefreshIcon color={Colors.modeColor.colorCode} />
-                            </Pressable>
+                            </Pressable> */}
 
                         </View>
                     ) : null
@@ -130,12 +142,11 @@ const QueueList = () => {
                         data={[0, 1, 2, 3, 4, 5, 6, 7, 8]}
                         contentContainerStyle={{
                             overflow: "visible",
+                            paddingTop: verticalScale(10),
+                            gap: verticalScale(10)
                         }}
                         renderItem={({ item, index }) => <Skeleton
                             height={verticalScale(70)}
-                            style={{
-                                marginTop: verticalScale(5)
-                            }}
                         />
                         }
                         keyExtractor={item => item}
@@ -146,11 +157,22 @@ const QueueList = () => {
                             data={qlistData?.data}
                             contentContainerStyle={{
                                 overflow: "visible",
+                                paddingTop: verticalScale(10),
+                                gap: verticalScale(10)
                             }}
                             renderItem={({ item, index }) => <QlistItem item={item} index={index} qlistLength={qlistData?.data} />}
                             keyExtractor={item => item._id}
                             showsVerticalScrollIndicator={false}
                             ListFooterComponent={<View style={{ height: Platform.OS === "ios" ? verticalScale(60) : 0 }} />}
+
+                            refreshControl={
+                                <RefreshControl
+                                    refreshing={refreshing}
+                                    onRefresh={onRefresh}
+                                    colors={['black']}
+                                    progressBackgroundColor={'#fff'}
+                                />
+                            }
                         />
 
                     ) : (

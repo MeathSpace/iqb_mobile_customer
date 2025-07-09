@@ -200,7 +200,7 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     container: {
-        width: "85%",
+        width: "90%",
         borderRadius: scale(8),
         borderWidth: scale(1),
         borderColor: "gray",

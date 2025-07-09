@@ -207,11 +207,33 @@ const verification = () => {
         }}>
             <CustomView style={{ justifyContent: "space-between" }}>
                 <View style={{ gap: verticalScale(20) }}>
-                    <ProgressHeader
-                        progressOne={progressOne}
-                        progressTwo={progressTwo}
-                        progressThree={progressThree}
-                    />
+                    {/* {
+                        authType === "google" ? (
+                            <CustomText>sdvdsv</CustomText>
+                        ) : (
+                            <ProgressHeader
+                                progressOne={progressOne}
+                                progressTwo={progressTwo}
+                                progressThree={progressThree}
+                            />
+                        )
+                    } */}
+
+                    {authType === "google" ? (
+                        <ProgressHeader
+                            progressOne={progressOne}
+                            progressTwo={0.5}
+                            authType={"google"}
+                        />
+                    ) : (
+                        <ProgressHeader
+                            progressOne={progressOne}
+                            progressTwo={progressTwo}
+                            progressThree={progressThree}
+                        />
+                    )}
+
+
 
                     <View>
                         <CustomText style={styles.heading}>
@@ -219,7 +241,7 @@ const verification = () => {
                         </CustomText>
 
                         <CustomSecondaryText>
-                            Enter the 4 digit code sent to your mail
+                            Enter the 4 digit code sent to your mobile number
                         </CustomSecondaryText>
                     </View>
 
@@ -229,7 +251,7 @@ const verification = () => {
                         <TextInput
                             editable
                             keyboardType="numeric"
-                            placeholder="Enter your password"
+                            placeholder="Enter your otp"
                             placeholderTextColor={colors.secondaryText}
                             style={[false ? styles.inputFielderror : styles.inputField, {
                                 backgroundColor: "#0BA3AD1A",

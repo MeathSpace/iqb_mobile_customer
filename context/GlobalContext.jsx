@@ -81,7 +81,7 @@ export const GlobalProvider = ({ children }) => {
         applyAppointmentFilter,
         setApplyAppointmentFilter,
         rememberMe,
-        setRememberMe
+        setRememberMe,
     };
 
     return (

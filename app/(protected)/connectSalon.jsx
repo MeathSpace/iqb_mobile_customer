@@ -54,7 +54,7 @@ const connectSalon = () => {
         >
             <View
                 style={{
-                    width: "85%",
+                    width: "90%",
                     height: verticalScale(244),
                     borderRadius: scale(8),
                     borderWidth: scale(1),

@@ -71,23 +71,34 @@ const personalInfo = () => {
                 const formattedDate = `${year}-${month}-${day}`;
 
                 setSelectedDate(formattedDate);
-                setCalenderModal(false);
             }
+
+            setCalenderModal(false);
         } else {
             // IOS CODE AND SAVE IN TEMO DATE
+            if (selectedDate) {
+                setTempDate(selectedDate);
+            }
 
         }
 
     };
 
-    // const onDoneIOS = () => {
-    //     setDate(tempDate);
-    //     setSelectedDate(formatDate(tempDate));
-    //     setDateOfBirthError("");
-    //     setCalenderModal(false);
-    // };
+    const onDoneIOS = () => {
+        setDate(tempDate);
+        setSelectedDate(formatDate(tempDate));
+        setDateOfBirthError("");
+        setCalenderModal(false);
+    };
 
-    console.log("selectedDate ", selectedDate)
+    const formatDate = (date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
+    // console.log("selectedDate ", selectedDate)
 
     const [progressOne, setProgressOne] = useState(0.5)
     const [progressTwo, setProgressTwo] = useState(0)
@@ -212,11 +223,25 @@ const personalInfo = () => {
                         gap: verticalScale(20)
                     }}
                 >
-                    <ProgressHeader
+                    {/* <ProgressHeader
                         progressOne={progressOne}
                         progressTwo={progressTwo}
                         progressThree={progressThree}
-                    />
+                    /> */}
+
+                    {authType === "google" ? (
+                        <ProgressHeader
+                            progressOne={0.5}
+                            progressTwo={progressTwo}
+                            authType={"google"}
+                        />
+                    ) : (
+                        <ProgressHeader
+                            progressOne={progressOne}
+                            progressTwo={progressTwo}
+                            progressThree={progressThree}
+                        />
+                    )}
 
                     <View>
                         <CustomText style={styles.heading}>
@@ -442,60 +467,108 @@ const personalInfo = () => {
                             </View>
                         )} */}
 
-
-                        <Modal
-                            transparent={true}
-                            visible={calenderModal}
-                        >
-                            <View
-                                style={{
-                                    flex: 1,
-                                    backgroundColor: "rgba(0,0,0, 0.8)",
-                                    justifyContent: "center",
-                                    alignItems: "center",
-                                    position: "relative"
-                                }}
-                            >
-                                <View
-                                    style={{
-                                        backgroundColor: "#fff",
-                                        padding: scale(10),
-                                        borderRadius: scale(10),
-                                        // iOS shadow
-                                        shadowColor: "#000",
-                                        shadowOffset: {
-                                            width: 0,
-                                            height: 2,
-                                        },
-                                        shadowOpacity: 0.1,
-                                        shadowRadius: 4,
-                                    }}
+                        {
+                            Platform.OS === "android" ? (
+                                calenderModal && (
+                                    <View style={{ position: "absolute", top: verticalScale(34), left: 0, zIndex: 100 }}>
+                                        <DateTimePicker
+                                            mode="date"
+                                            maximumDate={new Date()}
+                                            value={date}
+                                            display="default"
+                                            accentColor={Colors.modeColor.colorCode}
+                                            onChange={onChange}
+                                        />
+                                    </View>
+                                )
+                            ) : (
+                                <Modal
+                                    transparent={true}
+                                    visible={calenderModal}
                                 >
-                                    <DateTimePicker
-                                        mode="date"
-                                        maximumDate={new Date()}
-                                        value={date}
-                                        display="inline"
-                                        accentColor={Colors.modeColor.colorCode}
-                                        onChange={onChange}
-                                    />
-                                </View>
+                                    <View
+                                        style={{
+                                            flex: 1,
+                                            backgroundColor: "rgba(0,0,0, 0.8)",
+                                            justifyContent: "center",
+                                            alignItems: "center",
+                                            position: "relative",
+                                            padding: scale(20)
+                                        }}
+                                    >
+                                        <View
+                                            style={{
+                                                backgroundColor: "#fff",
+                                                padding: scale(10),
+                                                borderRadius: scale(10),
+                                                // iOS shadow
+                                                shadowColor: "#000",
+                                                shadowOffset: {
+                                                    width: 0,
+                                                    height: 2,
+                                                },
+                                                shadowOpacity: 0.1,
+                                                shadowRadius: 4,
+                                            }}
+                                        >
+                                            <DateTimePicker
+                                                mode="date"
+                                                maximumDate={new Date()}
+                                                value={date}
+                                                display="inline"
+                                                accentColor={Colors.modeColor.colorCode}
+                                                onChange={onChange}
+                                            />
+                                        </View>
 
-                                <Pressable
-                                    style={{
-                                        position: "absolute",
-                                        bottom: verticalScale(20),
-                                        height: verticalScale(40),
-                                        borderRadius: scale(4),
-                                        width: "80%",
-                                        marginHorizontal: "auto",
-                                        backgroundColor: Colors.modeColor.colorCode,
-                                        justifyContent: "center",
-                                        alignItems: "center"
-                                    }}
-                                ><CustomText style={{ color: "#fff" }}>Done</CustomText></Pressable>
-                            </View>
-                        </Modal>
+                                        <View
+                                            style={{
+                                                width: "100%",
+                                                position: "absolute",
+                                                bottom: verticalScale(40),
+                                                display: "flex",
+                                                flexDirection: "row",
+                                                alignItems: "center",
+                                                justifyContent: "space-between"
+                                            }}
+                                        >
+                                            <Pressable
+                                                onPress={() => {
+                                                    setCalenderModal(false)
+                                                }}
+                                                style={{
+                                                    height: verticalScale(40),
+                                                    borderRadius: scale(4),
+                                                    width: "45%",
+                                                    marginHorizontal: "auto",
+                                                    backgroundColor: "#E11D48",
+                                                    justifyContent: "center",
+                                                    alignItems: "center"
+                                                }}
+                                            >
+                                                <CustomText style={{ color: "#fff" }}>Cancel</CustomText>
+                                            </Pressable>
+
+                                            <Pressable
+                                                onPress={onDoneIOS}
+                                                style={{
+                                                    height: verticalScale(40),
+                                                    borderRadius: scale(4),
+                                                    width: "45%",
+                                                    marginHorizontal: "auto",
+                                                    backgroundColor: Colors.modeColor.colorCode,
+                                                    justifyContent: "center",
+                                                    alignItems: "center"
+                                                }}
+                                            ><CustomText style={{ color: "#fff" }}>Done</CustomText>
+                                            </Pressable>
+                                        </View>
+
+
+                                    </View>
+                                </Modal>
+                            )
+                        }
 
 
                     </View>

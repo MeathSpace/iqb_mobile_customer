@@ -1,4 +1,4 @@
-import { ActivityIndicator, Alert, Keyboard, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
+import { ActivityIndicator, Alert, BackHandler, Keyboard, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import CustomScrollView from '../../../components/CustomScrollView'
 import { useTheme } from '@react-navigation/native'
@@ -34,6 +34,20 @@ const editProfile = () => {
     const { setIsAuthenticated, authenticatedUser, setAuthenticatedUser } = useAuth()
     const phoneRef = useRef(null);
 
+
+    useFocusEffect(
+        useCallback(() => {
+            const onBackPress = () => {
+                router.push('/account'); // 👈 or replace('/account') if you don’t want to go back to this screen
+                return true; // prevent default behavior
+            };
+
+            const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+            return () => subscription.remove(); // ✅ correct way
+        }, [])
+    );
+
     useFocusEffect(
         useCallback(() => {
             if (authenticatedUser) {
@@ -44,7 +58,7 @@ const editProfile = () => {
                 if (phoneRef.current) {
                     phoneRef.current.setValue(`${authenticatedUser?.customerMobileCountryCode}${authenticatedUser?.mobileNumber}`);
                 }
-                
+
                 setGender(authenticatedUser?.gender)
                 setSelectedDate(authenticatedUser?.dateOfBirth?.split("T")[0])
                 setPhoneNumber(`+${authenticatedUser?.customerMobileCountryCode}${authenticatedUser?.mobileNumber}`)
@@ -59,7 +73,6 @@ const editProfile = () => {
     const [gender, setGender] = useState("Male");
     const [date, setDate] = useState(new Date());
     const [selectedDate, setSelectedDate] = useState("");
-
 
     const [calenderModal, setCalenderModal] = useState(false);
 
@@ -77,21 +90,66 @@ const editProfile = () => {
     const [dateOfBirthError, setDateOfBirthError] = useState("");
 
 
+    // const onChange = (event, selectedDate) => {
+    //     setCalenderModal(false);
+    //     if (event.type === "set" && selectedDate) {
+    //         setDate(new Date(selectedDate));
+    //         setDateOfBirthError("");
+
+    //         const year = selectedDate.getFullYear();
+    //         const month = String(selectedDate.getMonth() + 1).padStart(2, '0'); // month is 0-indexed
+    //         const day = String(selectedDate.getDate()).padStart(2, '0');
+
+    //         const formattedDate = `${year}-${month}-${day}`;
+
+    //         setSelectedDate(formattedDate);
+    //     }
+    // };
+
+    const [tempDate, setTempDate] = useState(new Date());
+
     const onChange = (event, selectedDate) => {
-        setCalenderModal(false);
-        if (event.type === "set" && selectedDate) {
-            setDate(new Date(selectedDate));
-            setDateOfBirthError("");
+        // setCalenderModal(false);
+        if (Platform.OS === "android") {
+            if (event.type === "set" && selectedDate) {
+                setDate(new Date(selectedDate));
+                setDateOfBirthError("");
 
-            const year = selectedDate.getFullYear();
-            const month = String(selectedDate.getMonth() + 1).padStart(2, '0'); // month is 0-indexed
-            const day = String(selectedDate.getDate()).padStart(2, '0');
+                const year = selectedDate.getFullYear();
+                const month = String(selectedDate.getMonth() + 1).padStart(2, '0'); // month is 0-indexed
+                const day = String(selectedDate.getDate()).padStart(2, '0');
 
-            const formattedDate = `${year}-${month}-${day}`;
+                const formattedDate = `${year}-${month}-${day}`;
 
-            setSelectedDate(formattedDate);
+                setSelectedDate(formattedDate);
+            }
+
+            setCalenderModal(false);
+        } else {
+            // IOS CODE AND SAVE IN TEMO DATE
+            if (selectedDate) {
+                setTempDate(selectedDate);
+            }
+
         }
+
     };
+
+    const onDoneIOS = () => {
+        setDate(tempDate);
+        setSelectedDate(formatDate(tempDate));
+        setDateOfBirthError("");
+        setCalenderModal(false);
+    };
+
+    const formatDate = (date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    };
+
+    // console.log("selectedDate ", selectedDate)
 
     const [phoneNumber, setPhoneNumber] = useState('');
 
@@ -574,7 +632,7 @@ const editProfile = () => {
                                 )
                             }
 
-                            {calenderModal && (
+                            {/* {calenderModal && (
                                 <View style={{ position: "absolute", top: verticalScale(34), left: 0, zIndex: 100 }}>
                                     <DateTimePicker
                                         mode="date"
@@ -585,7 +643,111 @@ const editProfile = () => {
                                         onChange={onChange}
                                     />
                                 </View>
-                            )}
+                            )} */}
+
+                            {
+                                Platform.OS === "android" ? (
+                                    calenderModal && (
+                                        <View style={{ position: "absolute", top: verticalScale(34), left: 0, zIndex: 100 }}>
+                                            <DateTimePicker
+                                                mode="date"
+                                                maximumDate={new Date()}
+                                                value={date}
+                                                display="default"
+                                                accentColor={Colors.modeColor.colorCode}
+                                                onChange={onChange}
+                                            />
+                                        </View>
+                                    )
+                                ) : (
+                                    <Modal
+                                        transparent={true}
+                                        visible={calenderModal}
+                                    >
+                                        <View
+                                            style={{
+                                                flex: 1,
+                                                backgroundColor: "rgba(0,0,0, 0.8)",
+                                                justifyContent: "center",
+                                                alignItems: "center",
+                                                position: "relative",
+                                                padding: scale(20)
+                                            }}
+                                        >
+                                            <View
+                                                style={{
+                                                    backgroundColor: "#fff",
+                                                    padding: scale(10),
+                                                    borderRadius: scale(10),
+                                                    // iOS shadow
+                                                    shadowColor: "#000",
+                                                    shadowOffset: {
+                                                        width: 0,
+                                                        height: 2,
+                                                    },
+                                                    shadowOpacity: 0.1,
+                                                    shadowRadius: 4,
+                                                }}
+                                            >
+                                                <DateTimePicker
+                                                    mode="date"
+                                                    maximumDate={new Date()}
+                                                    value={date}
+                                                    display="inline"
+                                                    accentColor={Colors.modeColor.colorCode}
+                                                    onChange={onChange}
+                                                />
+                                            </View>
+
+                                            <View
+                                                style={{
+                                                    width: "100%",
+                                                    position: "absolute",
+                                                    bottom: verticalScale(40),
+                                                    display: "flex",
+                                                    flexDirection: "row",
+                                                    alignItems: "center",
+                                                    justifyContent: "space-between"
+                                                }}
+                                            >
+                                                <Pressable
+                                                    onPress={() => {
+                                                        setCalenderModal(false)
+                                                    }}
+                                                    style={{
+                                                        height: verticalScale(40),
+                                                        borderRadius: scale(4),
+                                                        width: "45%",
+                                                        marginHorizontal: "auto",
+                                                        backgroundColor: "#E11D48",
+                                                        justifyContent: "center",
+                                                        alignItems: "center"
+                                                    }}
+                                                >
+                                                    <CustomText style={{ color: "#fff" }}>Cancel</CustomText>
+                                                </Pressable>
+
+                                                <Pressable
+                                                    onPress={onDoneIOS}
+                                                    style={{
+                                                        height: verticalScale(40),
+                                                        borderRadius: scale(4),
+                                                        width: "45%",
+                                                        marginHorizontal: "auto",
+                                                        backgroundColor: Colors.modeColor.colorCode,
+                                                        justifyContent: "center",
+                                                        alignItems: "center"
+                                                    }}
+                                                ><CustomText style={{ color: "#fff" }}>Done</CustomText>
+                                                </Pressable>
+                                            </View>
+
+
+                                        </View>
+                                    </Modal>
+                                )
+                            }
+
                         </View>
 
                         <Pressable
