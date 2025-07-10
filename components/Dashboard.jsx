@@ -19,11 +19,76 @@ import axios from 'axios'
 import { BASE_URL } from '@/utils/api';
 import Skeleton from './Skeleton'
 
+import * as Device from 'expo-device';
+import * as Notifications from 'expo-notifications';
+import Constants from 'expo-constants';
+
+Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+        shouldPlaySound: true,
+        shouldSetBadge: true,
+        shouldShowBanner: true,
+        shouldShowList: true,
+    }),
+});
+
+
+
+function handleRegistrationError(errorMessage) {
+    alert(errorMessage);
+    throw new Error(errorMessage);
+}
+
+
+async function registerForPushNotificationsAsync() {
+    if (Platform.OS === 'android') {
+        Notifications.setNotificationChannelAsync('default', {
+            name: 'default',
+            importance: Notifications.AndroidImportance.MAX,
+            vibrationPattern: [0, 250, 250, 250],
+            lightColor: '#FF231F7C',
+        });
+    }
+
+    if (Device.isDevice) {
+        const { status: existingStatus } = await Notifications.getPermissionsAsync();
+        let finalStatus = existingStatus;
+        if (existingStatus !== 'granted') {
+            const { status } = await Notifications.requestPermissionsAsync();
+            finalStatus = status;
+        }
+        if (finalStatus !== 'granted') {
+            handleRegistrationError('Permission not granted to get push token for push notification!');
+            return;
+        }
+        const projectId =
+            Constants?.expoConfig?.extra?.eas?.projectId ?? Constants?.easConfig?.projectId;
+        if (!projectId) {
+            handleRegistrationError('Project ID not found');
+        }
+        try {
+            const pushTokenString = (
+                await Notifications.getExpoPushTokenAsync({
+                    projectId,
+                })
+            ).data;
+            // console.log("From Dashboard Screen ",pushTokenString);
+            return pushTokenString;
+        } catch (e) {
+            handleRegistrationError(`${e}`);
+        }
+    } else {
+        handleRegistrationError('Must use physical device for push notifications');
+    }
+}
+
 
 const Dashboard = () => {
 
     const { homeDashboardData, setHomeDashboardData } = useGlobal()
     const { authenticatedUser } = useAuth()
+
+    // console.log("Authenticated user", authenticatedUser)
 
     const [sliceBarber, setSliceBarber] = useState(3)
 
@@ -473,6 +538,65 @@ const Dashboard = () => {
         // },
 
     ]
+
+
+
+    // Notification Code 
+
+
+    const [expoPushToken, setExpoPushToken] = useState('');
+    const [notification, setNotification] = useState(
+        undefined
+    );
+
+    useFocusEffect(
+        useCallback(() => {
+            registerForPushNotificationsAsync()
+                .then(token => setExpoPushToken(token ?? ''))
+                .catch((error) => setExpoPushToken(`${error}`));
+
+            const notificationListener = Notifications.addNotificationReceivedListener(notification => {
+                setNotification(notification);
+            });
+
+            const responseListener = Notifications.addNotificationResponseReceivedListener(response => {
+                // console.log(response);
+            });
+
+            return () => {
+                notificationListener.remove();
+                responseListener.remove();
+            };
+        }, [])
+    )
+
+    useFocusEffect(
+        useCallback(() => {
+            if (expoPushToken) {
+                const saveExpoPushToken = async () => {
+                    try {
+                        const { data } = await axios.post(`${BASE_URL}/mobileRoutes/pushDevices`, {
+                            salonId: authenticatedUser?.salonId,
+                            name: authenticatedUser?.name,
+                            email: authenticatedUser?.email,
+                            deviceToken: expoPushToken,
+                            deviceType: "android"
+                        })
+
+
+                        // console.log("Saved Notifcation Data ", data)
+                    } catch (error) {
+                        console.log("Error saving token ", error)
+                    }
+                }
+
+                saveExpoPushToken()
+            }
+
+        }, [expoPushToken, authenticatedUser])
+    )
+
+    // console.log("Real Token From Dashboard ", expoPushToken)
 
     return (
         <CustomTabView

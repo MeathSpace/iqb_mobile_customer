@@ -44,13 +44,15 @@
 
 import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { Image } from 'expo-image';
-import React, { memo } from 'react'
+import React, { memo, useState } from 'react'
 import { NotificationIcon } from '../constants/icons'
 import { useAuth } from '../context/AuthContext'
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import { useTheme } from '@react-navigation/native'
 import CustomText from './CustomText'
 import { Link, useRouter } from 'expo-router';
+import { useGlobal } from '../context/GlobalContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const Header = () => {
 
@@ -63,6 +65,8 @@ const Header = () => {
     const router = useRouter()
 
     // console.log("authenticatedUser ", authenticatedUser)
+
+    const { newNotification, setNewNotification } = useGlobal()
 
 
     return (
@@ -115,21 +119,44 @@ const Header = () => {
                         justifyContent: "center",
                         alignItems: "center"
                     }}
-                    onPress={() => router.push("/notification")}
+                    onPress={async () => {
+                        
+                        if (newNotification.value) {
+                            await AsyncStorage.setItem(
+                                "newNotification",
+                                JSON.stringify({
+                                    email: authenticatedUser?.email,
+                                    value: false
+                                })
+                            );
+                            setNewNotification({
+                                email: "",
+                                value: false
+                            })
+                        }
+
+                        router.push("/notification")
+                    }}
                 >
                     <NotificationIcon size={moderateScale(24)} color={colors.text} />
                 </Pressable>
-                <View
-                    style={{
-                        width: scale(7),
-                        height: scale(7),
-                        backgroundColor: "#D63163",
-                        borderRadius: scale(20),
-                        position: "absolute",
-                        top: scale(6),
-                        right: scale(8)
-                    }}
-                />
+
+                {
+                    newNotification.value && (
+                        <View
+                            style={{
+                                width: scale(7),
+                                height: scale(7),
+                                backgroundColor: "#D63163",
+                                borderRadius: scale(20),
+                                position: "absolute",
+                                top: scale(6),
+                                right: scale(8)
+                            }}
+                        />
+                    )
+                }
+
             </View>
 
         </View>

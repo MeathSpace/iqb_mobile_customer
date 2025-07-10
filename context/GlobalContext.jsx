@@ -1,5 +1,6 @@
 import { createContext, useState, useContext, useEffect, useRef } from 'react';
 import { useAuth } from './AuthContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const GlobalContext = createContext();
 
@@ -54,6 +55,43 @@ export const GlobalProvider = ({ children }) => {
         open: true
     })
     const [rememberMe, setRememberMe] = useState(true);
+    const [notificationListData, setNotificationListData] = useState(useState({
+        notificationData: null,
+        loading: false,
+        error: null,
+        success: false
+    }))
+
+    useEffect(() => {
+        const saveNotificationToStorage = async () => {
+            if (authenticatedUser?.email) {
+                try {
+
+                    const value = await AsyncStorage.getItem("newNotification");
+
+                    if (value !== null) {
+                        const parsedValue = JSON.parse(value);
+
+                        setNewNotification({
+                            email: parsedValue.email,
+                            value: parsedValue.email === authenticatedUser?.email ? parsedValue.value : false
+                        })
+                    }
+
+                } catch (error) {
+                    console.log("Error from new Notification Async Storage", error);
+                }
+            }
+        };
+
+        saveNotificationToStorage();
+    }, [authenticatedUser]);
+
+
+    const [newNotification, setNewNotification] = useState({
+        email: "",
+        value: false
+    })
 
     const value = {
         selectedBarber,
@@ -82,6 +120,10 @@ export const GlobalProvider = ({ children }) => {
         setApplyAppointmentFilter,
         rememberMe,
         setRememberMe,
+        notificationListData,
+        setNotificationListData,
+        newNotification,
+        setNewNotification
     };
 
     return (

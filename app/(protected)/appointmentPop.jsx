@@ -18,7 +18,7 @@ const appointmentPop = () => {
     const selectedAppointmentParse = params?.selectedAppointment ? JSON.parse(params?.selectedAppointment) : {}
     const { authenticatedUser } = useAuth()
 
-    console.log("selectedAppointmentParse ", selectedAppointmentParse)
+    // console.log("selectedAppointmentParse ", selectedAppointmentParse)
     const [deleteAppointmentLoader, setDeleteAppointmentLoader] = useState(false)
 
     const confirmDeleteHandler = () => {
@@ -124,7 +124,7 @@ const appointmentPop = () => {
                             (deleteAppointmentLoader) ? (
                                 <ActivityIndicator size="small" color="#E11D48" />
                             ) : (
-                                <CustomText style={{ color: "#E11D48" }}>Delete</CustomText>
+                                <CustomText style={{ color: "#E11D48" }}>Cancel</CustomText>
                             )
                         }
 

@@ -18,7 +18,7 @@ const CustomTabView = ({ style, children, scrollable = false, ...props }) => {
         authenticatedUser?.salonId ? (
             <ContentWrapper
                 style={{
-                    backgroundColor: "#fff",
+                    backgroundColor: colors.background,
                     flex: 1,
                     paddingHorizontal: scale(10),
                     paddingTop: verticalScale(10),

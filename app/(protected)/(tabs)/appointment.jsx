@@ -100,6 +100,8 @@ const appointment = () => {
     }, 2000);
   };
 
+  console.log(applyAppointmentFilter.selectedTab)
+
   return (
     <CustomTabView
       style={{
@@ -315,7 +317,7 @@ const appointment = () => {
                               justifyContent: "space-between",
                               alignItems: "center",
                               minHeight: verticalScale(75),
-                              backgroundColor: "#fff",
+                              backgroundColor: colors.background,
                               marginBottom: verticalScale(10),
                               paddingHorizontal: scale(15),
                               borderRadius: scale(10),
@@ -431,21 +433,13 @@ const appointment = () => {
                             style={{
                               textAlign: "center"
                             }}
-                          >You haven’t booked any appointments yet. Schedule your appointment today to ensure a convenient time that fits your schedule.</CustomSecondaryText>
-                          {/* <Pressable
-                            onPress={() => router.push("/appointmentCalendar")}
-                            style={{
-                              height: verticalScale(40),
-                              paddingInline: scale(30),
-                              backgroundColor: Colors.modeColor.colorCode,
-                              marginHorizontal: "auto",
-                              justifyContent: "center",
-                              alignItems: "center",
-                              borderRadius: scale(4),
-                            }}
-                          ><CustomText style={{
-                            color: "#fff"
-                          }}>Book Appointment</CustomText></Pressable> */}
+                          >
+                            {applyAppointmentFilter.selectedTab === "upcoming" ? "You haven’t booked any appointments yet. Schedule your appointment today to ensure a convenient time that fits your schedule." :
+                              applyAppointmentFilter.selectedTab === "served" ? "You have no served appointments" :
+                                applyAppointmentFilter.selectedTab === "cancelled" ? "You have no cancel appointments" :
+                                  "You haven’t booked any appointments yet. Schedule your appointment today to ensure a convenient time that fits your schedule."}
+                          </CustomSecondaryText>
+
                         </View>
                       </View>
                     )

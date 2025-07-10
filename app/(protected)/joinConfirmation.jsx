@@ -515,6 +515,7 @@ import { useGlobal } from '../../context/GlobalContext';
 import { useAuth } from '../../context/AuthContext';
 import axios from 'axios';
 import { BASE_URL } from '@/utils/api';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const singleJoinConfirmation = () => {
 
@@ -534,15 +535,6 @@ const singleJoinConfirmation = () => {
   const selectedBookCalenderTimeslotParse = params?.selectedBookCalenderTimeslot ? JSON.parse(params?.selectedBookCalenderTimeslot) : ""
   const selectedBookCalenderDateParse = params?.selectedBookCalenderDate ? JSON.parse(params?.selectedBookCalenderDate) : ""
   const selectedBookAppointmentNoteParse = params?.selectedBookAppointmentNote ? JSON.parse(params?.selectedBookAppointmentNote) : ""
-
-  // console.log("selectedCustomerBookAppointmentBarberParse ", selectedCustomerBookAppointmentBarberParse)
-
-  // console.log({
-  //   selectedCustomerBookAppointmentBarberParse,
-  //   selectedCustomerBookAppointmentServicesParse,
-  //   selectedBookCalenderTimeslotParse,
-  //   selectedBookAppointmentNoteParse
-  // })
 
 
   const darkMapStyle = [
@@ -602,6 +594,8 @@ const singleJoinConfirmation = () => {
 
   const [singleJoinLoader, setSingleJoinLoader] = useState(false)
 
+  const { newNotification, setNewNotification } = useGlobal()
+
   const singleJoinPressed = async () => {
     try {
       const singleJoinData = {
@@ -623,6 +617,20 @@ const singleJoinConfirmation = () => {
 
       Toast.success(data?.message)
       setSingleJoinLoader(false)
+
+      await AsyncStorage.setItem(
+        "newNotification",
+        JSON.stringify({
+          email: authenticatedUser?.email,
+          value: true
+        })
+      );
+
+      setNewNotification({
+        email: authenticatedUser?.email,
+        value: true
+      })
+
       router.replace("/queuelist")
 
     } catch (error) {
@@ -660,6 +668,20 @@ const singleJoinConfirmation = () => {
 
       Toast.success(data?.message)
       setGroupJoinLoader(false)
+
+      await AsyncStorage.setItem(
+        "newNotification",
+        JSON.stringify({
+          email: authenticatedUser?.email,
+          value: true
+        })
+      );
+
+      setNewNotification({
+        email: authenticatedUser?.email,
+        value: true
+      })
+
       router.replace("/queuelist")
 
     } catch (error) {
@@ -695,6 +717,20 @@ const singleJoinConfirmation = () => {
 
       Toast.success(data?.message)
       setBookAppointmentLoader(false)
+
+      await AsyncStorage.setItem(
+        "newNotification",
+        JSON.stringify({
+          email: authenticatedUser?.email,
+          value: true
+        })
+      );
+
+      setNewNotification({
+        email: authenticatedUser?.email,
+        value: true
+      })
+
       router.replace("/appointment")
 
     } catch (error) {
@@ -725,6 +761,20 @@ const singleJoinConfirmation = () => {
 
       Toast.success(data?.message)
       setEditAppointmentLoader(false)
+
+      await AsyncStorage.setItem(
+        "newNotification",
+        JSON.stringify({
+          email: authenticatedUser?.email,
+          value: true
+        })
+      );
+
+      setNewNotification({
+        email: authenticatedUser?.email,
+        value: true
+      })
+
       router.replace("/appointment")
 
     } catch (error) {

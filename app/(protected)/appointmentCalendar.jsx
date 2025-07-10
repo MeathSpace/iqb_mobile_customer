@@ -258,7 +258,7 @@ const appointmentCalendar = () => {
         generateDatesForMonth(currentMonth);
     }, [currentMonth]);
 
-   
+
     const generateDatesForMonth = (monthMoment) => {
         const startOfMonth = monthMoment.clone().startOf('month');
         const endOfMonth = monthMoment.clone().endOf('month');
@@ -783,8 +783,98 @@ const appointmentCalendar = () => {
                                     flexWrap: "wrap",
                                     gap: scale(10)
                                 }}>
+
                                     {
-                                        engageTimeslotsData?.data?.map((item, index) => {
+                                        !selectedCustomerBarber ? (
+                                            <View
+                                                style={{
+                                                    width: "100%",
+                                                    minHeight: verticalScale(300),
+                                                    justifyContent: "center",
+                                                    alignItems: "center",
+                                                }}
+                                            >
+                                                <CustomText>Please select barber</CustomText>
+                                            </View>
+                                        ) : !selectedCalenderDate ? (
+                                            <View
+                                                style={{
+                                                    width: "100%",
+                                                    minHeight: verticalScale(300),
+                                                    justifyContent: "center",
+                                                    alignItems: "center",
+                                                }}
+                                            >
+                                                <CustomText>Please select date</CustomText>
+                                            </View>
+                                        ) : engageTimeslotsData?.loading ? (
+                                            <>
+                                                <Skeleton
+                                                    width={scrolling ? "31%" : "48%"}
+                                                    height={verticalScale(40)}
+                                                    style={{
+                                                        borderRadius: scale(8)
+                                                    }}
+                                                />
+                                                <Skeleton
+                                                    width={scrolling ? "31%" : "48%"}
+                                                    height={verticalScale(40)}
+                                                    style={{
+                                                        borderRadius: scale(8)
+                                                    }}
+                                                />
+                                                <Skeleton
+                                                    width={scrolling ? "31%" : "48%"}
+                                                    height={verticalScale(40)}
+                                                    style={{
+                                                        borderRadius: scale(8)
+                                                    }}
+                                                />
+                                                <Skeleton
+                                                    width={scrolling ? "31%" : "48%"}
+                                                    height={verticalScale(40)}
+                                                    style={{
+                                                        borderRadius: scale(8)
+                                                    }}
+                                                />
+                                                <Skeleton
+                                                    width={scrolling ? "31%" : "48%"}
+                                                    height={verticalScale(40)}
+                                                    style={{
+                                                        borderRadius: scale(8)
+                                                    }}
+                                                />
+                                                <Skeleton
+                                                    width={scrolling ? "31%" : "48%"}
+                                                    height={verticalScale(40)}
+                                                    style={{
+                                                        borderRadius: scale(8)
+                                                    }}
+                                                />
+                                                <Skeleton
+                                                    width={scrolling ? "31%" : "48%"}
+                                                    height={verticalScale(40)}
+                                                    style={{
+                                                        borderRadius: scale(8)
+                                                    }}
+                                                />
+                                                <Skeleton
+                                                    width={scrolling ? "31%" : "48%"}
+                                                    height={verticalScale(40)}
+                                                    style={{
+                                                        borderRadius: scale(8)
+                                                    }}
+                                                />
+                                                <Skeleton
+                                                    width={scrolling ? "31%" : "48%"}
+                                                    height={verticalScale(40)}
+                                                    style={{
+                                                        borderRadius: scale(8)
+                                                    }}
+                                                />
+
+                                            </>
+                                        ) : engageTimeslotsData?.data?.map((item, index) => {
                                             return (
                                                 <Pressable
                                                     onPress={() => {
@@ -803,8 +893,6 @@ const appointmentCalendar = () => {
                                                         height: verticalScale(40),
                                                         justifyContent: "center",
                                                         alignItems: "center",
-                                                        // borderColor: Colors.modeColor.colorCode,
-                                                        // borderWidth: scale(1),
                                                         borderRadius: scale(8)
                                                     }}>
                                                     <CustomText style={{

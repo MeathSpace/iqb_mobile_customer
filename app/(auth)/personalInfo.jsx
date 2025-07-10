@@ -498,7 +498,9 @@ const personalInfo = () => {
                                     >
                                         <View
                                             style={{
-                                                backgroundColor: "#fff",
+                                                backgroundColor: colors.background,
+                                                borderColor: colors.border,
+                                                borderWidth: scale(1),
                                                 padding: scale(10),
                                                 borderRadius: scale(10),
                                                 // iOS shadow
