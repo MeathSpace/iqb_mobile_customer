@@ -13,7 +13,9 @@ const ProtectedLayout = () => {
     return (
         <Stack
             initialRouteName="(tabs)"
-            screenOptions={{ headerShown: false }}>
+            screenOptions={{
+                headerShown: false,
+            }}>
             <Stack.Screen
                 name="selectBarber"
                 options={{

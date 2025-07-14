@@ -12,7 +12,7 @@ import SalonCard from '../../../components/SalonCard';
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import CustomTabView from '../../../components/CustomTabView';
-import { ArrowLeftIcon, CarIcon, ExternalLinkIcon, HeartFilledIcon, HeartIcon } from '../../../constants/icons';
+import { ArrowLeftIcon, CarIcon, ExternalLinkIcon, HeartDislikeIcon, HeartFilledIcon, HeartIcon } from '../../../constants/icons';
 import { Image } from 'expo-image';
 import CustomText from '../../../components/CustomText';
 import { useFocusEffect, useRouter } from 'expo-router';
@@ -22,6 +22,7 @@ import axios from 'axios';
 import { BASE_URL } from '@/utils/api';
 import { Toast } from 'toastify-react-native'
 import Skeleton from '../../../components/Skeleton';
+import CustomSecondaryText from '../../../components/CustomSecondaryText';
 
 const MyFavourites = () => {
 
@@ -258,14 +259,47 @@ const MyFavourites = () => {
                     />
 
                 ) : (
-                    <View
-                        style={{
-                            flex: 1,
-                            justifyContent: "center",
-                            alignItems: "center",
-                        }}
-                    >
-                        <CustomText>No Favourite salon available</CustomText>
+                    <View style={{
+                        justifyContent: "center",
+                        alignItems: "center",
+                        flex: 1
+                    }}>
+                        <View
+                            style={{
+                                gap: verticalScale(12)
+                            }}
+                        >
+                            <View
+                                style={{
+                                    width: scale(60),
+                                    height: scale(60),
+                                    backgroundColor: colors.background,
+                                    marginHorizontal: "auto",
+                                    borderRadius: scale(50),
+                                    justifyContent: "center",
+                                    alignItems: "center"
+                                }}
+                            >
+                                <HeartDislikeIcon
+                                    color={colors.text}
+                                    size={scale(40)}
+                                />
+                            </View>
+                            <CustomText
+                                style={{
+                                    textAlign: "center",
+                                    fontSize: scale(16)
+                                }}
+                            >No Favourite</CustomText>
+                            <CustomSecondaryText
+                                style={{
+                                    textAlign: "center"
+                                }}
+                            >
+                                You don't have any favourite salon
+                            </CustomSecondaryText>
+
+                        </View>
                     </View>
                 )
             }

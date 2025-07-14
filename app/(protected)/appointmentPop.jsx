@@ -31,7 +31,7 @@ const appointmentPop = () => {
                     style: "cancel"
                 },
                 {
-                    text: "Delete",
+                    text: "Confirm",
                     style: "destructive",
                     onPress: () => deleteHandler()
                 }

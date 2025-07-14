@@ -1076,7 +1076,8 @@ const appointmentCalendar = () => {
                         <View style={styles.footer}>
                             <Pressable
                                 onPress={() => {
-                                    router.replace("/appointment")
+                                    // router.replace("/appointment")
+                                    router.dismiss()
                                 }}
                                 style={styles.searchButton}>
                                 <CustomText style={{ color: '#fff' }}>Back</CustomText>

@@ -664,7 +664,8 @@ const editProfile = () => {
                                         transparent={true}
                                         visible={calenderModal}
                                     >
-                                        <View
+                                        <Pressable
+                                            onPress={() => setCalenderModal(false)}
                                             style={{
                                                 flex: 1,
                                                 backgroundColor: "rgba(0,0,0, 0.8)",
@@ -745,12 +746,18 @@ const editProfile = () => {
                                             </View>
 
 
-                                        </View>
+                                        </Pressable>
                                     </Modal>
                                 )
                             }
 
                         </View>
+
+                        {/* <Pressable
+                            onPress={() => {
+                                console.log("VALUEEEE ", router.canGoBack())
+                            }}
+                        ><CustomText>svv</CustomText></Pressable> */}
 
                         <Pressable
                             onPress={() => saveHandler()}

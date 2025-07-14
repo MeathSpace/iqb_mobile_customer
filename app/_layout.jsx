@@ -99,7 +99,10 @@ const RootLayout = () => {
           tokenCache={tokenCache}>
           <ThemeProvider value={colorScheme === 'dark' ? MyDarkTheme : MyLightTheme}>
             {/* <Slot /> */}
-            <Stack screenOptions={{ headerShown: false }} />
+            <Stack screenOptions={{
+              headerShown: false,
+              // gestureEnabled: false
+            }} />
             <StatusBar style="auto" />
             <ToastManager />
           </ThemeProvider>

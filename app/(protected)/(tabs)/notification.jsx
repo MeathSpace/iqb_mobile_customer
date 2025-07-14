@@ -3,7 +3,7 @@ import React, { useCallback, useEffect } from 'react'
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import { useFocusEffect, useRouter } from 'expo-router';
 import CustomTabView from '../../../components/CustomTabView';
-import { ArrowLeftIcon } from '../../../constants/icons';
+import { ArrowLeftIcon, NotificationOffIcon } from '../../../constants/icons';
 import CustomText from '../../../components/CustomText';
 import { Image } from 'expo-image';
 import { useTheme } from '@react-navigation/native';
@@ -13,6 +13,7 @@ import { BASE_URL } from '@/utils/api';
 import { useAuth } from '../../../context/AuthContext';
 import Skeleton from '../../../components/Skeleton';
 import { io } from "socket.io-client";
+import CustomSecondaryText from '../../../components/CustomSecondaryText';
 
 const notification = () => {
 
@@ -107,7 +108,7 @@ const notification = () => {
                 paddingVertical: verticalScale(0),
                 // paddingTop: verticalScale(10),
                 paddingBottom: Platform.OS === "ios" ? verticalScale(80) : verticalScale(20),
-                gap: verticalScale(10)
+                gap: verticalScale(10),
             }}
         >
             <ScrollView
@@ -197,14 +198,47 @@ const notification = () => {
                             </View>
                         ))
                     ) : (
-                        <View
-                            style={{
-                                height: verticalScale(400),
-                                justifyContent: "center",
-                                alignItems: "center"
-                            }}
-                        >
-                            <CustomText>No notifications available</CustomText>
+                        <View style={{
+                            justifyContent: "center",
+                            alignItems: "center",
+                            minHeight: verticalScale(500)
+                        }}>
+                            <View
+                                style={{
+                                    gap: verticalScale(12)
+                                }}
+                            >
+                                <View
+                                    style={{
+                                        width: scale(60),
+                                        height: scale(60),
+                                        backgroundColor: colors.background,
+                                        marginHorizontal: "auto",
+                                        borderRadius: scale(50),
+                                        justifyContent: "center",
+                                        alignItems: "center"
+                                    }}
+                                >
+                                    <NotificationOffIcon
+                                        color={colors.text}
+                                        size={scale(40)}
+                                    />
+                                </View>
+                                <CustomText
+                                    style={{
+                                        textAlign: "center",
+                                        fontSize: scale(16)
+                                    }}
+                                >No Notification</CustomText>
+                                <CustomSecondaryText
+                                    style={{
+                                        textAlign: "center"
+                                    }}
+                                >
+                                    You don't have notification
+                                </CustomSecondaryText>
+
+                            </View>
                         </View>
                     )
 

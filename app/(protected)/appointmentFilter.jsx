@@ -23,7 +23,7 @@ const appointmentFilter = () => {
 
     return (
         <Pressable
-            onPress={() => router.back()}
+            onPress={() => router.dismiss()}
             style={{
                 flex: 1,
                 backgroundColor: "rgba(0,0,0,0.5)",

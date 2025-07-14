@@ -100,8 +100,6 @@ const appointment = () => {
     }, 2000);
   };
 
-  console.log(applyAppointmentFilter.selectedTab)
-
   return (
     <CustomTabView
       style={{

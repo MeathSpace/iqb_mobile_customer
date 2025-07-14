@@ -207,3 +207,11 @@ export const EyeOffIcon = ({ size = moderateScale(24), color = 'black', style })
 export const RefreshIcon = ({ size = moderateScale(24), color = 'black', style }) => (
     <MaterialCommunityIcons name="reload" size={size} color={color} style={style} />
 );
+
+export const HeartDislikeIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <Ionicons name="heart-dislike-outline" size={size} color={color} style={style} />
+);
+
+export const NotificationOffIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <Ionicons name="notifications-off-outline" size={size} color={color} style={style} />
+);

@@ -486,7 +486,8 @@ const personalInfo = () => {
                                     transparent={true}
                                     visible={calenderModal}
                                 >
-                                    <View
+                                    <Pressable
+                                        onPress={() => setCalenderModal(false)}
                                         style={{
                                             flex: 1,
                                             backgroundColor: "rgba(0,0,0, 0.8)",
@@ -567,7 +568,7 @@ const personalInfo = () => {
                                         </View>
 
 
-                                    </View>
+                                    </Pressable>
                                 </Modal>
                             )
                         }

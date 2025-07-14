@@ -631,7 +631,7 @@ const singleJoinConfirmation = () => {
         value: true
       })
 
-      router.replace("/queuelist")
+      router.dismissTo("/queuelist")
 
     } catch (error) {
 
@@ -682,7 +682,7 @@ const singleJoinConfirmation = () => {
         value: true
       })
 
-      router.replace("/queuelist")
+      router.dismissTo("/queuelist")
 
     } catch (error) {
       setGroupJoinLoader(false)
@@ -731,7 +731,7 @@ const singleJoinConfirmation = () => {
         value: true
       })
 
-      router.replace("/appointment")
+      router.dismissTo("/appointment")
 
     } catch (error) {
       setBookAppointmentLoader(false)
@@ -775,7 +775,7 @@ const singleJoinConfirmation = () => {
         value: true
       })
 
-      router.replace("/appointment")
+      router.dismissTo("/appointment")
 
     } catch (error) {
       setEditAppointmentLoader(false)
