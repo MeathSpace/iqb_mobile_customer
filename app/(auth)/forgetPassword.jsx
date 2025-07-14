@@ -23,6 +23,8 @@ const forgetPassword = () => {
     const [emailError, setEmailError] = useState(false);
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
+    const [forgetLoader, setForgetLoader] = useState(false)
+
     const forgetHandler = async () => {
         if (!email) {
             setEmailError("Email is required")
@@ -32,6 +34,8 @@ const forgetPassword = () => {
         }
 
         try {
+            setForgetLoader(true)
+
             const { data } = await axios.post(`${BASE_URL}/customer/forgetPassword`, {
                 email,
             })
@@ -44,9 +48,13 @@ const forgetPassword = () => {
                 }
             })
 
+            setForgetLoader(false)
+
         } catch (error) {
             Toast.error(error?.response?.data?.message)
             console.log("Error in forget password ", error)
+
+            setForgetLoader(false)
         }
 
     }
@@ -75,7 +83,10 @@ const forgetPassword = () => {
                             placeholder="Enter your email"
                             placeholderTextColor={colors.secondaryText}
                             style={[false ? styles.inputFielderror : styles.inputField, {
-                                backgroundColor: "#0BA3AD1A", fontFamily: "AirbnbCereal_W_Bk", color: colors.text
+                                // backgroundColor: "#0BA3AD1A", 
+                                borderWidth: scale(1),
+                                borderColor: "gray",
+                                fontFamily: "AirbnbCereal_W_Bk", color: colors.text
                             }]}
                             onChangeText={(text) => {
                                 setEmailError("")
@@ -102,6 +113,7 @@ const forgetPassword = () => {
                 </View>
 
                 <Pressable
+                    disabled={forgetLoader}
                     onPress={() => forgetHandler()}
                     style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode }]}>
                     <CustomText style={{ color: "#fff" }}>Save & next</CustomText>

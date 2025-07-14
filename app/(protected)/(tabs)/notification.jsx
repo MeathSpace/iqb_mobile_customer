@@ -23,87 +23,91 @@ const notification = () => {
     const { notificationListData, setNotificationListData } = useGlobal()
     const { authenticatedUser } = useAuth()
 
-    // useEffect(() => {
-    //     const fetchNotifications = async () => {
-    //         try {
-    //             const { data } = await axios.post(`${BASE_URL}/mobileRoutes/getAllNotificationsByCustomerEmail`, {
-    //                 email: authenticatedUser?.email
-    //             })
-    //             // console.log(JSON.stringify(data?.response, null, 2));
+    useEffect(() => {
+        const fetchNotifications = async () => {
+            try {
+                const { data } = await axios.post(`${BASE_URL}/mobileRoutes/getAllNotificationsByCustomerEmail`, {
+                    email: authenticatedUser?.email
+                })
 
-    //             setNotificationListData((prev) => ({ ...prev, loading: false, notificationData: JSON.stringify(data?.response), success: true, error: null }))
+                // console.log(JSON.stringify(data?.response, null, 2));
 
-    //         } catch (error) {
-    //             setNotificationListData((prev) => ({ ...prev, loading: false, notificationData: null, success: false, error: error }))
-    //             console.log("Error fetching notifications ", error)
-    //         }
-    //     }
+                setNotificationListData((prev) => ({ ...prev, loading: false, notificationData: data?.response, success: true, error: null }))
 
-    //     fetchNotifications()
-    // }, [])
+            } catch (error) {
+                setNotificationListData((prev) => ({ ...prev, loading: false, notificationData: null, success: false, error: error }))
+                console.log("Error fetching notifications ", error)
+            }
+        }
+
+        fetchNotifications()
+
+    }, [])
 
 
     // console.log("notificationListData ", notificationListData)
 
-    const socket = io("https://iqb-final.onrender.com", {
-        transports: ['websocket'],
-    });
+    // const socket = io("https://iqb-final.onrender.com", {
+    //     transports: ['websocket'],
+    // });
 
-    const fetchNotifications = async () => {
-        try {
+    // const fetchNotifications = async () => {
+    //     try {
 
-            setNotificationListData((prev) => ({ ...prev, loading: true }))
+    //         setNotificationListData((prev) => ({ ...prev, loading: true }))
 
-            const { data } = await axios.post(`${BASE_URL}/mobileRoutes/getAllNotificationsByCustomerEmail`, {
-                email: authenticatedUser?.email
-            });
+    //         const { data } = await axios.post(`${BASE_URL}/mobileRoutes/getAllNotificationsByCustomerEmail`, {
+    //             email: authenticatedUser?.email
+    //         });
 
-            // console.log("Data ",data)
+    //         // console.log("Data ",data)
 
-            setNotificationListData((prev) => ({
-                ...prev,
-                loading: false,
-                notificationData: data?.response || [],
-                success: true,
-                error: null
-            }));
-        } catch (error) {
-            setNotificationListData((prev) => ({
-                ...prev,
-                loading: false,
-                notificationData: [],
-                success: false,
-                error: error
-            }));
-            console.log("Error fetching notifications ", error);
-        }
-    };
+    //         setNotificationListData((prev) => ({
+    //             ...prev,
+    //             loading: false,
+    //             notificationData: data?.response || [],
+    //             success: true,
+    //             error: null
+    //         }));
+    //     } catch (error) {
+    //         setNotificationListData((prev) => ({
+    //             ...prev,
+    //             loading: false,
+    //             notificationData: [],
+    //             success: false,
+    //             error: error
+    //         }));
+    //         console.log("Error fetching notifications ", error);
+    //     }
+    // };
 
 
-    useFocusEffect(
-        useCallback(() => {
+    // useFocusEffect(
+    //     useCallback(() => {
 
-            fetchNotifications();
+    //         fetchNotifications();
 
-            socket.emit("joinCustomerforNotifications", { salonId: authenticatedUser?.salonId, customerEmail: authenticatedUser?.email });
+    //         socket.emit("joinCustomerforNotifications", { salonId: authenticatedUser?.salonId, customerEmail: authenticatedUser?.email });
 
-            socket.on("receiveNotifications", (notificationData) => {
+    //         socket.on("receiveNotifications", (notificationData) => {
 
-                setNotificationListData((prev) => ({
-                    ...prev,
-                    loading: false,
-                    notificationData: notificationData,
-                    success: true,
-                    error: null
-                }));
-            })
+    //             setNotificationListData((prev) => ({
+    //                 ...prev,
+    //                 loading: false,
+    //                 notificationData: notificationData,
+    //                 success: true,
+    //                 error: null
+    //             }));
+    //         })
 
-        }, [authenticatedUser])
-    )
+    //     }, [authenticatedUser])
+    // )
 
     return (
-        <CustomTabView
+        <View
             style={{
+                paddingHorizontal: scale(10),
+                paddingTop: verticalScale(10),
                 backgroundColor: "#00B0901A",
                 paddingVertical: verticalScale(0),
                 // paddingTop: verticalScale(10),
@@ -244,7 +248,7 @@ const notification = () => {
 
                 }
             </ScrollView>
-        </CustomTabView>
+        </View>
     )
 }
 

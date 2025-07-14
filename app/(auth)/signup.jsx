@@ -89,9 +89,12 @@ const signup = () => {
     const { isLoaded, isSignedIn, user } = useUser()
     const { signOut } = useClerk()
 
+    const [googleClicked, setGoogleClicked] = useState(false)
 
     const googleSignupPressed = useCallback(async () => {
         try {
+            setGoogleClicked(true)
+
             // Start the authentication process by calling `startSSOFlow()`
             const { createdSessionId, setActive, signIn, signUp } = await startSSOFlow({
                 strategy: 'oauth_google',
@@ -117,10 +120,13 @@ const signup = () => {
                 // Use the `signIn` or `signUp` returned from `startSSOFlow`
                 // to handle next steps
             }
+
+            setGoogleClicked(false)
         } catch (err) {
             // See https://clerk.com/docs/custom-flows/error-handling
             // for more info on error handling
             console.error(JSON.stringify(err, null, 2))
+            setGoogleClicked(false)
         }
     }, []);
 
@@ -128,7 +134,6 @@ const signup = () => {
 
     useEffect(() => {
         if (isSignedIn) {
-            // console.log(user?.primaryEmailAddress?.emailAddress)
 
             const checkEmail = async () => {
                 try {
@@ -180,7 +185,10 @@ const signup = () => {
                             placeholder="Enter your email"
                             placeholderTextColor={colors.secondaryText}
                             style={[false ? styles.inputFielderror : styles.inputField, {
-                                backgroundColor: "#0BA3AD1A", fontFamily: "AirbnbCereal_W_Bk", color: colors.text
+                                // backgroundColor: "#0BA3AD1A",
+                                borderWidth: scale(1),
+                                borderColor: "gray",
+                                fontFamily: "AirbnbCereal_W_Bk", color: colors.text
                             }]}
                             onChangeText={(text) => {
                                 setEmailError("")
@@ -231,6 +239,7 @@ const signup = () => {
                     </View>
 
                     <Pressable
+                        disabled={googleClicked || googleSigninLoader}
                         onPress={async () => {
                             if (isSignedIn) {
                                 await signOut()
@@ -242,7 +251,7 @@ const signup = () => {
                         style={
                             [styles.auth_btn,
                             {
-                                borderWidth: moderateScale(1.5),
+                                borderWidth: scale(1),
                                 borderColor: "gray",
                                 flexDirection: "row",
                                 alignItems: "center",

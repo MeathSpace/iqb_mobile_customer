@@ -13,7 +13,7 @@ import BarberCard from './BarberCard'
 import { Link, router, useFocusEffect } from 'expo-router'
 import { Dimensions } from 'react-native';
 import { Image } from 'expo-image'
-import { useTheme } from '@react-navigation/native'
+import { usePreventRemove, useTheme } from '@react-navigation/native'
 import { useGlobal } from '../context/GlobalContext'
 import axios from 'axios'
 import { BASE_URL } from '@/utils/api';
@@ -586,7 +586,7 @@ const Dashboard = () => {
 
                         // console.log("Saved Notifcation Data ", data)
                     } catch (error) {
-                        console.log("Error saving token ", error)
+                        // console.log("Error saving token ", error)
                     }
                 }
 
@@ -597,6 +597,24 @@ const Dashboard = () => {
     )
 
     // console.log("Real Token From Dashboard ", expoPushToken)
+
+    const { setJoinModes, joinModes } = useGlobal();
+
+    const hasUnsavedChanges = true
+
+    usePreventRemove(
+        hasUnsavedChanges, // This boolean determines if removal should be prevented
+        ({ data }) => {
+            // The action is still passed, but we're choosing not to dispatch it,
+            // effectively making "going back" impossible through these means.
+            // Alert.alert(
+            //     'Cannot Go Back',
+            //     'You cannot go back during the signup flow. Please complete the current step.',
+            //     [{ text: 'OK', onPress: () => null }] // Only an 'OK' button
+            // );
+        }
+    );
+
 
     return (
         <CustomTabView
@@ -746,7 +764,7 @@ const Dashboard = () => {
                                         // marginBottom: verticalScale(20)
                                     }}>
                                         <Pressable
-                                            onPress={() => router.push("/queuelist")}
+                                            onPress={() => router.push("/joinpopup")}
                                             style={[styles.btn, {
                                                 backgroundColor: Colors.modeColor.colorCode, shadowColor: Colors.modeColor.colorCode,
                                             }]}>
@@ -754,7 +772,11 @@ const Dashboard = () => {
                                         </Pressable>
 
                                         <Pressable
-                                            onPress={() => router.push("/appointment")}
+                                            // onPress={() => router.push("/appointment")}
+                                            onPress={() => {
+                                                setJoinModes((prev) => ({ ...prev, appointment: true, appointmentType: "Book" }));
+                                                router.push("/appointmentCalendar");
+                                            }}
                                             style={[styles.btn, {
                                                 backgroundColor: Colors.modeColor.colorCode2,
                                                 shadowColor: Colors.modeColor.colorCode,
@@ -879,7 +901,7 @@ const Dashboard = () => {
                                                 fontFamily: "AirbnbCereal_W_Blk",
                                                 color: Colors.modeColor.colorCode
                                             }}
-                                        >{homeDashboardData?.dashboardData?.barberOnDuty}</CustomText></CustomText>
+                                        >({homeDashboardData?.dashboardData?.barberOnDuty})</CustomText></CustomText>
 
                                     </View>
 

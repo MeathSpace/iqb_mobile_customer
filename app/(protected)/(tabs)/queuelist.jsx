@@ -88,7 +88,8 @@ const QueueList = () => {
                 justifyContent: "space-between",
                 paddingVertical: verticalScale(0),
                 paddingTop: verticalScale(10),
-                backgroundColor: "#00B0901A"
+                // backgroundColor: "#00B0901A"
+                backgroundColor: colors.background
             }}>
             <View style={{ flex: 1, paddingBottom: Platform.OS === 'ios' ? verticalScale(60) : 0 }}>
                 {

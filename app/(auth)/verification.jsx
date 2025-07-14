@@ -1,4 +1,4 @@
-import { ActivityIndicator, Keyboard, Pressable, StyleSheet, Text, TextInput, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
+import { ActivityIndicator, Alert, Keyboard, Pressable, StyleSheet, Text, TextInput, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
@@ -6,7 +6,7 @@ import CustomView from '../../components/CustomView';
 import ProgressHeader from '../../components/ProgressHeader';
 import CustomText from '../../components/CustomText';
 import CustomSecondaryText from '../../components/CustomSecondaryText';
-import { useTheme } from '@react-navigation/native';
+import { usePreventRemove, useTheme } from '@react-navigation/native';
 import { Colors } from '@/constants/Colors';
 import { ErrorIcon } from '../../constants/icons';
 import axios from 'axios';
@@ -201,6 +201,22 @@ const verification = () => {
         }
     }
 
+
+    const hasUnsavedChanges = true;
+
+    usePreventRemove(
+        hasUnsavedChanges, // This boolean determines if removal should be prevented
+        ({ data }) => {
+            // The action is still passed, but we're choosing not to dispatch it,
+            // effectively making "going back" impossible through these means.
+            Alert.alert(
+                'Cannot Go Back',
+                'You cannot go back during the signup flow. Please complete the current step.',
+                [{ text: 'OK', onPress: () => null }] // Only an 'OK' button
+            );
+        }
+    );
+
     return (
         <TouchableWithoutFeedback onPress={() => {
             Keyboard.dismiss();
@@ -254,7 +270,9 @@ const verification = () => {
                             placeholder="Enter your otp"
                             placeholderTextColor={colors.secondaryText}
                             style={[false ? styles.inputFielderror : styles.inputField, {
-                                backgroundColor: "#0BA3AD1A",
+                                // backgroundColor: "#0BA3AD1A",
+                                borderWidth: scale(1),
+                                borderColor: "gray",
                                 fontFamily: "AirbnbCereal_W_Bk", color: colors.text
                             }]}
                             onChangeText={(text) => {

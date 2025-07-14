@@ -1,15 +1,16 @@
 import { FlatList, Keyboard, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import React, { useEffect, useRef, useState } from 'react';
-import { SearchIcon } from '../constants/icons';
+import { NotificationIcon, SearchIcon } from '../constants/icons';
 import CustomText from './CustomText';
 import { useTheme } from '@react-navigation/native';
-import { Link } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import { Image } from 'expo-image';
 import { useAuth } from '../context/AuthContext';
 import { useGlobal } from '../context/GlobalContext';
 import { BASE_URL } from '@/utils/api'
 import axios from 'axios'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const SearchHeader = () => {
 
@@ -103,14 +104,20 @@ const SearchHeader = () => {
         console.log("City Salons")
     };
 
+    const router = useRouter()
+    const { newNotification, setNewNotification } = useGlobal()
 
     return (
-        <View style={[styles.container, { backgroundColor: colors.tabBackground }]}>
+        <View style={[styles.container, {
+            // backgroundColor: colors.tabBackground
+            backgroundColor: colors.background
+        }]}>
             <View style={[styles.searchWrapper,
             {
                 backgroundColor: colors.background,
                 borderColor: colors.border,
                 borderWidth: scale(1),
+                borderRadius: scale(20)
             }]}>
                 <TextInput
                     style={[styles.input, { color: colors.text }]}
@@ -123,6 +130,37 @@ const SearchHeader = () => {
                     <SearchIcon size={moderateScale(16)} color={colors.text} />
                 </Pressable>
             </View>
+
+            <Pressable
+                style={{
+                    height: scale(40),
+                    width: scale(40),
+                    borderRadius: scale(30),
+                    // backgroundColor: "#EAA82433",
+                    justifyContent: "center",
+                    alignItems: "center"
+                }}
+                onPress={async () => {
+
+                    if (newNotification.value) {
+                        await AsyncStorage.setItem(
+                            "newNotification",
+                            JSON.stringify({
+                                email: authenticatedUser?.email,
+                                value: false
+                            })
+                        );
+                        setNewNotification({
+                            email: "",
+                            value: false
+                        })
+                    }
+
+                    router.push("/notification")
+                }}
+            >
+                <NotificationIcon size={moderateScale(24)} color={colors.text} />
+            </Pressable>
 
             {/* {searchCityNameData?.data?.length > 0 && query.length > 0 && (
                 <FlatList

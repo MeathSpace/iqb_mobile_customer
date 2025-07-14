@@ -121,8 +121,13 @@ const signin = () => {
 
     const { isLoaded, isSignedIn, user } = useUser()
 
+    const [googleClicked, setGoogleClicked] = useState(false)
+
     const googleSigninPressed = useCallback(async () => {
         try {
+
+            setGoogleClicked(true)
+
             // Start the authentication process by calling `startSSOFlow()`
             const { createdSessionId, setActive, signIn, signUp } = await startSSOFlow({
                 strategy: 'oauth_google',
@@ -148,10 +153,15 @@ const signin = () => {
                 // Use the `signIn` or `signUp` returned from `startSSOFlow`
                 // to handle next steps
             }
+
+            setGoogleClicked(false)
         } catch (err) {
+            setGoogleClicked(false)
             // See https://clerk.com/docs/custom-flows/error-handling
             // for more info on error handling
             console.error(JSON.stringify(err, null, 2))
+
+
         }
     }, []);
 
@@ -186,7 +196,7 @@ const signin = () => {
                     if (rememberMe) {
                         await AsyncStorage.setItem("isAuthenticated", JSON.stringify(true))
                     } else {
-                        signOut()
+                        await signOut()
                     }
 
                     await AsyncStorage.setItem("LoggedInUser", JSON.stringify({
@@ -205,10 +215,11 @@ const signin = () => {
                     router.push("/home")
 
                 } catch (error) {
-                    signOut()
+                    await signOut()
                     setGoogleSigninLoader(false)
                     setSignInData((prev) => ({ ...prev, loading: false, user: null, success: false, error: error }))
                     Toast.error(error?.response?.data?.message)
+                    console.log("Error ", error)
                 }
             };
 
@@ -238,7 +249,9 @@ const signin = () => {
                             placeholder="Enter your email"
                             placeholderTextColor={colors.secondaryText}
                             style={[false ? styles.inputFielderror : styles.inputField, {
-                                backgroundColor: "#0BA3AD1A",
+                                // backgroundColor: "#0BA3AD1A",
+                                borderWidth: scale(1),
+                                borderColor: "gray",
                                 fontFamily: "AirbnbCereal_W_Md",
                                 color: colors.text
                             }]}
@@ -366,11 +379,12 @@ const signin = () => {
                     </View>
 
                     <Pressable
+                        disabled={googleClicked || googleSigninLoader}
                         onPress={googleSigninPressed}
                         style={
                             [styles.auth_btn,
                             {
-                                borderWidth: moderateScale(1.5),
+                                borderWidth: scale(1),
                                 borderColor: "gray",
                                 flexDirection: "row",
                                 alignItems: "center",
@@ -424,7 +438,9 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         alignItems: 'center',
         borderRadius: scale(4),
-        backgroundColor: "#0BA3AD1A",
+        // backgroundColor: "#0BA3AD1A",
+        borderWidth: scale(1),
+        borderColor: "gray",
         gap: scale(10),
         paddingRight: scale(10),
     },

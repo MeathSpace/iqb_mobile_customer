@@ -7,7 +7,7 @@ import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import CustomSecondaryText from '../../components/CustomSecondaryText'
 import { useTheme } from '@react-navigation/native'
 import { Colors } from '@/constants/Colors';
-import { ErrorIcon } from '../../constants/icons'
+import { ErrorIcon, EyeIcon, EyeOffIcon } from '../../constants/icons'
 import axios from 'axios';
 import { BASE_URL } from '@/utils/api';
 import { Toast } from 'toastify-react-native'
@@ -63,6 +63,9 @@ const forgetPasswordConfirmation = () => {
         }
     }
 
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+
     return (
         <TouchableWithoutFeedback onPress={() => {
             Keyboard.dismiss();
@@ -82,7 +85,7 @@ const forgetPasswordConfirmation = () => {
                     <View style={styles.inputWrapper}>
                         <CustomText>Password</CustomText>
 
-                        <TextInput
+                        {/* <TextInput
                             editable
                             placeholder="Enter your password"
                             placeholderTextColor={colors.secondaryText}
@@ -94,7 +97,34 @@ const forgetPasswordConfirmation = () => {
                                 setPassword(text)
                             }}
                             value={password}
-                        />
+                        /> */}
+
+                        <View style={styles.passwordInputContainer}>
+                            <TextInput
+                                editable
+                                placeholder="Enter your password"
+                                placeholderTextColor={colors.secondaryText}
+                                style={[false ? styles.inputFielderror : styles.inputField, {
+                                    // borderWidth: scale(1),
+                                    // borderColor: "gray",
+                                    fontFamily: "AirbnbCereal_W_Bk",
+                                    color: colors.text,
+                                    flex: 1
+                                }]}
+                                onChangeText={(text) => {
+                                    setPasswordError("")
+                                    setPassword(text)
+                                }}
+                                value={password}
+                                secureTextEntry={!showPassword}
+                            />
+                            <Pressable
+                                onPress={() => setShowPassword(!showPassword)}
+                                style={styles.eyeIcon}
+                            >
+                                {showPassword ? (<EyeOffIcon />) : (<EyeIcon />)}
+                            </Pressable>
+                        </View>
 
                         {
                             passwordError && (
@@ -114,7 +144,7 @@ const forgetPasswordConfirmation = () => {
                     <View style={styles.inputWrapper}>
                         <CustomText>Confirm password</CustomText>
 
-                        <TextInput
+                        {/* <TextInput
                             editable
                             placeholder="Enter your confirm password"
                             placeholderTextColor={colors.secondaryText}
@@ -126,7 +156,35 @@ const forgetPasswordConfirmation = () => {
                                 setConfirmPassword(text)
                             }}
                             value={confirmPassword}
-                        />
+                        /> */}
+
+
+                        <View style={styles.passwordInputContainer}>
+                            <TextInput
+                                editable
+                                placeholder="Enter your confirm password"
+                                placeholderTextColor={colors.secondaryText}
+                                style={[false ? styles.inputFielderror : styles.inputField, {
+                                    // borderWidth: scale(1),
+                                    // borderColor: "gray",
+                                    fontFamily: "AirbnbCereal_W_Bk",
+                                    color: colors.text,
+                                    flex: 1
+                                }]}
+                                onChangeText={(text) => {
+                                    setConfirmPasswordError("")
+                                    setConfirmPassword(text)
+                                }}
+                                value={confirmPassword}
+                                secureTextEntry={!showConfirmPassword}
+                            />
+                            <Pressable
+                                onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+                                style={styles.eyeIcon}
+                            >
+                                {showConfirmPassword ? (<EyeOffIcon />) : (<EyeIcon />)}
+                            </Pressable>
+                        </View>
 
                         {
                             confirmPasswordError && (
@@ -202,5 +260,16 @@ const styles = StyleSheet.create({
         marginLeft: "auto",
         marginBlock: verticalScale(0),
         paddingHorizontal: scale(20),
-    }
+    },
+
+    passwordInputContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderRadius: scale(4),
+        // backgroundColor: "#0BA3AD1A",
+        borderWidth: scale(1),
+        borderColor: "gray",
+        gap: scale(10),
+        paddingRight: scale(10),
+    },
 })

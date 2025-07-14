@@ -105,7 +105,8 @@ const account = () => {
   return (
     <View
       style={{
-        backgroundColor: "#00B0901A",
+        // backgroundColor: "#00B0901A",
+        backgroundColor: colors.background,
         flex: 1,
         justifyContent: "space-between",
         padding: scale(10)
@@ -117,7 +118,7 @@ const account = () => {
       <View>
         <View
           onPress={() => router.push("/editProfile")}
-          style={[styles.profileCard, { backgroundColor: colors.background, marginBottom: verticalScale(10) }]}>
+          style={[styles.profileCard, { backgroundColor: "#00B0901A", marginBottom: verticalScale(10) }]}>
           {/* <View style={{ flexDirection: "row", alignItems: "center", gap: moderateScale(10) }}> */}
           <View style={{ gap: moderateScale(5) }}>
             <CustomText style={{ fontFamily: "AirbnbCereal_W_Bd", fontSize: scale(22) }}>{authenticatedUser?.name}</CustomText>
@@ -290,26 +291,32 @@ const account = () => {
             // borderColor: "rgba(0,0,0,0.15)"
           }}
         >
+          {/* <Pressable
+            onPress={logoutPressed}
+            style={styles.profileItem}> */}
           <Pressable
             onPress={logoutPressed}
-            style={styles.profileItem}>
-            <View style={{
+            style={{
               flexDirection: "row",
               alignItems: "center",
-              gap: scale(10)
+              gap: scale(10),
+              width: scale(100)
             }}>
-              <View
-                style={{
-                  padding: scale(5),
-                  backgroundColor: "#E11D481A",
-                  borderRadius: scale(50)
-                }}
-              >
-                <LogoutIcon color='#E11D48' size={scale(18)} />
-              </View>
-              <CustomText style={{ fontFamily: "AirbnbCereal_W_Md", color: "#E11D48" }}>Logout</CustomText>
+            <View
+              style={{
+                padding: scale(5),
+                backgroundColor: "#E11D481A",
+                borderRadius: scale(50)
+              }}
+            >
+              <LogoutIcon color='#E11D48' size={scale(18)} />
             </View>
+            <CustomText style={{
+              fontFamily: "AirbnbCereal_W_Md",
+              color: "#E11D48",
+            }}>Logout</CustomText>
           </Pressable>
+          {/* </Pressable> */}
         </View>
 
       </View>

@@ -55,7 +55,7 @@ const SalonCard = ({ item, setSelectedCustomerSalon, favourite = false }) => {
                 </View>
 
 
-                <Pressable
+                {/* <Pressable
                     onPress={() => {
                         setSelectedSalonLocation({ ...item?.location?.coordinates, address: item?.address, salonName: item?.salonName })
                     }}
@@ -74,7 +74,7 @@ const SalonCard = ({ item, setSelectedCustomerSalon, favourite = false }) => {
                 >
                     <MapIcon size={scale(18)}/>
                     <CustomText style={{ color: "##0BA3AD" }}>See location</CustomText>
-                </Pressable>
+                </Pressable> */}
 
             </View>
         </Pressable>

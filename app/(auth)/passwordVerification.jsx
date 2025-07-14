@@ -22,8 +22,8 @@ const passwordVerification = () => {
     const [currentVerificationOtp, setCurrentVerificationOtp] = useState(verificationCodeValue)
     const [verificationCodeLoading, setVerificationCodeLoading] = useState(false)
 
-    console.log("Email ", email)
-    console.log("currentVerificationOtp Code ", currentVerificationOtp)
+    // console.log("Email ", email)
+    // console.log("currentVerificationOtp Code ", currentVerificationOtp)
 
 
     const [verificationTime, setVerificationTime] = useState(0);
@@ -118,7 +118,9 @@ const passwordVerification = () => {
                             placeholder="Enter your otp"
                             placeholderTextColor={colors.secondaryText}
                             style={[false ? styles.inputFielderror : styles.inputField, {
-                                backgroundColor: "#0BA3AD1A",
+                                // backgroundColor: "#0BA3AD1A",
+                                borderWidth: scale(1),
+                                borderColor: "gray",
                                 fontFamily: "AirbnbCereal_W_Bk", color: colors.text
                             }]}
                             onChangeText={(text) => {

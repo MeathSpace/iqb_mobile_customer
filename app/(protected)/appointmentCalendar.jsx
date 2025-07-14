@@ -1100,7 +1100,7 @@ export default appointmentCalendar
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#00B0901A',
+        // backgroundColor: '#00B0901A',
         paddingHorizontal: scale(15),
     },
     boxOpenWrapper: {

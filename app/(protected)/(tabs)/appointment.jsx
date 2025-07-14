@@ -105,7 +105,8 @@ const appointment = () => {
       style={{
         paddingHorizontal: scale(0),
         paddingTop: verticalScale(0),
-        backgroundColor: "#00B0901A"
+        // backgroundColor: "#00B0901A"
+        backgroundColor: colors.background
       }}
     >
       <View style={{
@@ -315,7 +316,7 @@ const appointment = () => {
                               justifyContent: "space-between",
                               alignItems: "center",
                               minHeight: verticalScale(75),
-                              backgroundColor: colors.background,
+                              backgroundColor: "#00B0901A",
                               marginBottom: verticalScale(10),
                               paddingHorizontal: scale(15),
                               borderRadius: scale(10),

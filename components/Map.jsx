@@ -1,4 +1,4 @@
-import { FlatList, Keyboard, Modal, Platform, Pressable, StyleSheet, Text, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
+import { Alert, FlatList, Keyboard, Modal, Platform, Pressable, StyleSheet, Text, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import MapView, { PROVIDER_GOOGLE, Marker, Region } from 'react-native-maps';
 import * as Location from 'expo-location';
@@ -32,14 +32,9 @@ const Map = () => {
         success: false
     })
 
-    // console.log("Map screen ", searchCitySalons)
-
-    // console.log("selectedSalonLocation ", selectedSalonLocation)
 
     const [region, setRegion] = useState(null);
     const mapRef = useRef(null);
-
-    // console.log("searchCityNameData ", searchCityNameData)
 
 
     useEffect(() => {
@@ -59,8 +54,6 @@ const Map = () => {
             });
         })();
     }, []);
-
-    // Watch for selected city and move map
 
 
     useEffect(() => {
@@ -190,6 +183,31 @@ const Map = () => {
 
     }, [])
 
+    const [getAllSalons, setGetAllSalons] = useState({
+        data: null,
+        loading: false,
+        error: null,
+        success: false
+    })
+
+    useEffect(() => {
+        const fetchAllSalons = async () => {
+            try {
+
+                setGetAllSalons((prev) => ({ ...prev, loading: true }))
+
+                const { data } = await axios.get(`${BASE_URL}/mobileRoutes/getAllSalonsMob`)
+
+                setGetAllSalons((prev) => ({ ...prev, loading: false, data: data?.response, success: true, error: null }))
+
+            } catch (error) {
+                setGetAllSalons((prev) => ({ ...prev, loading: false, data: null, success: false, error: error }))
+                console.log("Error fetching salons ", error)
+            }
+        }
+
+        fetchAllSalons()
+    }, [])
 
     const connectSalonPressed = async () => {
         try {
@@ -445,39 +463,70 @@ const Map = () => {
 
     ]
 
-    // console.log("selectedSalonLocation ", selectedSalonLocation)
-
     return (
         <>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
                 <View style={{
                     flex: 1
                 }}>
-                    <MapView
-                        provider={PROVIDER_GOOGLE}
-                        region={region}
-                        showsUserLocation={true}
-                        showsMyLocationButton={true}
-                        toolbarEnabled={true}
-                        zoomControlEnabled={true}
-                        ref={mapRef}
-                        style={{ flex: 1, paddingBottom: 80, position: 'relative' }}
-                        customMapStyle={colorScheme === 'dark' ? darkMapStyle : []}
-                    >
-                        {
-                            selectedSalonLocation?.latitude && selectedSalonLocation?.longitude && (
-                                <Marker
-                                    coordinate={{
-                                        latitude: selectedSalonLocation.latitude,
-                                        longitude: selectedSalonLocation.longitude,
-                                    }}
-                                    title={selectedSalonLocation?.salonName}
-                                    description={selectedSalonLocation?.address}
-                                />
-                            )
-                        }
+                    {
+                        getAllSalons?.loading ? (
+                            <View
+                                style={{
+                                    flex: 1,
+                                    backgroundColor: "#efefef"
+                                }}
+                            />
+                        ) : (
+                            getAllSalons?.data?.length > 0 && (
+                                <MapView
+                                    provider={PROVIDER_GOOGLE}
+                                    region={region}
+                                    showsUserLocation={true}
+                                    showsMyLocationButton={true}
+                                    toolbarEnabled={true}
+                                    zoomControlEnabled={true}
+                                    ref={mapRef}
+                                    style={{ flex: 1, paddingBottom: 80, position: 'relative' }}
+                                    customMapStyle={colorScheme === 'dark' ? darkMapStyle : []}
+                                >
 
-                    </MapView>
+                                    {
+                                        getAllSalons?.data?.length > 0 && getAllSalons?.data?.map((salon, index) => {
+                                            if (salon?.location?.coordinates?.latitude && salon?.location?.coordinates?.longitude) {
+                                                return (
+                                                    <Marker
+                                                        key={index}
+                                                        coordinate={{
+                                                            latitude: salon?.location?.coordinates?.latitude,
+                                                            longitude: salon?.location?.coordinates?.longitude,
+                                                        }}
+                                                        title={salon.salonName}
+                                                        description={salon.address}
+                                                    // onPress={() => {
+                                                    //     Alert.alert(
+                                                    //         salon.salonName || "Salon",
+                                                    //         salon.address || "No address provided",
+                                                    //         [
+                                                    //             { text: "OK" },
+                                                    //             // Optional: add a navigation button
+                                                    //             // { text: "View", onPress: () => router.push(...) }
+                                                    //         ]
+                                                    //     );
+                                                    // }}
+                                                    />
+                                                );
+                                            }
+                                            return null;
+                                        })
+                                    }
+
+                                </MapView>
+                            )
+                        )
+
+                    }
+
 
                     <FlatList
                         style={{
@@ -759,3 +808,17 @@ const styles = StyleSheet.create({
 })
 
 
+
+
+{/* {
+                            selectedSalonLocation?.latitude && selectedSalonLocation?.longitude && (
+                                <Marker
+                                    coordinate={{
+                                        latitude: selectedSalonLocation.latitude,
+                                        longitude: selectedSalonLocation.longitude,
+                                    }}
+                                    title={selectedSalonLocation?.salonName}
+                                    description={selectedSalonLocation?.address}
+                                />
+                            )
+                        } */}

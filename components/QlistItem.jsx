@@ -111,7 +111,7 @@ const QlistItem = ({ item, index, qlistLength }) => {
     const { authenticatedUser } = useAuth()
 
     return (
-        <View style={[styles.qlistItem, { backgroundColor: colors.background }]}>
+        <View style={[styles.qlistItem, { backgroundColor: "#00B0901A" }]}>
             <View>
                 <CustomText
                     style={{

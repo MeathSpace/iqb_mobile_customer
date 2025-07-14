@@ -6,21 +6,22 @@ import { useLocalSearchParams, useRouter } from 'expo-router'
 import CustomText from '../../components/CustomText'
 import CustomSecondaryText from '../../components/CustomSecondaryText'
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
-import { useTheme } from '@react-navigation/native'
+import { usePreventRemove, useTheme } from '@react-navigation/native'
 import { Colors } from '@/constants/Colors';
-import { ErrorIcon } from '../../constants/icons'
+import { ErrorIcon, EyeIcon, EyeOffIcon } from '../../constants/icons'
 import axios from 'axios';
 import { BASE_URL } from '@/utils/api';
 import { Toast } from 'toastify-react-native'
+import { Alert } from 'react-native'
 
 const passwordConfirmation = () => {
 
-    const [verificationCodeData, setVerificationCodeData] = useState({
-        verificationData: null,
-        loading: false,
-        error: null,
-        success: false
-    })
+    // const [verificationCodeData, setVerificationCodeData] = useState({
+    //     verificationData: null,
+    //     loading: false,
+    //     error: null,
+    //     success: false
+    // })
 
     const { email,
         firstName,
@@ -50,8 +51,11 @@ const passwordConfirmation = () => {
     const [passwordError, setPasswordError] = useState("")
     const [confirmPasswordError, setConfirmPasswordError] = useState("")
 
+    const [verificationLoader, setVerificationLoader] = useState(false)
 
     const passwordConfirmHandler = async () => {
+        if (verificationLoader) return;
+
         try {
             if (!password) {
                 setPasswordError("Password is required");
@@ -83,6 +87,8 @@ const passwordConfirmation = () => {
 
             // setVerificationCodeData((prev) => ({ ...prev, loading: false, verificationData: data?.response, success: true, error: null }))
 
+            setVerificationLoader(true)
+
             router.push({
                 pathname: "/verification",
                 params: {
@@ -98,11 +104,34 @@ const passwordConfirmation = () => {
                 }
             });
 
+
         } catch (error) {
             // setVerificationCodeData((prev) => ({ ...prev, loading: false, verificationData: null, success: false, error: error }))
             Toast.error(error?.response?.data?.message)
+        } finally {
+            setVerificationLoader(false);
         }
     }
+
+    const [showPassword, setShowPassword] = useState(false);
+    const [showConfirmPassword, setShowConfirmPassword] = useState(false)
+
+
+
+    const hasUnsavedChanges = true;
+
+    usePreventRemove(
+        hasUnsavedChanges, // This boolean determines if removal should be prevented
+        ({ data }) => {
+            // The action is still passed, but we're choosing not to dispatch it,
+            // effectively making "going back" impossible through these means.
+            Alert.alert(
+                'Cannot Go Back',
+                'You cannot go back during the signup flow. Please complete the current step.',
+                [{ text: 'OK', onPress: () => null }] // Only an 'OK' button
+            );
+        }
+    );
 
     return (
         <TouchableWithoutFeedback onPress={() => {
@@ -129,7 +158,7 @@ const passwordConfirmation = () => {
                     <View style={styles.inputWrapper}>
                         <CustomText>Password</CustomText>
 
-                        <TextInput
+                        {/* <TextInput
                             editable
                             placeholder="Enter your password"
                             placeholderTextColor={colors.secondaryText}
@@ -141,7 +170,34 @@ const passwordConfirmation = () => {
                                 setPassword(text)
                             }}
                             value={password}
-                        />
+                        /> */}
+
+                        <View style={styles.passwordInputContainer}>
+                            <TextInput
+                                editable
+                                placeholder="Enter your password"
+                                placeholderTextColor={colors.secondaryText}
+                                style={[false ? styles.inputFielderror : styles.inputField, {
+                                    // borderWidth: scale(1),
+                                    // borderColor: "gray",
+                                    fontFamily: "AirbnbCereal_W_Bk",
+                                    color: colors.text,
+                                    flex: 1
+                                }]}
+                                onChangeText={(text) => {
+                                    setPasswordError("")
+                                    setPassword(text)
+                                }}
+                                value={password}
+                                secureTextEntry={!showPassword}
+                            />
+                            <Pressable
+                                onPress={() => setShowPassword(!showPassword)}
+                                style={styles.eyeIcon}
+                            >
+                                {showPassword ? (<EyeOffIcon />) : (<EyeIcon />)}
+                            </Pressable>
+                        </View>
 
                         {
                             passwordError && (
@@ -161,7 +217,7 @@ const passwordConfirmation = () => {
                     <View style={styles.inputWrapper}>
                         <CustomText>Confirm password</CustomText>
 
-                        <TextInput
+                        {/* <TextInput
                             editable
                             placeholder="Enter your confirm password"
                             placeholderTextColor={colors.secondaryText}
@@ -173,7 +229,35 @@ const passwordConfirmation = () => {
                                 setConfirmPassword(text)
                             }}
                             value={confirmPassword}
-                        />
+                        /> */}
+
+
+                        <View style={styles.passwordInputContainer}>
+                            <TextInput
+                                editable
+                                placeholder="Enter your confirm password"
+                                placeholderTextColor={colors.secondaryText}
+                                style={[false ? styles.inputFielderror : styles.inputField, {
+                                    // borderWidth: scale(1),
+                                    // borderColor: "gray",
+                                    fontFamily: "AirbnbCereal_W_Bk",
+                                    color: colors.text,
+                                    flex: 1
+                                }]}
+                                onChangeText={(text) => {
+                                    setConfirmPasswordError("")
+                                    setConfirmPassword(text)
+                                }}
+                                value={confirmPassword}
+                                secureTextEntry={!showConfirmPassword}
+                            />
+                            <Pressable
+                                onPress={() => setShowConfirmPassword(!showConfirmPassword)}
+                                style={styles.eyeIcon}
+                            >
+                                {showConfirmPassword ? (<EyeOffIcon />) : (<EyeIcon />)}
+                            </Pressable>
+                        </View>
 
                         {
                             confirmPasswordError && (
@@ -188,11 +272,13 @@ const passwordConfirmation = () => {
                             )
                         }
                     </View>
+
                 </View>
 
                 <Pressable
                     onPress={() => passwordConfirmHandler()}
-                    disabled={verificationCodeData?.loading}
+                    disabled={verificationLoader}
+                    // disabled={verificationCodeData?.loading}
                     style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode }]}>
 
                     {/* {
@@ -241,5 +327,16 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         marginBlock: verticalScale(0)
+    },
+
+    passwordInputContainer: {
+        flexDirection: 'row',
+        alignItems: 'center',
+        borderRadius: scale(4),
+        // backgroundColor: "#0BA3AD1A",
+        borderWidth: scale(1),
+        borderColor: "gray",
+        gap: scale(10),
+        paddingRight: scale(10),
     },
 })

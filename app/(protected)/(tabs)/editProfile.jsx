@@ -4,7 +4,7 @@ import CustomScrollView from '../../../components/CustomScrollView'
 import { useTheme } from '@react-navigation/native'
 import { useFocusEffect, useRouter } from 'expo-router'
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { ArrowLeftIcon, CalendarIcon, CameraIcon, ErrorIcon, RightIcon } from '../../../constants/icons'
+import { ArrowDownIcon, ArrowLeftIcon, CalendarIcon, CameraIcon, ErrorIcon, RightIcon } from '../../../constants/icons'
 import CustomText from '../../../components/CustomText'
 import CountryPicker, { DARK_THEME }
     from 'react-native-country-picker-modal';
@@ -58,10 +58,11 @@ const editProfile = () => {
                 if (phoneRef.current) {
                     phoneRef.current.setValue(`${authenticatedUser?.customerMobileCountryCode}${authenticatedUser?.mobileNumber}`);
                 }
+                setPhoneNumber(`+${authenticatedUser?.customerMobileCountryCode}${authenticatedUser?.mobileNumber}`)
 
                 setGender(authenticatedUser?.gender)
                 setSelectedDate(authenticatedUser?.dateOfBirth?.split("T")[0])
-                setPhoneNumber(`+${authenticatedUser?.customerMobileCountryCode}${authenticatedUser?.mobileNumber}`)
+
             }
 
         }, [authenticatedUser])
@@ -89,22 +90,6 @@ const editProfile = () => {
     const [phoneNumberError, setPhoneNumberError] = useState("");
     const [dateOfBirthError, setDateOfBirthError] = useState("");
 
-
-    // const onChange = (event, selectedDate) => {
-    //     setCalenderModal(false);
-    //     if (event.type === "set" && selectedDate) {
-    //         setDate(new Date(selectedDate));
-    //         setDateOfBirthError("");
-
-    //         const year = selectedDate.getFullYear();
-    //         const month = String(selectedDate.getMonth() + 1).padStart(2, '0'); // month is 0-indexed
-    //         const day = String(selectedDate.getDate()).padStart(2, '0');
-
-    //         const formattedDate = `${year}-${month}-${day}`;
-
-    //         setSelectedDate(formattedDate);
-    //     }
-    // };
 
     const [tempDate, setTempDate] = useState(new Date());
 
@@ -149,7 +134,6 @@ const editProfile = () => {
         return `${year}-${month}-${day}`;
     };
 
-    // console.log("selectedDate ", selectedDate)
 
     const [phoneNumber, setPhoneNumber] = useState('');
 
@@ -170,24 +154,34 @@ const editProfile = () => {
 
     useEffect(() => {
         if (selectedCountry && phoneRef.current) {
-            phoneRef.current.selectCountry(selectedCountry?.cca2?.toLowerCase());
+            phoneRef?.current?.selectCountry(selectedCountry?.cca2?.toLowerCase());
         }
     }, [selectedCountry]);
 
     const [inValid, setInValid] = useState(false)
 
     const phoneNumberHandler = (phoneNumber) => {
-
         const isValid = phoneRef.current?.isValidNumber();
+        // Sync country based on current input
+        const isoCode = phoneRef.current?.getISOCode(); // 'in', 'gb', etc.
+        if (isoCode && isoCode.toUpperCase() !== selectedCountry.cca2) {
+            setSelectedCountry(prev => ({
+                ...prev,
+                cca2: isoCode.toUpperCase(),
+                callingCode: [phoneRef.current?.getCountryCode() || ""],
+            }));
+        }
+
         if (isValid) {
             setPhoneNumber(phoneNumber);
-            setPhoneNumberError("")
+            setPhoneNumberError("");
             setInValid(false)
         } else {
+            setPhoneNumber(phoneNumber); // still keep the input
             setPhoneNumberError("Invalid phone number");
             setInValid(true)
         }
-    }
+    };
 
     const [updateProfileLoader, setUpdateProfileLoader] = useState(false)
 
@@ -230,25 +224,35 @@ const editProfile = () => {
                 return;
             }
 
-            const updatedCallingCode = Number(selectedCountry?.callingCode?.[0]);
-            let sanitizedPhoneNumber = phoneNumber.replace(/\D/g, ''); // Remove all non-digit characters
+            // const updatedCallingCode = Number(selectedCountry?.callingCode?.[0]);
+            // let sanitizedPhoneNumber = phoneNumber.replace(/\D/g, ''); // Remove all non-digit characters
 
-            const callingCodeStr = updatedCallingCode.toString();
+            // const callingCodeStr = updatedCallingCode.toString();
 
-            // Keep removing the calling code prefix as long as it repeats at the start
-            while (sanitizedPhoneNumber.startsWith(callingCodeStr)) {
-                sanitizedPhoneNumber = sanitizedPhoneNumber.slice(callingCodeStr.length);
-            }
+            // // Keep removing the calling code prefix as long as it repeats at the start
+            // while (sanitizedPhoneNumber.startsWith(callingCodeStr)) {
+            //     sanitizedPhoneNumber = sanitizedPhoneNumber.slice(callingCodeStr.length);
+            // }
+
+            const currentCountryCode = phoneRef.current?.getCountryCode();
+            const mobileNumber = phoneNumber.replace("+", "");
+
+            // fallback logic
+            const finalCallingCode = currentCountryCode || selectedCountry?.callingCode?.[0] || "";
+            const updatedNumber = mobileNumber.startsWith(finalCallingCode)
+                ? mobileNumber.slice(finalCallingCode.length)
+                : mobileNumber;
 
             const editProfileData = {
                 email: authenticatedUser?.email,
                 name: `${firstName} ${lastName}`,
                 dateOfBirth: selectedDate,
                 gender,
-                mobileCountryCode: updatedCallingCode,
-                mobileNumber: Number(sanitizedPhoneNumber),
+                mobileCountryCode: finalCallingCode,
+                mobileNumber: updatedNumber,
                 countryCca2: selectedCountry?.cca2
             };
+
 
             setUpdateProfileLoader(true)
 
@@ -361,16 +365,19 @@ const editProfile = () => {
 
     };
 
+    const [openGenderDrop, setOpenGenderDrop] = useState(false)
+
     return (
         <KeyboardAvoidingView
             style={{ flex: 1 }}
             behavior={Platform.OS === 'ios' ? 'padding' : undefined}
-            keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0} // adjust as needed
+            keyboardVerticalOffset={Platform.OS === 'ios' ? 100 : 0}
         >
             <ScrollView
                 style={{
                     flex: 1,
-                    backgroundColor: "#00B0901A"
+                    backgroundColor: colors.background
+                    // backgroundColor: "#00B0901A"
                 }}
 
                 contentContainerStyle={{
@@ -383,7 +390,7 @@ const editProfile = () => {
             >
                 <TouchableWithoutFeedback onPress={() => {
                     Keyboard.dismiss();
-                    setGenderOpen(false);
+                    setOpenGenderDrop(false);
                 }}>
                     <View
                         style={{
@@ -394,7 +401,7 @@ const editProfile = () => {
                     >
 
                         <View
-                            style={[styles.profileCard, { backgroundColor: colors.background }]}>
+                            style={[styles.profileCard, { backgroundColor: "#00B0901A" }]}>
                             <View style={{ gap: moderateScale(5) }}>
                                 <CustomText style={{ fontFamily: "AirbnbCereal_W_Bd", fontSize: scale(22) }}>{authenticatedUser?.name}</CustomText>
                                 <CustomText style={{ fontSize: scale(14), color: "gray" }}>{authenticatedUser?.email}</CustomText>
@@ -448,7 +455,11 @@ const editProfile = () => {
                                 editable
                                 placeholder="Enter your first name"
                                 placeholderTextColor={colors.secondaryText}
-                                style={[false ? styles.inputFielderror : styles.inputField, { backgroundColor: colors.background, fontFamily: "AirbnbCereal_W_Bk", color: colors.text }]}
+                                style={[false ? styles.inputFielderror : styles.inputField, {
+                                    borderWidth: scale(1),
+                                    borderColor: "gray",
+                                    fontFamily: "AirbnbCereal_W_Bk", color: colors.text
+                                }]}
                                 onChangeText={(text) => {
                                     setFirstNameError("")
                                     setFirstName(text)
@@ -478,7 +489,11 @@ const editProfile = () => {
                                 editable
                                 placeholder="Enter your last name"
                                 placeholderTextColor={colors.secondaryText}
-                                style={[false ? styles.inputFielderror : styles.inputField, { backgroundColor: colors.background, fontFamily: "AirbnbCereal_W_Bk", color: colors.text }]}
+                                style={[false ? styles.inputFielderror : styles.inputField, {
+                                    borderWidth: scale(1),
+                                    borderColor: "gray",
+                                    fontFamily: "AirbnbCereal_W_Bk", color: colors.text
+                                }]}
                                 onChangeText={(text) => {
                                     setLastNameError("")
                                     setLastName(text)
@@ -501,7 +516,7 @@ const editProfile = () => {
 
                         </View>
 
-                        <View style={styles.inputWrapper}>
+                        {/* <View style={styles.inputWrapper}>
                             <CustomText>Select Gender</CustomText>
 
                             <DropDownPicker
@@ -551,8 +566,85 @@ const editProfile = () => {
                                     tintColor: "#00A36C"
                                 }}
                             />
-                        </View>
+                        </View> */}
 
+                        <View
+                            style={[styles.inputWrapper, {
+                                zIndex: 10
+                            }]}
+                        >
+                            <CustomText>Gender</CustomText>
+
+                            <Pressable
+                                onPress={() => setOpenGenderDrop((prev) => !prev)}
+                                style={[false ? styles.inputFielderror : styles.inputField, {
+                                    // backgroundColor: "#0BA3AD1A",
+                                    borderWidth: scale(1),
+                                    borderColor: "gray",
+                                    fontFamily: "AirbnbCereal_W_Bk", color: colors.text,
+                                    flexDirection: "row",
+                                    justifyContent: "space-between",
+                                    alignItems: "center",
+                                    position: "relative"
+                                }]}
+                            >
+                                <CustomText
+                                    style={{
+                                        fontFamily: "AirbnbCereal_W_Bk"
+                                    }}
+                                >{gender}</CustomText>
+
+                                <View><ArrowDownIcon size={scale(16)} color={colors.text} /></View>
+
+                                {
+                                    openGenderDrop && (
+                                        <View
+                                            style={{
+                                                position: "absolute",
+                                                top: verticalScale(50),
+                                                backgroundColor: colors.card, // use themed color
+                                                left: 0,
+                                                right: 0,
+                                                borderRadius: scale(4),
+                                                zIndex: 999, // Higher than 100 to ensure it's above everything
+                                                elevation: 5, // Android support
+                                                paddingVertical: scale(8), // spacing
+                                                shadowColor: "#000", // iOS support
+                                                shadowOffset: { width: 0, height: 2 },
+                                                shadowOpacity: 0.1,
+                                                shadowRadius: 4,
+                                            }}
+                                        >
+                                            {
+                                                ["Male", "Female", "Other"].map((item, index) => (
+                                                    <Pressable
+                                                        key={index}
+                                                        onPress={() => {
+                                                            setGender(item);
+                                                            setOpenGenderDrop(false); // close dropdown after selection
+                                                        }}
+                                                        style={{
+                                                            paddingVertical: scale(8),
+                                                            paddingHorizontal: scale(12),
+                                                            backgroundColor: colors.card, // solid background
+                                                        }}
+                                                    >
+                                                        <CustomText style={{
+                                                            fontFamily: "AirbnbCereal_W_Bk",
+                                                            color: colors.text
+                                                        }}>
+                                                            {item}
+                                                        </CustomText>
+                                                    </Pressable>
+                                                ))
+                                            }
+                                        </View>
+                                    )
+                                }
+
+
+                            </Pressable>
+                        </View>
 
                         <View style={styles.inputWrapper}>
                             <CustomText>Mobile Number</CustomText>
@@ -562,7 +654,11 @@ const editProfile = () => {
                                 onChangePhoneNumber={(number) => phoneNumberHandler(number)}
                                 onPressFlag={toggleCountryPicker}
                                 textStyle={{ color: colors.text, fontSize: moderateScale(14) }}
-                                style={[styles.inputField, { backgroundColor: colors.background, fontFamily: "AirbnbCereal_W_Bk", color: colors.text }]}
+                                style={[styles.inputField, {
+                                    borderWidth: scale(1),
+                                    borderColor: "gray",
+                                    fontFamily: "AirbnbCereal_W_Bk", color: colors.text
+                                }]}
                             />
 
                             {
@@ -606,7 +702,8 @@ const editProfile = () => {
                                 style={[
                                     false ? styles.inputFielderror : styles.inputDateField,
                                     {
-                                        backgroundColor: colors.background,
+                                        borderWidth: scale(1),
+                                        borderColor: "gray",
                                         fontFamily: "AirbnbCereal_W_Bk",
                                         color: colors.text,
                                         justifyContent: "center", // Ensures CalendarIcon stays aligned

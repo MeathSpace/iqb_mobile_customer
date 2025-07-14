@@ -66,7 +66,7 @@ const index = () => {
 
 
         <CustomText style={styles.heading}>
-          Welcome to iQueueBook
+          Welcome to iQBook
         </CustomText>
         <CustomSecondaryText style={styles.sub_heading}>
           Instantly book, style your hair and mustache the way you want by the

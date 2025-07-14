@@ -1,13 +1,13 @@
-import { Alert, Button, Keyboard, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
+import { Alert, BackHandler, Button, Keyboard, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import CustomScrollView from '../../components/CustomScrollView'
-import { useLocalSearchParams, useRouter } from 'expo-router'
+import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router'
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import ProgressHeader from '../../components/ProgressHeader'
 import CustomText from '../../components/CustomText'
 import CustomSecondaryText from '../../components/CustomSecondaryText'
 import DropDownPicker from 'react-native-dropdown-picker';
-import { CalendarIcon, ErrorIcon } from '../../constants/icons'
+import { ArrowDownIcon, CalendarIcon, ErrorIcon } from '../../constants/icons'
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { Colors } from '@/constants/Colors';
 
@@ -15,7 +15,7 @@ import PhoneInput
     from 'react-native-phone-input';
 import CountryPicker, { DARK_THEME }
     from 'react-native-country-picker-modal';
-import { useTheme } from '@react-navigation/native';
+import { useNavigation, usePreventRemove, useTheme } from '@react-navigation/native';
 
 const personalInfo = () => {
 
@@ -129,16 +129,42 @@ const personalInfo = () => {
         }
     }, [selectedCountry]);
 
-    const phoneNumberHandler = (phoneNumber) => {
+    // const phoneNumberHandler = (phoneNumber) => {
 
+    //     const isValid = phoneRef.current?.isValidNumber();
+    //     if (isValid) {
+    //         setPhoneNumber(phoneNumber);
+    //         setPhoneNumberError("")
+    //     } else {
+    //         setPhoneNumberError("Invalid phone number");
+    //     }
+    // }
+
+    const [inValid, setInValid] = useState(false)
+
+    const phoneNumberHandler = (phoneNumber) => {
         const isValid = phoneRef.current?.isValidNumber();
+
+        // Sync country based on current input
+        const isoCode = phoneRef.current?.getISOCode(); // 'in', 'gb', etc.
+        if (isoCode && isoCode.toUpperCase() !== selectedCountry.cca2) {
+            setSelectedCountry(prev => ({
+                ...prev,
+                cca2: isoCode.toUpperCase(),
+                callingCode: [phoneRef.current?.getCountryCode() || ""],
+            }));
+        }
+
         if (isValid) {
             setPhoneNumber(phoneNumber);
-            setPhoneNumberError("")
+            setPhoneNumberError("");
+            setInValid(false)
         } else {
+            setPhoneNumber(phoneNumber); // still keep the input
             setPhoneNumberError("Invalid phone number");
+            setInValid(true)
         }
-    }
+    };
 
 
     const saveHandler = () => {
@@ -169,13 +195,28 @@ const personalInfo = () => {
             return;
         }
 
+        if (inValid) {
+            setPhoneNumberError("Invalid phone number");
+            return;
+        }
+
         if (!selectedDate) {
             setDateOfBirthError("Date of birth is required");
             return;
         }
 
-        const mobileNumber = phoneNumber.replace("+", "")
-        const updatedNumber = mobileNumber.startsWith(selectedCountry?.callingCode[0]) ? mobileNumber.slice(selectedCountry?.callingCode[0].length) : mobileNumber
+        // const mobileNumber = phoneNumber.replace("+", "")
+        // const updatedNumber = mobileNumber.startsWith(selectedCountry?.callingCode[0]) ? mobileNumber.slice(selectedCountry?.callingCode[0].length) : mobileNumber
+
+        const currentCountryCode = phoneRef.current?.getCountryCode();
+        const mobileNumber = phoneNumber.replace("+", "");
+
+        // fallback logic
+        const finalCallingCode = currentCountryCode || selectedCountry?.callingCode?.[0] || "";
+        const updatedNumber = mobileNumber.startsWith(finalCallingCode)
+            ? mobileNumber.slice(finalCallingCode.length)
+            : mobileNumber;
+
 
         if (authType === "google") {
             router.push({
@@ -208,11 +249,30 @@ const personalInfo = () => {
 
     }
 
+    const [openGenderDrop, setOpenGenderDrop] = useState(false)
+
+    const hasUnsavedChanges = true;
+
+    usePreventRemove(
+        hasUnsavedChanges, // This boolean determines if removal should be prevented
+        ({ data }) => {
+            // The action is still passed, but we're choosing not to dispatch it,
+            // effectively making "going back" impossible through these means.
+            Alert.alert(
+                'Cannot Go Back',
+                'You cannot go back during the signup flow. Please complete the current step.',
+                [{ text: 'OK', onPress: () => null }] // Only an 'OK' button
+            );
+        }
+    );
+
+
     return (
         <CustomScrollView>
 
             <TouchableWithoutFeedback onPress={() => {
                 Keyboard.dismiss();
+                setOpenGenderDrop(false)
                 setGenderOpen(false);
             }}>
 
@@ -223,11 +283,6 @@ const personalInfo = () => {
                         gap: verticalScale(20)
                     }}
                 >
-                    {/* <ProgressHeader
-                        progressOne={progressOne}
-                        progressTwo={progressTwo}
-                        progressThree={progressThree}
-                    /> */}
 
                     {authType === "google" ? (
                         <ProgressHeader
@@ -242,6 +297,10 @@ const personalInfo = () => {
                             progressThree={progressThree}
                         />
                     )}
+
+                    {/* <View>
+                        <CustomText>Here in the sign up flow user cannot go back on any page</CustomText>
+                    </View> */}
 
                     <View>
                         <CustomText style={styles.heading}>
@@ -261,7 +320,10 @@ const personalInfo = () => {
                             placeholder="Enter your first name"
                             placeholderTextColor={colors.secondaryText}
                             style={[false ? styles.inputFielderror : styles.inputField, {
-                                backgroundColor: "#0BA3AD1A", fontFamily: "AirbnbCereal_W_Bk", color: colors.text
+                                // backgroundColor: "#0BA3AD1A", 
+                                borderWidth: scale(1),
+                                borderColor: "gray",
+                                fontFamily: "AirbnbCereal_W_Bk", color: colors.text
                             }]}
                             onChangeText={(text) => {
                                 setFirstNameError("")
@@ -293,7 +355,9 @@ const personalInfo = () => {
                             placeholder="Enter your last name"
                             placeholderTextColor={colors.secondaryText}
                             style={[false ? styles.inputFielderror : styles.inputField, {
-                                backgroundColor: "#0BA3AD1A",
+                                // backgroundColor: "#0BA3AD1A",
+                                borderWidth: scale(1),
+                                borderColor: "gray",
                                 fontFamily: "AirbnbCereal_W_Bk", color: colors.text
                             }]}
                             onChangeText={(text) => {
@@ -317,55 +381,80 @@ const personalInfo = () => {
                         }
                     </View>
 
-                    <View style={styles.inputWrapper}>
-                        <CustomText>Select Gender</CustomText>
-                        <DropDownPicker
-                            listMode="SCROLLVIEW"
-                            // dropDownMaxHeight={240}
-                            open={genderOpen}
-                            value={gender}
-                            items={genderItems}
-                            setOpen={setGenderOpen}
-                            setValue={setGender}
-                            setItems={setGenderItems}
-                            itemSeparator={true}
-                            itemSeparatorStyle={{
-                                backgroundColor: "#0BA3AD1A"
-                            }}
-                            placeholder="Select a gender"
-                            style={[
-                                styles.dropdown,
-                                {
-                                    borderColor: "transparent",
-                                    backgroundColor: "#0BA3AD1A",
-                                },
-                            ]}
-                            dropDownContainerStyle={[
-                                styles.dropdownContainer,
-                                {
-                                    borderColor: "#0BA3AD1A",
-                                    backgroundColor: colors.card,
-                                }
-                            ]}
-                            textStyle={{
-                                fontSize: moderateScale(14),
-                                fontFamily: 'AirbnbCereal_W_Bk',
-                                color: colors.text
-                            }}
-                            listItemLabelStyle={{
-                                fontSize: moderateScale(14),
-                                fontFamily: 'AirbnbCereal_W_Bk',
-                                color: colors.text,
-                            }}
-                            arrowIconStyle={{
-                                tintColor: colors.text,
-                            }}
-                            tickIconStyle={{
-                                tintColor: "#00A36C"
-                            }}
-                        />
-                    </View>
+                    <View
+                        style={[styles.inputWrapper, {
+                            zIndex: 10
+                        }]}
+                    >
+                        <CustomText>Gender</CustomText>
 
+                        <Pressable
+                            onPress={() => setOpenGenderDrop((prev) => !prev)}
+                            style={[false ? styles.inputFielderror : styles.inputField, {
+                                // backgroundColor: "#0BA3AD1A",
+                                borderWidth: scale(1),
+                                borderColor: "gray",
+                                fontFamily: "AirbnbCereal_W_Bk", color: colors.text,
+                                flexDirection: "row",
+                                justifyContent: "space-between",
+                                alignItems: "center",
+                                position: "relative"
+                            }]}
+                        >
+                            <CustomText
+                                style={{
+                                    fontFamily: "AirbnbCereal_W_Bk"
+                                }}
+                            >{gender}</CustomText>
+
+                            <View><ArrowDownIcon size={scale(16)} color={colors.text} /></View>
+
+                            {
+                                openGenderDrop && (
+                                    <View
+                                        style={{
+                                            position: "absolute",
+                                            top: verticalScale(50),
+                                            backgroundColor: colors.card, // use themed color
+                                            left: 0,
+                                            right: 0,
+                                            borderRadius: scale(4),
+                                            zIndex: 999, // Higher than 100 to ensure it's above everything
+                                            elevation: 5, // Android support
+                                            paddingVertical: scale(8), // spacing
+                                            shadowColor: "#000", // iOS support
+                                            shadowOffset: { width: 0, height: 2 },
+                                            shadowOpacity: 0.1,
+                                            shadowRadius: 4,
+                                        }}
+                                    >
+                                        {
+                                            ["Male", "Female", "Other"].map((item, index) => (
+                                                <Pressable
+                                                    key={index}
+                                                    onPress={() => {
+                                                        setGender(item);
+                                                        setOpenGenderDrop(false); // close dropdown after selection
+                                                    }}
+                                                    style={{
+                                                        paddingVertical: scale(8),
+                                                        paddingHorizontal: scale(12),
+                                                        backgroundColor: colors.card, // solid background
+                                                    }}
+                                                >
+                                                    <CustomText style={{ color: colors.text, fontFamily: "AirbnbCereal_W_Bk" }}>
+                                                        {item}
+                                                    </CustomText>
+                                                </Pressable>
+                                            ))
+                                        }
+                                    </View>
+                                )
+                            }
+
+
+                        </Pressable>
+                    </View>
 
                     <View style={styles.inputWrapper}>
                         <CustomText>Mobile Number</CustomText>
@@ -377,7 +466,10 @@ const personalInfo = () => {
                             onPressFlag={toggleCountryPicker}
                             textStyle={{ color: colors.text, fontSize: moderateScale(14) }}
                             style={[styles.inputField, {
-                                backgroundColor: "#0BA3AD1A", fontFamily: "AirbnbCereal_W_Bk", color: colors.text
+                                // backgroundColor: "#0BA3AD1A", 
+                                borderWidth: scale(1),
+                                borderColor: "gray",
+                                fontFamily: "AirbnbCereal_W_Bk", color: colors.text
                             }]}
                         />
 
@@ -424,7 +516,9 @@ const personalInfo = () => {
                                 false ? styles.inputFielderror : styles.inputDateField,
                                 {
                                     // borderColor: colors.border,
-                                    backgroundColor: "#0BA3AD1A",
+                                    // backgroundColor: "#0BA3AD1A",
+                                    borderWidth: scale(1),
+                                    borderColor: "gray",
                                     fontFamily: "AirbnbCereal_W_Bk",
                                     color: colors.text,
                                     justifyContent: "center", // Ensures CalendarIcon stays aligned
@@ -453,19 +547,6 @@ const personalInfo = () => {
                                 </View>
                             )
                         }
-
-                        {/* {calenderModal && (
-                            <View style={{ position: "absolute", top: verticalScale(34), left: 0, zIndex: 100 }}>
-                                <DateTimePicker
-                                    mode="date"
-                                    maximumDate={new Date()}
-                                    value={date}
-                                    display="default"
-                                    accentColor={Colors.modeColor.colorCode}
-                                    onChange={onChange}
-                                />
-                            </View>
-                        )} */}
 
                         {
                             Platform.OS === "android" ? (
@@ -586,7 +667,7 @@ const personalInfo = () => {
 
             </TouchableWithoutFeedback>
 
-        </CustomScrollView >
+        </CustomScrollView>
     )
 }
 
@@ -631,11 +712,11 @@ const styles = StyleSheet.create({
         borderRadius: scale(4),
         borderWidth: moderateScale(1.5),
         paddingHorizontal: scale(10),
-        zIndex: 100
+        // zIndex: 100
     },
     dropdownContainer: {
         borderWidth: moderateScale(1.5),
-        zIndex: 100
+        // zIndex: 100
     },
 
     submitButton: {
@@ -659,3 +740,64 @@ const styles = StyleSheet.create({
         backgroundColor: "red"
     }
 })
+
+
+
+
+
+
+
+
+
+
+
+
+
+{/* <View style={styles.inputWrapper}>
+                        <CustomText>Select Gender</CustomText>
+                        <DropDownPicker
+                            listMode="SCROLLVIEW"
+                            // dropDownMaxHeight={240}
+                            open={genderOpen}
+                            value={gender}
+                            items={genderItems}
+                            setOpen={setGenderOpen}
+                            setValue={setGender}
+                            setItems={setGenderItems}
+                            itemSeparator={true}
+                            itemSeparatorStyle={{
+                                backgroundColor: "#0BA3AD1A"
+                            }}
+                            placeholder="Select a gender"
+                            style={[
+                                styles.dropdown,
+                                {
+                                    borderColor: "transparent",
+                                    backgroundColor: "#0BA3AD1A",
+                                },
+                            ]}
+                            dropDownContainerStyle={[
+                                styles.dropdownContainer,
+                                {
+                                    borderColor: "#0BA3AD1A",
+                                    backgroundColor: colors.card,
+                                }
+                            ]}
+                            textStyle={{
+                                fontSize: moderateScale(14),
+                                fontFamily: 'AirbnbCereal_W_Bk',
+                                color: colors.text
+                            }}
+                            listItemLabelStyle={{
+                                fontSize: moderateScale(14),
+                                fontFamily: 'AirbnbCereal_W_Bk',
+                                color: colors.text,
+                            }}
+                            arrowIconStyle={{
+                                tintColor: colors.text,
+                            }}
+                            tickIconStyle={{
+                                tintColor: "#00A36C"
+                            }}
+                        />
+                    </View> */}
