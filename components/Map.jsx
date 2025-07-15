@@ -1,5 +1,5 @@
-import { Alert, FlatList, Keyboard, Modal, Platform, Pressable, StyleSheet, Text, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
-import React, { useEffect, useRef, useState } from 'react'
+import { ActivityIndicator, Alert, FlatList, Keyboard, Linking, Modal, Platform, Pressable, StyleSheet, Text, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import MapView, { PROVIDER_GOOGLE, Marker, Region } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { useAuth } from '../context/AuthContext';
@@ -11,11 +11,18 @@ import { Colors } from '../constants/Colors';
 import SalonCard from './SalonCard';
 import { Image } from 'expo-image';
 import { useTheme } from '@react-navigation/native';
-import { CloseIcon } from '../constants/icons';
+import { ArrowLeftIcon, CheckIcon, ClockIcon, CloseIcon, ContactIcon, EmailIcon, FacebookIcon, HeartFilledIcon, HeartIcon, InstagramIcon, MapIcon, WhatsappIcon } from '../constants/icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { BASE_URL } from '@/utils/api';
 import Skeleton from './Skeleton';
+import CustomTabView from './CustomTabView';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import BottomSheet, { BottomSheetScrollView } from '@gorhom/bottom-sheet';
+import { useFocusEffect } from 'expo-router';
+import { Toast } from 'toastify-react-native'
+import BarberCard from './BarberCard';
 
 const Map = () => {
 
@@ -24,14 +31,6 @@ const Map = () => {
     const { colors } = useTheme()
     const { searchSalon, setAuthenticatedUser, authenticatedUser } = useAuth()
     const { searchCitySalons, setSearchCitySalons, selectedSalonLocation } = useGlobal()
-
-    const [serviceCategoryData, setServiceCategoryData] = useState({
-        data: null,
-        loading: false,
-        error: null,
-        success: false
-    })
-
 
     const [region, setRegion] = useState(null);
     const mapRef = useRef(null);
@@ -209,8 +208,12 @@ const Map = () => {
         fetchAllSalons()
     }, [])
 
+    const [connectSalonLoader, setConnectSalonLoader] = useState(false)
+
     const connectSalonPressed = async () => {
         try {
+
+            setConnectSalonLoader(true)
 
             const { data } = await axios.post(`${BASE_URL}/customer/customerConnectSalon`, {
                 salonId: selectedCustomerSalon?.data?.salonId,
@@ -233,8 +236,12 @@ const Map = () => {
                 error: null,
                 success: false
             })
+
+            setConnectSalonLoader(false)
+
         } catch (error) {
             console.log("Error connecting salon ", error)
+            setConnectSalonLoader(false)
         }
     }
 
@@ -463,6 +470,225 @@ const Map = () => {
 
     ]
 
+
+    // Salon Info for connect Salon
+
+    const [salonInfoData, setSalonInfoData] = useState({
+        data: null,
+        loading: false,
+        error: null,
+        success: false
+    })
+
+    const [selectecConnectSalonId, setSelectedConnectSalonId] = useState("")
+
+    console.log("selectecConnectSalonId ", selectecConnectSalonId)
+
+    useFocusEffect(
+        useCallback(() => {
+            if (selectecConnectSalonId) {
+                const fetchSalonInfo = async () => {
+                    try {
+
+                        setSalonInfoData((prev) => ({ ...prev, loading: true }))
+
+                        const { data } = await axios.get(`${BASE_URL}/mobileRoutes/getSalonInfoBySalonId`, {
+                            params: {
+                                salonId: selectecConnectSalonId,
+                                customerEmail: authenticatedUser?.email
+                            }
+                        })
+
+                        setSalonInfoData((prev) => ({ ...prev, loading: false, data: data?.response, success: true, error: null }))
+
+                    } catch (error) {
+
+                        setSalonInfoData((prev) => ({ ...prev, loading: false, data: null, success: false, error: error }))
+                        console.log("Error fetching salon Info ", error)
+                    }
+                }
+
+                fetchSalonInfo()
+            }
+
+
+        }, [authenticatedUser, selectecConnectSalonId])
+    )
+
+    const flatlistRef = useRef()
+    const [currentIndex, setCurrentIndex] = useState(0)
+
+    // hooks
+    const sheetRef = useRef(null);
+
+    const [tabData, setTabData] = useState([
+        "Details",
+        "Services",
+        "Barber"
+    ])
+
+    const [selectedTab, setSelectedTab] = useState("Details")
+
+    const latitude = salonInfoData?.data?.salonInfo?.location?.coordinates?.latitude
+    const longitude = salonInfoData?.data?.salonInfo?.location?.coordinates?.longitude
+
+    const openLink = async (url) => {
+        const supported = await Linking.canOpenURL(url);
+        if (supported) {
+            await Linking.openURL(url);
+        } else {
+            console.warn("Can't open URL:", url);
+        }
+    };
+
+    const [serviceCategorySelected, setServiceCategorySelected] = useState({
+        categoryName: "",
+        selected: false
+    })
+
+
+    const [serviceCategoryData, setServiceCategoryData] = useState({
+        data: null,
+        loading: false,
+        error: null,
+        success: false
+    })
+
+    const [salonServicesCategoryData, setSalonServicesCategoryData] = useState({
+        data: null,
+        loading: false,
+        error: null,
+        success: false
+    })
+
+    useFocusEffect(
+        useCallback(() => {
+            const fetchServiceCategoryData = async () => {
+                try {
+
+                    setServiceCategoryData((prev) => ({ ...prev, loading: true }))
+
+                    const { data } = await axios.get(`${BASE_URL}/mobileRoutes/getAllServiceCategories`)
+
+                    setServiceCategoryData((prev) => ({ ...prev, loading: false, data: data?.response, success: true, error: null }))
+
+                } catch (error) {
+                    setServiceCategoryData((prev) => ({ ...prev, loading: false, data: null, success: false, error: error }))
+                    console.error("Error fetching service category data: ", error)
+                }
+            }
+
+            fetchServiceCategoryData()
+
+            if (serviceCategorySelected.selected && serviceCategorySelected.categoryName) {
+                const fetchSalonServicesByCategory = async () => {
+                    try {
+
+                        setSalonServicesCategoryData((prev) => ({ ...prev, loading: true }))
+
+                        const { data } = await axios.get(`${BASE_URL}/mobileRoutes/getSalonServicesByCategory`, {
+                            params: {
+                                salonId: selectecConnectSalonId,
+                                serviceCategoryName: serviceCategorySelected.categoryName
+                            }
+                        })
+
+                        setSalonServicesCategoryData((prev) => ({ ...prev, loading: false, data: data?.response, success: true, error: null }))
+
+                    } catch (error) {
+                        setSalonServicesCategoryData((prev) => ({ ...prev, loading: false, data: null, success: false, error: error }))
+                        console.error("Error fetching salon services category data: ", error)
+                    }
+                }
+
+                fetchSalonServicesByCategory()
+            }
+
+
+        }, [serviceCategorySelected, selectecConnectSalonId])
+    )
+
+    const [selectCustomerServices, setSelectedCustomerServices] = useState([])
+    const [selectedCustomerBarber, setSelectedCustomerBarber] = useState(null)
+
+    const addServiceHandler = (service) => {
+        const updatedSalonServices = salonServicesCategoryData?.data?.map((item) => {
+            return item?.serviceId === service?.serviceId ? { ...service, selected: true } : item
+        })
+
+        setSalonServicesCategoryData({
+            data: updatedSalonServices,
+            loading: false,
+            error: null,
+            success: false
+        })
+
+        setSelectedCustomerServices([...selectCustomerServices, service])
+    }
+
+    const removeServiceHandler = (service) => {
+        const updatedSalonServices = salonServicesCategoryData?.data?.map((item) => {
+            return item?.serviceId === service?.serviceId ? { ...service, selected: false } : item
+        })
+
+        setSalonServicesCategoryData({
+            data: updatedSalonServices,
+            loading: false,
+            error: null,
+            success: false
+        })
+
+        setSelectedCustomerServices((prev) => {
+
+            const filteredArray = prev.filter((item) => {
+                return item?.serviceId !== service?.serviceId
+            })
+
+            return filteredArray
+        })
+    }
+
+    const [favouriteLoader, setFavouriteLoader] = useState(false)
+
+    const addToFavourites = async () => {
+        try {
+
+            setFavouriteLoader(true)
+
+            const { data } = await axios.post(`${BASE_URL}/customer/customerFavouriteSalon`, {
+                email: authenticatedUser?.email,
+                salonId: selectecConnectSalonId
+            })
+
+            setFavouriteLoader(false)
+
+            setSalonInfoData({
+                ...salonInfoData,
+                data: {
+                    ...salonInfoData.data,
+                    salonInfo: {
+                        ...salonInfoData.data.salonInfo,
+                        isFavourite: true
+                    }
+                }
+            });
+
+            // Toast.success("Successfully added to favourites")
+
+            Alert.alert("Success", "Successfully added to favourites");
+
+        } catch (error) {
+            setFavouriteLoader(false)
+            // Toast.error(error?.response?.data?.message);
+            // Toast doesnot come in the modal
+            Alert.alert("Error", error?.response?.data?.message || "Something went wrong");
+            console.log("Error in favourite salon ", error?.response?.data);
+        }
+    }
+
+    // console.log(salonInfoData?.data)
+
+
     return (
         <>
             <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -524,7 +750,6 @@ const Map = () => {
                                 </MapView>
                             )
                         )
-
                     }
 
 
@@ -541,13 +766,17 @@ const Map = () => {
                             gap: scale(10)
                         }}
                         data={searchCitySalons?.data}
-                        renderItem={({ item }) => <SalonCard item={item} setSelectedCustomerSalon={setSelectedCustomerSalon} />}
+                        renderItem={({ item }) => <SalonCard
+                            item={item}
+                            setSelectedCustomerSalon={setSelectedCustomerSalon}
+                            setSelectedConnectSalonId={setSelectedConnectSalonId}
+                        />}
                         keyExtractor={item => item._id}
                         horizontal
                         showsHorizontalScrollIndicator={false}
                     />
 
-                    <Modal
+                    {/* <Modal
                         animationType="fade"
                         transparent={true}
                         visible={selectedCustomerSalon.open}
@@ -608,14 +837,12 @@ const Map = () => {
                                     >Explore all services</CustomText>
                                     <View
                                         style={{
-                                            // height: verticalScale(97),
                                             flexDirection: "row",
                                             alignItems: "center",
                                             flexDirection: "row",
                                             flexWrap: "wrap",
                                             paddingVertical: verticalScale(20),
                                             gap: scale(25),
-                                            // justifyContent: "space-between"
                                         }}
                                     >
 
@@ -628,7 +855,6 @@ const Map = () => {
                                                             style={{
                                                                 gap: verticalScale(10),
                                                                 width: scale(65),
-                                                                // marginBottom: verticalScale(10)
                                                             }}
                                                         >
 
@@ -685,48 +911,6 @@ const Map = () => {
                                             )
                                         }
 
-                                        {/* {
-                                            serviceCategories.map((item, index) => {
-                                                return (
-                                                    <View
-                                                        key={index}
-                                                        style={{
-                                                            gap: verticalScale(10),
-                                                            // width: scale(65),
-                                                            // marginBottom: verticalScale(10)
-                                                            // paddingLeft: scale(5)
-                                                        }}
-                                                    >
-
-                                                        <View
-                                                            style={{
-                                                                width: scale(45),
-                                                                height: scale(45),
-                                                                borderRadius: scale(30),
-                                                                backgroundColor: colors.background,
-                                                                marginHorizontal: "auto"
-                                                            }}
-                                                        >
-                                                            <Image
-                                                                style={{ width: "100%", height: "100%", borderRadius: scale(30) }}
-                                                                source={item.image}
-                                                                contentFit="cover"
-                                                                transition={1000}
-                                                            />
-                                                        </View>
-                                                        <CustomText
-                                                            style={{
-                                                                fontFamily: "AirbnbCereal_W_Md",
-                                                                fontSize: scale(12),
-                                                                textAlign: "center",
-                                                                color: "gray",
-                                                            }}
-                                                        >{item.name}</CustomText>
-                                                    </View>
-                                                )
-                                            })
-                                        } */}
-
                                     </View>
                                 </View>
 
@@ -745,14 +929,839 @@ const Map = () => {
                                 </Pressable>
                             </Pressable>
                         </Pressable>
+                    </Modal> */}
+
+
+                    <Modal
+                        animationType="fade"
+                        transparent={true}
+                        visible={selectedCustomerSalon.open}
+                        onRequestClose={() => setSelectedCustomerSalon({ open: false, data: {} })}
+                    >
+                        <View
+                            style={{
+                                flex: 1,
+                                justifyContent: "center",
+                                alignItems: "center",
+                            }}
+                        >
+                            <SafeAreaView>
+                                <GestureHandlerRootView style={[styles.container, {
+                                    backgroundColor: colors.background,
+                                }]}>
+
+                                    {
+                                        salonInfoData?.loading ? (
+                                            <Skeleton
+                                                height={verticalScale(200)}
+                                                width={scale(400)}
+                                            />
+                                        ) : salonInfoData?.data?.salonInfo?.gallery?.length > 0 ? (
+                                            <View>
+                                                <FlatList
+                                                    data={salonInfoData?.data?.salonInfo?.gallery?.slice(0, 5)}
+                                                    style={{
+                                                        position: "relative"
+                                                    }}
+                                                    renderItem={({ item }) => <SalonItem item={item} />}
+                                                    keyExtractor={item => item._id}
+                                                    ref={flatlistRef}
+                                                    horizontal={true}
+                                                    showsHorizontalScrollIndicator={false}
+                                                    // snapToAlignment="start"
+                                                    decelerationRate="fast"
+                                                    snapToInterval={scale(400)}
+                                                    pagingEnabled={true}
+                                                    onMomentumScrollEnd={(event) => {
+                                                        const offsetX = event.nativeEvent.contentOffset.x;
+                                                        const index = Math.round(offsetX / scale(400));
+                                                        setCurrentIndex(index);
+                                                    }}
+                                                    initialNumToRender={3}
+                                                    maxToRenderPerBatch={3}
+                                                />
+                                                <View
+                                                    style={{
+                                                        position: "absolute",
+                                                        bottom: Platform.OS === "ios" ? verticalScale(40) : verticalScale(30),
+                                                        alignSelf: "center",
+                                                        flexDirection: "row",
+                                                        gap: scale(8),
+                                                        alignItems: "center"
+                                                    }}
+                                                >
+                                                    {
+                                                        salonInfoData?.data?.salonInfo?.gallery?.slice(0, 5)?.map((item, index) => {
+                                                            return (
+                                                                <Pressable
+                                                                    onPress={() => {
+                                                                        setCurrentIndex(index);
+                                                                        flatlistRef.current?.scrollToIndex({ animated: true, index });
+                                                                    }}
+                                                                    key={index}
+                                                                    style={{
+                                                                        width: index === currentIndex ? scale(25) : scale(10),
+                                                                        height: scale(10),
+                                                                        borderRadius: scale(30),
+                                                                        backgroundColor: index === currentIndex ? Colors.modeColor.colorCode : "#fff"
+                                                                    }}
+                                                                ></Pressable>
+                                                            )
+                                                        })
+                                                    }
+
+                                                </View>
+                                            </View>
+
+                                        ) : (
+                                            <View
+                                                style={{
+                                                    width: "100%",
+                                                    height: verticalScale(200),
+                                                }}
+                                            >
+                                                <Image
+                                                    style={{
+                                                        width: scale(350),
+                                                        height: verticalScale(200),
+                                                    }}
+                                                    source={require('@/assets/images/dummygallery.jpg')}
+                                                    contentFit="cover"
+                                                    transition={300}
+                                                />
+                                            </View>
+                                        )
+                                    }
+
+
+                                    {
+                                        !salonInfoData?.loading && (
+                                            <BottomSheet
+                                                ref={sheetRef}
+                                                index={0}
+                                                snapPoints={Platform.OS === "ios" ? ["72%", "90%"] : ["68%", "87%"]}
+                                                enableDynamicSizing={false}
+                                                backgroundStyle={{
+                                                    backgroundColor: colors.background,
+                                                    borderTopLeftRadius: scale(20),
+                                                    borderTopRightRadius: scale(20),
+                                                }}
+                                            // onChange={handleSheetChange}
+                                            >
+                                                <View
+                                                    style={{
+                                                        flexDirection: "row",
+                                                        alignItems: "center",
+                                                        gap: scale(10),
+                                                        padding: scale(10),
+                                                        justifyContent: "space-between"
+                                                    }}
+                                                >
+                                                    <CustomText>Add to Favorites</CustomText>
+
+                                                    <Pressable
+                                                        disabled={favouriteLoader}
+                                                        onPress={addToFavourites}
+                                                        style={{
+                                                            width: scale(30),
+                                                            height: scale(30),
+                                                            // backgroundColor: "#E11D481A",
+                                                            justifyContent: "center",
+                                                            alignItems: "center",
+                                                            borderRadius: scale(4)
+                                                        }}
+                                                    >
+
+                                                        {
+                                                            salonInfoData?.data?.salonInfo?.isFavourite ? <HeartFilledIcon size={scale(16)} color='#E11D48' /> : <HeartIcon size={scale(16)} color='#E11D48' />
+                                                        }
+                                                    </Pressable>
+                                                </View>
+
+                                                <View style={{
+                                                    flexDirection: "row",
+                                                    alignItems: "center",
+                                                    gap: scale(10),
+                                                    padding: scale(10),
+                                                    justifyContent: "space-between"
+                                                }}>
+                                                    {
+                                                        tabData.map((item, index) => {
+                                                            return (
+                                                                <Pressable
+                                                                    key={index}
+                                                                    style={[styles.tabBtn, {
+                                                                        backgroundColor: selectedTab === item ? Colors.modeColor.colorCode : "#00B0901A"
+                                                                    }]}
+                                                                    onPress={() => {
+                                                                        setSelectedTab(item)
+                                                                    }}
+                                                                ><CustomText style={{
+                                                                    fontSize: scale(12),
+                                                                    color: selectedTab === item ? "#fff" : Colors.modeColor.colorCode
+                                                                }}>{item}</CustomText></Pressable>
+                                                            )
+                                                        })
+                                                    }
+
+                                                </View>
+
+                                                <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
+                                                    {
+                                                        selectedTab === "Details" && (
+                                                            <>
+                                                                <View
+                                                                    style={{
+                                                                        backgroundColor: "#00B0901A",
+                                                                        borderRadius: scale(4),
+                                                                        padding: scale(10),
+                                                                        gap: verticalScale(5)
+                                                                    }}
+                                                                >
+                                                                    <CustomText
+                                                                        style={{
+                                                                            fontFamily: "AirbnbCereal_W_Bd",
+                                                                        }}
+                                                                    >Description</CustomText>
+
+                                                                    <CustomText
+                                                                        style={{
+                                                                            fontSize: scale(14),
+                                                                            color: "gray"
+                                                                        }}
+                                                                    >{salonInfoData?.data?.salonInfo?.salonDesc}</CustomText>
+                                                                </View>
+
+                                                                <View
+                                                                    style={{
+                                                                        backgroundColor: "#00B0901A",
+                                                                        borderRadius: scale(4),
+                                                                        padding: scale(10),
+                                                                        gap: verticalScale(5),
+                                                                        flexDirection: "row",
+                                                                        alignItems: "center",
+                                                                        justifyContent: "space-between"
+                                                                    }}
+                                                                >
+
+                                                                    <View>
+                                                                        <CustomText
+                                                                            style={{
+                                                                                fontFamily: "AirbnbCereal_W_Bd",
+                                                                            }}
+                                                                        >Contact Us</CustomText>
+
+                                                                        <CustomText
+                                                                            style={{
+                                                                                fontSize: scale(14),
+                                                                                color: "gray"
+                                                                            }}
+                                                                        >
+                                                                            If you have any questions
+                                                                        </CustomText>
+                                                                    </View>
+
+                                                                    <View
+                                                                        style={{
+                                                                            flexDirection: "row",
+                                                                            alignItems: "center",
+                                                                            gap: scale(10)
+                                                                        }}
+                                                                    >
+                                                                        <Pressable
+                                                                            style={{
+                                                                                width: scale(30),
+                                                                                height: scale(30),
+                                                                                backgroundColor: colors.background,
+                                                                                justifyContent: "center",
+                                                                                alignItems: "center",
+                                                                                borderRadius: scale(4)
+                                                                            }}
+
+                                                                            onPress={() => {
+                                                                                Linking.openURL(
+                                                                                    `tel:${salonInfoData?.data?.salonInfo?.mobileCountryCode}${salonInfoData?.data?.salonInfo?.contactTel}`
+                                                                                );
+                                                                            }}
+                                                                        >
+                                                                            <ContactIcon size={scale(18)} color={"#4285F4"} />
+                                                                        </Pressable>
+
+                                                                        <Pressable
+                                                                            style={{
+                                                                                width: scale(30),
+                                                                                height: scale(30),
+                                                                                backgroundColor: colors.background,
+                                                                                justifyContent: "center",
+                                                                                alignItems: "center",
+                                                                                borderRadius: scale(4)
+                                                                            }}
+                                                                            onPress={() => {
+                                                                                openLink(``)
+                                                                            }}
+                                                                        >
+                                                                            <WhatsappIcon size={scale(18)} color={"#25D366"} />
+                                                                        </Pressable>
+
+                                                                        <Pressable
+                                                                            style={{
+                                                                                width: scale(30),
+                                                                                height: scale(30),
+                                                                                backgroundColor: colors.background,
+                                                                                justifyContent: "center",
+                                                                                alignItems: "center",
+                                                                                borderRadius: scale(4)
+                                                                            }}
+                                                                            onPress={() => {
+                                                                                openLink(`mailto:${salonInfoData?.data?.salonInfo?.salonEmail}`)
+                                                                            }}
+                                                                        >
+                                                                            <EmailIcon size={scale(18)} color={"#EA4335"} />
+                                                                        </Pressable>
+
+                                                                    </View>
+
+                                                                </View>
+
+                                                                <View>
+
+                                                                    {
+                                                                        salonInfoData?.data?.salonInfo?.location?.coordinates?.latitude && salonInfoData?.data?.salonInfo?.location?.coordinates?.longitude && (
+                                                                            <MapView
+                                                                                provider={PROVIDER_GOOGLE}
+                                                                                initialCamera={{
+                                                                                    center: {
+                                                                                        latitude: salonInfoData?.data?.salonInfo?.location?.coordinates?.latitude,
+                                                                                        longitude: salonInfoData?.data?.salonInfo?.location?.coordinates?.longitude
+                                                                                    },
+                                                                                    zoom: 15, // 0 (world view) to ~20 (very close)
+                                                                                    pitch: 0,
+                                                                                    heading: 0,
+                                                                                }}
+                                                                                scrollEnabled={false}
+                                                                                zoomEnabled={false}
+                                                                                rotateEnabled={false}
+                                                                                pitchEnabled={false}
+                                                                                style={[styles.map,
+                                                                                {
+                                                                                    // borderColor: "#efefef", 
+                                                                                    // borderWidth: scale(1) 
+                                                                                }
+                                                                                ]}
+                                                                                pointerEvents={Platform.OS === "ios" ? "none" : "auto"}
+                                                                                customMapStyle={colorScheme === "dark" ? darkMapStyle : []}
+                                                                            />
+                                                                        )
+                                                                    }
+
+                                                                    <View
+                                                                        style={{
+                                                                            backgroundColor: "#0BA3AD1A",
+                                                                            borderBottomLeftRadius: scale(4),
+                                                                            borderBottomRightRadius: scale(4),
+                                                                            padding: scale(10),
+                                                                            gap: verticalScale(5),
+                                                                            flexDirection: "row",
+                                                                            alignItems: "center",
+                                                                            justifyContent: "space-between"
+                                                                        }}
+                                                                    >
+
+                                                                        <View>
+                                                                            <CustomText
+                                                                                style={{
+                                                                                    fontFamily: "AirbnbCereal_W_Bd",
+                                                                                }}
+                                                                            >Location</CustomText>
+
+                                                                            <CustomText
+                                                                                style={{
+                                                                                    fontSize: scale(14),
+                                                                                    color: "gray",
+                                                                                    maxWidth: "90%"
+                                                                                }}
+                                                                            >
+                                                                                {`${salonInfoData?.data?.salonInfo?.address}, ${salonInfoData?.data?.salonInfo?.city}, ${salonInfoData?.data?.salonInfo?.country}`}
+                                                                            </CustomText>
+                                                                        </View>
+
+                                                                        <Pressable
+                                                                            style={{
+                                                                                width: scale(30),
+                                                                                height: scale(30),
+                                                                                backgroundColor: colors.background,
+                                                                                justifyContent: "center",
+                                                                                alignItems: "center",
+                                                                                borderRadius: scale(4)
+                                                                            }}
+                                                                            onPress={() => openLink(`https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`)}
+                                                                        >
+                                                                            <MapIcon size={scale(18)} color={"#fbbf24"} />
+                                                                        </Pressable>
+
+                                                                    </View>
+                                                                </View>
+
+                                                                <View
+                                                                    style={{
+                                                                        backgroundColor: "#00B0901A",
+                                                                        borderRadius: scale(4),
+                                                                        padding: scale(10),
+                                                                        gap: verticalScale(5),
+                                                                        flexDirection: "row",
+                                                                        alignItems: "center",
+                                                                        justifyContent: "space-between"
+                                                                    }}
+                                                                >
+
+                                                                    <View>
+                                                                        <CustomText
+                                                                            style={{
+                                                                                fontFamily: "AirbnbCereal_W_Bd",
+                                                                            }}
+                                                                        >Follow us on</CustomText>
+
+                                                                        <CustomText
+                                                                            style={{
+                                                                                fontSize: scale(14),
+                                                                                color: "gray"
+                                                                            }}
+                                                                        >
+                                                                            Social links
+                                                                        </CustomText>
+                                                                    </View>
+
+                                                                    <View
+                                                                        style={{
+                                                                            flexDirection: "row",
+                                                                            alignItems: "center",
+                                                                            gap: scale(10)
+                                                                        }}
+                                                                    >
+                                                                        <Pressable
+                                                                            style={{
+                                                                                width: scale(30),
+                                                                                height: scale(30),
+                                                                                backgroundColor: colors.background,
+                                                                                justifyContent: "center",
+                                                                                alignItems: "center",
+                                                                                borderRadius: scale(4)
+                                                                            }}
+                                                                            onPress={() => openLink(salonInfoData?.data?.salonInfo?.instraLink)}
+                                                                        >
+                                                                            <InstagramIcon size={scale(18)} color={"#E1306C"} />
+                                                                        </Pressable>
+
+                                                                        <Pressable
+                                                                            style={{
+                                                                                width: scale(30),
+                                                                                height: scale(30),
+                                                                                backgroundColor: colors.background,
+                                                                                justifyContent: "center",
+                                                                                alignItems: "center",
+                                                                                borderRadius: scale(4)
+                                                                            }}
+                                                                            onPress={() => openLink(salonInfoData?.data?.salonInfo?.facebookLink)}
+                                                                        >
+                                                                            <FacebookIcon size={scale(18)} color={"#1877F2"} />
+                                                                        </Pressable>
+                                                                    </View>
+
+                                                                </View>
+
+                                                                <View
+                                                                    style={{
+                                                                        flexDirection: "row",
+                                                                        alignItems: "center",
+                                                                        gap: scale(10),
+                                                                        justifyContent: "space-between"
+                                                                    }}
+                                                                >
+                                                                    <Pressable
+                                                                        disabled={connectSalonLoader}
+                                                                        style={[styles.modalbtn, { backgroundColor: Colors.modeColor.colorCode }]}
+                                                                        onPress={() => connectSalonPressed()}
+                                                                    >
+                                                                        {
+                                                                            connectSalonLoader ? (
+                                                                                <ActivityIndicator size="small" color="#fff" />
+                                                                            ) : (
+                                                                                <CustomText style={{ color: "#fff" }}>Connect</CustomText>
+                                                                            )
+                                                                        }
+
+                                                                    </Pressable>
+
+                                                                    <Pressable
+                                                                        style={[styles.closebtn]}
+                                                                        onPress={() => setSelectedCustomerSalon({ open: false, data: {} })}
+                                                                    >
+                                                                        <CustomText style={{ color: "#E11D48" }}>Cancel</CustomText>
+                                                                    </Pressable>
+                                                                </View>
+                                                            </>
+                                                        )
+                                                    }
+
+                                                    {
+                                                        selectedTab === "Services" && (
+                                                            serviceCategorySelected?.selected ? (
+                                                                <>
+                                                                    <Pressable
+                                                                        onPress={() => {
+                                                                            setServiceCategorySelected({
+                                                                                selected: false,
+                                                                                categoryName: ""
+                                                                            })
+                                                                        }}
+                                                                        style={{
+                                                                            flexDirection: "row",
+                                                                            alignItems: "center",
+                                                                            gap: scale(10),
+                                                                            // height: verticalScale(60)
+                                                                        }}
+                                                                    >
+                                                                        <ArrowLeftIcon size={scale(18)} />
+                                                                        <CustomText
+                                                                            style={{
+                                                                                fontFamily: "AirbnbCereal_W_Bd"
+                                                                            }}
+                                                                        >{serviceCategorySelected?.categoryName}</CustomText>
+                                                                    </Pressable>
+
+                                                                    {
+                                                                        salonServicesCategoryData?.data?.length > 0 ? (
+                                                                            salonServicesCategoryData?.data?.map((item, index) => {
+                                                                                return (
+                                                                                    <Pressable
+                                                                                        key={item?.serviceId}
+                                                                                        style={{
+                                                                                            borderRadius: scale(10),
+                                                                                            backgroundColor: "#00B0901A",
+                                                                                            padding: scale(12),
+                                                                                            gap: verticalScale(10)
+                                                                                        }}
+                                                                                    >
+                                                                                        <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+                                                                                            <View
+                                                                                                style={{
+                                                                                                    flexDirection: "row",
+                                                                                                    alignItems: "center",
+                                                                                                    gap: scale(10)
+                                                                                                }}
+                                                                                            >
+
+                                                                                                {
+                                                                                                    item?.selected ? (
+                                                                                                        <View
+                                                                                                            style={{
+                                                                                                                height: scale(50),
+                                                                                                                width: scale(50),
+                                                                                                                borderRadius: scale(80),
+                                                                                                                backgroundColor: "rgba(0,0,0,0.4)",
+                                                                                                                position: "relative"
+                                                                                                            }}
+                                                                                                        >
+                                                                                                            <Image
+                                                                                                                style={{ height: scale(50), width: scale(50), borderRadius: scale(80), zIndex: -1 }}
+                                                                                                                source={{ uri: item?.serviceIcon?.url }}
+                                                                                                                contentFit="cover"
+                                                                                                                transition={300}
+                                                                                                            />
+                                                                                                            <CheckIcon
+                                                                                                                color='#fff'
+                                                                                                                style={{
+                                                                                                                    position: "absolute",
+                                                                                                                    top: scale(14),
+                                                                                                                    left: scale(14)
+                                                                                                                }}
+                                                                                                            />
+                                                                                                        </View>
+                                                                                                    ) : (
+                                                                                                        <Image
+                                                                                                            style={{ height: scale(50), width: scale(50), borderRadius: scale(80) }}
+                                                                                                            source={{ uri: item?.serviceIcon?.url }}
+                                                                                                            contentFit="cover"
+                                                                                                            transition={300}
+                                                                                                        />
+                                                                                                    )
+                                                                                                }
+
+                                                                                                <View style={{ gap: verticalScale(5) }}>
+                                                                                                    <CustomText style={{
+                                                                                                        fontSize: scale(12),
+                                                                                                        fontFamily: "AirbnbCereal_W_Bd"
+                                                                                                    }}>{item?.serviceName}</CustomText>
+                                                                                                    <Pressable
+                                                                                                        style={{
+                                                                                                            height: verticalScale(15),
+                                                                                                            width: scale(50),
+                                                                                                            backgroundColor: "#00B0901A",
+                                                                                                            borderRadius: scale(4),
+                                                                                                            justifyContent: "center",
+                                                                                                            alignItems: "center"
+                                                                                                        }}
+                                                                                                    ><CustomText style={{ fontSize: scale(10), color: "#00B090" }}>{item?.serviceCategoryName}</CustomText></Pressable>
+                                                                                                </View>
+                                                                                            </View>
+
+                                                                                            {
+                                                                                                item?.selected ? (
+                                                                                                    <Pressable
+                                                                                                        onPress={() => removeServiceHandler(item)}
+                                                                                                        style={{
+                                                                                                            height: verticalScale(20),
+                                                                                                            width: scale(60),
+                                                                                                            backgroundColor: "#E11D48",
+                                                                                                            borderRadius: scale(4),
+                                                                                                            justifyContent: "center",
+                                                                                                            alignItems: "center"
+                                                                                                        }}
+                                                                                                    ><CustomText style={{ fontSize: scale(12), color: "#fff" }}>Remove</CustomText>
+                                                                                                    </Pressable>
+                                                                                                ) : (
+                                                                                                    <Pressable
+                                                                                                        onPress={() => addServiceHandler(item)}
+                                                                                                        style={{
+                                                                                                            height: verticalScale(20),
+                                                                                                            width: scale(55),
+                                                                                                            backgroundColor: "#1f2937",
+                                                                                                            borderRadius: scale(4),
+                                                                                                            justifyContent: "center",
+                                                                                                            alignItems: "center"
+                                                                                                        }}
+                                                                                                    ><CustomText style={{ fontSize: scale(12), color: "#fff" }}>Add</CustomText>
+                                                                                                    </Pressable>
+                                                                                                )
+                                                                                            }
+                                                                                        </View>
+
+                                                                                        <View style={{ marginTop: verticalScale(5), gap: verticalScale(5) }}>
+                                                                                            <CustomText
+                                                                                                style={{
+                                                                                                    color: "gray",
+                                                                                                    fontSize: scale(12)
+                                                                                                }}
+                                                                                            >{item?.serviceDesc}</CustomText>
+
+                                                                                            <View
+                                                                                                style={{
+                                                                                                    flexDirection: "row",
+                                                                                                    alignItems: "center",
+                                                                                                    justifyContent: "space-between"
+                                                                                                }}
+                                                                                            >
+                                                                                                <View style={{
+                                                                                                    flexDirection: "row",
+                                                                                                    alignItems: "center",
+                                                                                                    justifyContent: "space-between",
+                                                                                                    width: scale(75),
+                                                                                                    gap: scale(2),
+                                                                                                    backgroundColor: colors.background,
+                                                                                                    paddingHorizontal: scale(5),
+                                                                                                    borderRadius: scale(4)
+                                                                                                }}>
+                                                                                                    <ClockIcon size={scale(12)} color={Colors.modeColor.colorCode} />
+                                                                                                    <CustomText style={{ fontSize: scale(12), flex: 1, color: Colors.modeColor.colorCode }}>{item?.serviceEWT} mins</CustomText>
+                                                                                                </View>
+
+                                                                                                <CustomText
+                                                                                                    style={{
+                                                                                                        fontFamily: "AirbnbCereal_W_Blk",
+                                                                                                        fontSize: scale(18),
+                                                                                                        color: Colors.modeColor.colorCode
+                                                                                                    }}
+                                                                                                >{authenticatedUser?.currency} {item?.servicePrice}</CustomText>
+                                                                                            </View>
+                                                                                        </View>
+                                                                                    </Pressable >
+                                                                                )
+                                                                            })
+                                                                        ) : (
+                                                                            <View
+                                                                                style={{
+                                                                                    height: verticalScale(180),
+                                                                                    justifyContent: "center",
+                                                                                    alignItems: "center",
+                                                                                }}
+                                                                            >
+                                                                                <CustomText>No services available</CustomText>
+                                                                            </View>
+                                                                        )
+
+                                                                    }
+                                                                </>
+                                                            ) : <>
+                                                                <CustomText
+                                                                    style={{
+                                                                        fontFamily: "AirbnbCereal_W_Blk"
+                                                                    }}
+                                                                >Explore all services</CustomText>
+
+                                                                <View
+                                                                    style={{
+                                                                        flexDirection: "row",
+                                                                        alignItems: "center",
+                                                                        flexDirection: "row",
+                                                                        flexWrap: "wrap",
+                                                                        // paddingVertical: verticalScale(10),
+                                                                        gap: scale(20),
+                                                                    }}
+                                                                >
+
+                                                                    {
+                                                                        serviceCategoryData?.loading ? (
+                                                                            [0, 1, 2, 3, 4, 5, 6, 7].map((item, index) => {
+                                                                                return (
+                                                                                    <View
+                                                                                        key={index}
+                                                                                        style={{
+                                                                                            gap: verticalScale(10),
+                                                                                            width: scale(65),
+                                                                                            // marginBottom: verticalScale(10)
+                                                                                        }}
+                                                                                    >
+
+                                                                                        <Skeleton
+                                                                                            width={scale(60)}
+                                                                                            height={scale(60)}
+                                                                                            borderRadius={scale(30)}
+                                                                                        >
+
+                                                                                        </Skeleton>
+
+                                                                                    </View>
+                                                                                )
+                                                                            })
+                                                                        ) : (
+                                                                            serviceCategoryData?.data?.map((item, index) => {
+                                                                                return (
+                                                                                    <View
+                                                                                        key={item?._id}
+                                                                                        style={{
+                                                                                            gap: verticalScale(10),
+                                                                                            width: scale(65),
+                                                                                            marginBottom: verticalScale(10)
+                                                                                        }}
+                                                                                    >
+
+                                                                                        <Pressable
+                                                                                            style={{
+                                                                                                width: scale(60),
+                                                                                                height: scale(60),
+                                                                                                borderRadius: scale(30),
+                                                                                                backgroundColor: colors.background,
+                                                                                                marginHorizontal: "auto"
+                                                                                            }}
+                                                                                            onPress={() => {
+                                                                                                setServiceCategorySelected({
+                                                                                                    categoryName: item.serviceCategoryName,
+                                                                                                    selected: true
+                                                                                                })
+                                                                                            }}
+                                                                                        >
+                                                                                            <Image
+                                                                                                style={{ width: "100%", height: "100%", borderRadius: scale(30) }}
+                                                                                                source={{ uri: item?.serviceCategoryImage?.url.replace("http", "https") }}
+                                                                                                contentFit="cover"
+                                                                                                transition={1000}
+                                                                                            />
+                                                                                        </Pressable>
+                                                                                        <CustomText
+                                                                                            style={{
+                                                                                                fontFamily: "AirbnbCereal_W_Md",
+                                                                                                fontSize: scale(12),
+                                                                                                textAlign: "center",
+                                                                                                color: "gray",
+                                                                                            }}
+                                                                                        >{item.serviceCategoryName}</CustomText>
+                                                                                    </View>
+                                                                                )
+                                                                            })
+                                                                        )
+                                                                    }
+
+                                                                </View>
+                                                            </>
+
+                                                        )
+                                                    }
+
+                                                    {
+                                                        selectedTab === "Barber" && (
+                                                            <>
+                                                                <CustomText
+                                                                    style={{
+                                                                        fontFamily: "AirbnbCereal_W_Blk"
+                                                                    }}
+                                                                >Explore all stylists</CustomText>
+
+                                                                {
+                                                                    salonInfoData?.data?.barbers?.length > 0 ? (
+                                                                        <View
+                                                                            style={{
+                                                                                flexDirection: "row",
+                                                                                flexWrap: "wrap",
+                                                                                gap: scale(10)
+                                                                            }}
+                                                                        >
+
+                                                                            {
+                                                                                salonInfoData?.data?.barbers?.map((item, index) => {
+                                                                                    return (<BarberCard key={item?.barberId} item={item} />)
+                                                                                })
+                                                                            }
+
+                                                                        </View>
+                                                                    ) : (
+                                                                        <View style={{
+                                                                            height: verticalScale(180),
+                                                                            justifyContent: "center",
+                                                                            alignItems: "center",
+                                                                        }}>
+                                                                            <CustomText>No barbers available</CustomText>
+                                                                        </View>
+                                                                    )
+                                                                }
+
+                                                            </>
+                                                        )
+                                                    }
+
+                                                </BottomSheetScrollView>
+
+                                            </BottomSheet>
+                                        )
+                                    }
+
+                                </GestureHandlerRootView>
+                            </SafeAreaView>
+                        </View>
                     </Modal>
-                </View>
-            </TouchableWithoutFeedback>
+
+                </View >
+            </TouchableWithoutFeedback >
         </>
     )
 }
 
 export default Map
+
+const SalonItem = ({ item }) => {
+
+    const { colors } = useTheme()
+
+    return (
+        <View style={[styles.cardWrapper, { backgroundColor: colors.background }]} >
+            <Image
+                style={styles.cardImage}
+                source={{ uri: item.url }}
+                contentFit="cover"
+                transition={300}
+            />
+        </View>
+    )
+};
 
 const styles = StyleSheet.create({
     modalWrapper: {
@@ -760,10 +1769,11 @@ const styles = StyleSheet.create({
         backgroundColor: 'rgba(0,0,0,0.5)',
         justifyContent: 'center',
         alignItems: 'center',
-        paddingHorizontal: scale(20),
+        // paddingHorizontal: scale(20),
     },
     modalContainer: {
         width: '100%',
+        height: "90%",
         // backgroundColor: 'white',
         borderRadius: moderateScale(12),
         padding: scale(15),
@@ -790,7 +1800,7 @@ const styles = StyleSheet.create({
     },
     modalbtn: {
         minHeight: verticalScale(35),
-        width: "100%",
+        width: "48%",
         alignItems: "center",
         justifyContent: "center",
         marginTop: verticalScale(15),
@@ -798,13 +1808,54 @@ const styles = StyleSheet.create({
     },
     closebtn: {
         minHeight: verticalScale(35),
-        width: "100%",
+        width: "48%",
         alignItems: "center",
         justifyContent: "center",
-        marginTop: verticalScale(10),
+        marginTop: verticalScale(15),
         borderRadius: moderateScale(6),
         backgroundColor: "#E11D481A"
-    }
+    },
+
+
+
+
+    container: {
+        flex: 1,
+    },
+
+    contentContainer: {
+        paddingHorizontal: scale(10),
+        paddingTop: scale(10),
+        paddingBottom: Platform.OS === "ios" ? verticalScale(80) : verticalScale(10),
+        gap: verticalScale(10)
+        // backgroundColor: "#fff",
+    },
+
+    cardWrapper: {
+        height: verticalScale(200),
+        width: scale(400),
+    },
+    cardImage: {
+        height: "100%",
+        width: "100%",
+    },
+
+    tabBtn: {
+        height: verticalScale(30),
+        backgroundColor: "gray",
+        flex: 1,
+        paddingInline: scale(10),
+        borderRadius: scale(4),
+        justifyContent: "center",
+        alignItems: "center"
+    },
+
+    map: {
+        width: "100%",
+        height: verticalScale(128),
+        borderTopLeftRadius: scale(4),
+        borderTopRightRadius: scale(4)
+    },
 })
 
 

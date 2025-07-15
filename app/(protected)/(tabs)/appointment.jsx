@@ -52,7 +52,9 @@ const appointment = () => {
 
       if (applyAppointmentFilter.open) {
 
-        socket.emit("joinSalon", authenticatedUser?.salonId);
+        // socket.emit("joinSalon", authenticatedUser?.salonId);
+
+        socket.emit("customerAppointmentList", { salonId: authenticatedUser?.salonId, email: authenticatedUser?.email })
 
         socket.on("appointmentsUpdated", (appointmentData) => {
           setAppointmentListData((prev) => ({ ...prev, loading: false, data: appointmentData, success: true, error: null }))

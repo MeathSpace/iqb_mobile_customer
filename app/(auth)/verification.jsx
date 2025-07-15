@@ -257,7 +257,7 @@ const verification = () => {
                         </CustomText>
 
                         <CustomSecondaryText>
-                            Enter the 4 digit code sent to your mobile number
+                            Enter the 4 digit code sent to your mobile number and email
                         </CustomSecondaryText>
                     </View>
 

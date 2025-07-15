@@ -4,15 +4,19 @@ import CustomText from '../../../components/CustomText'
 import { scale, verticalScale } from 'react-native-size-matters'
 import { useRouter } from 'expo-router'
 import { Colors } from '@/constants/Colors';
+import { useTheme } from '@react-navigation/native'
 
 const termService = () => {
+
   const router = useRouter()
+  const { colors } = useTheme()
 
   return (
     <ScrollView
       style={{
         flex: 1,
-        backgroundColor: "#00B0901A"
+        // backgroundColor: "#00B0901A"
+        backgroundColor: colors.background
       }}
       contentContainerStyle={{
         paddingTop: verticalScale(10),

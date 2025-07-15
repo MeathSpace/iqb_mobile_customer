@@ -141,7 +141,8 @@ const MyFavourites = () => {
     return (
         <View
             style={{
-                backgroundColor: "#00B0901A",
+                // backgroundColor: "#00B0901A",
+                backgroundColor: colors.background,
                 flex: 1,
                 paddingHorizontal: scale(10),
                 paddingTop: verticalScale(10),
@@ -176,7 +177,18 @@ const MyFavourites = () => {
                                     borderRadius: scale(8),
                                     borderColor: "gray",
                                     position: "relative",
+                                    backgroundColor: "#fff",
+                                    // ✅ Android shadow
+                                    elevation: 2,
 
+                                    // ✅ iOS shadow
+                                    shadowColor: "#000",
+                                    shadowOffset: {
+                                        width: 0,
+                                        height: 2,
+                                    },
+                                    shadowOpacity: 0.1,
+                                    shadowRadius: 4,
                                 }}
                             >
                                 <Image

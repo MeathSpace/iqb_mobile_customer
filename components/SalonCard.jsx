@@ -7,16 +7,19 @@ import CustomText from './CustomText';
 import { useGlobal } from '../context/GlobalContext';
 import { MapIcon } from '../constants/icons';
 
-const SalonCard = ({ item, setSelectedCustomerSalon, favourite = false }) => {
+const SalonCard = ({ item, setSelectedCustomerSalon, setSelectedConnectSalonId, favourite = false }) => {
 
     const { colors } = useTheme()
     const { selectedSalonLocation, setSelectedSalonLocation } = useGlobal()
 
     return (
-        <Pressable onPress={() => setSelectedCustomerSalon({
-            open: true,
-            data: item
-        })}>
+        <Pressable onPress={() => {
+            setSelectedConnectSalonId(item?.salonId)
+            setSelectedCustomerSalon({
+                open: true,
+                data: item
+            })
+        }}>
             <View style={[styles.cardWrapper, { width: favourite ? "100%" : scale(280), backgroundColor: colors.background }]}>
                 {/* <Image
                     style={styles.cardImage}

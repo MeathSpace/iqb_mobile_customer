@@ -175,7 +175,7 @@ const signup = () => {
                 <View style={{ width: "100%", gap: verticalScale(20) }}>
                     <Image
                         style={[styles.Logo, { tintColor: colors.text }]}
-                        source={require("../../assets/images/icon.png")}
+                        source={require("../../assets/images/iqbook.png")}
                         resizeMode="cover"
                     />
 

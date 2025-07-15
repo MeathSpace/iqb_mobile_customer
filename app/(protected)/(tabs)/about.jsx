@@ -14,7 +14,7 @@ const about = () => {
   const aboutData = [
     {
       id: 1,
-      name: "iqueueBook Website",
+      name: "iqBook Website",
       icon: <GlobalIcon color='gray' />,
       url: "#"
     },
@@ -43,7 +43,8 @@ const about = () => {
   return (
     <View
       style={{
-        backgroundColor: "#00B0901A",
+        // backgroundColor: "#00B0901A",
+        backgroundColor: colors.background,
         flex: 1,
         paddingHorizontal: scale(10),
         paddingTop: verticalScale(10),
@@ -82,7 +83,9 @@ const about = () => {
                   flexDirection: "row",
                   justifyContent: "space-between",
                   alignItems: "center",
-                  height: verticalScale(50)
+                  height: verticalScale(50),
+                  borderBottomColor: colors.borderBottomColor,
+                  borderBottomWidth: scale(1)
                 }}
               >
                 <View

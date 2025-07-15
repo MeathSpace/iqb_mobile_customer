@@ -99,7 +99,9 @@ const helpSupport = () => {
                             styles.inputField,
                             {
                                 // borderColor: "#DDDDDD",
-                                backgroundColor: "#00B0901A",
+                                // backgroundColor: "#00B0901A",
+                                borderWidth: scale(1),
+                                borderColor: "gray",
                                 fontFamily: "AirbnbCereal_W_Md"
                             }
                         ]}
@@ -129,8 +131,10 @@ const helpSupport = () => {
                             {
                                 minHeight: verticalScale(120),
                                 textAlignVertical: "top",
-                                borderColor: "#DDDDDD",
-                                backgroundColor: "#00B0901A",
+                                // borderColor: "#DDDDDD",
+                                // backgroundColor: "#00B0901A",
+                                borderWidth: scale(1),
+                                borderColor: "gray",
                                 fontFamily: "AirbnbCereal_W_Md"
                             }
                         ]}

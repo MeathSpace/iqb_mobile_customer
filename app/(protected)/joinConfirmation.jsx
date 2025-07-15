@@ -795,135 +795,140 @@ const singleJoinConfirmation = () => {
   };
 
   return (
-    <ScrollView
-      showsVerticalScrollIndicator={false}
-      style={{ flex: 1, backgroundColor: colors.background }}
-      contentContainerStyle={{
-        flexGrow: 1,
-        paddingHorizontal: scale(15),
-        paddingVertical: Platform.OS === "ios" ? verticalScale(60) : verticalScale(15),
-        justifyContent: "space-between",
-      }}>
-      <View style={{ gap: verticalScale(15) }}>
-        <View style={{
-          width: moderateScale(70),
-          height: moderateScale(70),
-          justifyContent: "center",
-          alignItems: "center",
-          borderRadius: moderateScale(65),
-          backgroundColor: "#00B090",
-          // marginBottom: verticalScale(15),
-          marginHorizontal: "auto"
+    <SafeAreaView
+      style={{
+        flex: 1
+      }}
+    >
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={{ flex: 1, backgroundColor: colors.background }}
+        contentContainerStyle={{
+          flexGrow: 1,
+          paddingHorizontal: scale(15),
+          paddingVertical: Platform.OS === "ios" ? verticalScale(60) : verticalScale(15),
+          justifyContent: "space-between",
         }}>
-          <CheckIcon
-            color={"#fff"} size={moderateScale(40)} />
-        </View>
-        <View style={{
-          gap: verticalScale(5),
-        }}>
-          <CustomText style={styles.heading}>
-            {params?.appointment ? "Review and confirm below" : "Yah! Good to see you here"}
-          </CustomText>
+        <View style={{ gap: verticalScale(15) }}>
+          <View style={{
+            width: moderateScale(70),
+            height: moderateScale(70),
+            justifyContent: "center",
+            alignItems: "center",
+            borderRadius: moderateScale(65),
+            backgroundColor: "#00B090",
+            // marginBottom: verticalScale(15),
+            marginHorizontal: "auto"
+          }}>
+            <CheckIcon
+              color={"#fff"} size={moderateScale(40)} />
+          </View>
+          <View style={{
+            gap: verticalScale(5),
+          }}>
+            <CustomText style={styles.heading}>
+              {params?.appointment ? "Review and confirm below" : "Yah! Good to see you here"}
+            </CustomText>
 
-          <CustomSecondaryText style={{ textAlign: "center", }}>
-            {params?.appointment ? "You'll be notified once your appointment is scheduled" : "You will be notified when your time arrives"}
-          </CustomSecondaryText>
-        </View>
-
-
-        {
-          params?.singleJoin === "true" ? (
-            <View style={[styles.card, { backgroundColor: "#0BA3AD1A", borderColor: colors.border }]}>
-              <View style={{ flexDirection: "row", alignItems: "center", gap: scale(10) }}>
-                <Image
-                  style={{ height: moderateScale(55), width: moderateScale(55), borderRadius: moderateScale(30) }}
-                  source={{ uri: selectedCustomerBarberParse?.profile?.[0]?.url }}
-                  contentFit="cover"
-                  transition={300}
-                />
-                <CustomText>{selectedCustomerBarberParse?.name}</CustomText>
-              </View>
+            <CustomSecondaryText style={{ textAlign: "center", }}>
+              {params?.appointment ? "You'll be notified once your appointment is scheduled" : "You will be notified when your time arrives"}
+            </CustomSecondaryText>
+          </View>
 
 
-              <View style={[styles.cardContent]}>
-                <View style={{ gap: scale(6) }}>
-                  {
-                    selectCustomerServicesParse?.map((ele, index) => {
-                      return (
-                        <CustomSecondaryText key={ele?.serviceId}>{index + 1}. {ele.serviceName}</CustomSecondaryText>
-                      )
-                    })
-                  }
+          {
+            params?.singleJoin === "true" ? (
+              <View style={[styles.card, { backgroundColor: "#0BA3AD1A", borderColor: colors.border }]}>
+                <View style={{ flexDirection: "row", alignItems: "center", gap: scale(10) }}>
+                  <Image
+                    style={{ height: moderateScale(55), width: moderateScale(55), borderRadius: moderateScale(30) }}
+                    source={{ uri: selectedCustomerBarberParse?.profile?.[0]?.url }}
+                    contentFit="cover"
+                    transition={300}
+                  />
+                  <CustomText>{selectedCustomerBarberParse?.name}</CustomText>
                 </View>
-                <View style={{ gap: scale(6) }}>
-                  <CustomText style={{ textAlign: "center", fontSize: moderateScale(18) }}>{authenticatedUser?.currency} {selectCustomerServicesParse.reduce((acc, item) => acc + item.servicePrice, 0)}</CustomText>
-                  <View style={{ flexDirection: "row", alignItems: "center", gap: scale(5), }}>
-                    <ClockIcon size={moderateScale(14)} color={colors.secondaryText} />
+
+
+                <View style={[styles.cardContent]}>
+                  <View style={{ gap: scale(6) }}>
                     {
-                      params?.singleJoin ? (
-                        <CustomSecondaryText style={{ fontSize: scale(12) }}> {selectCustomerServicesParse.reduce((acc, item) => acc + item.serviceEWT, 0)} mins</CustomSecondaryText>
-                      ) : (
-                        <CustomSecondaryText style={{ fontSize: scale(12) }}>12:30 AM - 2:30 PM</CustomSecondaryText>
-                      )
+                      selectCustomerServicesParse?.map((ele, index) => {
+                        return (
+                          <CustomSecondaryText key={ele?.serviceId}>{index + 1}. {ele.serviceName}</CustomSecondaryText>
+                        )
+                      })
                     }
+                  </View>
+                  <View style={{ gap: scale(6) }}>
+                    <CustomText style={{ textAlign: "center", fontSize: moderateScale(18) }}>{authenticatedUser?.currency} {selectCustomerServicesParse.reduce((acc, item) => acc + item.servicePrice, 0)}</CustomText>
+                    <View style={{ flexDirection: "row", alignItems: "center", gap: scale(5), }}>
+                      <ClockIcon size={moderateScale(14)} color={colors.secondaryText} />
+                      {
+                        params?.singleJoin ? (
+                          <CustomSecondaryText style={{ fontSize: scale(12) }}> {selectCustomerServicesParse.reduce((acc, item) => acc + item.serviceEWT, 0)} mins</CustomSecondaryText>
+                        ) : (
+                          <CustomSecondaryText style={{ fontSize: scale(12) }}>12:30 AM - 2:30 PM</CustomSecondaryText>
+                        )
+                      }
 
+                    </View>
                   </View>
                 </View>
-              </View>
 
 
-              {
-                !params?.singleJoin && (
-                  <View
-                    style={[styles.appointmentCardContent, { borderTopColor: colors.border }]}
-                  >
-                    <CustomText
-                      style={{
-                        fontSize: scale(9.16)
-                      }}
-                    >Hi! I’d like a quick haircut and beard trim. Please keep the sides short and tidy, and leave a bit of length on top. Looking forward to it!</CustomText>
-                  </View>
-                )
-              }
-            </View>
-          ) : params?.singleJoin === "false" ? (
-            <>
-              {
-                selectedGroupMembers?.map((item) => {
-                  return (
+                {
+                  !params?.singleJoin && (
                     <View
-                      key={item.id}
-                      style={[styles.card, { backgroundColor: "#0BA3AD1A", borderColor: colors.border }]}>
-                      <View style={{ flexDirection: "row", alignItems: "center", gap: scale(10) }}>
-                        <Image
-                          style={{ height: moderateScale(55), width: moderateScale(55), borderRadius: moderateScale(30) }}
-                          source={{ uri: item?.selectedCustomerBarber?.profile?.[0]?.url }}
-                          contentFit="cover"
-                          transition={300}
-                        />
-                        <View style={{ gap: verticalScale(5) }}>
-                          <CustomText>{item?.selectedCustomerBarber?.name}</CustomText>
-                          <CustomSecondaryText>{item.memberName}</CustomSecondaryText>
+                      style={[styles.appointmentCardContent, { borderTopColor: colors.border }]}
+                    >
+                      <CustomText
+                        style={{
+                          fontSize: scale(9.16)
+                        }}
+                      >Hi! I’d like a quick haircut and beard trim. Please keep the sides short and tidy, and leave a bit of length on top. Looking forward to it!</CustomText>
+                    </View>
+                  )
+                }
+              </View>
+            ) : params?.singleJoin === "false" ? (
+              <>
+                {
+                  selectedGroupMembers?.map((item) => {
+                    return (
+                      <View
+                        key={item.id}
+                        style={[styles.card, { backgroundColor: "#0BA3AD1A", borderColor: colors.border }]}>
+                        <View style={{ flexDirection: "row", alignItems: "center", gap: scale(10) }}>
+                          <Image
+                            style={{ height: moderateScale(55), width: moderateScale(55), borderRadius: moderateScale(30) }}
+                            source={{ uri: item?.selectedCustomerBarber?.profile?.[0]?.url }}
+                            contentFit="cover"
+                            transition={300}
+                          />
+                          <View style={{ gap: verticalScale(5) }}>
+                            <CustomText>{item?.selectedCustomerBarber?.name}</CustomText>
+                            <CustomSecondaryText>{item.memberName}</CustomSecondaryText>
+                          </View>
                         </View>
-                      </View>
 
 
-                      <View style={[styles.cardContent]}>
-                        <View style={{ gap: scale(6) }}>
-                          {
-                            item?.selectCustomerServices?.map((ele, index) => {
-                              return (
-                                <CustomSecondaryText key={ele?.serviceId}>{index + 1}. {ele.serviceName}</CustomSecondaryText>
-                              )
-                            })
-                          }
-                        </View>
-                        <View style={{ gap: scale(6) }}>
-                          <CustomText style={{ textAlign: "center", fontSize: moderateScale(18) }}>{authenticatedUser?.currency} {item?.selectCustomerServices.reduce((acc, item) => acc + item.servicePrice, 0)}</CustomText>
-                          <View style={{ flexDirection: "row", alignItems: "center", gap: scale(5), }}>
-                            <ClockIcon size={moderateScale(14)} color={colors.secondaryText} />
-                            <CustomSecondaryText style={{ fontSize: scale(12) }}> {item?.selectCustomerServices.reduce((acc, item) => acc + item.serviceEWT, 0)} mins</CustomSecondaryText>
-                            {/* {
+                        <View style={[styles.cardContent]}>
+                          <View style={{ gap: scale(6) }}>
+                            {
+                              item?.selectCustomerServices?.map((ele, index) => {
+                                return (
+                                  <CustomSecondaryText key={ele?.serviceId}>{index + 1}. {ele.serviceName}</CustomSecondaryText>
+                                )
+                              })
+                            }
+                          </View>
+                          <View style={{ gap: scale(6) }}>
+                            <CustomText style={{ textAlign: "center", fontSize: moderateScale(18) }}>{authenticatedUser?.currency} {item?.selectCustomerServices.reduce((acc, item) => acc + item.servicePrice, 0)}</CustomText>
+                            <View style={{ flexDirection: "row", alignItems: "center", gap: scale(5), }}>
+                              <ClockIcon size={moderateScale(14)} color={colors.secondaryText} />
+                              <CustomSecondaryText style={{ fontSize: scale(12) }}> {item?.selectCustomerServices.reduce((acc, item) => acc + item.serviceEWT, 0)} mins</CustomSecondaryText>
+                              {/* {
                       params?.singleJoin ? (
                         <CustomSecondaryText style={{ fontSize: scale(12) }}> {selectCustomerServicesParse.reduce((acc, item) => acc + item.serviceEWT, 0)} mins</CustomSecondaryText>
                       ) : (
@@ -931,234 +936,111 @@ const singleJoinConfirmation = () => {
                       )
                     } */}
 
+                            </View>
                           </View>
                         </View>
+
                       </View>
-
-                    </View>
-                  )
-                })
-              }
-
-            </>
-          ) : params?.bookAppointment === "true" ? (
-            <View style={[styles.card, { backgroundColor: "#0BA3AD1A", borderColor: colors.border }]}>
-              <View style={{ flexDirection: "row", alignItems: "center", gap: scale(10) }}>
-                <Image
-                  style={{ height: moderateScale(55), width: moderateScale(55), borderRadius: moderateScale(30) }}
-                  source={{ uri: selectedCustomerBookAppointmentBarberParse?.profile?.[0]?.url }}
-                  contentFit="cover"
-                  transition={300}
-                />
-                <CustomText>{selectedCustomerBookAppointmentBarberParse?.name}</CustomText>
-              </View>
-
-
-              <View style={[styles.cardContent]}>
-                <View style={{ gap: scale(6) }}>
-                  {
-                    selectedCustomerBookAppointmentServicesParse?.map((ele, index) => {
-                      return (
-                        <CustomSecondaryText key={ele?.serviceId}>{index + 1}. {ele.serviceName}</CustomSecondaryText>
-                      )
-                    })
-                  }
-                </View>
-                <View style={{ gap: scale(6) }}>
-                  <CustomText style={{ textAlign: "center", fontSize: moderateScale(18) }}>{authenticatedUser?.currency} {selectedCustomerBookAppointmentServicesParse.reduce((acc, item) => acc + item.servicePrice, 0)}</CustomText>
-                  <View style={{ flexDirection: "row", alignItems: "center", gap: scale(5), }}>
-                    <ClockIcon size={moderateScale(14)} color={colors.secondaryText} />
-                    <CustomSecondaryText style={{ fontSize: scale(12) }}>{selectedBookCalenderTimeslotParse}</CustomSecondaryText>
-                  </View>
-                </View>
-              </View>
-
-
-              <View
-                style={[styles.appointmentCardContent, { borderTopColor: colors.border }]}
-              >
-                <CustomText
-                  style={{
-                    fontSize: scale(12)
-                  }}
-                >{selectedBookAppointmentNoteParse}</CustomText>
-              </View>
-
-            </View>
-          ) : params?.editAppointment === "true" && (
-            <View style={[styles.card, { backgroundColor: "#0BA3AD1A", borderColor: colors.border }]}>
-              <View style={{ flexDirection: "row", alignItems: "center", gap: scale(10) }}>
-                <Image
-                  style={{ height: moderateScale(55), width: moderateScale(55), borderRadius: moderateScale(30) }}
-                  source={{ uri: selectedCustomerBookAppointmentBarberParse?.profile?.[0]?.url }}
-                  contentFit="cover"
-                  transition={300}
-                />
-                <CustomText>{selectedCustomerBookAppointmentBarberParse?.name}</CustomText>
-              </View>
-
-
-              <View style={[styles.cardContent]}>
-                <View style={{ gap: scale(6) }}>
-                  {
-                    selectedCustomerBookAppointmentServicesParse?.map((ele, index) => {
-                      return (
-                        <CustomSecondaryText key={ele?.serviceId}>{index + 1}. {ele.serviceName}</CustomSecondaryText>
-                      )
-                    })
-                  }
-                </View>
-                <View style={{ gap: scale(6) }}>
-                  <CustomText style={{ textAlign: "center", fontSize: moderateScale(18) }}>{authenticatedUser?.currency} {selectedCustomerBookAppointmentServicesParse.reduce((acc, item) => acc + item.servicePrice, 0)}</CustomText>
-                  <View style={{ flexDirection: "row", alignItems: "center", gap: scale(5), }}>
-                    <ClockIcon size={moderateScale(14)} color={colors.secondaryText} />
-                    <CustomSecondaryText style={{ fontSize: scale(12) }}>{selectedBookCalenderTimeslotParse}</CustomSecondaryText>
-                  </View>
-                </View>
-              </View>
-
-
-              <View
-                style={[styles.appointmentCardContent, { borderTopColor: colors.border }]}
-              >
-                <CustomText
-                  style={{
-                    fontSize: scale(12)
-                  }}
-                >{selectedBookAppointmentNoteParse}</CustomText>
-              </View>
-
-            </View>
-          )
-        }
-
-        <View
-          style={{
-            backgroundColor: "#00B0901A",
-            borderRadius: scale(4),
-            padding: scale(10),
-            gap: verticalScale(5),
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between"
-          }}
-        >
-
-          <View>
-            <CustomText
-              style={{
-                fontFamily: "AirbnbCereal_W_Bd",
-              }}
-            >Contact Us</CustomText>
-
-            <CustomText
-              style={{
-                fontSize: scale(14),
-                color: "gray"
-              }}
-            >
-              If you have any questions
-            </CustomText>
-          </View>
-
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              gap: scale(10)
-            }}
-          >
-            <Pressable
-              style={{
-                width: scale(30),
-                height: scale(30),
-                backgroundColor: colors.background,
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: scale(4)
-              }}
-
-              onPress={() => {
-                Linking.openURL(
-                  `tel:${authenticatedUser.mobileCountryCode}${authenticatedUser?.contactTel}`
-                );
-              }}
-
-            >
-              <ContactIcon size={scale(18)} color={"#4285F4"} />
-            </Pressable>
-
-            <Pressable
-              style={{
-                width: scale(30),
-                height: scale(30),
-                backgroundColor: colors.background,
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: scale(4)
-              }}
-              onPress={() => {
-                openLink(``)
-              }}
-            >
-              <WhatsappIcon size={scale(18)} color={"#25D366"} />
-            </Pressable>
-
-            <Pressable
-              style={{
-                width: scale(30),
-                height: scale(30),
-                backgroundColor: colors.background,
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: scale(4)
-              }}
-              onPress={() => {
-                openLink(`mailto:${authenticatedUser?.salonEmail}`)
-              }}
-            >
-              <EmailIcon size={scale(18)} color={"#EA4335"} />
-            </Pressable>
-
-          </View>
-
-        </View>
-
-        <View>
-          {
-            authenticatedUser && (
-              <MapView
-                provider={PROVIDER_GOOGLE}
-                initialCamera={{
-                  center: {
-                    latitude: authenticatedUser?.location?.coordinates?.latitude,
-                    longitude: authenticatedUser?.location?.coordinates?.longitude,
-                  },
-                  zoom: 15, // 0 (world view) to ~20 (very close)
-                  pitch: 0,
-                  heading: 0,
-                }}
-                scrollEnabled={false}
-                zoomEnabled={false}
-                rotateEnabled={false}
-                pitchEnabled={false}
-                style={[styles.map,
-                {
-                  // borderColor: "#efefef", 
-                  // borderWidth: scale(1) 
+                    )
+                  })
                 }
-                ]}
-                customMapStyle={colorScheme === "dark" ? darkMapStyle : []}
-                pointerEvents={Platform.OS === "ios" ? "none" : "auto"}
-              />
+
+              </>
+            ) : params?.bookAppointment === "true" ? (
+              <View style={[styles.card, { backgroundColor: "#0BA3AD1A", borderColor: colors.border }]}>
+                <View style={{ flexDirection: "row", alignItems: "center", gap: scale(10) }}>
+                  <Image
+                    style={{ height: moderateScale(55), width: moderateScale(55), borderRadius: moderateScale(30) }}
+                    source={{ uri: selectedCustomerBookAppointmentBarberParse?.profile?.[0]?.url }}
+                    contentFit="cover"
+                    transition={300}
+                  />
+                  <CustomText>{selectedCustomerBookAppointmentBarberParse?.name}</CustomText>
+                </View>
+
+
+                <View style={[styles.cardContent]}>
+                  <View style={{ gap: scale(6) }}>
+                    {
+                      selectedCustomerBookAppointmentServicesParse?.map((ele, index) => {
+                        return (
+                          <CustomSecondaryText key={ele?.serviceId}>{index + 1}. {ele.serviceName}</CustomSecondaryText>
+                        )
+                      })
+                    }
+                  </View>
+                  <View style={{ gap: scale(6) }}>
+                    <CustomText style={{ textAlign: "center", fontSize: moderateScale(18) }}>{authenticatedUser?.currency} {selectedCustomerBookAppointmentServicesParse.reduce((acc, item) => acc + item.servicePrice, 0)}</CustomText>
+                    <View style={{ flexDirection: "row", alignItems: "center", gap: scale(5), }}>
+                      <ClockIcon size={moderateScale(14)} color={colors.secondaryText} />
+                      <CustomSecondaryText style={{ fontSize: scale(12) }}>{selectedBookCalenderTimeslotParse}</CustomSecondaryText>
+                    </View>
+                  </View>
+                </View>
+
+
+                <View
+                  style={[styles.appointmentCardContent, { borderTopColor: colors.border }]}
+                >
+                  <CustomText
+                    style={{
+                      fontSize: scale(12)
+                    }}
+                  >{selectedBookAppointmentNoteParse}</CustomText>
+                </View>
+
+              </View>
+            ) : params?.editAppointment === "true" && (
+              <View style={[styles.card, { backgroundColor: "#0BA3AD1A", borderColor: colors.border }]}>
+                <View style={{ flexDirection: "row", alignItems: "center", gap: scale(10) }}>
+                  <Image
+                    style={{ height: moderateScale(55), width: moderateScale(55), borderRadius: moderateScale(30) }}
+                    source={{ uri: selectedCustomerBookAppointmentBarberParse?.profile?.[0]?.url }}
+                    contentFit="cover"
+                    transition={300}
+                  />
+                  <CustomText>{selectedCustomerBookAppointmentBarberParse?.name}</CustomText>
+                </View>
+
+
+                <View style={[styles.cardContent]}>
+                  <View style={{ gap: scale(6) }}>
+                    {
+                      selectedCustomerBookAppointmentServicesParse?.map((ele, index) => {
+                        return (
+                          <CustomSecondaryText key={ele?.serviceId}>{index + 1}. {ele.serviceName}</CustomSecondaryText>
+                        )
+                      })
+                    }
+                  </View>
+                  <View style={{ gap: scale(6) }}>
+                    <CustomText style={{ textAlign: "center", fontSize: moderateScale(18) }}>{authenticatedUser?.currency} {selectedCustomerBookAppointmentServicesParse.reduce((acc, item) => acc + item.servicePrice, 0)}</CustomText>
+                    <View style={{ flexDirection: "row", alignItems: "center", gap: scale(5), }}>
+                      <ClockIcon size={moderateScale(14)} color={colors.secondaryText} />
+                      <CustomSecondaryText style={{ fontSize: scale(12) }}>{selectedBookCalenderTimeslotParse}</CustomSecondaryText>
+                    </View>
+                  </View>
+                </View>
+
+
+                <View
+                  style={[styles.appointmentCardContent, { borderTopColor: colors.border }]}
+                >
+                  <CustomText
+                    style={{
+                      fontSize: scale(12)
+                    }}
+                  >{selectedBookAppointmentNoteParse}</CustomText>
+                </View>
+
+              </View>
             )
           }
 
           <View
             style={{
-              backgroundColor: "#0BA3AD1A",
-              borderBottomLeftRadius: scale(4),
-              borderBottomRightRadius: scale(4),
+              backgroundColor: "#00B0901A",
+              borderRadius: scale(4),
               padding: scale(10),
               gap: verticalScale(5),
               flexDirection: "row",
@@ -1172,20 +1054,143 @@ const singleJoinConfirmation = () => {
                 style={{
                   fontFamily: "AirbnbCereal_W_Bd",
                 }}
-              >Location</CustomText>
+              >Contact Us</CustomText>
 
               <CustomText
                 style={{
                   fontSize: scale(14),
-                  color: "gray",
-                  maxWidth: "90%"
+                  color: "gray"
                 }}
               >
-                {authenticatedUser?.address}, {authenticatedUser?.city}, {authenticatedUser?.country}
+                If you have any questions
               </CustomText>
             </View>
 
-            {/* <View
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                gap: scale(10)
+              }}
+            >
+              <Pressable
+                style={{
+                  width: scale(30),
+                  height: scale(30),
+                  backgroundColor: colors.background,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderRadius: scale(4)
+                }}
+
+                onPress={() => {
+                  Linking.openURL(
+                    `tel:${authenticatedUser.mobileCountryCode}${authenticatedUser?.contactTel}`
+                  );
+                }}
+
+              >
+                <ContactIcon size={scale(18)} color={"#4285F4"} />
+              </Pressable>
+
+              <Pressable
+                style={{
+                  width: scale(30),
+                  height: scale(30),
+                  backgroundColor: colors.background,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderRadius: scale(4)
+                }}
+                onPress={() => {
+                  openLink(``)
+                }}
+              >
+                <WhatsappIcon size={scale(18)} color={"#25D366"} />
+              </Pressable>
+
+              <Pressable
+                style={{
+                  width: scale(30),
+                  height: scale(30),
+                  backgroundColor: colors.background,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderRadius: scale(4)
+                }}
+                onPress={() => {
+                  openLink(`mailto:${authenticatedUser?.salonEmail}`)
+                }}
+              >
+                <EmailIcon size={scale(18)} color={"#EA4335"} />
+              </Pressable>
+
+            </View>
+
+          </View>
+
+          <View>
+            {
+              authenticatedUser && (
+                <MapView
+                  provider={PROVIDER_GOOGLE}
+                  initialCamera={{
+                    center: {
+                      latitude: authenticatedUser?.location?.coordinates?.latitude,
+                      longitude: authenticatedUser?.location?.coordinates?.longitude,
+                    },
+                    zoom: 15, // 0 (world view) to ~20 (very close)
+                    pitch: 0,
+                    heading: 0,
+                  }}
+                  scrollEnabled={false}
+                  zoomEnabled={false}
+                  rotateEnabled={false}
+                  pitchEnabled={false}
+                  style={[styles.map,
+                  {
+                    // borderColor: "#efefef", 
+                    // borderWidth: scale(1) 
+                  }
+                  ]}
+                  customMapStyle={colorScheme === "dark" ? darkMapStyle : []}
+                  pointerEvents={Platform.OS === "ios" ? "none" : "auto"}
+                />
+              )
+            }
+
+            <View
+              style={{
+                backgroundColor: "#0BA3AD1A",
+                borderBottomLeftRadius: scale(4),
+                borderBottomRightRadius: scale(4),
+                padding: scale(10),
+                gap: verticalScale(5),
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "space-between"
+              }}
+            >
+
+              <View>
+                <CustomText
+                  style={{
+                    fontFamily: "AirbnbCereal_W_Bd",
+                  }}
+                >Location</CustomText>
+
+                <CustomText
+                  style={{
+                    fontSize: scale(14),
+                    color: "gray",
+                    maxWidth: "90%"
+                  }}
+                >
+                  {authenticatedUser?.address}, {authenticatedUser?.city}, {authenticatedUser?.country}
+                </CustomText>
+              </View>
+
+              {/* <View
               style={{
                 flexDirection: "row",
                 alignItems: "center",
@@ -1193,88 +1198,89 @@ const singleJoinConfirmation = () => {
                 flex: 1
               }}
             > */}
-            <Pressable
-              onPress={() => openLink(`https://www.google.com/maps/search/?api=1&query=${authenticatedUser?.location?.coordinates?.latitude},${authenticatedUser?.location?.coordinates?.longitude}`)}
-              style={{
-                width: scale(30),
-                height: scale(30),
-                backgroundColor: colors.background,
-                justifyContent: "center",
-                alignItems: "center",
-                borderRadius: scale(4)
-              }}
-            >
-              <MapIcon size={scale(18)} color={"#fbbf24"} />
-            </Pressable>
+              <Pressable
+                onPress={() => openLink(`https://www.google.com/maps/search/?api=1&query=${authenticatedUser?.location?.coordinates?.latitude},${authenticatedUser?.location?.coordinates?.longitude}`)}
+                style={{
+                  width: scale(30),
+                  height: scale(30),
+                  backgroundColor: colors.background,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  borderRadius: scale(4)
+                }}
+              >
+                <MapIcon size={scale(18)} color={"#fbbf24"} />
+              </Pressable>
 
-            {/* </View> */}
+              {/* </View> */}
 
+            </View>
           </View>
+
         </View>
 
-      </View>
 
+        <View style={{
+          flexDirection: "row",
+          alignItems: "center",
+          gap: scale(10)
+        }}>
+          <Pressable
+            onPress={() => {
+              if (params?.bookAppointment === "true") {
+                router.push("/appointment")
+              } else {
+                router.push("/queuelist")
+              }
 
-      <View style={{
-        flexDirection: "row",
-        alignItems: "center",
-        gap: scale(10)
-      }}>
-        <Pressable
-          onPress={() => {
-            if (params?.bookAppointment === "true") {
-              router.push("/appointment")
-            } else {
-              router.push("/queuelist")
-            }
+            }}
+            style={[styles.btn, { backgroundColor: "#E11D481A" }]}>
+            <CustomText style={{ color: "#E11D48" }}>Cancel</CustomText>
+          </Pressable>
 
-          }}
-          style={[styles.btn, { backgroundColor: "#E11D481A" }]}>
-          <CustomText style={{ color: "#E11D48" }}>Cancel</CustomText>
-        </Pressable>
+          {
+            params?.bookAppointment === "true" || params?.editAppointment === "true" ? (
+              <Pressable
+                onPress={() => {
+                  if (params?.bookAppointment === "true") {
+                    bookAppointmentPressed()
+                  } else {
+                    editAppointmentPressed()
+                  }
 
-        {
-          params?.bookAppointment === "true" || params?.editAppointment === "true" ? (
-            <Pressable
-              onPress={() => {
-                if (params?.bookAppointment === "true") {
-                  bookAppointmentPressed()
-                } else {
-                  editAppointmentPressed()
+                }}
+                style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode }]}>
+                {
+                  (bookAppointmentLoader || editAppointmentLoader) ? (
+                    <ActivityIndicator size="small" color="#fff" />
+                  ) : (
+                    <CustomText style={{ color: "#fff" }}>Confirm</CustomText>
+                  )
                 }
 
-              }}
-              style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode }]}>
-              {
-                (bookAppointmentLoader || editAppointmentLoader) ? (
-                  <ActivityIndicator size="small" color="#fff" />
-                ) : (
-                  <CustomText style={{ color: "#fff" }}>Confirm</CustomText>
-                )
-              }
+              </Pressable>
+            ) : (
+              <Pressable
+                onPress={params?.singleJoin === "true" ? singleJoinPressed : groupJoinPressed}
+                style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode }]}>
+                {
+                  (singleJoinLoader || groupJoinLoader) ? (
+                    <ActivityIndicator size="small" color="#fff" />
+                  ) : (
+                    <CustomText style={{ color: "#fff" }}>Confirm</CustomText>
+                  )
+                }
 
-            </Pressable>
-          ) : (
-            <Pressable
-              onPress={params?.singleJoin === "true" ? singleJoinPressed : groupJoinPressed}
-              style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode }]}>
-              {
-                (singleJoinLoader || groupJoinLoader) ? (
-                  <ActivityIndicator size="small" color="#fff" />
-                ) : (
-                  <CustomText style={{ color: "#fff" }}>Confirm</CustomText>
-                )
-              }
-
-            </Pressable>
-          )
-        }
+              </Pressable>
+            )
+          }
 
 
 
-      </View>
+        </View>
 
-    </ScrollView >
+      </ScrollView >
+    </SafeAreaView>
   )
 }
 

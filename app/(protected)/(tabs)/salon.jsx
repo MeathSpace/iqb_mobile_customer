@@ -728,6 +728,7 @@ const salon = () => {
                         }}
                     >
                         <CustomText>Add to Favorites</CustomText>
+
                         <Pressable
                             disabled={favouriteLoader}
                             onPress={addToFavourites}
@@ -1065,7 +1066,7 @@ const salon = () => {
                                                 style={{
                                                     fontFamily: "AirbnbCereal_W_Bd"
                                                 }}
-                                            >Hair Cutting</CustomText>
+                                            >{serviceCategorySelected?.categoryName}</CustomText>
                                         </Pressable>
 
                                         {
@@ -1368,6 +1369,8 @@ const salon = () => {
                         }
 
                     </BottomSheetScrollView>
+
+                    
                 </BottomSheet>
             </GestureHandlerRootView>
         </CustomTabView>

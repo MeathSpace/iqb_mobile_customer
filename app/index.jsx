@@ -38,10 +38,10 @@ const index = () => {
       <CustomView style={{ alignItems: "center", justifyContent: "center" }}>
         <Image
           style={[styles.Logo, { tintColor: colors.text }]}
-          source={require("../assets/images/IQB_Logo.png")}
+          source={require("../assets/images/iqbook.png")}
           resizeMode="cover"
         />
-        <CustomText style={styles.heading}>iQueueBook</CustomText>
+        <CustomText style={styles.heading}>iQBook</CustomText>
       </CustomView>
     )
   }
@@ -60,7 +60,7 @@ const index = () => {
         /> */}
         <Image
           style={[styles.Logo, { tintColor: colors.text }]}
-          source={require("../assets/images/icon.png")}
+          source={require("../assets/images/iqbook.png")}
           resizeMode="cover"
         />
 

@@ -116,7 +116,7 @@ const forgetPassword = () => {
                     disabled={forgetLoader}
                     onPress={() => forgetHandler()}
                     style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode }]}>
-                    <CustomText style={{ color: "#fff" }}>Save & next</CustomText>
+                    <CustomText style={{ color: "#fff" }}>continue</CustomText>
                 </Pressable>
             </CustomView>
         </TouchableWithoutFeedback>

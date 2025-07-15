@@ -26,6 +26,9 @@ const notification = () => {
     useEffect(() => {
         const fetchNotifications = async () => {
             try {
+
+                setNotificationListData((prev) => ({ ...prev, loading: true }))
+
                 const { data } = await axios.post(`${BASE_URL}/mobileRoutes/getAllNotificationsByCustomerEmail`, {
                     email: authenticatedUser?.email
                 })
@@ -108,9 +111,11 @@ const notification = () => {
             style={{
                 paddingHorizontal: scale(10),
                 paddingTop: verticalScale(10),
-                backgroundColor: "#00B0901A",
+                // backgroundColor: "#00B0901A",
+                backgroundColor: colors.background,
                 paddingVertical: verticalScale(0),
                 // paddingTop: verticalScale(10),
+                flex: 1,
                 paddingBottom: Platform.OS === "ios" ? verticalScale(80) : verticalScale(20),
                 gap: verticalScale(10),
             }}
@@ -216,7 +221,7 @@ const notification = () => {
                                     style={{
                                         width: scale(60),
                                         height: scale(60),
-                                        backgroundColor: colors.background,
+                                        backgroundColor: "#00B0901A",
                                         marginHorizontal: "auto",
                                         borderRadius: scale(50),
                                         justifyContent: "center",

@@ -5,14 +5,18 @@ import CustomText from '../../../components/CustomText'
 import { scale, verticalScale } from 'react-native-size-matters'
 import { ArrowLeftIcon } from '../../../constants/icons'
 import { useRouter } from 'expo-router'
+import { useTheme } from '@react-navigation/native'
 
 const licenses = () => {
+
   const router = useRouter()
+  const { colors } = useTheme()
 
   return (
     <View
       style={{
-        backgroundColor: "#00B0901A",
+        // backgroundColor: "#00B0901A",
+        backgroundColor: colors.background,
         flex: 1,
         paddingVertical: verticalScale(0),
         paddingTop: verticalScale(10),

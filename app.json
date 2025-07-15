@@ -4,7 +4,7 @@
     "slug": "iqb_mobile_customer",
     "version": "1.0.0",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/iqbook.png",
     "scheme": "iqbmobilecustomer",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
@@ -21,7 +21,7 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/icon.png",
+        "foregroundImage": "./assets/images/iqbook.png",
         "backgroundColor": "#ffffff"
       },
       "config": {
@@ -55,7 +55,7 @@
       [
         "expo-notifications",
         {
-          "icon": "./assets/images/icon.png",
+          "icon": "./assets/images/iqbook.png",
           "color": "#ffffff",
           "defaultChannel": "default"
         }

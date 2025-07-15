@@ -110,6 +110,7 @@ const appointmentPop = () => {
                     }}
                 >
                     <Pressable
+                        disabled={deleteAppointmentLoader}
                         onPress={confirmDeleteHandler}
                         style={{
                             height: verticalScale(35),
