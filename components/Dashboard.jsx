@@ -33,7 +33,6 @@ Notifications.setNotificationHandler({
 });
 
 
-
 function handleRegistrationError(errorMessage) {
     // alert(errorMessage);
     // throw new Error(errorMessage);
@@ -597,7 +596,7 @@ const Dashboard = () => {
         }, [expoPushToken, authenticatedUser])
     )
 
-    // console.log("Real Token From Dashboard ", expoPushToken)
+    console.log("Real Token From Dashboard ", expoPushToken)
 
     const { setJoinModes, joinModes } = useGlobal();
 
@@ -621,7 +620,7 @@ const Dashboard = () => {
         <CustomTabView
             style={{
                 paddingTop: verticalScale(0),
-                paddingBottom: Platform.OS === "ios" ? verticalScale(60) : verticalScale(10)
+                paddingBottom: Platform.OS === "ios" ? verticalScale(60) : verticalScale(0)
             }}
         >
             <FlatList

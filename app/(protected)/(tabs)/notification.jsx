@@ -23,29 +23,29 @@ const notification = () => {
     const { notificationListData, setNotificationListData } = useGlobal()
     const { authenticatedUser } = useAuth()
 
-    useEffect(() => {
-        const fetchNotifications = async () => {
-            try {
+    // useEffect(() => {
+    //     const fetchNotifications = async () => {
+    //         try {
 
-                setNotificationListData((prev) => ({ ...prev, loading: true }))
+    //             setNotificationListData((prev) => ({ ...prev, loading: true }))
 
-                const { data } = await axios.post(`${BASE_URL}/mobileRoutes/getAllNotificationsByCustomerEmail`, {
-                    email: authenticatedUser?.email
-                })
+    //             const { data } = await axios.post(`${BASE_URL}/mobileRoutes/getAllNotificationsByCustomerEmail`, {
+    //                 email: authenticatedUser?.email
+    //             })
 
-                // console.log(JSON.stringify(data?.response, null, 2));
+    //             // console.log(JSON.stringify(data?.response, null, 2));
 
-                setNotificationListData((prev) => ({ ...prev, loading: false, notificationData: data?.response, success: true, error: null }))
+    //             setNotificationListData((prev) => ({ ...prev, loading: false, notificationData: data?.response, success: true, error: null }))
 
-            } catch (error) {
-                setNotificationListData((prev) => ({ ...prev, loading: false, notificationData: null, success: false, error: error }))
-                console.log("Error fetching notifications ", error)
-            }
-        }
+    //         } catch (error) {
+    //             setNotificationListData((prev) => ({ ...prev, loading: false, notificationData: null, success: false, error: error }))
+    //             console.log("Error fetching notifications ", error)
+    //         }
+    //     }
 
-        fetchNotifications()
+    //     fetchNotifications()
 
-    }, [])
+    // }, [])
 
 
     // console.log("notificationListData ", notificationListData)
@@ -105,6 +105,32 @@ const notification = () => {
 
     //     }, [authenticatedUser])
     // )
+
+
+    useFocusEffect(
+        useCallback(() => {
+            const fetchNotifications = async () => {
+                try {
+
+                    setNotificationListData((prev) => ({ ...prev, loading: true }))
+
+                    const { data } = await axios.post(`${BASE_URL}/mobileRoutes/getAllNotificationsByCustomerEmail`, {
+                        email: authenticatedUser?.email
+                    })
+
+                    // console.log(JSON.stringify(data?.response, null, 2));
+
+                    setNotificationListData((prev) => ({ ...prev, loading: false, notificationData: data?.response, success: true, error: null }))
+
+                } catch (error) {
+                    setNotificationListData((prev) => ({ ...prev, loading: false, notificationData: null, success: false, error: error }))
+                    console.log("Error fetching notifications ", error)
+                }
+            }
+
+            fetchNotifications()
+        }, [])
+    )
 
     return (
         <View
@@ -280,23 +306,34 @@ const styles = StyleSheet.create({})
 
 
 // async function sendPushNotification(expoPushToken) {
-//     const message = {
-//         to: expoPushToken,
-//         sound: 'default',
-//         title: 'Original Title',
-//         body: 'And here is the body!',
-//         data: { someData: 'goes here' },
-//     };
+//     try {
+//         const message = {
+//             to: expoPushToken,
+//             sound: 'default',
+//             title: 'Original Title',
+//             body: 'And here is the body!',
+//             data: { someData: 'goes here' },
+//             priority: 'high',
+//             channelId: 'default',
+//         };
 
-//     await fetch('https://exp.host/--/api/v2/push/send', {
-//         method: 'POST',
-//         headers: {
-//             Accept: 'application/json',
-//             'Accept-encoding': 'gzip, deflate',
-//             'Content-Type': 'application/json',
-//         },
-//         body: JSON.stringify(message),
-//     });
+//         const response = await fetch('https://exp.host/--/api/v2/push/send', {
+//             method: 'POST',
+//             headers: {
+//                 Accept: 'application/json',
+//                 'Accept-encoding': 'gzip, deflate',
+//                 'Content-Type': 'application/json',
+//             },
+//             body: JSON.stringify(message),
+//         });
+
+
+//         const result = await response.json(); // ✅ Get actual result
+//         console.log("Push notification response:", result);
+
+//     } catch (error) {
+//         console.log("Error sending notification ", error)
+//     }
 // }
 
 
@@ -326,6 +363,7 @@ const styles = StyleSheet.create({})
 //             handleRegistrationError('Permission not granted to get push token for push notification!');
 //             return;
 //         }
+
 //         const projectId =
 //             Constants?.expoConfig?.extra?.eas?.projectId ?? Constants?.easConfig?.projectId;
 //         if (!projectId) {

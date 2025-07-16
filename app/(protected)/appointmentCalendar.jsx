@@ -157,6 +157,7 @@ const appointmentCalendar = () => {
     const [appointmentNote, setAppointmentNote] = useState("")
     const [selectedEngageTimeSlot, setSelectedEngageTimeSlot] = useState("")
     const [disableDates, setDisbaleDates] = useState([])
+    const [disableLoader, setDisableLoader] = useState(false)
 
     // console.log("selectedEngageTimeSlot ", selectedEngageTimeSlot)
 
@@ -172,7 +173,7 @@ const appointmentCalendar = () => {
                         barberId: selectedCustomerBarber?.barberId,
                         date: selectedCalenderDate
                     })
-
+    
                     setEngageTimeslotsData((prev) => ({ ...prev, loading: false, data: data?.response, success: true, error: null }))
 
                 } catch (error) {
@@ -192,34 +193,40 @@ const appointmentCalendar = () => {
             const fetchFullyBookedDates = async () => {
                 try {
 
+                    setDisableLoader(true)
+
                     const { data } = await axios.post(`${BASE_URL}/mobileRoutes/getFullyBookedDatesBySalonIdBarberId`, {
                         salonId: selectedCustomerBarber?.salonId,
                         barberId: selectedCustomerBarber?.barberId,
                     })
 
                     setDisbaleDates(prev => [...prev, ...data.response])
+                    setDisableLoader(false)
 
                     // console.log("Get fully booked dates ", data)
 
                 } catch (error) {
                     console.log("Error fetching fully booked dates ", error?.response?.data)
+                    setDisableLoader(false)
                 }
             }
 
             const fetchBarberDisableAppointmentDates = async () => {
                 try {
-
+                    setDisableLoader(true)
                     const { data } = await axios.post(`${BASE_URL}/mobileRoutes/getBarberDisabledAppointmentDates`, {
                         salonId: selectedCustomerBarber?.salonId,
                         barberId: selectedCustomerBarber?.barberId,
                     })
 
                     setDisbaleDates(prev => [...prev, ...data.response])
+                    setDisableLoader(false)
 
                     // console.log("Get barber disable appointment dates ", data)
 
                 } catch (error) {
                     console.log("Error fetching barber disable appointment dates ", error?.response?.data)
+                    setDisableLoader(false)
                 }
             }
 
@@ -235,7 +242,7 @@ const appointmentCalendar = () => {
 
     // console.log("engageTimeslotsData ", engageTimeslotsData)
 
-    console.log("disableDates sdvwwb ", disableDates)
+    // console.log("disableDates sdvwwb ", disableDates)
 
     const [activeSection, setActiveSection] = useState('services')
     const [scrolling, setScrolling] = useState(false)
@@ -338,10 +345,11 @@ const appointmentCalendar = () => {
         } else if (!selectedCalenderDate) {
             Toast.error("Please select a date")
             return
-        } else if (!appointmentNote) {
-            Toast.error("Please select an appointment note")
-            return
-        }
+        } 
+        // else if (!appointmentNote) {
+        //     Toast.error("Please select an appointment note")
+        //     return
+        // }
 
         router.push({
             pathname: "/joinConfirmation",
@@ -596,7 +604,8 @@ const appointmentCalendar = () => {
                                                 setScrolling(false)
                                                 setActiveSection("calendar")
                                                 setAddIconPressCount(0)
-                                                // setDisbaleDates([])
+                                                setSelectedCalenderDate("")
+                                                setDisbaleDates([])
                                             }}
                                         >
                                             <View
@@ -617,7 +626,7 @@ const appointmentCalendar = () => {
                                                     <CustomText style={{
                                                         fontSize: scale(14)
                                                     }}>{item?.name}</CustomText>
-                                                    <View style={{
+                                                    {/* <View style={{
                                                         flexDirection: "row",
                                                         alignItems: "center",
                                                         justifyContent: "space-between",
@@ -627,18 +636,18 @@ const appointmentCalendar = () => {
                                                     }}>
                                                         <ClockIcon size={scale(12)} color='gray' />
                                                         <CustomText style={{ fontSize: scale(12), flex: 1, color: "gray" }}>{item?.barberEWT} mins</CustomText>
-                                                    </View>
+                                                    </View> */}
                                                 </View>
                                             </View>
 
-                                            <View
+                                            {/* <View
                                                 style={{
 
                                                 }}
                                             >
                                                 <CustomText style={{ fontSize: scale(16), fontFamily: "AirbnbCereal_W_Blk", textAlign: "center" }}>{item?.queueCount}</CustomText>
                                                 <CustomText style={{ fontSize: scale(14), color: "gray" }}>In Queue</CustomText>
-                                            </View>
+                                            </View> */}
                                         </Pressable>
                                     )
                                 })
@@ -708,13 +717,12 @@ const appointmentCalendar = () => {
                                 >
                                     {dates.map((day, index) => (
                                         <Pressable
-                                            disabled={disableDates?.includes(day?.fullDate)}
+                                            disabled={disableLoader || disableDates?.includes(day?.fullDate)}
                                             onPress={() => {
                                                 setSelectedCalenderDate(day?.fullDate)
                                             }}
                                             key={day.fullDate}
                                             style={[styles.dayBox, {
-                                                // backgroundColor:selectedCalenderDate === day?.fullDate ? "red" : "blue"
                                                 backgroundColor: disableDates?.includes(day?.fullDate) && "#e5e5e5",
                                                 borderColor: selectedCalenderDate === day?.fullDate ? "#0BA3AD" : null,
                                                 borderWidth: selectedCalenderDate === day?.fullDate ? scale(1) : null

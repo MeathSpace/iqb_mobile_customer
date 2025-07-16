@@ -718,7 +718,7 @@ const salon = () => {
                     }}
                 // onChange={handleSheetChange}
                 >
-                    <View
+                    {/* <View
                         style={{
                             flexDirection: "row",
                             alignItems: "center",
@@ -746,7 +746,7 @@ const salon = () => {
                                 salonInfoData?.data?.salonInfo?.isFavourite ? <HeartFilledIcon size={scale(16)} color='#E11D48' /> : <HeartIcon size={scale(16)} color='#E11D48' />
                             }
                         </Pressable>
-                    </View>
+                    </View> */}
 
                     <View style={{
                         flexDirection: "row",

@@ -1,4 +1,4 @@
-import { ActivityIndicator, Image, Keyboard, Pressable, StyleSheet, Text, TextInput, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
+import { ActivityIndicator, Image, InteractionManager, Keyboard, Pressable, StyleSheet, Text, TextInput, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
 import React, { useCallback, useEffect } from 'react'
 import CustomView from '../../components/CustomView'
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
@@ -154,7 +154,12 @@ const signup = () => {
                         }
                     });
 
-                    await signOut()
+                    // await signOut()
+
+                    // Delay signOut slightly so it doesn't interrupt navigation
+                    InteractionManager.runAfterInteractions(() => {
+                        signOut(); // Donot give await
+                    });
 
                 } catch (error) {
                     await signOut()
@@ -243,9 +248,9 @@ const signup = () => {
                         onPress={async () => {
                             if (isSignedIn) {
                                 await signOut()
-                                googleSignupPressed()
+                                await googleSignupPressed()
                             } else {
-                                googleSignupPressed()
+                                await googleSignupPressed()
                             }
                         }}
                         style={

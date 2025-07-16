@@ -188,6 +188,7 @@ const editAppointmentCalender = () => {
     const [appointmentNote, setAppointmentNote] = useState("")
     const [selectedEngageTimeSlot, setSelectedEngageTimeSlot] = useState("")
     const [disableDates, setDisbaleDates] = useState([])
+    const [disableLoader, setDisableLoader] = useState(false)
 
     // console.log("selectedEngageTimeSlot ", selectedEngageTimeSlot)
 
@@ -223,34 +224,41 @@ const editAppointmentCalender = () => {
             const fetchFullyBookedDates = async () => {
                 try {
 
+                    setDisableLoader(true)
+
                     const { data } = await axios.post(`${BASE_URL}/mobileRoutes/getFullyBookedDatesBySalonIdBarberId`, {
                         salonId: selectedCustomerBarber?.salonId,
                         barberId: selectedCustomerBarber?.barberId,
                     })
 
                     setDisbaleDates(prev => [...prev, ...data.response])
+                    setDisableLoader(false)
 
                     // console.log("Get fully booked dates ", data)
 
                 } catch (error) {
                     console.log("Error fetching fully booked dates ", error?.response?.data)
+                    setDisableLoader(false)
                 }
             }
 
             const fetchBarberDisableAppointmentDates = async () => {
                 try {
 
+                    setDisableLoader(true)
                     const { data } = await axios.post(`${BASE_URL}/mobileRoutes/getBarberDisabledAppointmentDates`, {
                         salonId: selectedCustomerBarber?.salonId,
                         barberId: selectedCustomerBarber?.barberId,
                     })
 
                     setDisbaleDates(prev => [...prev, ...data.response])
+                    setDisableLoader(false)
 
                     // console.log("Get barber disable appointment dates ", data)
 
                 } catch (error) {
                     console.log("Error fetching barber disable appointment dates ", error?.response?.data)
+                    setDisableLoader(false)
                 }
             }
 
@@ -382,10 +390,11 @@ const editAppointmentCalender = () => {
         } else if (!selectedCalenderDate) {
             Toast.error("Please select a date")
             return
-        } else if (!appointmentNote) {
-            Toast.error("Please select an appointment note")
-            return
         }
+        //  else if (!appointmentNote) {
+        //     Toast.error("Please select an appointment note")
+        //     return
+        // }
 
         router.push({
             pathname: "/joinConfirmation",
@@ -636,7 +645,8 @@ const editAppointmentCalender = () => {
                                                 setScrolling(false)
                                                 setActiveSection("calendar")
                                                 setAddIconPressCount(0)
-                                                // setDisbaleDates([])
+                                                setSelectedCalenderDate("")
+                                                setDisbaleDates([])
                                             }}
                                         >
                                             <View
@@ -657,7 +667,7 @@ const editAppointmentCalender = () => {
                                                     <CustomText style={{
                                                         fontSize: scale(14)
                                                     }}>{item?.name}</CustomText>
-                                                    <View style={{
+                                                    {/* <View style={{
                                                         flexDirection: "row",
                                                         alignItems: "center",
                                                         justifyContent: "space-between",
@@ -667,18 +677,18 @@ const editAppointmentCalender = () => {
                                                     }}>
                                                         <ClockIcon size={scale(12)} color='gray' />
                                                         <CustomText style={{ fontSize: scale(12), flex: 1, color: "gray" }}>{item?.barberEWT} mins</CustomText>
-                                                    </View>
+                                                    </View> */}
                                                 </View>
                                             </View>
 
-                                            <View
+                                            {/* <View
                                                 style={{
 
                                                 }}
                                             >
                                                 <CustomText style={{ fontSize: scale(16), fontFamily: "AirbnbCereal_W_Blk", textAlign: "center" }}>{item?.queueCount}</CustomText>
                                                 <CustomText style={{ fontSize: scale(14), color: "gray" }}>In Queue</CustomText>
-                                            </View>
+                                            </View> */}
                                         </Pressable>
                                     )
                                 })
@@ -749,7 +759,7 @@ const editAppointmentCalender = () => {
                                 >
                                     {dates.map((day, index) => (
                                         <Pressable
-                                            disabled={disableDates?.includes(day?.fullDate)}
+                                            disabled={disableLoader || disableDates?.includes(day?.fullDate)}
                                             onPress={() => {
                                                 setSelectedCalenderDate(day?.fullDate)
                                             }}

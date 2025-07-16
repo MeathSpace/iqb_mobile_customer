@@ -1314,7 +1314,7 @@ const styles = StyleSheet.create({
   map: {
     width: "100%",
     height: verticalScale(150),
-    marginHorizontal: scale(5),
+    // marginHorizontal: scale(5),
   },
 
   addressContainer: {

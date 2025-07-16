@@ -482,8 +482,6 @@ const Map = () => {
 
     const [selectecConnectSalonId, setSelectedConnectSalonId] = useState("")
 
-    console.log("selectecConnectSalonId ", selectecConnectSalonId)
-
     useFocusEffect(
         useCallback(() => {
             if (selectecConnectSalonId) {
@@ -686,7 +684,7 @@ const Map = () => {
         }
     }
 
-    // console.log(salonInfoData?.data)
+    console.log(salonInfoData?.data?.salonInfo?.salonLogo)
 
 
     return (
@@ -1057,7 +1055,30 @@ const Map = () => {
                                                         justifyContent: "space-between"
                                                     }}
                                                 >
-                                                    <CustomText>Add to Favorites</CustomText>
+                                                    {/* <CustomText>Add to Favorites</CustomText> */}
+
+                                                    <View
+                                                        style={{
+                                                            flexDirection: "row",
+                                                            alignItems: "center",
+                                                            gap: scale(10)
+                                                        }}
+                                                    >
+                                                        <Image
+                                                            style={{
+                                                                height: scale(37.25),
+                                                                width: scale(37.25),
+                                                                borderRadius: scale(20),
+                                                                position: "relative"
+                                                            }}
+                                                            source={salonInfoData?.data?.salonInfo?.salonLogo?.[0]?.url}
+                                                            // placeholder={{ blurhash }}
+                                                            contentFit="cover"
+                                                            transition={1000}
+                                                        />
+
+                                                        <CustomText style={{ fontSize: scale(16) }}>{salonInfoData?.data?.salonInfo?.salonName}</CustomText>
+                                                    </View>
 
                                                     <Pressable
                                                         disabled={favouriteLoader}
