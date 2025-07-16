@@ -596,7 +596,7 @@ const Dashboard = () => {
         }, [expoPushToken, authenticatedUser])
     )
 
-    console.log("Real Token From Dashboard ", expoPushToken)
+    // console.log("Real Token From Dashboard ", expoPushToken)
 
     const { setJoinModes, joinModes } = useGlobal();
 

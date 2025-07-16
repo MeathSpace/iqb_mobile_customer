@@ -1,4 +1,4 @@
-import { Platform, StyleSheet, Text, View, Animated, Alert } from 'react-native'
+import { Platform, StyleSheet, Text, View, Animated, Alert, Pressable } from 'react-native'
 import React, { useEffect, useRef } from 'react'
 import { Tabs } from 'expo-router';
 import { CalenderIcon, HomeIcon, ProfileIcon, QueueIcon, SalonIcon } from '../../../constants/icons';
@@ -34,7 +34,30 @@ export default function TabLayout() {
                         // tabBarShowLabel: false,
                         tabBarActiveTintColor: Colors.modeColor.colorCode,
                         headerShown: false,
-                        tabBarButton: HapticTab,
+                        // tabBarButton: HapticTab,
+
+                        tabBarButton: (props) => (
+                            <Pressable
+                                {...props}
+                                android_ripple={{
+                                    color: 'transparent', // Makes the ripple effect invisible on Android
+                                    // Alternatively, for a more definitive removal, you could try:
+                                    // foreground: false,
+                                }}
+                                // For iOS, ensure no opacity change on press if you don't want it
+                                style={({ pressed }) => ({
+                                    opacity: Platform.OS === 'ios' && pressed ? 1 : 1, // Keep full opacity on iOS press
+                                    // You can add other base styles here if needed that were implicitly
+                                    // handled by the default component
+                                    flex: 1, // Ensure it fills the space correctly
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                })}
+                            >
+                                {props.children}
+                            </Pressable>
+                        ),
+
                         tabBarStyle: {
                             ...Platform.select({
                                 ios: {

@@ -1,13 +1,13 @@
 {
   "project_info": {
-    "project_number": "861356863055",
-    "project_id": "expo-notification-v2",
-    "storage_bucket": "expo-notification-v2.firebasestorage.app"
+    "project_number": "328989269092",
+    "project_id": "expo-notification-v3",
+    "storage_bucket": "expo-notification-v3.firebasestorage.app"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:861356863055:android:beadbcc90248eee0b9443a",
+        "mobilesdk_app_id": "1:328989269092:android:148de53ef83e123522d371",
         "android_client_info": {
           "package_name": "com.iqbook.iqb"
         }
@@ -15,7 +15,7 @@
       "oauth_client": [],
       "api_key": [
         {
-          "current_key": "AIzaSyD7nllqiuXOK-6tPcQGtOH-IdKXg6wjtRE"
+          "current_key": "AIzaSyBZ8qfFaTHLZaVu1K4yFlHN28y13apRRlc"
         }
       ],
       "services": {

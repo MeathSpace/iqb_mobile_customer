@@ -610,6 +610,15 @@ const salon = () => {
         }
     };
 
+    function formatMinutesToHrMin(totalMinutes) {
+        const hours = Math.floor(totalMinutes / 60);
+        const mins = totalMinutes % 60;
+
+        if (hours > 0 && mins > 0) return `${hours}hr ${mins}min`;
+        if (hours > 0) return `${hours}hr`;
+        return `${mins}min`;
+    }
+
 
     return (
         <CustomTabView
@@ -1194,15 +1203,13 @@ const salon = () => {
                                                                     <View style={{
                                                                         flexDirection: "row",
                                                                         alignItems: "center",
-                                                                        justifyContent: "space-between",
-                                                                        width: scale(75),
                                                                         gap: scale(2),
                                                                         backgroundColor: colors.background,
                                                                         paddingHorizontal: scale(5),
                                                                         borderRadius: scale(4)
                                                                     }}>
                                                                         <ClockIcon size={scale(12)} color={Colors.modeColor.colorCode} />
-                                                                        <CustomText style={{ fontSize: scale(12), flex: 1, color: Colors.modeColor.colorCode }}>{item?.serviceEWT} mins</CustomText>
+                                                                        <CustomText style={{ fontSize: scale(12), color: Colors.modeColor.colorCode }}>{formatMinutesToHrMin(item?.serviceEWT)}</CustomText>
                                                                     </View>
 
                                                                     <CustomText
@@ -1370,7 +1377,7 @@ const salon = () => {
 
                     </BottomSheetScrollView>
 
-                    
+
                 </BottomSheet>
             </GestureHandlerRootView>
         </CustomTabView>

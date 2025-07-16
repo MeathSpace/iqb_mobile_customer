@@ -385,6 +385,28 @@ const styles = StyleSheet.create({})
 //     }
 // }
 
+
+// async function getNoti() {
+//     try {
+//         const receiptResponse = await fetch("https://exp.host/--/api/v2/push/getReceipts", {
+//             method: "POST",
+//             headers: {
+//                 "Accept": "application/json",
+//                 "Content-Type": "application/json"
+//             },
+//             body: JSON.stringify({
+//                 ids: ["019812eb-d4cf-7dae-9c7e-cd3467025a97"]  // array of receipt IDs
+//             })
+//         });
+
+//         const result = await receiptResponse.json();
+//         console.log("Push receipt:", JSON.stringify(result, null, 2));
+
+//     } catch (error) {
+//         console.log(error)
+//     }
+// }
+
 // export default function notification() {
 //     const [expoPushToken, setExpoPushToken] = useState('');
 //     const [notification, setNotification] = useState(
@@ -422,6 +444,13 @@ const styles = StyleSheet.create({})
 //                 title="Press to Send Notification"
 //                 onPress={async () => {
 //                     await sendPushNotification(expoPushToken);
+//                 }}
+//             />
+
+//             <Button
+//                 title="Press to Get Notification"
+//                 onPress={async () => {
+//                     await getNoti();
 //                 }}
 //             />
 //         </View>

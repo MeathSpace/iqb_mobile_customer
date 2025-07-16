@@ -11,6 +11,15 @@ const BarberCard = ({ item }) => {
 
     const { colors } = useTheme()
 
+    function formatMinutesToHrMin(totalMinutes) {
+        const hours = Math.floor(totalMinutes / 60);
+        const mins = totalMinutes % 60;
+
+        if (hours > 0 && mins > 0) return `${hours}hr ${mins}min`;
+        if (hours > 0) return `${hours}hr`;
+        return `${mins}min`;
+    }
+
     return (
         <View style={[styles.cardWrapper, {}]}>
             <Image
@@ -47,7 +56,7 @@ const BarberCard = ({ item }) => {
                 flex: 1
             }}>
                 <ClockIcon size={scale(12)} color='gray' />
-                <CustomText style={{ fontSize: scale(12), flex: 1, color: "gray" }}>{item?.barberEWT} mins</CustomText>
+                <CustomText style={{ fontSize: scale(12), flex: 1, color: "gray" }}>{formatMinutesToHrMin(item?.barberEWT)}</CustomText>
             </View>
 
             {/* <View style={{

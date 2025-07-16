@@ -794,6 +794,15 @@ const singleJoinConfirmation = () => {
     }
   };
 
+  function formatMinutesToHrMin(totalMinutes) {
+    const hours = Math.floor(totalMinutes / 60);
+    const mins = totalMinutes % 60;
+
+    if (hours > 0 && mins > 0) return `${hours}hr ${mins}min`;
+    if (hours > 0) return `${hours}hr`;
+    return `${mins}min`;
+  }
+
   return (
     <SafeAreaView
       style={{
@@ -862,16 +871,9 @@ const singleJoinConfirmation = () => {
                   </View>
                   <View style={{ gap: scale(6) }}>
                     <CustomText style={{ textAlign: "center", fontSize: moderateScale(18) }}>{authenticatedUser?.currency} {selectCustomerServicesParse.reduce((acc, item) => acc + item.servicePrice, 0)}</CustomText>
-                    <View style={{ flexDirection: "row", alignItems: "center", gap: scale(5), }}>
+                    <View style={{ flexDirection: "row", alignItems: "center", gap: scale(2), }}>
                       <ClockIcon size={moderateScale(14)} color={colors.secondaryText} />
-                      {
-                        params?.singleJoin ? (
-                          <CustomSecondaryText style={{ fontSize: scale(12) }}> {selectCustomerServicesParse.reduce((acc, item) => acc + item.serviceEWT, 0)} mins</CustomSecondaryText>
-                        ) : (
-                          <CustomSecondaryText style={{ fontSize: scale(12) }}>12:30 AM - 2:30 PM</CustomSecondaryText>
-                        )
-                      }
-
+                      <CustomSecondaryText style={{ fontSize: scale(12) }}> {formatMinutesToHrMin(selectCustomerServicesParse.reduce((acc, item) => acc + item.serviceEWT, 0))}</CustomSecondaryText>
                     </View>
                   </View>
                 </View>
@@ -925,9 +927,9 @@ const singleJoinConfirmation = () => {
                           </View>
                           <View style={{ gap: scale(6) }}>
                             <CustomText style={{ textAlign: "center", fontSize: moderateScale(18) }}>{authenticatedUser?.currency} {item?.selectCustomerServices.reduce((acc, item) => acc + item.servicePrice, 0)}</CustomText>
-                            <View style={{ flexDirection: "row", alignItems: "center", gap: scale(5), }}>
+                            <View style={{ flexDirection: "row", alignItems: "center", gap: scale(2), }}>
                               <ClockIcon size={moderateScale(14)} color={colors.secondaryText} />
-                              <CustomSecondaryText style={{ fontSize: scale(12) }}> {item?.selectCustomerServices.reduce((acc, item) => acc + item.serviceEWT, 0)} mins</CustomSecondaryText>
+                              <CustomSecondaryText style={{ fontSize: scale(12) }}> {formatMinutesToHrMin(item?.selectCustomerServices.reduce((acc, item) => acc + item.serviceEWT, 0))}</CustomSecondaryText>
                               {/* {
                       params?.singleJoin ? (
                         <CustomSecondaryText style={{ fontSize: scale(12) }}> {selectCustomerServicesParse.reduce((acc, item) => acc + item.serviceEWT, 0)} mins</CustomSecondaryText>

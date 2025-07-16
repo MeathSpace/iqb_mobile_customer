@@ -110,14 +110,23 @@ const QlistItem = ({ item, index, qlistLength }) => {
     const { colors } = useTheme()
     const { authenticatedUser } = useAuth()
 
+    function formatMinutesToHrMin(totalMinutes) {
+        const hours = Math.floor(totalMinutes / 60);
+        const mins = totalMinutes % 60;
+
+        if (hours > 0 && mins > 0) return `${hours}hr ${mins}min`;
+        if (hours > 0) return `${hours}hr`;
+        return `${mins}min`;
+    }
+
     return (
         <View style={[styles.qlistItem, { backgroundColor: "#00B0901A" }]}>
             <View>
-                <CustomText
+                {/* <CustomText
                     style={{
                         fontFamily: "AirbnbCereal_W_Bd"
                     }}
-                >{item.barberName}</CustomText>
+                >{item.barberName}</CustomText> */}
                 <View
                     style={{
                         flexDirection: "row",
@@ -138,18 +147,27 @@ const QlistItem = ({ item, index, qlistLength }) => {
                         contentFit="cover"
                         transition={300}
                     />
-                    <View>
-                        <CustomText style={{ fontSize: scale(14), color: "#00B090" }}>{authenticatedUser?.email === item?.customerEmail ? item?.name : "client"}</CustomText>
-                        <CustomText style={{ fontSize: scale(14), color: "#696D6E" }}>{item.customerEWT} mins</CustomText>
+                    <View style={{ gap: verticalScale(3) }}>
+                        {/* <CustomText style={{ fontSize: scale(14), color: "#00B090" }}>{authenticatedUser?.email === item?.customerEmail ? item?.name : "client"}</CustomText>
+                        <CustomText style={{ fontSize: scale(14), color: "#696D6E" }}>{formatMinutesToHrMin(item.customerEWT)}</CustomText> */}
+
+                        <CustomText style={{ fontSize: scale(14) }}>{item.barberName}</CustomText>
+                        <CustomText style={{ fontSize: scale(12), color: authenticatedUser?.email === item?.customerEmail ? "#00B090" : "#696D6E" }}>{authenticatedUser?.email === item?.customerEmail ? item?.name : "client"}</CustomText>
                     </View>
                 </View>
             </View>
 
-            <CustomText
-                style={{
-                    fontFamily: "AirbnbCereal_W_Bd"
-                }}
-            >{item.qPosition === 1 ? "Next" : item.qPosition}</CustomText>
+            <View style={{
+                minWidth: scale(80),
+            }}>
+                <CustomText
+                    style={{
+                        fontFamily: "AirbnbCereal_W_Bd",
+                        textAlign: "center"
+                    }}
+                >{item.qPosition === 1 ? "Next" : item.qPosition}</CustomText>
+                <CustomText style={{ fontSize: scale(14), color: "#696D6E", textAlign: "center" }}>{formatMinutesToHrMin(item.customerEWT)}</CustomText>
+            </View>
         </View>
     )
 }
