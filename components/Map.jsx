@@ -10,8 +10,8 @@ import CustomSecondaryText from './CustomSecondaryText';
 import { Colors } from '../constants/Colors';
 import SalonCard from './SalonCard';
 import { Image } from 'expo-image';
-import { useTheme } from '@react-navigation/native';
-import { ArrowLeftIcon, CheckIcon, ClockIcon, CloseIcon, ContactIcon, EmailIcon, FacebookIcon, HeartFilledIcon, HeartIcon, InstagramIcon, MapIcon, WhatsappIcon } from '../constants/icons';
+import { usePreventRemove, useTheme } from '@react-navigation/native';
+import { ArrowLeftIcon, CheckIcon, ClockIcon, CloseIcon, ContactIcon, CuttingIcon, EmailIcon, FacebookIcon, HeartFilledIcon, HeartIcon, InstagramIcon, MapIcon, MapScissorIcon, WhatsappIcon } from '../constants/icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { BASE_URL } from '@/utils/api';
@@ -695,6 +695,22 @@ const Map = () => {
         return `${mins}min`;
     }
 
+    const hasUnsavedChanges = true
+
+    usePreventRemove(
+        hasUnsavedChanges, // This boolean determines if removal should be prevented
+        ({ data }) => {
+            // The action is still passed, but we're choosing not to dispatch it,
+            // effectively making "going back" impossible through these means.
+            // Alert.alert(
+            //     'Cannot Go Back',
+            //     'You cannot go back during the signup flow. Please complete the current step.',
+            //     [{ text: 'OK', onPress: () => null }] // Only an 'OK' button
+            // );
+        }
+    );
+
+    const [selectedMarker, setSelectedMarker] = useState("")
 
     return (
         <>
@@ -736,18 +752,31 @@ const Map = () => {
                                                         }}
                                                         title={salon.salonName}
                                                         description={salon.address}
-                                                    // onPress={() => {
-                                                    //     Alert.alert(
-                                                    //         salon.salonName || "Salon",
-                                                    //         salon.address || "No address provided",
-                                                    //         [
-                                                    //             { text: "OK" },
-                                                    //             // Optional: add a navigation button
-                                                    //             // { text: "View", onPress: () => router.push(...) }
-                                                    //         ]
-                                                    //     );
-                                                    // }}
-                                                    />
+                                                        onPress={() => {
+                                                            setSelectedMarker(salon.salonId)
+                                                        }}
+                                                    >
+                                                        <View
+                                                            style={{
+                                                                backgroundColor: colors.background,
+                                                                padding: scale(2),
+                                                                borderRadius: scale(8),
+                                                                borderWidth: scale(1),
+                                                                borderColor: colors.border,
+                                                            }}
+                                                        >
+                                                            <View
+                                                                style={{
+                                                                    padding: scale(8),
+                                                                    borderRadius: scale(6),
+                                                                    backgroundColor: selectedMarker === salon.salonId ? "#0BA3AD" : "#efefef"
+                                                                }}
+                                                            >
+                                                                <MapScissorIcon color={selectedMarker === salon.salonId ? "#fff" : "#000"} />
+                                                            </View>
+                                                        </View>
+
+                                                    </Marker>
                                                 );
                                             }
                                             return null;
@@ -964,7 +993,24 @@ const Map = () => {
                                                 width={scale(400)}
                                             />
                                         ) : salonInfoData?.data?.salonInfo?.gallery?.length > 0 ? (
-                                            <View>
+                                            <View style={{ position: 'relative' }}>
+                                                <Pressable
+                                                    onPress={() => setSelectedCustomerSalon({ open: false, data: {} })}
+                                                    style={{
+                                                        position: 'absolute',
+                                                        top: verticalScale(10),
+                                                        left: scale(10),
+                                                        zIndex: 10,
+                                                        backgroundColor: colors.background,
+                                                        height: scale(40),
+                                                        width: scale(40),
+                                                        borderRadius: scale(30),
+                                                        justifyContent: "center",
+                                                        alignItems: "center"
+                                                    }}
+                                                >
+                                                    <ArrowLeftIcon color={colors.text} />
+                                                </Pressable>
                                                 <FlatList
                                                     data={salonInfoData?.data?.salonInfo?.gallery?.slice(0, 5)}
                                                     style={{
@@ -1399,7 +1445,7 @@ const Map = () => {
 
                                                                 </View>
 
-                                                                <View
+                                                                {/* <View
                                                                     style={{
                                                                         flexDirection: "row",
                                                                         alignItems: "center",
@@ -1428,7 +1474,7 @@ const Map = () => {
                                                                     >
                                                                         <CustomText style={{ color: "#E11D48" }}>Cancel</CustomText>
                                                                     </Pressable>
-                                                                </View>
+                                                                </View> */}
                                                             </>
                                                         )
                                                     }
@@ -1758,6 +1804,38 @@ const Map = () => {
 
                                                 </BottomSheetScrollView>
 
+                                                <View
+                                                    style={{
+                                                        flexDirection: "row",
+                                                        alignItems: "center",
+                                                        gap: scale(10),
+                                                        justifyContent: "space-between",
+                                                        marginHorizontal: scale(10)
+                                                    }}
+                                                >
+                                                    <Pressable
+                                                        disabled={connectSalonLoader}
+                                                        style={[styles.modalbtn, { backgroundColor: Colors.modeColor.colorCode }]}
+                                                        onPress={() => connectSalonPressed()}
+                                                    >
+                                                        {
+                                                            connectSalonLoader ? (
+                                                                <ActivityIndicator size="small" color="#fff" />
+                                                            ) : (
+                                                                <CustomText style={{ color: "#fff" }}>Connect</CustomText>
+                                                            )
+                                                        }
+
+                                                    </Pressable>
+
+                                                    {/* <Pressable
+                                                        style={[styles.closebtn]}
+                                                        onPress={() => setSelectedCustomerSalon({ open: false, data: {} })}
+                                                    >
+                                                        <CustomText style={{ color: "#E11D48" }}>Cancel</CustomText>
+                                                    </Pressable> */}
+                                                </View>
+
                                             </BottomSheet>
                                         )
                                     }
@@ -1828,7 +1906,7 @@ const styles = StyleSheet.create({
     },
     modalbtn: {
         minHeight: verticalScale(35),
-        width: "48%",
+        width: "100%",
         alignItems: "center",
         justifyContent: "center",
         marginTop: verticalScale(15),

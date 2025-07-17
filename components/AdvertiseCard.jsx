@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     },
     cardImage: {
         // height: "100%",
-        height: verticalScale(145),
+        height: verticalScale(145/1.8),
         width: "100%",
         borderRadius: scale(12),
     }

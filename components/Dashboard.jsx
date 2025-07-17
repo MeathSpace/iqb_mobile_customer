@@ -22,6 +22,7 @@ import Skeleton from './Skeleton'
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
@@ -596,7 +597,60 @@ const Dashboard = () => {
         }, [expoPushToken, authenticatedUser])
     )
 
-    // console.log("Real Token From Dashboard ", expoPushToken)
+    // "android": {
+    //     "allowBackup": false
+    // }
+
+    // useFocusEffect(
+    //     useCallback(() => {
+    //         const initPush = async () => {
+    //             try {
+    //                 const newToken = await registerForPushNotificationsAsync();
+
+    //                 if (newToken) {
+    //                     const storedToken = await AsyncStorage.getItem("expoPushToken");
+
+    //                     if (!storedToken || storedToken !== newToken) {
+    //                         // Update saved token
+    //                         await AsyncStorage.setItem("expoPushToken", newToken);
+    //                         setExpoPushToken(newToken); // Save in state
+
+    //                         // ✅ Save to your backend
+    //                         await axios.post(`${BASE_URL}/mobileRoutes/pushDevices`, {
+    //                             salonId: authenticatedUser?.salonId,
+    //                             name: authenticatedUser?.name,
+    //                             email: authenticatedUser?.email,
+    //                             deviceToken: newToken,
+    //                             deviceType: "android",
+    //                         });
+    //                     } else {
+    //                         // Already up-to-date
+    //                         setExpoPushToken(storedToken);
+    //                     }
+    //                 }
+    //             } catch (err) {
+    //                 console.log("Push token error:", err);
+    //             }
+    //         };
+
+    //         initPush();
+
+    //         const notificationListener = Notifications.addNotificationReceivedListener(notification => {
+    //             setNotification(notification);
+    //         });
+
+    //         const responseListener = Notifications.addNotificationResponseReceivedListener(response => {
+    //             // Handle notification tap
+    //         });
+
+    //         return () => {
+    //             notificationListener.remove();
+    //             responseListener.remove();
+    //         };
+    //     }, [authenticatedUser])
+    // );
+
+
 
     const { setJoinModes, joinModes } = useGlobal();
 

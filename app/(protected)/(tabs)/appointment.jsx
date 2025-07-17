@@ -377,12 +377,6 @@ const appointment = () => {
 
                             {/* Right section */}
                             <View style={{ gap: verticalScale(5) }}>
-                              <View style={{ flexDirection: "row", alignItems: "center", gap: scale(2) }}>
-                                <ClockIcon size={scale(12)} color="gray" />
-                                <CustomText style={{ fontSize: scale(12), color: "gray" }}>
-                                  {item?.timeSlots}
-                                </CustomText>
-                              </View>
                               <CustomText
                                 style={{
                                   fontSize: scale(14),
@@ -392,6 +386,13 @@ const appointment = () => {
                               >
                                 {item?.appointmentDate?.split("T")[0]}
                               </CustomText>
+
+                              <View style={{ flexDirection: "row", alignItems: "center", gap: scale(2) }}>
+                                <ClockIcon size={scale(12)} color="gray" />
+                                <CustomText style={{ fontSize: scale(12), color: "gray" }}>
+                                  {item?.timeSlots}
+                                </CustomText>
+                              </View>
                             </View>
                           </Pressable>
                         )}

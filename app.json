@@ -11,7 +11,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.iqbook.iqb",
-      "buildNumber": "20",
+      "buildNumber": "21",
       "config": {
         "googleMapsApiKey": "AIzaSyCFTy8N-ZV2Oji8QbpQjuzXHwuC-kNSdmU"
       },
@@ -31,7 +31,8 @@
       },
       "softwareKeyboardLayoutMode": "pan",
       "package": "com.iqbook.iqb",
-      "googleServicesFile": "./google-services.json"
+      "googleServicesFile": "./google-services.json",
+      "allowBackup": false
     },
     "web": {
       "bundler": "metro",
