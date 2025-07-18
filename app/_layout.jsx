@@ -66,12 +66,15 @@ const RootLayout = () => {
     ...DefaultTheme,
     colors: {
       ...DefaultTheme.colors,
-      background: '#ffffff',
+      background: '#F9FAFB',
       tabBackground: '#efefef',
-      text: "#000000",
-      secondaryText: "#808080",
+      text: "#1f2937",
+      secondaryText: "#6b7280", // text-gray-500
       secondaryInputBackground: "#efefef",
-      borderBottomColor: "#efefef"
+      borderBottomColor: "#efefef",
+      notificationBellColor: "#6b7280",
+      cardColor: "#fff",
+      cardBorder: "#e5e7eb"
     },
   };
 
@@ -80,15 +83,28 @@ const RootLayout = () => {
     ...DarkTheme,
     colors: {
       ...DarkTheme.colors,
-      background: '#000000',
+      background: '#111827',
       tabBackground: '#151718',
       text: "#ffffff",
-      secondaryText: "#F4F4F5B2",
+      secondaryText: "#6b7280", // text-gray-500
       secondaryInputBackground: "#000000",
-      borderBottomColor: "#101010"
+      borderBottomColor: "#101010",
+      notificationBellColor: "#D1D5DB",
+      cardColor: "#1F2937",
+      cardBorder: "#1F2937"
     },
   };
 
+
+  // 🌿 Color Palette
+  // -----------------------------------------
+  // const colors = {
+  //   teal500: '#14B8A6', // Used in gradients, icons
+  //   teal600: '#0D9488', // Darker gradient
+  //   teal400: '#2DD4BF', // Notification badge dot
+  //   green500: '#22C55E', // System background with 10% opacity
+  //   green600: '#16A34A', // “Online” text
+  // };
 
   return (
     <AuthProvider>

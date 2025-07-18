@@ -21,42 +21,49 @@ const BarberCard = ({ item }) => {
     }
 
     return (
-        <View style={[styles.cardWrapper, {}]}>
+        <View style={[styles.cardWrapper, { backgroundColor: colors.cardColor, borderColor: colors.cardBorder, borderWidth: scale(1) }]}>
             <Image
-                style={styles.cardImage}
+                style={[styles.cardImage, {
+                    // borderColor: colors.cardBorder
+                }]}
                 source={{ uri: item?.profile?.[0]?.url }}
                 contentFit="cover"
                 transition={300}
             />
-            <View>
-                <View
-                    style={{
-                        width: scale(40),
-                        height: verticalScale(15),
-                        backgroundColor: item?.isOnline ? "#00B0901A" : "#E11D481A",
-                        justifyContent: "center",
-                        alignItems: "center",
-                        borderRadius: scale(4)
-                    }}
-                >
-                    <CustomText
-                        style={{
-                            fontSize: scale(10),
-                            color: item?.isOnline ? "#00B090" : "#E11D48",
-                        }}
-                    >{item?.isOnline ? "Online" : "Offline"}</CustomText>
-                </View>
-            </View>
-            <CustomText style={{ fontSize: scale(12) }}>{item.name}</CustomText>
             <View style={{
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-                gap: scale(2),
-                flex: 1
+                padding: scale(10),
+                gap: verticalScale(5)
             }}>
-                <ClockIcon size={scale(12)} color='gray' />
-                <CustomText style={{ fontSize: scale(12), flex: 1, color: "gray" }}>{formatMinutesToHrMin(item?.barberEWT)}</CustomText>
+                {/* <View>
+                    <View
+                        style={{
+                            width: scale(40),
+                            height: verticalScale(15),
+                            backgroundColor: item?.isOnline ? "#00B0901A" : "#E11D481A",
+                            justifyContent: "center",
+                            alignItems: "center",
+                            borderRadius: scale(4)
+                        }}
+                    >
+                        <CustomText
+                            style={{
+                                fontSize: scale(10),
+                                color: item?.isOnline ? "#00B090" : "#E11D48",
+                            }}
+                        >{item?.isOnline ? "Online" : "Offline"}</CustomText>
+                    </View>
+                </View> */}
+                <CustomText style={{ fontSize: scale(16) }}>{item.name}</CustomText>
+                <View style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    justifyContent: "space-between",
+                    gap: scale(2),
+                    flex: 1
+                }}>
+                    <ClockIcon size={scale(14)} color={colors.secondaryText} />
+                    <CustomText style={{ fontSize: scale(14), flex: 1, color: colors.secondaryText }}>{formatMinutesToHrMin(item?.barberEWT)}</CustomText>
+                </View>
             </View>
 
             {/* <View style={{
@@ -109,15 +116,18 @@ export default BarberCard
 
 const styles = StyleSheet.create({
     cardWrapper: {
-        width: scale(103),
+        width: scale(160),
         marginBottom: verticalScale(15),
-        gap: verticalScale(2)
+        // gap: verticalScale(2),
+        borderRadius: scale(10),
     },
     cardImage: {
         height: verticalScale(110),
         width: "100%",
-        borderRadius: scale(10),
-        marginBottom: verticalScale(5)
+        borderTopLeftRadius: scale(10),
+        borderTopRightRadius: scale(10),
+        // marginBottom: verticalScale(5),
+        // borderWidth: scale(1)
     },
     cardContentWrapper: {
         gap: verticalScale(5),

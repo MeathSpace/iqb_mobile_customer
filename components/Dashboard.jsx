@@ -1,4 +1,4 @@
-import { FlatList, Platform, Pressable, Image as ReactNativeImage, StyleSheet, Text, View } from 'react-native'
+import { FlatList, Platform, Pressable, Image as ReactNativeImage, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useCallback, useState } from 'react'
 import CustomTabView from './CustomTabView'
 import CustomText from './CustomText'
@@ -7,7 +7,7 @@ import CustomSecondaryText from './CustomSecondaryText'
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import { Colors } from '../constants/Colors'
 import AdvertiseCard from './AdvertiseCard'
-import { ClockIcon, CuttingIcon, DyeIcon, MenuIcon, NextIcon, QueueIcon, RightIcon, SettingsIcon, StylingIcon, TrimIcon, UserIcon } from '../constants/icons'
+import { AboutIcon, CalendarIcon, ClockIcon, CuttingIcon, DyeIcon, MenuIcon, NextIcon, QueueIcon, RightIcon, SalonIcon, SettingsIcon, SparkleIcon, StylingIcon, TrimIcon, UserIcon } from '../constants/icons'
 import StatusCard from './StatusCard'
 import BarberCard from './BarberCard'
 import { Link, router, useFocusEffect } from 'expo-router'
@@ -23,6 +23,12 @@ import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
 import AsyncStorage from '@react-native-async-storage/async-storage'
+
+
+
+import { LinearGradient } from 'expo-linear-gradient';
+import { Feather } from '@expo/vector-icons';
+import Header from './Header'
 
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
@@ -91,7 +97,7 @@ const Dashboard = () => {
 
     // console.log("Authenticated user", authenticatedUser)
 
-    const [sliceBarber, setSliceBarber] = useState(3)
+    const [sliceBarber, setSliceBarber] = useState(4)
 
     const [homeAdvertisementData, setHomeAdvertisementData] = useState({
         advertisementData: null,
@@ -179,13 +185,26 @@ const Dashboard = () => {
 
     const pageData = [
         {
+            title: "header"
+        },
+        {
             title: "hero",
         },
+
         {
-            title: "advertise",
+            title: "hint",
         },
+
         {
             title: "status",
+        },
+
+        {
+            title: "advertisement",
+        },
+
+        {
+            title: "advertise",
         },
 
         {
@@ -198,348 +217,6 @@ const Dashboard = () => {
             title: "services",
         }
     ]
-
-    const salonData = [
-        {
-            id: '1',
-            title: 'Glamour Grace Salon',
-            image: 'https://cdn.pixabay.com/photo/2019/03/08/20/17/beauty-salon-4043096_960_720.jpg',
-            services: ['Haircuts', 'Coloring', 'Styling', 'Bridal Packages', 'Spa Treatments'],
-        },
-        {
-            id: '2',
-            title: 'Velvet & Ivy Spa',
-            image: 'https://cdn-ilblohb.nitrocdn.com/CoViiNPrBmwoLCQyMsMvkIwRSuXFuqci/assets/images/optimized/rev-27f70e7/www.latestinteriors.com/wp-content/uploads/2024/01/Interior-Designers-in-Delhi-3.jpeg',
-            services: ['Organic Facials', 'Aromatherapy Massages', 'Holistic Beauty Treatments'],
-        },
-        {
-            id: '3',
-            title: 'The Luxe Lotus',
-            image: 'https://cdn.pixabay.com/photo/2019/03/08/20/17/beauty-salon-4043096_960_720.jpg',
-            services: ['Hair Extensions', 'Keratin Treatments', 'Luxury Manicures'],
-        },
-        {
-            id: '4',
-            title: 'Blush & Blossom Beauty',
-            image: 'https://cdn-ilblohb.nitrocdn.com/CoViiNPrBmwoLCQyMsMvkIwRSuXFuqci/assets/images/optimized/rev-27f70e7/www.latestinteriors.com/wp-content/uploads/2024/01/Interior-Designers-in-Delhi-3.jpeg',
-            services: ['Makeup Artistry', 'Eyelash Extensions', 'Skincare Consultations'],
-        },
-        {
-            id: '5',
-            title: 'Opulence Oasis Salon',
-            image: 'https://cdn.pixabay.com/photo/2019/03/08/20/17/beauty-salon-4043096_960_720.jpg',
-            services: ['Hair Spa Therapies', 'Color Correction', 'Personalized Styling Sessions'],
-        },
-    ];
-
-    const salonStatus = [
-        {
-            id: 1,
-            title: "System Status",
-            icon: SettingsIcon,
-            value: homeDashboardData?.dashboardData?.salonInfo?.mobileBookingAvailability ? "ON" : "OFF",
-            color1: homeDashboardData?.dashboardData?.salonInfo?.mobileBookingAvailability ? "#00B090" : "#E11D48",
-            color2: homeDashboardData?.dashboardData?.salonInfo?.mobileBookingAvailability ? "#CCEFE9" : "#E11D481A"
-        },
-        {
-            id: 2,
-            title: "Total Queue",
-            icon: QueueIcon,
-            value: homeDashboardData?.dashboardData?.totalQueueCount || 0,
-            color1: "#006FFD",
-            color2: "#006FFD33"
-        },
-        {
-            id: 3,
-            title: "Next In Queue",
-            icon: NextIcon,
-            value: homeDashboardData?.dashboardData?.leastQueueCount + 1,
-            color1: "#EAA824",
-            color2: "#EAA82433"
-        },
-        {
-            id: 4,
-            title: "On Duty Staff",
-            icon: UserIcon,
-            value: homeDashboardData?.dashboardData?.barberOnDuty,
-            color1: "#7ED4AD",
-            color2: "#7ED4AD33"
-        },
-    ]
-
-    const barbersData = [
-        {
-            id: 1,
-            image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-            name: "Korbyn Larson",
-            online: true,
-            estTime: "15 mins",
-        },
-        {
-            id: 2,
-            image: "https://t3.ftcdn.net/jpg/02/43/12/34/360_F_243123463_zTooub557xEWABDLk0jJklDyLSGl2jrr.jpg",
-            name: "Aden Schneider",
-            online: true,
-            estTime: "15 mins",
-        },
-        {
-            id: 3,
-            image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-            name: "Parker Howard",
-            online: true,
-            estTime: "15 mins",
-        },
-        {
-            id: 4,
-            image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-            name: "Paulina Arroyo",
-            online: true,
-            estTime: "15 mins",
-        },
-        {
-            id: 5,
-            image: "https://t3.ftcdn.net/jpg/02/43/12/34/360_F_243123463_zTooub557xEWABDLk0jJklDyLSGl2jrr.jpg",
-            name: "Parker Howard",
-            online: true,
-            estTime: "15 mins",
-
-        },
-        {
-            id: 6,
-            image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-            name: "Paulina Arroyo",
-            online: true,
-            estTime: "15 mins",
-
-        },
-
-    ]
-
-    const serviceCategories = [
-        {
-            name: "Cutting",
-            image: require("../assets/images/1.png"),
-            services: [
-                {
-                    name: "Hair Cut",
-                    vip: true,
-                    est: 15,
-                    price: 49,
-                    serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
-                    image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-                },
-                {
-                    name: "Hair Cut",
-                    vip: true,
-                    est: 15,
-                    price: 49,
-                    serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
-                    image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-                },
-            ]
-        },
-        {
-            name: "Trim",
-            image: require("../assets/images/2.png"),
-            services: [
-                {
-                    name: "Hair Cut",
-                    vip: true,
-                    est: 15,
-                    price: 49,
-                    serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
-                    image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-                },
-                {
-                    name: "Hair Cut",
-                    vip: true,
-                    est: 15,
-                    price: 49,
-                    serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
-                    image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-                },
-            ]
-        },
-        {
-            name: "Styling",
-            image: require("../assets/images/1.png"),
-            services: [
-                {
-                    name: "Hair Cut",
-                    vip: true,
-                    est: 15,
-                    price: 49,
-                    serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
-                    image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-                },
-                {
-                    name: "Hair Cut",
-                    vip: true,
-                    est: 15,
-                    price: 49,
-                    serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
-                    image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-                },
-            ]
-        },
-        {
-            name: "Hair Dye",
-            image: require("../assets/images/4.png"),
-            services: [
-                {
-                    name: "Hair Cut",
-                    vip: true,
-                    est: 15,
-                    price: 49,
-                    serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
-                    image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-                },
-                {
-                    name: "Hair Cut",
-                    vip: true,
-                    est: 15,
-                    price: 49,
-                    serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
-                    image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-                },
-            ]
-        },
-
-        {
-            name: "More",
-            image: require("../assets/images/5.png"),
-            services: [
-                {
-                    name: "Hair Cut",
-                    vip: true,
-                    est: 15,
-                    price: 49,
-                    serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
-                    image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-                },
-                {
-                    name: "Hair Cut",
-                    vip: true,
-                    est: 15,
-                    price: 49,
-                    serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
-                    image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-                },
-            ]
-        },
-        {
-            name: "Cutting",
-            image: require("../assets/images/6.png"),
-            services: [
-                {
-                    name: "Hair Cut",
-                    vip: true,
-                    est: 15,
-                    price: 49,
-                    serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
-                    image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-                },
-                {
-                    name: "Hair Cut",
-                    vip: true,
-                    est: 15,
-                    price: 49,
-                    serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
-                    image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-                },
-            ]
-        },
-        {
-            name: "Trim",
-            image: require("../assets/images/7.png"),
-            services: [
-                {
-                    name: "Hair Cut",
-                    vip: true,
-                    est: 15,
-                    price: 49,
-                    serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
-                    image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-                },
-                {
-                    name: "Hair Cut",
-                    vip: true,
-                    est: 15,
-                    price: 49,
-                    serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
-                    image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-                },
-            ]
-        },
-        {
-            name: "Trim",
-            image: require("../assets/images/2.png"),
-            services: [
-                {
-                    name: "Hair Cut",
-                    vip: true,
-                    est: 15,
-                    price: 49,
-                    serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
-                    image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-                },
-                {
-                    name: "Hair Cut",
-                    vip: true,
-                    est: 15,
-                    price: 49,
-                    serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
-                    image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-                },
-            ]
-        },
-        // {
-        //     name: "Styling",
-        //     image: require("../assets/images/1.png"),
-        //     services: [
-        //         {
-        //             name: "Hair Cut",
-        //             vip: true,
-        //             est: 15,
-        //             price: 49,
-        //             serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
-        //             image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-        //         },
-        //         {
-        //             name: "Hair Cut",
-        //             vip: true,
-        //             est: 15,
-        //             price: 49,
-        //             serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
-        //             image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-        //         },
-        //     ]
-        // },
-        // {
-        //     name: "Cutting",
-        //     image: require("../assets/images/4.png"),
-        //     services: [
-        //         {
-        //             name: "Hair Cut",
-        //             vip: true,
-        //             est: 15,
-        //             price: 49,
-        //             serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
-        //             image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-        //         },
-        //         {
-        //             name: "Hair Cut",
-        //             vip: true,
-        //             est: 15,
-        //             price: 49,
-        //             serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
-        //             image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-        //         },
-        //     ]
-        // },
-
-    ]
-
 
 
     // Notification Code 
@@ -670,11 +347,80 @@ const Dashboard = () => {
     );
 
 
+    const statusData = [
+        {
+            label: 'System',
+            value: homeDashboardData?.dashboardData?.salonInfo?.mobileBookingAvailability ? "Online" : "Offline",
+            icon: 'power',
+            bgColor: homeDashboardData?.dashboardData?.salonInfo?.mobileBookingAvailability
+                ? 'rgba(34, 197, 94, 0.1)'    // ✅ green-500/10
+                : 'rgba(239, 68, 68, 0.1)',   // ❌ red-500/10
+            iconColor: homeDashboardData?.dashboardData?.salonInfo?.mobileBookingAvailability
+                ? '#22c55e'                   // green-500
+                : '#ef4444',                 // red-500
+            valueColor: homeDashboardData?.dashboardData?.salonInfo?.mobileBookingAvailability
+                ? '#22c55e'
+                : '#ef4444',
+            fontSize: scale(18),
+        },
+
+        {
+            label: 'Next In',
+            value: homeDashboardData?.dashboardData?.leastQueueCount + 1,
+            icon: 'user-check',
+            bgColor: 'rgba(168, 85, 247, 0.1)', // purple-500/10
+            iconColor: '#a855f7',
+        },
+        {
+            label: 'On Duty',
+            value: homeDashboardData?.dashboardData?.barberOnDuty,
+            icon: 'scissors',
+            bgColor: 'rgba(56, 189, 248, 0.1)', // sky-500/10
+            iconColor: '#38bdf8',
+        },
+        {
+            label: 'In Queue',
+            value: homeDashboardData?.dashboardData?.totalQueueCount || 0,
+            icon: 'users',
+            bgColor: 'rgba(13, 148, 136, 0.1)', // teal-500/10
+            iconColor: '#14b8a6',
+        },
+
+    ];
+
+
+    const services = [
+        {
+            id: '1',
+            title: 'Haircut & Style',
+            image: 'https://images.unsplash.com/photo-1599351431202-184b39349549?q=80&w=2574&auto=format&fit=crop',
+            fallback: 'https://placehold.co/160x200/E5E7EB/1F2937?text=Haircut',
+        },
+        {
+            id: '2',
+            title: 'Beard Trim',
+            image: 'https://images.unsplash.com/photo-1600948836842-8453549544b3?q=80&w=2574&auto=format&fit=crop',
+            fallback: 'https://placehold.co/160x200/E5E7EB/1F2937?text=Beard',
+        },
+        {
+            id: '3',
+            title: 'Massage',
+            image: 'https://images.unsplash.com/photo-1515377905703-c4788e51af15?q=80&w=2670&auto=format&fit=crop',
+            fallback: 'https://placehold.co/160x200/E5E7EB/1F2937?text=Massage',
+        },
+        {
+            id: '4',
+            title: 'Spa Treatment',
+            image: 'https://images.unsplash.com/photo-1544161515-cfd826dbaa0b?q=80&w=2574&auto=format&fit=crop',
+            fallback: 'https://placehold.co/160x200/E5E7EB/1F2937?text=Spa',
+        },
+    ];
+
     return (
         <CustomTabView
             style={{
                 paddingTop: verticalScale(0),
-                paddingBottom: Platform.OS === "ios" ? verticalScale(60) : verticalScale(0)
+                paddingBottom: Platform.OS === "ios" ? verticalScale(0) : verticalScale(0)
             }}
         >
             <FlatList
@@ -685,6 +431,220 @@ const Dashboard = () => {
                 }}
                 renderItem={({ item }) => {
                     switch (item.title) {
+
+                        case "header": {
+                            return (
+                                <Header />
+                            )
+                        }
+                        case "hero": {
+                            return (
+                                <>
+                                    {/* <CustomText style={{ fontFamily: "AirbnbCereal_W_Bd" }}>Hello, {authenticatedUser.name} 👋</CustomText>
+                                    {
+                                        homeDashboardData?.loading ? (
+                                            <View style={{
+                                                marginBottom: verticalScale(15),
+                                                marginTop: verticalScale(10)
+                                            }}>
+                                                <Skeleton height={verticalScale(30)} />
+                                            </View>
+                                        ) : homeDashboardData?.dashboardData?.salonInfo?.salonDesc?.length ? (<CustomText style={{ fontSize: scale(14), marginBottom: verticalScale(15), marginTop: verticalScale(10) }}>
+                                            {homeDashboardData?.dashboardData?.salonInfo?.salonDesc}
+                                        </CustomText>) : (
+                                            <CustomText style={{ fontSize: scale(14), marginBottom: verticalScale(15), marginTop: verticalScale(10) }}>
+                                                This salon currently doesn't have a description.
+                                            </CustomText>
+                                        )
+                                    } */}
+
+                                    {/* <View style={{
+                                        flexDirection: "row",
+                                        gap: verticalScale(10),
+                                        marginVertical: verticalScale(5)
+                                    }}>
+                                        <Pressable
+                                            onPress={() => router.push("/joinpopup")}
+                                            style={[styles.btn, {
+                                                backgroundColor: Colors.modeColor.colorCode, shadowColor: Colors.modeColor.colorCode,
+                                            }]}>
+                                            <CustomText style={{ color: "#fff", fontSize: scale(14) }}>Join Queue</CustomText>
+                                        </Pressable>
+
+                                        <Pressable
+                                            onPress={() => {
+                                                setJoinModes((prev) => ({ ...prev, appointment: true, appointmentType: "Book" }));
+                                                router.push("/appointmentCalendar");
+                                            }}
+                                            style={[styles.btn, {
+                                                backgroundColor: Colors.modeColor.colorCode2,
+                                                shadowColor: Colors.modeColor.colorCode,
+                                                borderColor: Colors.modeColor.colorCode,
+                                                borderWidth: scale(1)
+                                            }]}>
+                                            <CustomText
+                                                style={{
+                                                    color: Colors.modeColor.colorCode,
+                                                    fontSize: scale(14),
+                                                }}>Book Appointment</CustomText>
+                                        </Pressable>
+                                    </View> */}
+
+
+                                    <LinearGradient
+                                        colors={['#14b8a6', '#0d9488']}
+                                        style={styles.card}
+                                        start={{ x: 0, y: 0 }}
+                                        end={{ x: 1, y: 1 }}
+                                    >
+                                        <View style={styles.topRow}>
+                                            <View>
+                                                <CustomText style={styles.title}>Your Visit, Your Way</CustomText>
+                                                <CustomText style={styles.subtitle}>Join the queue or book for later.</CustomText>
+                                            </View>
+                                            <CalendarIcon color="white" style={styles.icon} />
+                                        </View>
+
+                                        <View style={styles.btnContainer}>
+                                            {/* Join Queue Button */}
+                                            <TouchableOpacity
+                                                onPress={() => router.push("/joinpopup")}
+                                                style={styles.joinQueue} activeOpacity={0.85}>
+                                                <CustomText style={styles.joinQueueText}>Join Queue</CustomText>
+                                            </TouchableOpacity>
+
+                                            {/* Book Ahead Button */}
+                                            <TouchableOpacity
+                                                onPress={() => {
+                                                    setJoinModes((prev) => ({ ...prev, appointment: true, appointmentType: "Book" }));
+                                                    router.push("/appointmentCalendar");
+                                                }}
+                                                style={styles.bookAhead} activeOpacity={0.85}>
+                                                <CustomText style={styles.bookAheadText}>Book Ahead</CustomText>
+                                            </TouchableOpacity>
+                                        </View>
+                                    </LinearGradient>
+
+                                </>
+
+                            )
+                        }
+
+                        case "status": {
+                            return (
+
+                                // homeDashboardData?.loading ? (<FlatList
+                                //     style={{
+                                //         overflow: "visible",
+                                //     }}
+                                //     contentContainerStyle={{
+                                //         flex: 1,
+                                //         flexDirection: "row",
+                                //         gap: scale(10),
+                                //         paddingVertical: verticalScale(10),
+                                //         justifyContent: "space-evenly"
+                                //     }}
+                                //     data={salonStatus}
+                                //     renderItem={({ item }) => <Skeleton width={scale(60)} height={scale(80)} />}
+                                //     keyExtractor={item => item.id}
+                                //     horizontal
+                                //     showsHorizontalScrollIndicator={false}
+                                //     bounces={false}
+                                // />) : (<FlatList
+                                //     style={{
+                                //         overflow: "visible",
+                                //     }}
+                                //     contentContainerStyle={{
+                                //         flex: 1,
+                                //         flexDirection: "row",
+                                //         gap: scale(10),
+                                //         paddingVertical: verticalScale(10),
+                                //         justifyContent: "space-evenly"
+                                //     }}
+                                //     data={salonStatus}
+                                //     renderItem={({ item }) => <StatusCard item={item} />}
+                                //     keyExtractor={item => item.id}
+                                //     horizontal
+                                //     showsHorizontalScrollIndicator={false}
+                                //     bounces={false}
+                                // />)
+
+
+                                homeDashboardData?.loading ? (
+                                    <View>
+                                        <CustomText style={styles.heading}>Live Queue Status</CustomText>
+                                        <View style={styles.grid}>
+                                            {
+                                                statusData.map((item, index) => (
+                                                    <Skeleton
+                                                        key={index}
+                                                        width={"48%"}
+                                                        height={verticalScale(75)}
+                                                        style={{
+                                                            width: '48%',
+                                                            borderRadius: scale(12),
+                                                            marginBottom: verticalScale(16),
+                                                        }}
+                                                    />
+                                                ))
+                                            }
+                                        </View>
+
+                                    </View>
+                                ) : (
+                                    <View>
+                                        <CustomText style={styles.heading}>Live Queue Status</CustomText>
+                                        <View style={styles.grid}>
+                                            {statusData.map((item, index) => (
+                                                <View key={index} style={[styles.statusCard, { backgroundColor: colors.cardColor, borderColor: colors.cardBorder }]}>
+                                                    <View style={[styles.iconContainer, { backgroundColor: item.bgColor }]}>
+                                                        <Feather name={item.icon} size={24} color={item.iconColor} />
+                                                    </View>
+                                                    <View>
+                                                        <CustomText style={[styles.label, {
+                                                            color: colors.secondaryText
+                                                        }]}>{item.label}</CustomText>
+                                                        <CustomText
+                                                            style={[
+                                                                styles.value,
+                                                                item.valueColor && { color: item.valueColor },
+                                                                item.fontSize && { fontSize: item.fontSize },
+                                                            ]}
+                                                        >
+                                                            {item.value}
+                                                        </CustomText>
+                                                    </View>
+                                                </View>
+                                            ))}
+                                        </View>
+                                    </View>
+                                )
+
+                            )
+                        }
+
+                        case "hint": {
+                            return (
+                                <View style={styles.hintCard}>
+                                    <View style={styles.hintIconWrapper}>
+                                        <SalonIcon color="#4b5563" />
+                                    </View>
+                                    <View style={styles.hintTextWrapper}>
+                                        <CustomText style={styles.hintTitle}>Salon Info</CustomText>
+                                        <CustomText style={styles.hintDescription}>
+                                            {homeDashboardData?.dashboardData?.salonInfo?.salonDesc}
+                                        </CustomText>
+                                    </View>
+                                </View>
+                            )
+                        }
+
+                        // case "advertise": {
+                        //     return (
+                        //         <CustomText>Advertise</CustomText>
+                        //     )
+                        // }
+
                         case "advertise": {
                             return (
                                 <>
@@ -696,13 +656,13 @@ const Dashboard = () => {
                                             contentContainerStyle={{
                                                 gap: scale(10),
                                             }}
-                                            data={salonData}
+                                            data={[0, 1, 2, 3]}
                                             renderItem={({ item }) => <View style={{
                                                 paddingVertical: verticalScale(20),
                                             }}>
-                                                <Skeleton width={scale(300.56)} height={verticalScale(145)} borderRadius={scale(12)} />
+                                                <Skeleton width={scale(300.56)} height={verticalScale(145 / 1.8)} borderRadius={scale(12)} />
                                             </View>}
-                                            keyExtractor={item => item.id}
+                                            keyExtractor={item => item}
                                             horizontal
                                             showsHorizontalScrollIndicator={false}
                                         />) : homeAdvertisementData?.advertisementData?.length ? (<FlatList
@@ -745,199 +705,139 @@ const Dashboard = () => {
                             )
                         }
 
-                        case "status": {
-                            return (
+                        // case "serviceCategory": {
+                        //     return (
+                        //         <View View style={styles.container} >
+                        //             <CustomText style={styles.heading}>Our Services</CustomText>
+                        //             <View
+                        //                 style={{
+                        //                     // height: verticalScale(97),
+                        //                     flexDirection: "row",
+                        //                     alignItems: "center",
+                        //                     flexDirection: "row",
+                        //                     flexWrap: "wrap",
+                        //                     // paddingVertical: verticalScale(20),
+                        //                     gap: scale(20),
+                        //                     // justifyContent: "space-between"
+                        //                 }}
+                        //             >
+                        //                 {
+                        //                     serviceCategoryData?.loading ? (
+                        //                         [0, 1, 2, 3, 4].map((item, index) => {
+                        //                             return (
+                        //                                 <View
+                        //                                     key={index}
+                        //                                     style={{
+                        //                                         gap: verticalScale(10),
+                        //                                         width: scale(65),
+                        //                                         // marginBottom: verticalScale(10)
+                        //                                     }}
+                        //                                 >
 
-                                homeDashboardData?.loading ? (<FlatList
-                                    style={{
-                                        overflow: "visible",
-                                    }}
-                                    contentContainerStyle={{
-                                        flex: 1,
-                                        flexDirection: "row",
-                                        gap: scale(10),
-                                        paddingVertical: verticalScale(10),
-                                        justifyContent: "space-evenly"
-                                    }}
-                                    data={salonStatus}
-                                    renderItem={({ item }) => <Skeleton width={scale(60)} height={scale(80)} />}
-                                    keyExtractor={item => item.id}
-                                    horizontal
-                                    showsHorizontalScrollIndicator={false}
-                                    bounces={false}
-                                />) : (<FlatList
-                                    style={{
-                                        overflow: "visible",
-                                    }}
-                                    contentContainerStyle={{
-                                        flex: 1,
-                                        flexDirection: "row",
-                                        gap: scale(10),
-                                        paddingVertical: verticalScale(10),
-                                        justifyContent: "space-evenly"
-                                    }}
-                                    data={salonStatus}
-                                    renderItem={({ item }) => <StatusCard item={item} />}
-                                    keyExtractor={item => item.id}
-                                    horizontal
-                                    showsHorizontalScrollIndicator={false}
-                                    bounces={false}
-                                />)
+                        //                                     <Skeleton
+                        //                                         width={scale(70)}
+                        //                                         height={scale(70)}
+                        //                                         borderRadius={scale(50)}
+                        //                                     >
+
+                        //                                     </Skeleton>
+
+                        //                                 </View>
+                        //                             )
+                        //                         })
+                        //                     ) : (
+                        //                         serviceCategoryData?.data?.map((item, index) => {
+                        //                             return (
+                        //                                 <View
+                        //                                     key={item?._id}
+                        //                                     style={{
+                        //                                         gap: verticalScale(10),
+                        //                                         width: scale(65),
+                        //                                     }}
+                        //                                 >
+
+                        //                                     <View
+                        //                                         style={{
+                        //                                             width: scale(70),
+                        //                                             height: scale(70),
+                        //                                             borderRadius: scale(50),
+                        //                                             // backgroundColor: "red",
+                        //                                             borderWidth: scale(3),
+                        //                                             borderColor: colors.cardColor,
+                        //                                             marginHorizontal: "auto",
+
+                        //                                             // ✅ iOS shadow
+                        //                                             shadowColor: '#000',
+                        //                                             shadowOffset: { width: 0, height: 2 },
+                        //                                             shadowOpacity: 0.2,
+                        //                                             shadowRadius: 3,
+
+                        //                                             // ✅ Android elevation
+                        //                                             elevation: 2,
+                        //                                         }}
+                        //                                     >
+                        //                                         <Image
+                        //                                             style={{ width: "100%", height: "100%", borderRadius: scale(50) }}
+                        //                                             source={{ uri: item?.serviceCategoryImage?.url.replace("http", "https") }}
+                        //                                             contentFit="cover"
+                        //                                             transition={1000}
+                        //                                         />
+                        //                                     </View>
+                        //                                     <CustomText
+                        //                                         style={{
+                        //                                             fontFamily: "AirbnbCereal_W_Md",
+                        //                                             fontSize: scale(14),
+                        //                                             textAlign: "center",
+                        //                                             // color: "gray",
+                        //                                         }}
+                        //                                     >{item.serviceCategoryName}</CustomText>
+                        //                                 </View>
+                        //                             )
+                        //                         })
+                        //                     )
+                        //                 }
+                        //             </View>
+                        //         </View>
 
 
-                            )
-                        }
-
-                        case "hero": {
-                            return (
-                                <>
-                                    <CustomText style={{ fontFamily: "AirbnbCereal_W_Bd" }}>Hello, {authenticatedUser.name} 👋</CustomText>
-                                    {
-                                        homeDashboardData?.loading ? (
-                                            <View style={{
-                                                marginBottom: verticalScale(15),
-                                                marginTop: verticalScale(10)
-                                            }}>
-                                                <Skeleton height={verticalScale(30)} />
-                                            </View>
-                                        ) : homeDashboardData?.dashboardData?.salonInfo?.salonDesc?.length ? (<CustomText style={{ fontSize: scale(14), marginBottom: verticalScale(15), marginTop: verticalScale(10) }}>
-                                            {homeDashboardData?.dashboardData?.salonInfo?.salonDesc}
-                                        </CustomText>) : (
-                                            <CustomText style={{ fontSize: scale(14), marginBottom: verticalScale(15), marginTop: verticalScale(10) }}>
-                                                This salon currently doesn't have a description.
-                                            </CustomText>
-                                        )
-                                    }
-                                    {/* <CustomText style={{ fontSize: scale(14), marginBottom: verticalScale(15), marginTop: verticalScale(10) }}>
-                                        We strive to reach beyond the roots (of hair), and into the refinement and healing of one’s core self.
-                                    </CustomText> */}
-                                    <View style={{
-                                        flexDirection: "row",
-                                        gap: verticalScale(10),
-                                        marginVertical: verticalScale(5)
-                                        // marginBottom: verticalScale(20)
-                                    }}>
-                                        <Pressable
-                                            onPress={() => router.push("/joinpopup")}
-                                            style={[styles.btn, {
-                                                backgroundColor: Colors.modeColor.colorCode, shadowColor: Colors.modeColor.colorCode,
-                                            }]}>
-                                            <CustomText style={{ color: "#fff", fontSize: scale(14) }}>Join Queue</CustomText>
-                                        </Pressable>
-
-                                        <Pressable
-                                            // onPress={() => router.push("/appointment")}
-                                            onPress={() => {
-                                                setJoinModes((prev) => ({ ...prev, appointment: true, appointmentType: "Book" }));
-                                                router.push("/appointmentCalendar");
-                                            }}
-                                            style={[styles.btn, {
-                                                backgroundColor: Colors.modeColor.colorCode2,
-                                                shadowColor: Colors.modeColor.colorCode,
-                                                borderColor: Colors.modeColor.colorCode,
-                                                borderWidth: scale(1)
-                                            }]}>
-                                            <CustomText
-                                                style={{
-                                                    color: Colors.modeColor.colorCode,
-                                                    fontSize: scale(14),
-                                                }}>Book Appointment</CustomText>
-                                        </Pressable>
-                                    </View>
-                                </>
-
-                            )
-                        }
-
-                        case "serviceCategory": {
-                            return (
-                                <View>
-                                    <CustomText
-                                        style={{
-                                            fontFamily: "AirbnbCereal_W_Blk"
-                                        }}
-                                    >Explore all services</CustomText>
-                                    <View
-                                        style={{
-                                            // height: verticalScale(97),
-                                            flexDirection: "row",
-                                            alignItems: "center",
-                                            flexDirection: "row",
-                                            flexWrap: "wrap",
-                                            paddingVertical: verticalScale(20),
-                                            gap: scale(20),
-                                            // justifyContent: "space-between"
-                                        }}
-                                    >
-                                        {
-                                            serviceCategoryData?.loading ? (
-                                                [0, 1, 2, 3, 4, 5, 6, 7].map((item, index) => {
-                                                    return (
-                                                        <View
-                                                            key={index}
-                                                            style={{
-                                                                gap: verticalScale(10),
-                                                                width: scale(65),
-                                                                // marginBottom: verticalScale(10)
-                                                            }}
-                                                        >
-
-                                                            <Skeleton
-                                                                width={scale(60)}
-                                                                height={scale(60)}
-                                                                borderRadius={scale(30)}
-                                                            >
-
-                                                            </Skeleton>
-
-                                                        </View>
-                                                    )
-                                                })
-                                            ) : (
-                                                serviceCategoryData?.data?.map((item, index) => {
-                                                    return (
-                                                        <View
-                                                            key={item?._id}
-                                                            style={{
-                                                                gap: verticalScale(10),
-                                                                width: scale(65),
-                                                                marginBottom: verticalScale(10)
-                                                            }}
-                                                        >
-
-                                                            <View
-                                                                style={{
-                                                                    width: scale(60),
-                                                                    height: scale(60),
-                                                                    borderRadius: scale(30),
-                                                                    backgroundColor: colors.background,
-                                                                    marginHorizontal: "auto"
-                                                                }}
-                                                            >
-                                                                <Image
-                                                                    style={{ width: "100%", height: "100%", borderRadius: scale(30) }}
-                                                                    source={{ uri: item?.serviceCategoryImage?.url.replace("http", "https") }}
-                                                                    contentFit="cover"
-                                                                    transition={1000}
-                                                                />
-                                                            </View>
-                                                            <CustomText
-                                                                style={{
-                                                                    fontFamily: "AirbnbCereal_W_Md",
-                                                                    fontSize: scale(12),
-                                                                    textAlign: "center",
-                                                                    color: "gray",
-                                                                }}
-                                                            >{item.serviceCategoryName}</CustomText>
-                                                        </View>
-                                                    )
-                                                })
-                                            )
-                                        }
-                                    </View>
-                                </View>
-                            )
-                        }
+                        //         // serviceCategoryData?.loading ? (
+                        //         //     <View View style={styles.container} >
+                        //         //         <CustomText style={styles.sectionTitle}>Our Services</CustomText>
+                        //         //         <FlatList
+                        //         //             data={[0, 1, 2, 3, 4, 5, 6, 7]}
+                        //         //             horizontal
+                        //         //             showsHorizontalScrollIndicator={false}
+                        //         //             // keyExtractor={(item) => item._id}
+                        //         //             contentContainerStyle={styles.scrollContainer}
+                        //         //             renderItem={({ item }) => (
+                        //         //                 <Skeleton
+                        //         //                     width={scale(160)}
+                        //         //                     height={verticalScale(192)}
+                        //         //                 />
+                        //         //             )}
+                        //         //         />
+                        //         //     </View>
+                        //         // ) : (
+                        //         //     <View View style={styles.container} >
+                        //         //         <CustomText style={styles.sectionTitle}>Our Services</CustomText>
+                        //         //         <FlatList
+                        //         //             data={serviceCategoryData?.data}
+                        //         //             horizontal
+                        //         //             showsHorizontalScrollIndicator={false}
+                        //         //             keyExtractor={(item) => item._id}
+                        //         //             contentContainerStyle={styles.scrollContainer}
+                        //         //             renderItem={({ item }) => (
+                        //         //                 <ServiceCard
+                        //         //                     title={item.serviceCategoryName}
+                        //         //                     image={item?.serviceCategoryImage?.url.replace("http", "https")}
+                        //         //                     fallback={item.fallback}
+                        //         //                 />
+                        //         //             )}
+                        //         //         />
+                        //         //     </View>
+                        //         // )
+                        //     )
+                        // }
 
                         case "barber": {
                             return (
@@ -946,33 +846,25 @@ const Dashboard = () => {
                                         flexDirection: "row",
                                         alignItems: "center",
                                         justifyContent: "space-between",
-                                        paddingBottom: verticalScale(15)
+                                        // paddingBottom: verticalScale(15)
                                     }}>
-                                        <CustomText style={{
-                                            fontFamily: "AirbnbCereal_W_Blk",
-                                        }}>Barbers on duty <CustomText
-                                            style={{
-                                                fontFamily: "AirbnbCereal_W_Blk",
-                                                color: Colors.modeColor.colorCode
-                                            }}
-                                        >({homeDashboardData?.dashboardData?.barberOnDuty})</CustomText></CustomText>
-
+                                        <CustomText style={styles.heading}>Our Stylists <CustomText style={[styles.heading, { color: Colors.modeColor.colorCode }]}>{homeDashboardData?.dashboardData?.barberOnDuty}</CustomText></CustomText>
                                     </View>
 
                                     {
                                         homeDashboardData?.loading ? (
                                             <FlatList
-                                                key={3}
+                                                key={2}
                                                 style={{
                                                     overflow: "visible",
                                                 }}
                                                 columnWrapperStyle={{
                                                     columnGap: scale(10),
                                                 }}
-                                                data={[0, 1, 2, 3, 4, 5,]}
+                                                data={[0, 1, 2, 3]}
                                                 renderItem={({ item }) => <Skeleton
                                                     height={verticalScale(110)}
-                                                    width={scale(103)}
+                                                    width={scale(160)}
                                                     borderRadius={scale(10)}
 
                                                     style={{
@@ -981,11 +873,11 @@ const Dashboard = () => {
                                                 />}
                                                 keyExtractor={item => item}
                                                 bounces={false}
-                                                numColumns={3}
+                                                numColumns={2}
                                             />
                                         ) : homeDashboardData?.dashboardData?.barbers?.length ? (
                                             <FlatList
-                                                key={3}
+                                                key={2}
                                                 style={{
                                                     overflow: "visible",
                                                 }}
@@ -994,9 +886,9 @@ const Dashboard = () => {
                                                 }}
                                                 data={homeDashboardData?.dashboardData?.barbers.slice(0, sliceBarber)}
                                                 renderItem={({ item }) => <BarberCard item={item} />}
-                                                keyExtractor={item => item.id}
+                                                keyExtractor={item => item.barberId}
                                                 bounces={false}
-                                                numColumns={3}
+                                                numColumns={2}
                                             />
                                         ) : (
                                             <View
@@ -1018,7 +910,8 @@ const Dashboard = () => {
                                                 }}
                                                 style={{
                                                     height: verticalScale(35),
-                                                    backgroundColor: "#00B0901A",
+                                                    // backgroundColor: "#00B0901A",
+                                                    backgroundColor: "#14b8a6",
                                                     borderRadius: scale(4),
                                                     justifyContent: "center",
                                                     alignItems: "center",
@@ -1060,8 +953,8 @@ const Dashboard = () => {
                                                             gap: scale(5)
                                                         }}
                                                     >
-                                                        <CustomText style={{ color: Colors.modeColor.colorCode }}>See all barbers</CustomText>
-                                                        <RightIcon size={scale(14)} color={Colors.modeColor.colorCode} />
+                                                        <CustomText style={{ color: "#fff" }}>See all barbers</CustomText>
+                                                        <RightIcon size={scale(14)} color={"#fff"} />
                                                     </View>
                                                 </View>
                                             </Pressable>
@@ -1084,22 +977,246 @@ const Dashboard = () => {
 
 export default Dashboard
 
+
+const ServiceCard = ({ title, image, fallback }) => {
+    const [imgError, setImgError] = React.useState(false);
+
+    return (
+        <TouchableOpacity style={styles.serviceCard} activeOpacity={0.8}>
+            <Image
+                source={{ uri: imgError ? fallback : image }}
+                onError={() => setImgError(true)}
+                style={styles.image}
+            />
+            <CustomText style={styles.serviceCardTitle}>{title}</CustomText>
+        </TouchableOpacity>
+    );
+};
+
 const styles = StyleSheet.create({
-    topContainer: {
-        // gap: verticalScale(10),
+
+    btnContainer: {
+        marginTop: verticalScale(24),
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        gap: scale(12), // or use marginRight on first button if gap isn't supported
     },
-    btn: {
-        // width: "45%",
-        width: "48%",
-        height: verticalScale(35),
-        borderRadius: scale(41),
-        alignItems: "center",
-        justifyContent: "center",
+    joinQueue: {
+        flex: 1,
+        backgroundColor: '#fff',
+        paddingVertical: verticalScale(12),
+        borderRadius: scale(12),
+        alignItems: 'center',
+        transform: [{ scale: 1 }],
     },
+    joinQueueText: {
+        color: '#0d9488', // teal-600
+        fontWeight: 'bold',
+        fontSize: scale(14),
+        fontFamily: "AirbnbCereal_W_XBd",
+    },
+    bookAhead: {
+        flex: 1,
+        backgroundColor: 'rgba(255,255,255,0.25)', // white/25
+        paddingVertical: verticalScale(12),
+        borderRadius: scale(12),
+        alignItems: 'center',
+        transform: [{ scale: 1 }],
+    },
+    bookAheadText: {
+        color: '#ffffff',
+        fontWeight: 'bold',
+        fontSize: scale(14),
+        fontFamily: "AirbnbCereal_W_XBd",
+    },
+
     cardImage: {
         height: scale(80),
         width: scale(80),
         borderRadius: scale(8),
         marginBottom: verticalScale(5)
     },
+
+    // Card Csss
+    card: {
+        borderRadius: scale(16),
+        padding: scale(24),
+        marginBottom: verticalScale(24),
+        shadowColor: '#000',
+        shadowOffset: { width: 0, height: 6 },
+        shadowOpacity: 0.15,
+        shadowRadius: 8,
+        elevation: 5,
+    },
+    topRow: {
+        flexDirection: 'row',
+        justifyContent: 'space-between',
+        alignItems: 'flex-start',
+    },
+    title: {
+        fontSize: scale(20),
+        fontFamily: "AirbnbCereal_W_XBd",
+        color: '#fff',
+    },
+    subtitle: {
+        fontSize: scale(14),
+        color: '#fff',
+        opacity: 0.9,
+        marginTop: verticalScale(4),
+    },
+    icon: {
+        opacity: 0.5,
+    },
+    button: {
+        marginTop: verticalScale(24),
+        width: '100%',
+        backgroundColor: '#fff',
+        paddingVertical: verticalScale(12),
+        borderRadius: scale(12),
+        alignItems: 'center',
+        transform: [{ scale: 1 }],
+    },
+    buttonText: {
+        color: '#0d9488',
+        fontWeight: 'bold',
+        fontSize: scale(16),
+    },
+
+    // Status Card
+
+    heading: {
+        fontSize: scale(20),
+        fontFamily: "AirbnbCereal_W_XBd",
+        marginBottom: verticalScale(16),
+    },
+    grid: {
+        flexDirection: 'row',
+        flexWrap: 'wrap',
+        justifyContent: 'space-between',
+    },
+    statusCard: {
+        // backgroundColor: '#fff',
+        // backgroundColor: "#1F2937",
+        width: '48%',
+        padding: scale(16),
+        borderRadius: scale(12),
+        marginBottom: verticalScale(16),
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: scale(6),
+        borderWidth: scale(1),
+        // borderColor: '#e5e7eb', // border-gray-200
+    },
+    iconContainer: {
+        padding: scale(12),
+        borderRadius: scale(12),
+        marginRight: scale(12),
+    },
+    label: {
+        fontSize: scale(14),
+        // color: '#6b7280', // text-gray-500
+    },
+    value: {
+        fontSize: scale(24),
+        fontFamily: "AirbnbCereal_W_XBd"
+    },
+
+    // hintCard: {
+    //     backgroundColor: '#faf5ff', // bg-purple-50
+    //     borderColor: '#e9d5ff',     // border-purple-200
+    //     borderWidth: 1,
+    //     borderRadius: scale(12),    // rounded-2xl
+    //     padding: scale(16),
+    //     marginBottom: verticalScale(24),
+    //     flexDirection: 'row',
+    //     alignItems: 'center',
+    //     gap: scale(12),
+    // },
+
+    // hintTextWrapper: {
+    //     width: "80%",
+    // },
+
+    // hintIconWrapper: {
+    //     backgroundColor: '#f3e8ff', // bg-purple-100
+    //     padding: scale(12),
+    //     borderRadius: scale(12),
+    // },
+    // hintTitle: {
+    //     fontFamily: "AirbnbCereal_W_XBd",
+    //     color: '#6b21a8',           // text-purple-800
+    //     fontSize: scale(16),
+    //     marginBottom: verticalScale(2),
+    // },
+    // hintDescription: {
+    //     fontSize: scale(13),
+    //     color: '#7e22ce',           // text-purple-700
+    // },
+
+    hintCard: {
+        backgroundColor: '#fff',  // bg-gray-50
+        borderColor: '#e5e7eb',      // border-gray-200
+        borderWidth: 1,
+        borderRadius: scale(12),
+        padding: scale(16),
+        marginBottom: verticalScale(24),
+        flexDirection: 'row',
+        alignItems: 'center',
+        gap: scale(12),
+    },
+
+    hintIconWrapper: {
+        backgroundColor: '#f3f4f6',  // bg-gray-100
+        padding: scale(12),
+        borderRadius: scale(12),
+    },
+
+    hintTextWrapper: {
+        width: '80%',
+    },
+
+    hintTitle: {
+        fontFamily: 'AirbnbCereal_W_XBd',
+        color: '#1f2937',            // text-gray-800
+        fontSize: scale(16),
+        marginBottom: verticalScale(2),
+    },
+
+    hintDescription: {
+        fontSize: scale(13),
+        color: '#4b5563',            // text-gray-600
+    },
+
+
+    // Service Category Card
+
+    container: {
+        marginBottom: verticalScale(32),
+    },
+    sectionTitle: {
+        fontSize: scale(20),
+        fontWeight: '600',
+        // color: '#1f2937', // text-gray-800
+        marginBottom: verticalScale(16),
+    },
+    scrollContainer: {
+        paddingBottom: verticalScale(8),
+    },
+    serviceCard: {
+        width: scale(160),
+        marginRight: scale(16),
+    },
+    image: {
+        width: '100%',
+        height: verticalScale(192), // equivalent to h-48
+        borderRadius: scale(16),
+        marginBottom: verticalScale(8),
+        backgroundColor: '#e5e7eb',
+    },
+    serviceCardTitle: {
+        textAlign: 'center',
+        fontWeight: '600',
+        // color: '#374151', // text-gray-700
+    },
+
 })

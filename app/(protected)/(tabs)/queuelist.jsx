@@ -1,4 +1,4 @@
-import { FlatList, Platform, Pressable, RefreshControl, StyleSheet, View } from 'react-native';
+import { FlatList, Platform, Pressable, RefreshControl, StyleSheet, TouchableOpacity, View } from 'react-native';
 import React, { useCallback, useState } from 'react';
 import CustomTabView from '../../../components/CustomTabView';
 import CustomText from '../../../components/CustomText';
@@ -13,8 +13,9 @@ import { useAuth } from '../../../context/AuthContext';
 import axios from 'axios';
 import { BASE_URL } from '@/utils/api';
 import Skeleton from '../../../components/Skeleton';
-import { PeopleIcon, RefreshIcon } from '../../../constants/icons';
+import { NotificationIcon, PeopleIcon, RefreshIcon } from '../../../constants/icons';
 import { io } from "socket.io-client";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const QueueList = () => {
 
@@ -82,15 +83,53 @@ const QueueList = () => {
         }, 2000);
     };
 
+    const { newNotification, setNewNotification } = useGlobal()
+
     return (
         <CustomTabView
             style={{
                 justifyContent: "space-between",
                 paddingVertical: verticalScale(0),
-                paddingTop: verticalScale(10),
+                paddingTop: verticalScale(0),
                 // backgroundColor: "#00B0901A"
                 backgroundColor: colors.background
             }}>
+            <View style={styles.header}>
+
+                <CustomText style={{ fontSize: scale(18), fontFamily: "AirbnbCereal_W_XBd" }}>Live Queue</CustomText>
+
+                {/* Right section - Notification bell */}
+                <Pressable
+                    style={styles.bellWrapper}
+                    activeOpacity={0.7}
+                    onPress={async () => {
+
+                        if (newNotification.value) {
+                            await AsyncStorage.setItem(
+                                "newNotification",
+                                JSON.stringify({
+                                    email: authenticatedUser?.email,
+                                    value: false
+                                })
+                            );
+                            setNewNotification({
+                                email: "",
+                                value: false
+                            })
+                        }
+
+                        router.push("/notification")
+                    }}
+                >
+                    <NotificationIcon size={moderateScale(24)} color={colors.notificationBellColor} />
+                    {
+                        newNotification.value && (
+                            <View style={styles.badge} />
+                        )
+                    }
+
+                </Pressable>
+            </View>
             <View style={{ flex: 1, paddingBottom: Platform.OS === 'ios' ? verticalScale(60) : 0 }}>
                 {
                     qlistData?.data?.length ? (
@@ -101,7 +140,7 @@ const QueueList = () => {
                                 gap: scale(10)
                             }}
                         >
-                            <Pressable
+                            {/* <Pressable
                                 onPress={() => router.push("/joinpopup")}
                                 style={{
                                     height: verticalScale(40),
@@ -115,7 +154,13 @@ const QueueList = () => {
                                 }}
                             >
                                 <CustomText style={{ color: "#fff" }}>Join Queue</CustomText>
-                            </Pressable>
+                            </Pressable> */}
+
+                            <TouchableOpacity
+                                onPress={() => router.push("/joinpopup")}
+                                style={styles.queueButton} activeOpacity={0.85}>
+                                <CustomText style={styles.queueButtonText}>Join Queue</CustomText>
+                            </TouchableOpacity>
 
                             {/* <Pressable
                                 disabled={qlistData?.loading}
@@ -231,8 +276,18 @@ const QueueList = () => {
                             </View>
                         </View>
                     )
-
                 }
+
+                {/* <QlistItem
+                    name="Jazz"
+                    partner="Sumit S."
+                    imageUrl="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?q=80&w=2574&auto=format&fit=crop"
+                />
+                <QlistItem
+                    name="Vivob"
+                    partner="Sumit S."
+                    imageUrl="https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=2864&auto=format&fit=crop"
+                /> */}
 
 
             </View>
@@ -243,23 +298,65 @@ const QueueList = () => {
 export default QueueList;
 
 const styles = StyleSheet.create({
-    title: {
-        fontFamily: "AirbnbCereal_W_Md"
+
+    queueButton: {
+        width: '100%',
+        backgroundColor: '#14b8a6', // bg-teal-500
+        paddingVertical: verticalScale(16), // py-4
+        borderRadius: scale(12), // rounded-xl
+        marginBottom: verticalScale(15), // mb-6
+        alignItems: 'center',
+        justifyContent: 'center',
     },
-    qlistHeader: {
+    queueButtonText: {
+        color: '#fff', // text-white
+        fontWeight: 'bold',
+        fontSize: scale(16),
+    },
+
+    // title: {
+    //     fontFamily: "AirbnbCereal_W_Md"
+    // },
+    // qlistHeader: {
+    //     flexDirection: 'row',
+    //     justifyContent: 'space-between',
+    //     alignItems: 'center',
+    //     marginBottom: verticalScale(10),
+    // },
+
+    // btn: {
+    //     width: "45%",
+    //     height: verticalScale(35),
+    //     borderRadius: scale(4),
+    //     alignItems: "center",
+    //     justifyContent: "center",
+    //     elevation: 4,
+    // }
+
+    header: {
+        // paddingTop: verticalScale(5),
+        // paddingBottom: verticalScale(15),
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        marginBottom: verticalScale(10),
+        height: verticalScale(70),
+        paddingTop: verticalScale(5),
+        paddingBottom: verticalScale(12),
     },
 
-    btn: {
-        width: "45%",
-        height: verticalScale(35),
+    bellWrapper: {
+        padding: scale(8),
+        borderRadius: scale(999),
+        position: 'relative',
+    },
+    badge: {
+        position: 'absolute',
+        top: scale(6),
+        right: scale(6),
+        width: scale(8),
+        height: scale(8),
         borderRadius: scale(4),
-        alignItems: "center",
-        justifyContent: "center",
-        elevation: 4,
-    }
+        backgroundColor: '#2dd4bf', // bg-teal-400
+    },
 });
 

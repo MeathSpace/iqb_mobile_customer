@@ -27,7 +27,7 @@ export default function TabLayout() {
                     backgroundColor: colors.background,
                 }}
             >
-                {authenticatedUser?.salonId ? <Header /> : null}
+                {/* {authenticatedUser?.salonId ? <Header /> : null} */}
 
                 <Tabs
                     screenOptions={{

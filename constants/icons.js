@@ -213,9 +213,14 @@ export const HeartDislikeIcon = ({ size = moderateScale(24), color = 'black', st
 );
 
 export const NotificationOffIcon = ({ size = moderateScale(24), color = 'black', style }) => (
-    <Ionicons name="notifications-off-outline" size={size} color={color} style={style} />
+    // <Ionicons name="notifications-off-outline" size={size} color={color} style={style} />
+    <Feather name="bell" size={size} color={color} style={style} />
 );
 
 export const MapScissorIcon = ({ size = moderateScale(24), color = 'black', style }) => (
     <Feather name="scissors" size={size} color={color} style={style} />
+);
+
+export const SparkleIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <Ionicons name="sparkles-outline" size={size} color={color} style={style} />
 );
