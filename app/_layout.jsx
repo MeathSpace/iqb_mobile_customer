@@ -74,7 +74,9 @@ const RootLayout = () => {
       borderBottomColor: "#efefef",
       notificationBellColor: "#6b7280",
       cardColor: "#fff",
-      cardBorder: "#e5e7eb"
+      cardBorder: "#e5e7eb",
+      queueBorder: "#e5e7eb",
+      selected: "#f0fdfa"
     },
   };
 
@@ -91,7 +93,9 @@ const RootLayout = () => {
       borderBottomColor: "#101010",
       notificationBellColor: "#D1D5DB",
       cardColor: "#1F2937",
-      cardBorder: "#1F2937"
+      cardBorder: "#1F2937",
+      queueBorder: "#374151",
+      selected: "#14b8a619"
     },
   };
 

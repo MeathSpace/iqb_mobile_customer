@@ -1,4 +1,4 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import { scale, verticalScale } from 'react-native-size-matters'
 import CustomText from '../../components/CustomText'
@@ -24,13 +24,13 @@ const joinpopup = () => {
             <Pressable
                 onPress={() => { }}
                 style={{
-                    width: "85%",
-                    height: verticalScale(350),
-                    backgroundColor: colors.background,
-                    borderRadius: scale(10),
-                    padding: scale(15),
+                    width: "95%",
+                    // height: verticalScale(350),
+                    backgroundColor: colors.cardColor,
+                    borderRadius: scale(12),
+                    padding: scale(20),
                     gap: verticalScale(20),
-                    borderColor: "gray",
+                    borderColor: colors.cardBorder,
                     borderWidth: scale(1)
                 }}
             >
@@ -49,29 +49,23 @@ const joinpopup = () => {
                 >
                     <CustomText
                         style={{
-                            fontFamily: "AirbnbCereal_W_Blk",
-                            fontSize: scale(16)
+                            fontFamily: "AirbnbCereal_W_XBd",
+                            fontSize: scale(18)
                         }}
                     >Single Join</CustomText>
                     <CustomText
                         style={{
                             fontFamily: "AirbnbCereal_W_Md",
-                            color: "gray",
-                            fontSize: scale(12)
+                            color: colors.secondaryText,
+                            fontSize: scale(14)
                         }}
                     >Join the queue as a single customer. This option is for individuals waiting alone for salon services.</CustomText>
-                    <Pressable
+
+                    <TouchableOpacity
                         onPress={() => router.replace("/singleJoin")}
-                        style={{
-                            height: verticalScale(40),
-                            borderRadius: scale(4),
-                            justifyContent: "center",
-                            alignItems: "center",
-                            backgroundColor: Colors.modeColor.colorCode
-                        }}
-                    >
-                        <CustomText style={{ color: "#fff" }}>Single Join</CustomText>
-                    </Pressable>
+                        style={styles.queueButton} activeOpacity={0.85}>
+                        <CustomText style={styles.queueButtonText}>Single Join</CustomText>
+                    </TouchableOpacity>
                 </View>
 
                 <View
@@ -81,29 +75,23 @@ const joinpopup = () => {
                 >
                     <CustomText
                         style={{
-                            fontFamily: "AirbnbCereal_W_Blk",
-                            fontSize: scale(16)
+                            fontFamily: "AirbnbCereal_W_XBd",
+                            fontSize: scale(18)
                         }}
                     >Group Join</CustomText>
                     <CustomText
                         style={{
                             fontFamily: "AirbnbCereal_W_Md",
-                            color: "gray",
-                            fontSize: scale(12)
+                            color: colors.secondaryText,
+                            fontSize: scale(14)
                         }}
                     >Join the queue with multiple people at once. Ideal for friends or family members visiting the salon together.</CustomText>
-                    <Pressable
+
+                    <TouchableOpacity
                         onPress={() => router.replace("/groupJoin")}
-                        style={{
-                            height: verticalScale(40),
-                            borderRadius: scale(4),
-                            justifyContent: "center",
-                            alignItems: "center",
-                            backgroundColor: Colors.modeColor.colorCode
-                        }}
-                    >
-                        <CustomText style={{ color: "#fff" }}>Group Join</CustomText>
-                    </Pressable>
+                        style={styles.queueButton} activeOpacity={0.85}>
+                        <CustomText style={styles.queueButtonText}>Group Join</CustomText>
+                    </TouchableOpacity>
                 </View>
             </Pressable>
         </Pressable>
@@ -112,4 +100,20 @@ const joinpopup = () => {
 
 export default joinpopup
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+
+    queueButton: {
+        width: '100%',
+        backgroundColor: '#14b8a6', // bg-teal-500
+        paddingVertical: verticalScale(16), // py-4
+        borderRadius: scale(12), // rounded-xl
+        marginBottom: verticalScale(15), // mb-6
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    queueButtonText: {
+        color: '#fff', // text-white
+        fontFamily: "AirbnbCereal_W_XBd",
+        fontSize: scale(16),
+    },
+})

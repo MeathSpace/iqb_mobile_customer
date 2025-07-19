@@ -11,7 +11,7 @@ const AdvertiseCard = ({ item }) => {
     return (
         <View style={[styles.cardWrapper, {}]}>
             <Image
-                style={styles.cardImage}
+                style={[styles.cardImage, { borderColor: colors.queueBorder}]}
                 source={{ uri: item.url }}
                 contentFit="cover"
                 transition={300}
@@ -26,13 +26,14 @@ const styles = StyleSheet.create({
     cardWrapper: {
         // height: verticalScale(200),
         // paddingVertical: verticalScale(20),
-        marginBottom: verticalScale(10),
+        // marginBottom: verticalScale(10),
         width: scale(330.56),
     },
     cardImage: {
         // height: "100%",
-        height: verticalScale(145 / 1.8),
+        height: verticalScale(145 / 1.2),
         width: "100%",
         borderRadius: scale(12),
+        borderWidth: scale(1)
     }
 })

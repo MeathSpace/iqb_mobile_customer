@@ -198,18 +198,10 @@ const Dashboard = () => {
         {
             title: "status",
         },
-
-        {
-            title: "advertisement",
-        },
-
         {
             title: "advertise",
         },
 
-        {
-            title: "serviceCategory",
-        },
         {
             title: "barber",
         },
@@ -427,7 +419,7 @@ const Dashboard = () => {
                 data={pageData}
                 showsVerticalScrollIndicator={false}
                 contentContainerStyle={{
-                    gap: verticalScale(0)
+                    gap: verticalScale(20)
                 }}
                 renderItem={({ item }) => {
                     switch (item.title) {
@@ -625,13 +617,20 @@ const Dashboard = () => {
 
                         case "hint": {
                             return (
-                                <View style={styles.hintCard}>
-                                    <View style={styles.hintIconWrapper}>
-                                        <SalonIcon color="#4b5563" />
+                                <View style={[styles.hintCard, {
+                                    backgroundColor: colors.cardColor,
+                                    borderColor: colors.cardBorder
+                                }]}>
+                                    <View style={[styles.hintIconWrapper, {
+                                        backgroundColor: colors.background,
+                                        borderColor: colors.cardBorder,
+                                        borderWidth: scale(1)
+                                    }]}>
+                                        <SalonIcon color={colors.text} />
                                     </View>
                                     <View style={styles.hintTextWrapper}>
-                                        <CustomText style={styles.hintTitle}>Salon Info</CustomText>
-                                        <CustomText style={styles.hintDescription}>
+                                        <CustomText style={[styles.hintTitle, { color: colors.secondaryText }]}>Salon Info</CustomText>
+                                        <CustomText style={[styles.hintDescription]}>
                                             {homeDashboardData?.dashboardData?.salonInfo?.salonDesc}
                                         </CustomText>
                                     </View>
@@ -639,11 +638,6 @@ const Dashboard = () => {
                             )
                         }
 
-                        // case "advertise": {
-                        //     return (
-                        //         <CustomText>Advertise</CustomText>
-                        //     )
-                        // }
 
                         case "advertise": {
                             return (
@@ -658,9 +652,9 @@ const Dashboard = () => {
                                             }}
                                             data={[0, 1, 2, 3]}
                                             renderItem={({ item }) => <View style={{
-                                                paddingVertical: verticalScale(20),
+                                                // paddingVertical: verticalScale(20),
                                             }}>
-                                                <Skeleton width={scale(300.56)} height={verticalScale(145 / 1.8)} borderRadius={scale(12)} />
+                                                <Skeleton width={scale(300.56)} height={verticalScale(145 / 1.2)} borderRadius={scale(12)} />
                                             </View>}
                                             keyExtractor={item => item}
                                             horizontal
@@ -842,14 +836,7 @@ const Dashboard = () => {
                         case "barber": {
                             return (
                                 <>
-                                    <View style={{
-                                        flexDirection: "row",
-                                        alignItems: "center",
-                                        justifyContent: "space-between",
-                                        // paddingBottom: verticalScale(15)
-                                    }}>
-                                        <CustomText style={styles.heading}>Our Stylists <CustomText style={[styles.heading, { color: Colors.modeColor.colorCode }]}>{homeDashboardData?.dashboardData?.barberOnDuty}</CustomText></CustomText>
-                                    </View>
+                                    <CustomText style={styles.heading}>Our Stylists <CustomText style={[styles.heading, { color: Colors.modeColor.colorCode }]}>{homeDashboardData?.dashboardData?.barberOnDuty}</CustomText></CustomText>
 
                                     {
                                         homeDashboardData?.loading ? (
@@ -868,7 +855,7 @@ const Dashboard = () => {
                                                     borderRadius={scale(10)}
 
                                                     style={{
-                                                        marginBottom: verticalScale(10)
+                                                        // marginBottom: verticalScale(10)
                                                     }}
                                                 />}
                                                 keyExtractor={item => item}
@@ -915,7 +902,7 @@ const Dashboard = () => {
                                                     borderRadius: scale(4),
                                                     justifyContent: "center",
                                                     alignItems: "center",
-                                                    marginBottom: verticalScale(20)
+                                                    // marginBottom: verticalScale(20)
                                                 }}
                                             >
                                                 <View style={{ flexDirection: "row", alignItems: "center", gap: scale(10) }}>
@@ -1041,7 +1028,7 @@ const styles = StyleSheet.create({
     card: {
         borderRadius: scale(16),
         padding: scale(24),
-        marginBottom: verticalScale(24),
+        // marginBottom: verticalScale(24),
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 6 },
         shadowOpacity: 0.15,
@@ -1087,7 +1074,7 @@ const styles = StyleSheet.create({
     heading: {
         fontSize: scale(20),
         fontFamily: "AirbnbCereal_W_XBd",
-        marginBottom: verticalScale(16),
+        marginBottom: verticalScale(10),
     },
     grid: {
         flexDirection: 'row',
@@ -1097,10 +1084,10 @@ const styles = StyleSheet.create({
     statusCard: {
         // backgroundColor: '#fff',
         // backgroundColor: "#1F2937",
-        width: '48%',
+        width: '47%',
         padding: scale(16),
         borderRadius: scale(12),
-        marginBottom: verticalScale(16),
+        marginBottom: verticalScale(15),
         flexDirection: 'row',
         alignItems: 'center',
         gap: scale(6),
@@ -1121,52 +1108,18 @@ const styles = StyleSheet.create({
         fontFamily: "AirbnbCereal_W_XBd"
     },
 
-    // hintCard: {
-    //     backgroundColor: '#faf5ff', // bg-purple-50
-    //     borderColor: '#e9d5ff',     // border-purple-200
-    //     borderWidth: 1,
-    //     borderRadius: scale(12),    // rounded-2xl
-    //     padding: scale(16),
-    //     marginBottom: verticalScale(24),
-    //     flexDirection: 'row',
-    //     alignItems: 'center',
-    //     gap: scale(12),
-    // },
-
-    // hintTextWrapper: {
-    //     width: "80%",
-    // },
-
-    // hintIconWrapper: {
-    //     backgroundColor: '#f3e8ff', // bg-purple-100
-    //     padding: scale(12),
-    //     borderRadius: scale(12),
-    // },
-    // hintTitle: {
-    //     fontFamily: "AirbnbCereal_W_XBd",
-    //     color: '#6b21a8',           // text-purple-800
-    //     fontSize: scale(16),
-    //     marginBottom: verticalScale(2),
-    // },
-    // hintDescription: {
-    //     fontSize: scale(13),
-    //     color: '#7e22ce',           // text-purple-700
-    // },
-
     hintCard: {
-        backgroundColor: '#fff',  // bg-gray-50
-        borderColor: '#e5e7eb',      // border-gray-200
         borderWidth: 1,
         borderRadius: scale(12),
         padding: scale(16),
-        marginBottom: verticalScale(24),
+        // marginBottom: verticalScale(24),
         flexDirection: 'row',
         alignItems: 'center',
         gap: scale(12),
     },
 
     hintIconWrapper: {
-        backgroundColor: '#f3f4f6',  // bg-gray-100
+        // backgroundColor: '#f3f4f6',  // bg-gray-100
         padding: scale(12),
         borderRadius: scale(12),
     },
@@ -1177,21 +1130,21 @@ const styles = StyleSheet.create({
 
     hintTitle: {
         fontFamily: 'AirbnbCereal_W_XBd',
-        color: '#1f2937',            // text-gray-800
+        // color: '#1f2937',            // text-gray-800
         fontSize: scale(16),
         marginBottom: verticalScale(2),
     },
 
     hintDescription: {
         fontSize: scale(13),
-        color: '#4b5563',            // text-gray-600
+        // color: '#4b5563',            // text-gray-600
     },
 
 
     // Service Category Card
 
     container: {
-        marginBottom: verticalScale(32),
+        // marginBottom: verticalScale(32),
     },
     sectionTitle: {
         fontSize: scale(20),

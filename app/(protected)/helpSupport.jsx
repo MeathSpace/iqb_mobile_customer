@@ -6,7 +6,8 @@ import {
     Keyboard,
     TouchableWithoutFeedback,
     ActivityIndicator,
-    Alert
+    Alert,
+    TouchableOpacity
 } from 'react-native'
 import React, { useState } from 'react'
 import { CloseIcon, ErrorIcon } from '../../constants/icons'
@@ -84,10 +85,10 @@ const helpSupport = () => {
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
             <View style={styles.overlay}>
-                <View style={[styles.container, { backgroundColor: colors.background }]}>
+                <View style={[styles.container, { backgroundColor: colors.background, borderColor: colors.cardBorder }]}>
                     <CustomText style={styles.title}>Help & Support</CustomText>
 
-                    <CustomText style={styles.description}>
+                    <CustomText style={[styles.description, { color: colors.secondaryText }]}>
                         If you are experiencing any issues, please let us know. We will try to resolve them as soon as possible.
                     </CustomText>
 
@@ -100,8 +101,9 @@ const helpSupport = () => {
                             {
                                 // borderColor: "#DDDDDD",
                                 // backgroundColor: "#00B0901A",
+                                backgroundColor: colors.cardColor,
                                 borderWidth: scale(1),
-                                borderColor: "gray",
+                                borderColor: colors.queueBorder,
                                 fontFamily: "AirbnbCereal_W_Md"
                             }
                         ]}
@@ -133,8 +135,9 @@ const helpSupport = () => {
                                 textAlignVertical: "top",
                                 // borderColor: "#DDDDDD",
                                 // backgroundColor: "#00B0901A",
+                                backgroundColor: colors.cardColor,
                                 borderWidth: scale(1),
-                                borderColor: "gray",
+                                borderColor: colors.queueBorder,
                                 fontFamily: "AirbnbCereal_W_Md"
                             }
                         ]}
@@ -161,7 +164,7 @@ const helpSupport = () => {
                         )
                     }
 
-                    <Pressable
+                    {/* <Pressable
                         onPress={sendCustomerSupportMail}
                         style={styles.submitButton}>
                         {
@@ -171,7 +174,21 @@ const helpSupport = () => {
                                 <CustomText style={{ color: "#fff" }}>Submit</CustomText>
                             )
                         }
-                    </Pressable>
+                    </Pressable> */}
+
+                    <TouchableOpacity
+                        onPress={sendCustomerSupportMail}
+                        style={styles.queueButton} activeOpacity={0.85}>
+
+                        {
+                            sendMailLoading ? (
+                                <ActivityIndicator size="small" color="#fff" />
+                            ) : (
+                                <CustomText style={styles.queueButtonText}>Submit</CustomText>
+                            )
+                        }
+
+                    </TouchableOpacity>
 
                     <CustomText style={styles.contactText}>
                         You can contact us on this number{" "}
@@ -204,22 +221,20 @@ const styles = StyleSheet.create({
         alignItems: "center"
     },
     container: {
-        width: "90%",
-        borderRadius: scale(8),
+        width: "95%",
+        borderRadius: scale(12),
         borderWidth: scale(1),
-        borderColor: "gray",
         justifyContent: "space-between",
         gap: verticalScale(10),
-        padding: scale(15),
+        padding: scale(17),
         position: 'relative'
     },
     title: {
-        fontFamily: "AirbnbCereal_W_Bd",
+        fontFamily: "AirbnbCereal_W_XBd",
         fontSize: scale(18),
         textAlign: "center"
     },
     description: {
-        color: "gray",
         fontSize: scale(14),
     },
     inputField: {
@@ -252,5 +267,20 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: "#E11D481A",
         borderRadius: scale(40),
-    }
+    },
+
+    queueButton: {
+        width: '100%',
+        backgroundColor: '#14b8a6', // bg-teal-500
+        paddingVertical: verticalScale(16), // py-4
+        borderRadius: scale(12), // rounded-xl
+        marginBottom: verticalScale(15), // mb-6
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    queueButtonText: {
+        color: '#fff', // text-white
+        fontFamily: "AirbnbCereal_W_XBd",
+        fontSize: scale(16),
+    },
 })

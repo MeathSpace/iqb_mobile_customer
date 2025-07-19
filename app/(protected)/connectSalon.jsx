@@ -1,4 +1,4 @@
-import { ActivityIndicator, Pressable, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import { CloseIcon, ErrorIcon } from '../../constants/icons';
@@ -54,28 +54,35 @@ const connectSalon = () => {
         >
             <View
                 style={{
-                    width: "90%",
-                    height: verticalScale(244),
-                    borderRadius: scale(8),
+                    width: "95%",
+                    height: verticalScale(280),
+                    borderRadius: scale(12),
                     borderWidth: scale(1),
-                    borderColor: "gray",
+                    borderColor: colors.cardBorder,
                     paddingVertical: verticalScale(24),
                     paddingHorizontal: scale(48),
                     gap: verticalScale(32),
-                    backgroundColor: colors.background,
+                    backgroundColor: colors.cardColor,
                     position: 'relative'
                 }}
             >
                 <View style={{ gap: verticalScale(25) }}>
-                    <ErrorIcon size={scale(45)} color={"#FF6961"} style={{ textAlign: "center" }} />
-                    <CustomText
-                        style={{
-                            textAlign: "center"
-                        }}
-                    >Are you sure you want to disconnect?</CustomText>
+                    {/* <ErrorIcon size={scale(45)} color={"#FF6961"} style={{ textAlign: "center" }} /> */}
+                    <View style={[styles.iconContainer, { backgroundColor: "rgba(239, 68, 68, 0.1)" }]}>
+                        <ErrorIcon size={scale(45)} color={"#ef4444"} style={{ textAlign: "center" }} />
+                    </View>
+
+                    <CustomText style={{
+                        fontFamily: "AirbnbCereal_W_Bd",
+                        fontSize: scale(16),
+                        textAlign: "center",
+                        // color: colors.secondaryText,
+                    }}>
+                        Are you sure you want to disconnect?
+                    </CustomText>
                 </View>
 
-                <Pressable
+                {/* <Pressable
                     onPress={changeSalonPressed}
                     style={{
                         height: verticalScale(44),
@@ -94,7 +101,21 @@ const connectSalon = () => {
                             <CustomText style={{ color: "#fff" }}>Change Salon</CustomText>
                         )
                     }
-                </Pressable>
+                </Pressable> */}
+
+                <TouchableOpacity
+                    onPress={changeSalonPressed}
+                    style={styles.queueButton} activeOpacity={0.85}>
+
+                    {
+                        connectSalonLoader ? (
+                            <ActivityIndicator size="small" color="#fff" />
+                        ) : (
+                            <CustomText style={styles.queueButtonText}>Change Salon</CustomText>
+                        )
+                    }
+
+                </TouchableOpacity>
 
                 <Pressable
                     onPress={() => router.back()}
@@ -126,5 +147,29 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: "#E11D481A",
         borderRadius: scale(40),
-    }
+    },
+
+    iconContainer: {
+        width: scale(80),
+        height: scale(80),
+        borderRadius: scale(80),
+        justifyContent: "center",
+        alignItems: "center",
+        marginHorizontal: "auto",
+    },
+
+    queueButton: {
+        width: '100%',
+        backgroundColor: '#14b8a6', // bg-teal-500
+        paddingVertical: verticalScale(16), // py-4
+        borderRadius: scale(12), // rounded-xl
+        marginBottom: verticalScale(15), // mb-6
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    queueButtonText: {
+        color: '#fff', // text-white
+        fontFamily: "AirbnbCereal_W_XBd",
+        fontSize: scale(16),
+    },
 })

@@ -219,12 +219,12 @@ const styles = StyleSheet.create({
 
     header: {
         // paddingHorizontal: scale(10),
-        paddingTop: verticalScale(5),
-        paddingBottom: verticalScale(12),
+        // paddingTop: verticalScale(5),
+        // paddingBottom: verticalScale(12),
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
-        height: verticalScale(70)
+        height: verticalScale(40),
     },
     leftSection: {
         flexDirection: 'row',
