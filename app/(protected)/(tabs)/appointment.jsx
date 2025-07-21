@@ -496,7 +496,7 @@
 
 
 
-import { Alert, FlatList, Platform, Pressable, RefreshControl, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, FlatList, Platform, Pressable, RefreshControl, SectionList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useCallback, useState } from 'react'
 import CustomText from '../../../components/CustomText';
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
@@ -644,7 +644,22 @@ const appointment = () => {
     },
   ];
 
-  console.log("appointmentListData ", JSON.stringify(appointmentListData?.data?.filter((item) => item.status !== "upcoming"), null, 2))
+  // console.log("appointmentListData ", JSON.stringify(appointmentListData?.data?.filter((item) => item.status !== "upcoming"), null, 2))
+
+
+  const upcomingAppointments = appointmentListData?.data?.filter((item) => item.status === "upcoming") || [];
+  const pastAppointments = appointmentListData?.data?.filter((item) => item.status !== "upcoming") || [];
+
+  const hasUpcoming = upcomingAppointments.length > 0;
+  const hasPast = pastAppointments.length > 0;
+
+  const sections = [];
+  if (hasUpcoming) {
+    sections.push({ title: 'Upcoming', data: upcomingAppointments });
+  }
+  if (hasPast) {
+    sections.push({ title: 'Past', data: pastAppointments });
+  }
 
   return (
     <CustomTabView
@@ -692,101 +707,99 @@ const appointment = () => {
         </Pressable>
       </View>
 
-      <View>
-        <CustomText style={styles.Listheader}>Upcoming</CustomText>
-
-        {
-          appointmentListData?.loading ? (
-            <CustomText>Loading..</CustomText>
-          ) : appointmentListData?.data?.filter((item) => item.status === "upcoming")?.length > 0 ? (
-            <FlatList
-              data={appointmentListData?.data?.filter((item) => item.status === "upcoming")}
-              keyExtractor={(item) => item._id}
-              renderItem={({ item }) => (
-                <Pressable
-                  onPress={() => {
-                    if (item.status === "upcoming") {
-                      router.push({
-                        pathname: "/appointmentPop",
-                        params: {
-                          selectedAppointment: JSON.stringify(item),
-                        },
-                      });
-                    } else {
-                      Alert.alert(
-                        "Warning",
-                        `This appointment is already ${item.status}`,
-                        [{ text: "OK", onPress: () => { } }],
-                        { cancelable: true }
-                      );
-                    }
-                  }}
-                  style={[styles.card, { backgroundColor: colors.cardColor, borderColor: colors.cardBorder }]}>
-                  <Image source={{ uri: item?.barberProfile?.[0]?.url }} style={styles.image} />
-                  <View style={styles.info}>
-                    <CustomText style={[styles.title, {
-                      fontFamily: "AirbnbCereal_W_XBd",
-                    }]} numberOfLines={1}>{item.barbername}</CustomText>
-                    <CustomText style={[styles.datetime, {
-                      color: colors.secondaryText,
-                    }]}>{item?.appointmentDate?.split("T")[0]} ({item?.timeSlots})</CustomText>
-                    <View style={styles.footer}>
-                      <CustomText style={[styles.meta, {
-                        color: colors.secondaryText,
-                      }]}>{authenticatedUser?.currency} {item?.services?.reduce((sum, service) => {
-                        return sum + (service?.servicePrice || 0);
-                      }, 0)} • {item?.services.length} item{item?.services.length > 1 ? 's' : ''}</CustomText>
-                    </View>
-                  </View>
-                </Pressable>
-              )}
-              style={{
-                height: verticalScale(250),
-                marginBottom: verticalScale(20)
-              }}
-              contentContainerStyle={{ paddingBottom: verticalScale(20), paddingHorizontal: scale(5) }}
-              ItemSeparatorComponent={() => <View style={styles.separator} />}
+      <>
+        {appointmentListData?.loading ? (
+          [0, 1, 2, 3, 4, 5].map((_, index) => (
+            <Skeleton
+              key={index}
+              height={verticalScale(80)}
+              borderRadius={scale(12)}
+              style={{ marginVertical: verticalScale(5) }}
             />
-          ) : (
-            <View style={[styles.upcomingCard, { backgroundColor: colors.cardColor, borderColor: colors.cardBorder }]}>
-              <View style={[styles.iconContainer, { backgroundColor: "rgba(13, 148, 136, 0.1)" }]}>
-                <Feather name={"calendar"} size={moderateScale(32)} color={"#14b8a6"} />
-              </View>
-              <Text style={styles.cardTitle}>No upcoming appointments</Text>
-              <Text style={[styles.cardSubtitle, { color: colors.secondaryText, }]}>Your upcoming appointments will appear here when you book.</Text>
-
-              <TouchableOpacity
-                onPress={() => {
-                  setJoinModes((prev) => ({ ...prev, appointment: true, appointmentType: "Book" }));
-                  router.push("/appointmentCalendar");
-                }}
-                style={styles.bookButton} activeOpacity={0.85}>
-                <CustomText style={styles.bookButtonText}>Book Appointment</CustomText>
-              </TouchableOpacity>
+          ))
+        ) : !hasUpcoming && !hasPast ? (
+          <View style={[styles.upcomingCard, { backgroundColor: colors.cardColor, borderColor: colors.cardBorder }]}>
+            <View style={[styles.iconContainer, { backgroundColor: "rgba(13, 148, 136, 0.1)" }]}>
+              <Feather name={"calendar"} size={moderateScale(32)} color={"#14b8a6"} />
             </View>
-          )
-        }
-      </View >
-
-      <View>
-        <CustomText style={styles.Listheader}>Past {appointmentListData?.data?.filter((item) => item.status !== "upcoming")?.length}</CustomText>
-
-        {
-          appointmentListData?.loading ? (
-            <CustomText>Loading..</CustomText>
-          ) : appointmentListData?.data?.filter((item) => item.status !== "upcoming")?.length > 0 ? (
-            <FlatList
-              data={appointmentListData?.data?.filter((item) => item.status !== "upcoming")}
+            <Text style={styles.cardTitle}>No Appointments</Text>
+            <Text style={[styles.cardSubtitle, { color: colors.secondaryText }]}>
+              You have no appointments to show.
+            </Text>
+            <TouchableOpacity
+              onPress={() => {
+                setJoinModes((prev) => ({ ...prev, appointment: true, appointmentType: "Book" }));
+                router.push("/appointmentCalendar");
+              }}
+              style={styles.bookButton}
+              activeOpacity={0.85}
+            >
+              <CustomText style={styles.bookButtonText}>Book Appointment</CustomText>
+            </TouchableOpacity>
+          </View>
+        ) : (
+          <>
+            {!hasUpcoming && hasPast && (
+              <View style={[styles.upcomingCard, { backgroundColor: colors.cardColor, borderColor: colors.cardBorder }]}>
+                <View style={[styles.iconContainer, { backgroundColor: "rgba(13, 148, 136, 0.1)" }]}>
+                  <Feather name={"calendar"} size={moderateScale(32)} color={"#14b8a6"} />
+                </View>
+                <CustomText style={styles.cardTitle}>No Appointments</CustomText>
+                <CustomText style={[styles.cardSubtitle, { color: colors.secondaryText }]}>
+                  You have no appointments to show.
+                </CustomText>
+                <TouchableOpacity
+                  onPress={() => {
+                    setJoinModes((prev) => ({ ...prev, appointment: true, appointmentType: "Book" }));
+                    router.push("/appointmentCalendar");
+                  }}
+                  style={styles.bookButton}
+                  activeOpacity={0.85}
+                >
+                  <CustomText style={styles.bookButtonText}>Book Appointment</CustomText>
+                </TouchableOpacity>
+              </View>
+            )}
+            <SectionList
+              refreshControl={
+                <RefreshControl
+                  refreshing={refreshing}
+                  onRefresh={onRefresh}
+                  colors={['black']}
+                  progressBackgroundColor={'#fff'}
+                />
+              }
+              sections={sections}
               keyExtractor={(item) => item._id}
-              renderItem={({ item }) => (
+              renderSectionHeader={({ section: { title } }) => (
+                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <CustomText style={styles.Listheader}>{title}</CustomText>
+                  {title === 'Past' && (
+                    <View
+                      style={{
+                        marginLeft: scale(8),
+                        width: scale(24),
+                        height: scale(24),
+                        borderRadius: scale(12),
+                        backgroundColor: colors.cardColor,
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                      }}
+                    >
+                      <CustomText style={{ fontSize: scale(12) }}>
+                        {pastAppointments.length}
+                      </CustomText>
+                    </View>
+                  )}
+                </View>
+              )}
+              renderItem={({ item, section }) => (
                 <Pressable
                   onPress={() => {
                     if (item.status === "upcoming") {
                       router.push({
                         pathname: "/appointmentPop",
-                        params: {
-                          selectedAppointment: JSON.stringify(item),
-                        },
+                        params: { selectedAppointment: JSON.stringify(item) },
                       });
                     } else {
                       Alert.alert(
@@ -797,53 +810,77 @@ const appointment = () => {
                       );
                     }
                   }}
-                  style={[styles.card, { backgroundColor: colors.cardColor, borderColor: colors.cardBorder }]}>
-                  <Image source={{ uri: item?.barberProfile?.[0]?.url }} style={styles.image} />
+                  style={[
+                    styles.card,
+                    {
+                      backgroundColor: colors.cardColor,
+                      borderColor: colors.cardBorder,
+                    },
+                  ]}
+                >
+                  <Image
+                    source={{ uri: item?.barberProfile?.[0]?.url }}
+                    style={[
+                      styles.image,
+                      {
+                        borderWidth: scale(1),
+                        borderColor: colors.queueBorder,
+                      },
+                    ]}
+                  />
                   <View style={styles.info}>
-                    <CustomText style={[styles.title, {
-                      fontFamily: "AirbnbCereal_W_XBd",
-                    }]} numberOfLines={1}>{item.barbername}</CustomText>
-                    <CustomText style={[styles.datetime, {
-                      color: colors.secondaryText,
-                    }]}>{item?.appointmentDate?.split("T")[0]} ({item?.timeSlots})</CustomText>
                     <CustomText
-                    >{item.status}</CustomText>
-                    <View style={styles.footer}>
-                      <CustomText style={[styles.meta, {
-                        color: colors.secondaryText,
-                      }]}>{authenticatedUser?.currency} {item?.services?.reduce((sum, service) => {
-                        return sum + (service?.servicePrice || 0);
-                      }, 0)} • {item?.services.length} item{item?.services.length > 1 ? 's' : ''}</CustomText>
+                      style={[styles.title, { fontFamily: "AirbnbCereal_W_XBd" }]}
+                      numberOfLines={1}
+                    >
+                      {item.barbername}
+                    </CustomText>
+                    <CustomText style={[styles.datetime, { color: colors.secondaryText }]}>
+                      {item?.appointmentDate?.split("T")[0]} ({item?.timeSlots})
+                    </CustomText>
 
-                      <TouchableOpacity
-                        onPress={() => {
-                          setJoinModes((prev) => ({ ...prev, appointment: true, appointmentType: "Book" }));
-                          router.push("/appointmentCalendar");
-                        }}
-                        style={styles.rebookButton}>
-                        <Text style={styles.rebookText}>Book again</Text>
-                      </TouchableOpacity>
+                    {section.title !== "Upcoming" && (
+                      <CustomText style={{ fontSize: scale(14), color: colors.secondaryText }}>
+                        {item.status}
+                      </CustomText>
+                    )}
+
+                    <View style={styles.footer}>
+                      <CustomText style={[styles.meta, { color: colors.secondaryText }]}>
+                        {authenticatedUser?.currency}{" "}
+                        {item?.services?.reduce((sum, service) => sum + (service?.servicePrice || 0), 0)} •{" "}
+                        {item?.services.length} item{item?.services.length > 1 ? "s" : ""}
+                      </CustomText>
+
+                      {section.title !== "Upcoming" && (
+                        <TouchableOpacity
+                          onPress={() => {
+                            setJoinModes((prev) => ({
+                              ...prev,
+                              appointment: true,
+                              appointmentType: "Book",
+                            }));
+                            router.push("/appointmentCalendar");
+                          }}
+                          style={styles.rebookButton}
+                        >
+                          <Text style={styles.rebookText}>Book again</Text>
+                        </TouchableOpacity>
+                      )}
                     </View>
                   </View>
                 </Pressable>
               )}
-              style={{
-                height: verticalScale(250)
+              contentContainerStyle={{
+                paddingBottom: Platform.OS === "ios" ? verticalScale(70) : verticalScale(20),
+                gap: verticalScale(15),
               }}
-              contentContainerStyle={{ paddingBottom: Platform.OS === "ios" ? verticalScale(150) : verticalScale(100), paddingHorizontal: scale(5) }}
-              ItemSeparatorComponent={() => <View style={styles.separator} />}
+              stickySectionHeadersEnabled={false}
             />
-          ) : (
-            <View style={[styles.upcomingCard, { backgroundColor: colors.cardColor, borderColor: colors.cardBorder }]}>
-              <View style={[styles.iconContainer, { backgroundColor: "rgba(13, 148, 136, 0.1)" }]}>
-                <Feather name={"calendar"} size={moderateScale(32)} color={"#14b8a6"} />
-              </View>
-              <Text style={styles.cardTitle}>No past appointments</Text>
-              <Text style={[styles.cardSubtitle, { color: colors.secondaryText, }]}>Your past appointments will appear here.</Text>
-            </View>
-          )
-        }
-      </View>
+          </>
+        )}
+      </>
+
 
     </CustomTabView >
   )
@@ -877,20 +914,10 @@ const styles = StyleSheet.create({
     backgroundColor: '#2dd4bf', // bg-teal-400
   },
 
-
-  container: {
-    paddingBottom: Platform.OS === "ios" ? verticalScale(150) : verticalScale(100),
-    paddingInline: scale(5),
-    backgroundColor: "red",
-    height: 300
-    // padding: scale(16),
-    // backgroundColor: "red",
-
-  },
   Listheader: {
     fontSize: scale(18),
     fontFamily: "AirbnbCereal_W_Bd",
-    marginBottom: verticalScale(10),
+    // marginBottom: verticalScale(10),
   },
 
   upcomingCard: {
@@ -901,7 +928,7 @@ const styles = StyleSheet.create({
     // borderColor: '#e5e7eb',
     borderWidth: scale(1),
     gap: verticalScale(20),
-    marginBottom: verticalScale(24)
+    marginBottom: verticalScale(10)
   },
 
   iconContainer: {
@@ -929,7 +956,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#14b8a6', // bg-teal-500
     paddingVertical: verticalScale(16), // py-4
     borderRadius: scale(12), // rounded-xl
-    marginBottom: verticalScale(15), // mb-6
+    // marginBottom: verticalScale(15), // mb-6
     alignItems: 'center',
     justifyContent: 'center'
   },
@@ -945,15 +972,14 @@ const styles = StyleSheet.create({
     // backgroundColor: '#ffffff',
     borderRadius: scale(12),
     padding: scale(12),
-    borderWidth: 1,
-    borderColor: '#e5e7eb',
-    shadowColor: '#000',
-    shadowOpacity: 0.03,
-    shadowRadius: 4,
-    elevation: 2,
+    borderWidth: scale(1),
+    // shadowColor: '#000',
+    // shadowOpacity: 0.03,
+    // shadowRadius: 4,
+    // elevation: 2,
   },
   separator: {
-    height: verticalScale(10),
+    // height: verticalScale(10),
   },
   image: {
     width: scale(60),

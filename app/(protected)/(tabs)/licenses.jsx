@@ -24,69 +24,92 @@ const licenses = () => {
       }}
     >
       <ScrollView contentContainerStyle={styles.scrollContent}>
-        <CustomText style={styles.heading}>End User License Agreement (EULA)</CustomText>
 
-        <CustomText style={styles.paragraph}>
-          <CustomText style={styles.bold}>Effective Date:</CustomText> 04-07-2025
-        </CustomText>
-        <CustomText style={styles.paragraph}>
-          <CustomText style={styles.bold}>App Name:</CustomText> iqbook
-        </CustomText>
+        <View style={{
+          flexDirection: "row",
+          alignItems: "center",
+        }}>
+          <Pressable onPress={() => router.replace("/about")}><ArrowLeftIcon color={colors.text} /></Pressable>
+          <CustomText style={{
+            flex: 1,
+            textAlign: "center",
+            fontFamily: "AirbnbCereal_W_XBd",
+          }}>End User License Agreement (EULA)</CustomText>
+        </View>
 
-        <CustomText style={styles.paragraph}>
-          This End User License Agreement (“Agreement”) is a legal agreement between you (“User”, “you”, or “your”) and <CustomText style={styles.italic}>iqbook</CustomText>, governing your use of the <CustomText style={styles.italic}>iqbook</CustomText> mobile application (“App”).
-        </CustomText>
+        <View style={{
+          backgroundColor: colors.cardColor,
+          borderWidth: scale(1),
+          borderColor: colors.queueBorder,
+          padding: scale(12),
+          borderRadius: scale(12),
+          marginTop: verticalScale(20)
+        }}>
 
-        <CustomText style={styles.paragraph}>
-          By downloading, installing, or using the app, you agree to be bound by the terms of this license.
-        </CustomText>
+          <CustomText style={styles.paragraph}>
+            <CustomText style={styles.bold}>Effective Date:</CustomText> 04-07-2025
+          </CustomText>
+          <CustomText style={styles.paragraph}>
+            <CustomText style={styles.bold}>App Name:</CustomText> iqbook
+          </CustomText>
 
-        {/* Sections */}
-        <CustomText style={styles.subHeading}>1. License Grant</CustomText>
-        <CustomText style={styles.bullet}>• Download and install the app on your personal device</CustomText>
-        <CustomText style={styles.bullet}>• Use the app solely for booking appointments, joining the salon queue, and managing your salon visits</CustomText>
-        <CustomText style={styles.paragraph}>You <CustomText style={styles.bold}>may not</CustomText>:</CustomText>
-        <CustomText style={styles.bullet}>• Copy, modify, or distribute the app or its content</CustomText>
-        <CustomText style={styles.bullet}>• Reverse engineer, decompile, or attempt to extract source code</CustomText>
-        <CustomText style={styles.bullet}>• Use the app for illegal purposes or outside the scope of permitted use</CustomText>
+          <CustomText style={styles.paragraph}>
+            This End User License Agreement (“Agreement”) is a legal agreement between you (“User”, “you”, or “your”) and <CustomText style={styles.italic}>iqbook</CustomText>, governing your use of the <CustomText style={styles.italic}>iqbook</CustomText> mobile application (“App”).
+          </CustomText>
 
-        <CustomText style={styles.subHeading}>2. Ownership and Intellectual Property</CustomText>
-        <CustomText style={styles.paragraph}>
-          All content, design, code, and trademarks within the app are owned by <CustomText style={styles.italic}>iqbook</CustomText> or its licensors. This license does not grant you ownership of the app or its content—only the right to use it under the conditions of this Agreement.
-        </CustomText>
+          <CustomText style={styles.paragraph}>
+            By downloading, installing, or using the app, you agree to be bound by the terms of this license.
+          </CustomText>
 
-        <CustomText style={styles.subHeading}>3. Updates and Modifications</CustomText>
-        <CustomText style={styles.paragraph}>
-          We may release updates or improvements to the app. These updates may be automatic or manual. You agree to install such updates for continued access and security.
-        </CustomText>
-        <CustomText style={styles.paragraph}>
-          We reserve the right to modify or discontinue the app at any time without notice.
-        </CustomText>
+          {/* Sections */}
+          <CustomText style={styles.subHeading}>1. License Grant</CustomText>
+          <CustomText style={styles.bullet}>• Download and install the app on your personal device</CustomText>
+          <CustomText style={styles.bullet}>• Use the app solely for booking appointments, joining the salon queue, and managing your salon visits</CustomText>
+          <CustomText style={styles.paragraph}>You <CustomText style={styles.bold}>may not</CustomText>:</CustomText>
+          <CustomText style={styles.bullet}>• Copy, modify, or distribute the app or its content</CustomText>
+          <CustomText style={styles.bullet}>• Reverse engineer, decompile, or attempt to extract source code</CustomText>
+          <CustomText style={styles.bullet}>• Use the app for illegal purposes or outside the scope of permitted use</CustomText>
 
-        <CustomText style={styles.subHeading}>4. Termination</CustomText>
-        <CustomText style={styles.paragraph}>
-          This license will remain in effect until terminated. We may suspend or terminate your access if you:
-        </CustomText>
-        <CustomText style={styles.bullet}>• Violate this agreement</CustomText>
-        <CustomText style={styles.bullet}>• Misuse the app</CustomText>
-        <CustomText style={styles.bullet}>• Engage in fraudulent, abusive, or harmful behavior</CustomText>
-        <CustomText style={styles.paragraph}>
-          Upon termination, you must delete the app from your device and stop using it immediately.
-        </CustomText>
+          <CustomText style={styles.subHeading}>2. Ownership and Intellectual Property</CustomText>
+          <CustomText style={styles.paragraph}>
+            All content, design, code, and trademarks within the app are owned by <CustomText style={styles.italic}>iqbook</CustomText> or its licensors. This license does not grant you ownership of the app or its content—only the right to use it under the conditions of this Agreement.
+          </CustomText>
 
-        <CustomText style={styles.subHeading}>5. Disclaimer of Warranty</CustomText>
-        <CustomText style={styles.paragraph}>
-          The app is provided <CustomText style={styles.italic}>"as is"</CustomText> without warranties of any kind. We do not guarantee that the app will be error-free or always available.
-        </CustomText>
-        <CustomText style={styles.paragraph}>
-          To the fullest extent permitted by law, we disclaim all warranties, express or implied.
-        </CustomText>
+          <CustomText style={styles.subHeading}>3. Updates and Modifications</CustomText>
+          <CustomText style={styles.paragraph}>
+            We may release updates or improvements to the app. These updates may be automatic or manual. You agree to install such updates for continued access and security.
+          </CustomText>
+          <CustomText style={styles.paragraph}>
+            We reserve the right to modify or discontinue the app at any time without notice.
+          </CustomText>
 
-        <CustomText style={styles.subHeading}>6. Limitation of Liability</CustomText>
-        <CustomText style={styles.bullet}>• Any damages resulting from the use or inability to use the app</CustomText>
-        <CustomText style={styles.bullet}>• Loss of data, missed appointments, or queue disruptions</CustomText>
-        <CustomText style={styles.bullet}>• Any indirect or consequential damages</CustomText>
-        <CustomText style={styles.paragraph}>Your use of the app is at your own risk.</CustomText>
+          <CustomText style={styles.subHeading}>4. Termination</CustomText>
+          <CustomText style={styles.paragraph}>
+            This license will remain in effect until terminated. We may suspend or terminate your access if you:
+          </CustomText>
+          <CustomText style={styles.bullet}>• Violate this agreement</CustomText>
+          <CustomText style={styles.bullet}>• Misuse the app</CustomText>
+          <CustomText style={styles.bullet}>• Engage in fraudulent, abusive, or harmful behavior</CustomText>
+          <CustomText style={styles.paragraph}>
+            Upon termination, you must delete the app from your device and stop using it immediately.
+          </CustomText>
+
+          <CustomText style={styles.subHeading}>5. Disclaimer of Warranty</CustomText>
+          <CustomText style={styles.paragraph}>
+            The app is provided <CustomText style={styles.italic}>"as is"</CustomText> without warranties of any kind. We do not guarantee that the app will be error-free or always available.
+          </CustomText>
+          <CustomText style={styles.paragraph}>
+            To the fullest extent permitted by law, we disclaim all warranties, express or implied.
+          </CustomText>
+
+          <CustomText style={styles.subHeading}>6. Limitation of Liability</CustomText>
+          <CustomText style={styles.bullet}>• Any damages resulting from the use or inability to use the app</CustomText>
+          <CustomText style={styles.bullet}>• Loss of data, missed appointments, or queue disruptions</CustomText>
+          <CustomText style={styles.bullet}>• Any indirect or consequential damages</CustomText>
+          <CustomText style={styles.paragraph}>Your use of the app is at your own risk.</CustomText>
+
+        </View>
+
 
       </ScrollView>
     </View>
@@ -104,24 +127,24 @@ const styles = StyleSheet.create({
     marginBottom: verticalScale(10),
   },
   heading: {
-    fontSize: scale(18),
-    fontWeight: 'bold',
+    fontSize: scale(22),
+    fontFamily: "AirbnbCereal_W_XBd",
     marginBottom: verticalScale(10),
     textAlign: 'center',
   },
   subHeading: {
-    fontSize: scale(16),
-    fontWeight: '600',
+    ffontSize: scale(18),
+    fontFamily: "AirbnbCereal_W_XBd",
     marginTop: verticalScale(15),
     marginBottom: verticalScale(5),
   },
   paragraph: {
-    fontSize: scale(13),
+    // fontSize: scale(13),
     lineHeight: scale(18),
     marginBottom: verticalScale(10),
   },
   bullet: {
-    fontSize: scale(13),
+    // fontSize: scale(13),
     marginLeft: scale(10),
     marginBottom: verticalScale(5),
   },

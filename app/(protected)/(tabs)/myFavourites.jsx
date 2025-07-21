@@ -149,6 +149,18 @@ const MyFavourites = () => {
                 paddingBottom: Platform.OS === "ios" ? verticalScale(80) : verticalScale(0)
             }}
         >
+            <View style={{
+                flexDirection: "row",
+                alignItems: "center",
+            }}>
+                <Pressable onPress={() => router.replace("/account")}><ArrowLeftIcon color={colors.text} /></Pressable>
+                <CustomText style={{
+                    flex: 1,
+                    textAlign: "center",
+                    fontFamily: "AirbnbCereal_W_XBd",
+                    fontSize: scale(18)
+                }}>My Favorites</CustomText>
+            </View>
 
             {
                 favouriteSalonData?.loading ? (
@@ -159,7 +171,7 @@ const MyFavourites = () => {
                                 width='95%'
                                 height={verticalScale(140)}
                                 style={{
-                                    borderRadius: scale(8),
+                                    borderRadius: scale(12),
                                     marginHorizontal: "auto",
                                     marginBottom: verticalScale(10)
                                 }}
@@ -174,28 +186,18 @@ const MyFavourites = () => {
                             <View
                                 style={{
                                     width: "100%",
-                                    borderRadius: scale(8),
-                                    borderColor: "gray",
+                                    borderRadius: scale(12),
+                                    borderColor: colors.queueBorder,
+                                    borderWidth: scale(1),
                                     position: "relative",
-                                    backgroundColor: "#fff",
-                                    // ✅ Android shadow
-                                    elevation: 2,
-
-                                    // ✅ iOS shadow
-                                    shadowColor: "#000",
-                                    shadowOffset: {
-                                        width: 0,
-                                        height: 2,
-                                    },
-                                    shadowOpacity: 0.1,
-                                    shadowRadius: 4,
+                                    backgroundColor: colors.cardColor,
                                 }}
                             >
                                 <Image
                                     style={{
                                         height: verticalScale(130),
-                                        borderTopLeftRadius: scale(7),
-                                        borderTopRightRadius: scale(7),
+                                        borderTopLeftRadius: scale(12),
+                                        borderTopRightRadius: scale(12),
                                     }}
                                     source={{ uri: item?.gallery?.[0]?.url }}
                                     contentFit="cover"
@@ -203,34 +205,46 @@ const MyFavourites = () => {
                                 />
                                 <View style={{
                                     flex: 1,
-                                    backgroundColor: colors.background,
-                                    padding: scale(10),
-                                    borderBottomLeftRadius: scale(7),
-                                    borderBottomRightRadius: scale(7),
+                                    backgroundColor: colors.cardColor,
+                                    paddingHorizontal: scale(10),
+                                    paddingVertical: verticalScale(15),
+                                    borderBottomLeftRadius: scale(12),
+                                    borderBottomRightRadius: scale(12),
                                 }}>
                                     <View style={{ gap: verticalScale(4) }}>
                                         <View
-                                            style={{ flexDirection: "row", alignItems: "center", gap: scale(5) }}
+                                            style={{
+                                                flexDirection: "row",
+                                                alignItems: "center",
+                                                gap: scale(10),
+                                            }}
                                         >
 
                                             <Image
                                                 style={{
-                                                    width: scale(35),
-                                                    height: scale(35),
+                                                    width: scale(40),
+                                                    height: scale(40),
                                                     borderRadius: scale(40)
                                                 }}
                                                 source={{ uri: item?.salonLogo?.[0]?.url }}
                                                 contentFit="cover"
                                                 transition={300}
                                             />
-                                            <CustomText>{item?.salonName}</CustomText>
+                                            <View style={{
+                                                gap: verticalScale(5)
+                                            }}>
+                                                <CustomText style={styles.heading}>{item?.salonName}</CustomText>
+                                                <CustomText
+                                                    style={{
+                                                        color: colors.secondaryText,
+                                                        fontSize: scale(12),
+                                                    }}
+                                                    numberOfLines={1}
+                                                >{item?.address}, {item?.city}, {item?.country}
+                                                </CustomText>
+                                            </View>
                                         </View>
-                                        <CustomText
-                                            style={{
-                                                color: "gray",
-                                                fontSize: scale(12),
-                                            }}
-                                        >{item?.address}, {item?.city}, {item?.country}</CustomText>
+
 
                                         {/* <View style={{ flexDirection: "row", alignItems: "center", gap: scale(10) }}>
                                     <CarIcon size={scale(16)} color={colors.text} />
@@ -257,7 +271,9 @@ const MyFavourites = () => {
                                         right: scale(10),
                                         backgroundColor: colors.background,
                                         borderRadius: scale(20),
-                                        padding: scale(8),
+                                        padding: scale(10),
+                                        borderWidth: scale(1),
+                                        borderColor: colors.queueBorder,
                                         justifyContent: "center",
                                         alignItems: "center",
                                     }}
@@ -271,46 +287,37 @@ const MyFavourites = () => {
                     />
 
                 ) : (
+
                     <View style={{
-                        justifyContent: "center",
-                        alignItems: "center",
-                        flex: 1
+                        flex: 1,
+                        paddingTop: verticalScale(20),
                     }}>
-                        <View
-                            style={{
-                                gap: verticalScale(12)
-                            }}
-                        >
-                            <View
-                                style={{
-                                    width: scale(60),
-                                    height: scale(60),
-                                    backgroundColor: colors.background,
-                                    marginHorizontal: "auto",
-                                    borderRadius: scale(50),
-                                    justifyContent: "center",
-                                    alignItems: "center"
-                                }}
-                            >
+                        <View style={[styles.noQueueContainer, {
+                            borderColor: colors.queueBorder,
+                            backgroundColor: colors.cardColor,
+                        }]}>
+                            <View style={[styles.iconContainer, { backgroundColor: 'rgba(239, 68, 68, 0.1)' }]}>
+
                                 <HeartDislikeIcon
-                                    color={colors.text}
-                                    size={scale(40)}
+                                    color={'#ef4444'}
+                                    size={scale(32)}
                                 />
                             </View>
-                            <CustomText
-                                style={{
-                                    textAlign: "center",
-                                    fontSize: scale(16)
-                                }}
-                            >No Favourite</CustomText>
-                            <CustomSecondaryText
-                                style={{
-                                    textAlign: "center"
-                                }}
-                            >
-                                You don't have any favourite salon
-                            </CustomSecondaryText>
 
+                            <CustomText style={{
+                                fontFamily: "AirbnbCereal_W_XBd",
+                                fontSize: scale(20),
+                                textAlign: "center",
+                            }}>No Favourite</CustomText>
+
+                            <CustomText style={{
+                                fontFamily: "AirbnbCereal_W_Bd",
+                                fontSize: scale(16),
+                                textAlign: "center",
+                                color: colors.secondaryText,
+                            }}>
+                                You don't have any favourite salon
+                            </CustomText>
                         </View>
                     </View>
                 )
@@ -324,17 +331,32 @@ export default MyFavourites;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // paddingTop: Platform.OS === 'ios' ? verticalScale(10) : 0,
-        // backgroundColor: '#fff',
     },
     heading: {
-        fontSize: moderateScale(18),
-        fontWeight: 'bold',
-        paddingHorizontal: scale(10),
+        fontSize: scale(16),
+        fontFamily: "AirbnbCereal_W_XBd",
     },
     listContainer: {
-        paddingHorizontal: scale(10),
+        // paddingHorizontal: scale(10),
         paddingVertical: verticalScale(10),
         gap: verticalScale(10),
     },
+
+    noQueueContainer: {
+        width: '100%',
+        borderWidth: scale(1),
+        borderRadius: scale(12),
+        // flex: 0.90,
+        padding: scale(30),
+        gap: verticalScale(20)
+    },
+
+    iconContainer: {
+        width: scale(80),
+        height: scale(80),
+        borderRadius: scale(80),
+        justifyContent: "center",
+        alignItems: "center",
+        marginHorizontal: "auto",
+    }
 });

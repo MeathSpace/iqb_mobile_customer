@@ -15,19 +15,19 @@ export const UserIcon = ({ size = moderateScale(24), color = 'black', style }) =
 );
 
 export const HomeIcon = ({ size = moderateScale(24), color = 'black', style }) => (
-    <Octicons name="home" size={size} color={color} style={style} />
+    <Feather name="home" size={size} color={color} style={style} />
 );
 
 export const QueueIcon = ({ size = moderateScale(24), color = 'black', style }) => (
-    <MaterialCommunityIcons name="human-queue" size={size} color={color} style={style} />
+    <Ionicons name="grid-outline" size={size} color={color} style={style} />
 );
 
 export const SalonIcon = ({ size = moderateScale(24), color = 'black', style }) => (
-    <MaterialIcons name="storefront" size={size} color={color} style={style} />
+    <Ionicons name="storefront-outline" size={size} color={color} style={style} />
 );
 
 export const CalenderIcon = ({ size = moderateScale(24), color = 'black', style }) => (
-    <Feather name="calendar" size={size} color={color} style={style} />
+    <Ionicons name="calendar-outline" size={size} color={color} style={style} />
 );
 
 export const NotificationIcon = ({ size = moderateScale(24), color = 'black', style }) => (
@@ -91,7 +91,7 @@ export const ContactIcon = ({ size = moderateScale(24), color = 'black', style }
 );
 
 export const MapIcon = ({ size = moderateScale(24), color = 'black', style }) => (
-    <FontAwesome5 name="map-marker-alt" size={size} color={color} style={style} />
+    <Feather name="map-pin" size={size} color={color} style={style} />
 );
 
 export const FacebookIcon = ({ size = moderateScale(24), color = 'black', style }) => (
@@ -102,6 +102,18 @@ export const InstagramIcon = ({ size = moderateScale(24), color = 'black', style
     <FontAwesome6 name="square-instagram" size={size} color={color} style={style} />
 );
 
+
+export const TiktokIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <FontAwesome5 name="tiktok" size={size} color={color} style={style} />
+);
+
+export const WebIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <MaterialCommunityIcons name="web" size={size} color={color} style={style} />
+);
+
+export const XIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <FontAwesome6 name="square-x-twitter" size={size} color={color} style={style} />
+);
 
 export const ClockIcon = ({ size = moderateScale(24), color = 'black', style }) => (
     <Feather name="clock" size={size} color={color} style={style} />
@@ -133,7 +145,7 @@ export const AddIcon = ({ size = moderateScale(24), color = 'black', style }) =>
 );
 
 export const ProfileIcon = ({ size = moderateScale(24), color = 'black', style }) => (
-    <Ionicons name="person-circle-outline" size={size} color={color} style={style} />
+    <Feather name="user" size={size} color={color} style={style} />
 );
 
 export const ErrorIcon = ({ size = moderateScale(24), color = 'black', style }) => (

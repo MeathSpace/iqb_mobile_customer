@@ -1,4 +1,4 @@
-import { FlatList, Linking, Platform, Pressable, ScrollView, StyleSheet, Text, useColorScheme, View } from 'react-native'
+import { FlatList, Linking, Platform, Pressable, ScrollView, SectionList, StyleSheet, Text, useColorScheme, View } from 'react-native'
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import BottomSheet, { BottomSheetScrollView, BottomSheetView } from '@gorhom/bottom-sheet';
@@ -8,7 +8,7 @@ import { Image } from 'expo-image';
 import { useTheme } from '@react-navigation/native';
 import { Colors } from '../../../constants/Colors';
 import CustomText from '../../../components/CustomText';
-import { ArrowLeftIcon, CheckIcon, ClockIcon, ContactIcon, EmailIcon, FacebookIcon, HeartFilledIcon, HeartIcon, InstagramIcon, MapIcon, WhatsappIcon } from '../../../constants/icons';
+import { ArrowLeftIcon, CheckIcon, ClockIcon, ContactIcon, EmailIcon, FacebookIcon, HeartFilledIcon, HeartIcon, InstagramIcon, MapIcon, TiktokIcon, WebIcon, WhatsappIcon, XIcon } from '../../../constants/icons';
 import MapView, { PROVIDER_GOOGLE } from 'react-native-maps'
 import BarberCard from '../../../components/BarberCard';
 import CustomTabView from '../../../components/CustomTabView';
@@ -106,7 +106,7 @@ const salon = () => {
     const [tabData, setTabData] = useState([
         "Details",
         "Services",
-        "Barber"
+        "Stylists"
     ])
 
     const [selectedTab, setSelectedTab] = useState("Details")
@@ -619,6 +619,167 @@ const salon = () => {
         return `${mins}min`;
     }
 
+    // console.log("categorizedSalonServices ", JSON.stringify(salonInfoData?.data?.categorizedSalonServices, null, 2));
+
+
+    const dummyServicesData = [
+        {
+            "serviceCategoryName": "Beard",
+            "services": [
+                {
+                    "serviceIcon": {
+                        "public_id": "icons/natural spa_1706703379406",
+                        "url": "https://res.cloudinary.com/dfrw3aqyp/image/upload/v1706703380/icons/natural%20spa_1706703379406.jpg"
+                    },
+                    "serviceId": 18,
+                    "serviceCode": "MA18",
+                    "serviceName": "Male beard and Haircut",
+                    "serviceDesc": "acdac",
+                    "servicePrice": 40,
+                    "serviceEWT": 37,
+                    "vipService": false,
+                    "_id": "68060458c3952c26da52b8ed",
+                    "serviceCategoryName": "Beard"
+                }
+            ]
+        },
+        {
+            "serviceCategoryName": "Haircut",
+            "services": [
+                {
+                    "serviceIcon": {
+                        "public_id": "icons/Malehaircut_1706703379405",
+                        "url": "https://res.cloudinary.com/dfrw3aqyp/image/upload/v1706703381/icons/Malehaircut_1706703379405.png"
+                    },
+                    "serviceId": 11,
+                    "serviceCode": "HA11",
+                    "serviceName": "Haircut",
+                    "serviceDesc": "best haircut in town",
+                    "servicePrice": 38,
+                    "serviceEWT": 25,
+                    "vipService": false,
+                    "_id": "67a46936c85dd16cdfa7ef9b",
+                    "serviceCategoryName": "Haircut"
+                },
+                {
+                    "serviceIcon": {
+                        "public_id": "icons/Femalehaircut_1706703379391",
+                        "url": "https://res.cloudinary.com/dfrw3aqyp/image/upload/v1706703381/icons/Femalehaircut_1706703379391.png"
+                    },
+                    "serviceId": 12,
+                    "serviceCode": "FE12",
+                    "serviceName": "Female Haircut",
+                    "serviceDesc": "we have a good reputation with female haircuts",
+                    "servicePrice": 40,
+                    "serviceEWT": 130,
+                    "vipService": false,
+                    "_id": "67a46936c85dd16cdfa7ef9c",
+                    "serviceCategoryName": "Haircut"
+                },
+                {
+                    "serviceIcon": {
+                        "public_id": "icons/Malehaircut_1706703379405",
+                        "url": "https://res.cloudinary.com/dfrw3aqyp/image/upload/v1706703381/icons/Malehaircut_1706703379405.png"
+                    },
+                    "serviceId": 17,
+                    "serviceCode": "CH17",
+                    "serviceName": "Child Haircut",
+                    "serviceDesc": "tteyue",
+                    "servicePrice": 10,
+                    "serviceEWT": 20,
+                    "vipService": false,
+                    "_id": "68060458c3952c26da52b8ec",
+                    "serviceCategoryName": "Haircut"
+                }
+            ]
+        },
+        {
+            "serviceCategoryName": "Massage",
+            "services": [
+                {
+                    "serviceIcon": {
+                        "public_id": "icons/massage_1706703379406",
+                        "url": "https://res.cloudinary.com/dfrw3aqyp/image/upload/v1706703380/icons/massage_1706703379406.jpg"
+                    },
+                    "serviceId": 14,
+                    "serviceCode": "MA14",
+                    "serviceName": "Massage",
+                    "serviceDesc": "we have the best massage specialists in town",
+                    "servicePrice": 70,
+                    "serviceEWT": 30,
+                    "vipService": true,
+                    "_id": "67a46936c85dd16cdfa7ef9e",
+                    "serviceCategoryName": "Massage"
+                },
+                {
+                    "serviceIcon": {
+                        "public_id": "icons/shave_1706703379407",
+                        "url": "https://res.cloudinary.com/dfrw3aqyp/image/upload/v1706703381/icons/shave_1706703379407.png"
+                    },
+                    "serviceId": 19,
+                    "serviceCode": "TH19",
+                    "serviceName": "Thai massage",
+                    "serviceDesc": "Shdhdh",
+                    "servicePrice": 22,
+                    "serviceEWT": 11,
+                    "vipService": true,
+                    "_id": "6808e100c7b7ec5c21cb9f98",
+                    "serviceCategoryName": "Massage"
+                }
+            ]
+        },
+        {
+            "serviceCategoryName": "Spa",
+            "services": [
+                {
+                    "serviceIcon": {
+                        "public_id": "icons/spa_1706703379407",
+                        "url": "https://res.cloudinary.com/dfrw3aqyp/image/upload/v1706703381/icons/spa_1706703379407.jpg"
+                    },
+                    "serviceId": 13,
+                    "serviceCode": "HA13",
+                    "serviceName": "Hair Spa",
+                    "serviceDesc": "Special spa machinaries available here",
+                    "servicePrice": 100,
+                    "serviceEWT": 50,
+                    "vipService": true,
+                    "_id": "67a46936c85dd16cdfa7ef9d",
+                    "serviceCategoryName": "Spa"
+                },
+                {
+                    "serviceIcon": {
+                        "public_id": "icons/hair dyes_1706703379402",
+                        "url": "https://res.cloudinary.com/dfrw3aqyp/image/upload/v1706703381/icons/hair%20dyes_1706703379402.jpg"
+                    },
+                    "serviceId": 15,
+                    "serviceCode": "HA15",
+                    "serviceName": "Hair groom",
+                    "serviceDesc": "adcdc",
+                    "servicePrice": 45,
+                    "serviceEWT": 34,
+                    "vipService": false,
+                    "_id": "68060458c3952c26da52b8ea",
+                    "serviceCategoryName": "Spa"
+                },
+                {
+                    "serviceIcon": {
+                        "public_id": "icons/Malehaircut_1706703379405",
+                        "url": "https://res.cloudinary.com/dfrw3aqyp/image/upload/v1706703381/icons/Malehaircut_1706703379405.png"
+                    },
+                    "serviceId": 16,
+                    "serviceCode": "HA16",
+                    "serviceName": "Hair Transplant",
+                    "serviceDesc": "ffff",
+                    "servicePrice": 45,
+                    "serviceEWT": 60,
+                    "vipService": true,
+                    "_id": "68060458c3952c26da52b8eb",
+                    "serviceCategoryName": "Spa"
+                }
+            ]
+        }
+    ]
+
 
     return (
         <CustomTabView
@@ -727,42 +888,63 @@ const salon = () => {
                     }}
                 // onChange={handleSheetChange}
                 >
-                    {/* <View
-                        style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            gap: scale(10),
-                            padding: scale(10),
-                            justifyContent: "space-between"
-                        }}
-                    >
-                        <CustomText>Add to Favorites</CustomText>
 
-                        <Pressable
-                            disabled={favouriteLoader}
-                            onPress={addToFavourites}
+                    <View style={{
+                        paddingInline: scale(10),
+                        marginVertical: verticalScale(10),
+                        gap: verticalScale(5)
+                    }}>
+                        <CustomText
+                            numberOfLines={1}
                             style={{
-                                width: scale(30),
-                                height: scale(30),
-                                // backgroundColor: "#E11D481A",
-                                justifyContent: "center",
+                                fontFamily: "AirbnbCereal_W_XBd",
+                                fontSize: scale(26),
+                            }}>{salonInfoData?.data?.salonInfo?.salonName}</CustomText>
+
+                        <View
+                            style={{
+                                flexDirection: "row",
                                 alignItems: "center",
-                                borderRadius: scale(4)
+                                gap: scale(5),
                             }}
                         >
 
-                            {
-                                salonInfoData?.data?.salonInfo?.isFavourite ? <HeartFilledIcon size={scale(16)} color='#E11D48' /> : <HeartIcon size={scale(16)} color='#E11D48' />
-                            }
-                        </Pressable>
-                    </View> */}
+                            <Pressable
+                                style={{
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                }}
+                                onPress={() => openLink(`https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`)}
+                            >
+                                <MapIcon size={scale(18)} color={'#14b8a6'} />
+                            </Pressable>
+
+                            <CustomText
+                                style={{
+                                    fontSize: scale(14),
+                                    color: "gray",
+                                    maxWidth: "90%"
+                                }}
+                            >
+                                {
+                                    !salonInfoData?.loading && (
+                                        `${salonInfoData?.data?.salonInfo?.address}, ${salonInfoData?.data?.salonInfo?.city}, ${salonInfoData?.data?.salonInfo?.country}`
+                                    )
+                                }
+                            </CustomText>
+
+                        </View>
+                    </View>
 
                     <View style={{
                         flexDirection: "row",
                         alignItems: "center",
                         gap: scale(10),
-                        padding: scale(10),
-                        justifyContent: "space-between"
+                        padding: scale(5),
+                        justifyContent: "space-between",
+                        backgroundColor: colors.cardColor,
+                        marginHorizontal: scale(10),
+                        borderRadius: scale(12)
                     }}>
 
                         {
@@ -771,14 +953,14 @@ const salon = () => {
                                     <Pressable
                                         key={index}
                                         style={[styles.tabBtn, {
-                                            backgroundColor: selectedTab === item ? Colors.modeColor.colorCode : "#00B0901A"
+                                            backgroundColor: selectedTab === item ? '#14b8a6' : colorScheme === "dark" ? "#3f3f46" : "#e4e4e7"
                                         }]}
                                         onPress={() => {
                                             setSelectedTab(item)
                                         }}
                                     ><CustomText style={{
                                         fontSize: scale(12),
-                                        color: selectedTab === item ? "#fff" : Colors.modeColor.colorCode
+                                        color: selectedTab === item ? "#fff" : colorScheme === "dark" ? "#fff" : "#000"
                                     }}>{item}</CustomText></Pressable>
                                 )
                             })
@@ -791,8 +973,10 @@ const salon = () => {
                                 <>
                                     <View
                                         style={{
-                                            backgroundColor: "#00B0901A",
-                                            borderRadius: scale(4),
+                                            backgroundColor: colors.cardColor,
+                                            borderWidth: scale(1),
+                                            borderColor: colors.queueBorder,
+                                            borderRadius: scale(12),
                                             padding: scale(10),
                                             gap: verticalScale(5)
                                         }}
@@ -813,17 +997,19 @@ const salon = () => {
 
                                     <View
                                         style={{
-                                            backgroundColor: "#00B0901A",
-                                            borderRadius: scale(4),
-                                            padding: scale(10),
-                                            gap: verticalScale(5),
-                                            flexDirection: "row",
-                                            alignItems: "center",
-                                            justifyContent: "space-between"
+                                            backgroundColor: colors.cardColor,
+                                            borderRadius: scale(12),
+                                            borderWidth: scale(1),
+                                            borderColor: colors.queueBorder,
+                                            padding: scale(15),
+                                            gap: verticalScale(15),
+                                            // flexDirection: "column",
+                                            // alignItems: "center",
+                                            // justifyContent: "space-between"
                                         }}
                                     >
 
-                                        <View>
+                                        {/* <View>
                                             <CustomText
                                                 style={{
                                                     fontFamily: "AirbnbCereal_W_Bd",
@@ -838,23 +1024,30 @@ const salon = () => {
                                             >
                                                 If you have any questions
                                             </CustomText>
-                                        </View>
+                                        </View> */}
+
+                                        <CustomText
+                                            style={{
+                                                fontFamily: "AirbnbCereal_W_Bd",
+                                            }}
+                                        >Contact Us</CustomText>
 
                                         <View
                                             style={{
                                                 flexDirection: "row",
                                                 alignItems: "center",
-                                                gap: scale(10)
+                                                justifyContent: "space-evenly",
+                                                gap: scale(10),
                                             }}
                                         >
                                             <Pressable
                                                 style={{
-                                                    width: scale(30),
-                                                    height: scale(30),
-                                                    backgroundColor: colors.background,
+                                                    width: scale(45),
+                                                    height: scale(45),
+                                                    borderRadius: scale(30),
+                                                    backgroundColor: 'rgba(56, 189, 248, 0.1)',
                                                     justifyContent: "center",
                                                     alignItems: "center",
-                                                    borderRadius: scale(4)
                                                 }}
 
                                                 onPress={() => {
@@ -863,46 +1056,46 @@ const salon = () => {
                                                     );
                                                 }}
                                             >
-                                                <ContactIcon size={scale(18)} color={"#4285F4"} />
+                                                <ContactIcon size={scale(22)} color={'#38bdf8'} />
                                             </Pressable>
 
                                             <Pressable
                                                 style={{
-                                                    width: scale(30),
-                                                    height: scale(30),
-                                                    backgroundColor: colors.background,
+                                                    width: scale(45),
+                                                    height: scale(45),
+                                                    borderRadius: scale(30),
+                                                    backgroundColor: 'rgba(13, 148, 136, 0.1)',
                                                     justifyContent: "center",
                                                     alignItems: "center",
-                                                    borderRadius: scale(4)
                                                 }}
                                                 onPress={() => {
                                                     openLink(``)
                                                 }}
                                             >
-                                                <WhatsappIcon size={scale(18)} color={"#25D366"} />
+                                                <WhatsappIcon size={scale(22)} color={'#14b8a6'} />
                                             </Pressable>
 
                                             <Pressable
                                                 style={{
-                                                    width: scale(30),
-                                                    height: scale(30),
-                                                    backgroundColor: colors.background,
+                                                    width: scale(45),
+                                                    height: scale(45),
+                                                    borderRadius: scale(30),
+                                                    backgroundColor: 'rgba(239, 68, 68, 0.1)',
                                                     justifyContent: "center",
                                                     alignItems: "center",
-                                                    borderRadius: scale(4)
                                                 }}
                                                 onPress={() => {
                                                     openLink(`mailto:${salonInfoData?.data?.salonInfo?.salonEmail}`)
                                                 }}
                                             >
-                                                <EmailIcon size={scale(18)} color={"#EA4335"} />
+                                                <EmailIcon size={scale(22)} color={'#ef4444'} />
                                             </Pressable>
 
                                         </View>
 
                                     </View>
 
-                                    <View>
+                                    {/* <View>
 
                                         {
                                             latitude && longitude && (
@@ -979,22 +1172,24 @@ const salon = () => {
                                             </Pressable>
 
                                         </View>
-                                    </View>
+                                    </View> */}
 
 
                                     <View
                                         style={{
-                                            backgroundColor: "#00B0901A",
-                                            borderRadius: scale(4),
-                                            padding: scale(10),
-                                            gap: verticalScale(5),
-                                            flexDirection: "row",
-                                            alignItems: "center",
-                                            justifyContent: "space-between"
+                                            backgroundColor: colors.cardColor,
+                                            borderRadius: scale(12),
+                                            borderWidth: scale(1),
+                                            borderColor: colors.queueBorder,
+                                            padding: scale(15),
+                                            gap: verticalScale(15),
+                                            // flexDirection: "row",
+                                            // alignItems: "center",
+                                            // justifyContent: "space-between"
                                         }}
                                     >
 
-                                        <View>
+                                        {/* <View>
                                             <CustomText
                                                 style={{
                                                     fontFamily: "AirbnbCereal_W_Bd",
@@ -1009,42 +1204,92 @@ const salon = () => {
                                             >
                                                 Social links
                                             </CustomText>
-                                        </View>
+                                        </View> */}
+
+                                        <CustomText
+                                            style={{
+                                                fontFamily: "AirbnbCereal_W_Bd",
+                                            }}
+                                        >Follow Us</CustomText>
 
                                         <View
                                             style={{
                                                 flexDirection: "row",
                                                 alignItems: "center",
+                                                justifyContent: "space-evenly",
                                                 gap: scale(10)
                                             }}
                                         >
                                             <Pressable
                                                 style={{
-                                                    width: scale(30),
-                                                    height: scale(30),
+                                                    width: scale(45),
+                                                    height: scale(45),
+                                                    borderRadius: scale(30),
                                                     backgroundColor: colors.background,
                                                     justifyContent: "center",
                                                     alignItems: "center",
-                                                    borderRadius: scale(4)
                                                 }}
                                                 onPress={() => openLink(salonInfoData?.data?.salonInfo?.instraLink)}
                                             >
-                                                <InstagramIcon size={scale(18)} color={"#E1306C"} />
+                                                <InstagramIcon size={scale(22)} color={"#E1306C"} />
                                             </Pressable>
 
                                             <Pressable
                                                 style={{
-                                                    width: scale(30),
-                                                    height: scale(30),
+                                                    width: scale(45),
+                                                    height: scale(45),
+                                                    borderRadius: scale(30),
                                                     backgroundColor: colors.background,
                                                     justifyContent: "center",
                                                     alignItems: "center",
-                                                    borderRadius: scale(4)
                                                 }}
                                                 onPress={() => openLink(salonInfoData?.data?.salonInfo?.facebookLink)}
                                             >
-                                                <FacebookIcon size={scale(18)} color={"#1877F2"} />
+                                                <FacebookIcon size={scale(22)} color={"#1877F2"} />
                                             </Pressable>
+
+                                            <Pressable
+                                                style={{
+                                                    width: scale(45),
+                                                    height: scale(45),
+                                                    borderRadius: scale(30),
+                                                    backgroundColor: colors.background,
+                                                    justifyContent: "center",
+                                                    alignItems: "center",
+                                                }}
+                                                onPress={() => openLink(salonInfoData?.data?.salonInfo?.twitterLink)}
+                                            >
+                                                <XIcon size={scale(22)} color={colors.text} />
+                                            </Pressable>
+
+                                            <Pressable
+                                                style={{
+                                                    width: scale(45),
+                                                    height: scale(45),
+                                                    borderRadius: scale(30),
+                                                    backgroundColor: colors.background,
+                                                    justifyContent: "center",
+                                                    alignItems: "center",
+                                                }}
+                                                onPress={() => openLink(salonInfoData?.data?.salonInfo?.tiktokLink)}
+                                            >
+                                                <TiktokIcon size={scale(22)} color={colors.text} />
+                                            </Pressable>
+
+                                            <Pressable
+                                                style={{
+                                                    width: scale(45),
+                                                    height: scale(45),
+                                                    borderRadius: scale(30),
+                                                    backgroundColor: colors.background,
+                                                    justifyContent: "center",
+                                                    alignItems: "center",
+                                                }}
+                                                onPress={() => openLink(salonInfoData?.data?.salonInfo?.webLink)}
+                                            >
+                                                <WebIcon size={scale(22)} color={colors.text} />
+                                            </Pressable>
+
                                         </View>
 
                                     </View>
@@ -1052,7 +1297,7 @@ const salon = () => {
                             )
                         }
 
-                        {
+                        {/* {
                             selectedTab === "Services" && (
                                 serviceCategorySelected?.selected ? (
                                     <>
@@ -1332,10 +1577,71 @@ const salon = () => {
                                 </>
 
                             )
+                        } */}
+                        {
+                            selectedTab === "Services" && (
+                                salonInfoData?.loading ? (
+                                    [0, 1, 2, 3, 4, 5, 6, 7].map((_, index) => (
+                                        <Skeleton
+                                            key={index}
+                                            height={scale(80)}
+                                            borderRadius={scale(12)}
+                                            style={{
+                                                marginBottom: verticalScale(5),
+                                            }}
+                                        />
+                                    ))
+                                ) : (
+                                    salonInfoData?.data?.categorizedSalonServices?.map((item, index) => (
+                                        <React.Fragment key={item?.serviceCategoryName || index}>
+                                            <CustomText style={styles.serviceName}>
+                                                {item?.serviceCategoryName}
+                                            </CustomText>
+                                            {item?.services?.map((ser) => (
+                                                <View
+                                                    key={ser.serviceId}
+                                                    style={[
+                                                        styles.card,
+                                                        {
+                                                            backgroundColor: colors.cardColor,
+                                                            borderColor: colors.queueBorder,
+                                                            borderWidth: scale(1),
+                                                        },
+                                                    ]}
+                                                >
+                                                    <Image source={{ uri: ser?.serviceIcon?.url }} style={styles.icon} />
+                                                    <View style={styles.cardContent}>
+                                                        <CustomText style={styles.serviceName}>{ser.serviceName}</CustomText>
+                                                        <CustomText style={[styles.serviceDesc, { color: colors.secondaryText }]}>
+                                                            {ser.serviceDesc}
+                                                        </CustomText>
+                                                        <View
+                                                            style={{
+                                                                flexDirection: "row",
+                                                                alignItems: "center",
+                                                                gap: scale(10),
+                                                                marginTop: verticalScale(5),
+                                                            }}
+                                                        >
+                                                            <CustomText style={styles.servicePrice}>
+                                                                {authenticatedUser?.currency} {ser.servicePrice}
+                                                            </CustomText>
+                                                            <CustomText style={[styles.serviceEWT, { color: colors.secondaryText }]}>
+                                                                ~ {ser.serviceEWT} mins
+                                                            </CustomText>
+                                                        </View>
+                                                    </View>
+                                                </View>
+                                            ))}
+                                        </React.Fragment>
+                                    ))
+                                )
+                            )
                         }
 
+
                         {
-                            selectedTab === "Barber" && (
+                            selectedTab === "Stylists" && (
                                 <>
                                     <CustomText
                                         style={{
@@ -1417,7 +1723,7 @@ const styles = StyleSheet.create({
         backgroundColor: "gray",
         flex: 1,
         paddingInline: scale(10),
-        borderRadius: scale(4),
+        borderRadius: scale(8),
         justifyContent: "center",
         alignItems: "center"
     },
@@ -1425,7 +1731,50 @@ const styles = StyleSheet.create({
     map: {
         width: "100%",
         height: verticalScale(128),
-        borderTopLeftRadius: scale(4),
-        borderTopRightRadius: scale(4)
+        borderTopLeftRadius: scale(12),
+        borderTopRightRadius: scale(12)
+    },
+
+
+
+    sectionHeader: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginVertical: 10,
+        marginHorizontal: 16,
+    },
+    card: {
+        flexDirection: 'row',
+        padding: scale(12),
+        // marginHorizontal: 16,
+        marginBottom: verticalScale(8),
+        borderRadius: scale(12),
+    },
+    icon: {
+        width: scale(60),
+        height: scale(60),
+        borderRadius: scale(8),
+        marginRight: scale(12),
+        borderWidth: scale(1),
+        borderColor: '#efefef', // gray-200
+    },
+    cardContent: {
+        flex: 1,
+        justifyContent: 'center',
+    },
+    serviceName: {
+        fontSize: scale(16),
+        fontFamily: "AirbnbCereal_W_Bd"
+    },
+    serviceDesc: {
+        fontSize: scale(14),
+    },
+    servicePrice: {
+        fontSize: scale(14),
+        fontFamily: "AirbnbCereal_W_Bd",
+        color: '#14b8a6'
+    },
+    serviceEWT: {
+        fontSize: scale(12),
     },
 })

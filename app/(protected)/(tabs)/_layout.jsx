@@ -31,8 +31,7 @@ export default function TabLayout() {
 
                 <Tabs
                     screenOptions={{
-                        // tabBarShowLabel: false,
-                        tabBarActiveTintColor: Colors.modeColor.colorCode,
+                        tabBarActiveTintColor: '#14b8a6',
                         headerShown: false,
                         // tabBarButton: HapticTab,
 
@@ -61,23 +60,26 @@ export default function TabLayout() {
                         tabBarStyle: {
                             ...Platform.select({
                                 ios: {
-                                    // Use a transparent background on iOS to show the blur effect
                                     position: 'absolute',
                                 },
                                 default: {},
                             }),
-                            // borderTopColor: "none",
-                            // paddingTop: verticalScale(5),
-                            // ✅ iOS Shadow
-
+                            height: Platform.OS === "ios" ? verticalScale(90) : verticalScale(70) + insets.bottom,
+                            paddingBottom: insets.bottom,   
+                            backgroundColor: colors.cardColor,
+                            borderTopWidth: scale(1),
+                            borderTopColor: colors.queueBorder,
                             shadowColor: '#000',
                             shadowOffset: { width: 0, height: -3 },
                             shadowOpacity: 0.1,
                             shadowRadius: 6,
                         },
+
+
                         tabBarLabelStyle: {
-                            fontFamily: 'AirbnbCereal_W_Bk',
-                            fontSize: scale(9.6),
+                            fontFamily: 'AirbnbCereal_W_Md',
+                            fontSize: scale(9.8),
+                            marginTop: verticalScale(4)
                         },
                         tabBarItemStyle: {
                         }
@@ -249,7 +251,7 @@ function AnimatedTabIcon({ focused, color, Icon }) {
 
     useEffect(() => {
         Animated.spring(scale, {
-            toValue: focused ? 1 : 0.9,
+            toValue: focused ? 1.1 : 1,
             useNativeDriver: true,
             friction: 4,
         }).start();

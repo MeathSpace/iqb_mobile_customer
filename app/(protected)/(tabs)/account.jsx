@@ -641,12 +641,7 @@ const account = () => {
                     <Feather name={opt?.icon} size={moderateScale(24)} color={opt.lightColor} />
                   </View>
                   <CustomText style={[styles.optionLabel]}>{opt.label}</CustomText>
-                  <Feather
-                    name="chevron-right"
-                    size={moderateScale(20)}
-                    color={colors.text}
-                    style={{ marginLeft: 'auto' }}
-                  />
+                  <RightIcon size={moderateScale(16)} color={colors.text} style={{ marginLeft: 'auto' }} />
                 </TouchableOpacity>
                 {idx !== profileOptions.length - 1 && (
                   <View style={[styles.separator, { backgroundColor: colors.queueBorder }]} />

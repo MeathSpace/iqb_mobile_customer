@@ -836,7 +836,31 @@ const Dashboard = () => {
                         case "barber": {
                             return (
                                 <>
-                                    <CustomText style={styles.heading}>Our Stylists <CustomText style={[styles.heading, { color: Colors.modeColor.colorCode }]}>{homeDashboardData?.dashboardData?.barberOnDuty}</CustomText></CustomText>
+                                    <View style={{
+                                        flexDirection: "row",
+                                        alignItems: "center",
+                                        marginBottom: verticalScale(10)
+                                    }}>
+                                        <CustomText style={styles.heading}>Our Stylists
+                                            {/* <CustomText style={[styles.heading, { color: Colors.modeColor.colorCode }]}>{homeDashboardData?.dashboardData?.barberOnDuty}</CustomText> */}
+                                        </CustomText>
+
+                                        <View
+                                            style={{
+                                                marginLeft: scale(8),
+                                                width: scale(24),
+                                                height: scale(24),
+                                                borderRadius: scale(12),
+                                                backgroundColor: colors.cardColor,
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                            }}
+                                        >
+                                            <CustomText style={{ fontSize: scale(12), fontFamily: "AirbnbCereal_W_Bd" }}>
+                                                {homeDashboardData?.dashboardData?.barberOnDuty}
+                                            </CustomText>
+                                        </View>
+                                    </View>
 
                                     {
                                         homeDashboardData?.loading ? (
@@ -850,12 +874,12 @@ const Dashboard = () => {
                                                 }}
                                                 data={[0, 1, 2, 3]}
                                                 renderItem={({ item }) => <Skeleton
-                                                    height={verticalScale(110)}
+                                                    height={verticalScale(160)}
                                                     width={scale(160)}
                                                     borderRadius={scale(10)}
 
                                                     style={{
-                                                        // marginBottom: verticalScale(10)
+                                                        marginBottom: verticalScale(15)
                                                     }}
                                                 />}
                                                 keyExtractor={item => item}
@@ -1074,7 +1098,7 @@ const styles = StyleSheet.create({
     heading: {
         fontSize: scale(20),
         fontFamily: "AirbnbCereal_W_XBd",
-        marginBottom: verticalScale(10),
+        // marginBottom: verticalScale(10),
     },
     grid: {
         flexDirection: 'row',
