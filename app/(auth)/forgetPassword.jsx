@@ -19,7 +19,7 @@ const forgetPassword = () => {
 
     const router = useRouter()
 
-    const [email, setEmail] = useState("arghya@yopmail.com")
+    const [email, setEmail] = useState("")
     const [emailError, setEmailError] = useState(false);
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 

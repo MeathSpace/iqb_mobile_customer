@@ -2,7 +2,7 @@ import { ActivityIndicator, Image, InteractionManager, Keyboard, Pressable, Styl
 import React, { useCallback, useEffect } from 'react'
 import CustomView from '../../components/CustomView'
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
-import { Link, useRouter } from 'expo-router';
+import { Link, useFocusEffect, useRouter } from 'expo-router';
 import { useState } from 'react';
 import CustomText from '../../components/CustomText';
 import { useTheme } from '@react-navigation/native';
@@ -148,46 +148,91 @@ const signup = () => {
 
     const [googleSigninLoader, setGoogleSigninLoader] = useState(false)
 
-    useEffect(() => {
-        if (isSignedIn) {
+    // useEffect(() => {
+    //     if (isSignedIn) {
 
-            const checkEmail = async () => {
-                try {
+    //         const checkEmail = async () => {
+    //             try {
 
-                    setGoogleSigninLoader(true)
+    //                 setGoogleSigninLoader(true)
 
-                    const { data } = await axios.post(`${BASE_URL}/customer/checkEmail`, {
-                        email: user?.primaryEmailAddress?.emailAddress
-                    })
+    //                 const { data } = await axios.post(`${BASE_URL}/customer/checkEmail`, {
+    //                     email: user?.primaryEmailAddress?.emailAddress
+    //                 })
 
-                    setGoogleSigninLoader(false)
+    //                 setGoogleSigninLoader(false)
 
-                    router.push({
-                        pathname: "/personalInfo",
-                        params: {
-                            email: user?.primaryEmailAddress?.emailAddress,
-                            authType: "google"
-                        }
-                    });
+    //                 router.push({
+    //                     pathname: "/personalInfo",
+    //                     params: {
+    //                         email: user?.primaryEmailAddress?.emailAddress,
+    //                         authType: "google"
+    //                     }
+    //                 });
 
-                    // await signOut()
+    //                 // await signOut()
 
-                    // Delay signOut slightly so it doesn't interrupt navigation
-                    InteractionManager.runAfterInteractions(() => {
-                        signOut(); // Donot give await
-                    });
+    //                 // Delay signOut slightly so it doesn't interrupt navigation
+    //                 InteractionManager.runAfterInteractions(() => {
+    //                     signOut(); // Donot give await
+    //                 });
 
-                } catch (error) {
-                    await signOut()
-                    setGoogleSigninLoader(false)
-                    Toast.error(error?.response?.data?.message)
+    //             } catch (error) {
+    //                 await signOut()
+    //                 setGoogleSigninLoader(false)
+    //                 Toast.error(error?.response?.data?.message)
+    //             }
+    //         }
+
+    //         checkEmail()
+    //     }
+    // }, [isSignedIn, router, user])
+
+    useFocusEffect(
+        useCallback(() => {
+            if (isSignedIn) {
+
+                const checkEmail = async () => {
+                    try {
+
+                        setGoogleSigninLoader(true)
+
+                        const { data } = await axios.post(`${BASE_URL}/customer/checkEmail`, {
+                            email: user?.primaryEmailAddress?.emailAddress
+                        })
+
+                        setGoogleSigninLoader(false)
+
+                        router.push({
+                            pathname: "/personalInfo",
+                            params: {
+                                email: user?.primaryEmailAddress?.emailAddress,
+                                authType: "google"
+                            }
+                        });
+
+                        // await signOut()
+
+                        // Delay signOut slightly so it doesn't interrupt navigation
+                        InteractionManager.runAfterInteractions(() => {
+                            signOut(); // Donot give await
+                        });
+
+                    } catch (error) {
+                        await signOut()
+                        setGoogleSigninLoader(false)
+                        Toast.error(error?.response?.data?.message)
+                    }
                 }
+
+                checkEmail()
             }
 
-            checkEmail()
-        }
-    }, [isSignedIn, router, user])
-
+            return () => {
+                console.log("Screen unfocused")
+            }
+        }, [isSignedIn, router, user])
+    )
 
 
     return (
@@ -362,7 +407,10 @@ const signup = () => {
                         }
                     </Pressable>
 
-                    <Pressable onPress={() => router.replace("/signin")}>
+                    <Pressable onPress={async () => {
+                        await signOut()
+                        router.replace("/signin")
+                    }}>
                         <CustomText style={[styles.subHeading, { color: colors.secondaryText }]}>Already a member ? <CustomText style={{ color: '#14b8a6' }}> Log In</CustomText></CustomText>
                     </Pressable>
 

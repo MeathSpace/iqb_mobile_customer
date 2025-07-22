@@ -452,7 +452,6 @@ const account = () => {
     } else {
       await AsyncStorage.removeItem("LoggedInUser")
     }
-
     await AsyncStorage.removeItem("isAuthenticated")
     setIsAuthenticated(false)
     setAuthenticatedUser(null)

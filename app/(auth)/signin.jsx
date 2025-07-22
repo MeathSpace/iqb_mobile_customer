@@ -4,7 +4,7 @@ import CustomView from "../../components/CustomView"
 import CustomText from "../../components/CustomText"
 import CustomSecondaryText from '../../components/CustomSecondaryText';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
-import { Link, useRouter } from 'expo-router';
+import { Link, useFocusEffect, useRouter } from 'expo-router';
 import Checkbox from 'expo-checkbox';
 import { useAuth } from '../../context/AuthContext'
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -168,66 +168,131 @@ const signin = () => {
 
     const [googleSigninLoader, setGoogleSigninLoader] = useState(false)
 
-    useEffect(() => {
+    // useEffect(() => {
 
-        if (isSignedIn) {
-            const handleAuth = async () => {
-                try {
-                    // setSignInData((prev) => ({ ...prev, loading: true }))
+    //     if (isSignedIn) {
+    //         const handleAuth = async () => {
+    //             try {
+    //                 // setSignInData((prev) => ({ ...prev, loading: true }))
 
-                    setGoogleSigninLoader(true)
+    //                 setGoogleSigninLoader(true)
 
-                    const { data } = await axios.post(`${BASE_URL}/customer/googleCustomerSignIn`, {
-                        email: user?.primaryEmailAddress?.emailAddress,
-                    })
+    //                 const { data } = await axios.post(`${BASE_URL}/customer/googleCustomerSignIn`, {
+    //                     email: user?.primaryEmailAddress?.emailAddress,
+    //                 })
 
-                    setSignInData((prev) => ({
-                        ...prev, loading: false, user: {
+    //                 setSignInData((prev) => ({
+    //                     ...prev, loading: false, user: {
+    //                         ...data?.response,
+    //                         // profile: [
+    //                         //     { url: user?.imageUrl }
+    //                         // ]
+    //                     }, success: true, error: null
+    //                 }))
+
+    //                 setGoogleSigninLoader(false)
+
+
+    //                 if (rememberMe) {
+    //                     await AsyncStorage.setItem("isAuthenticated", JSON.stringify(true))
+    //                 } else {
+    //                     await signOut()
+    //                 }
+
+    //                 await AsyncStorage.setItem("LoggedInUser", JSON.stringify({
+    //                     ...data?.response,
+    //                     // profile: [
+    //                     //     { url: user?.imageUrl }
+    //                     // ]
+    //                 }))
+    //                 setAuthenticatedUser({
+    //                     ...data?.response,
+    //                     // profile: [
+    //                     //     { url: user?.imageUrl }
+    //                     // ]
+    //                 })
+    //                 setIsAuthenticated(true)
+    //                 router.push("/home")
+
+    //             } catch (error) {
+    //                 await signOut()
+    //                 setGoogleSigninLoader(false)
+    //                 setSignInData((prev) => ({ ...prev, loading: false, user: null, success: false, error: error }))
+    //                 Toast.error(error?.response?.data?.message)
+    //                 console.log("Error ", error)
+    //             }
+    //         };
+
+    //         handleAuth();
+    //     }
+
+
+    // }, [isSignedIn, router, rememberMe, user]);
+
+    useFocusEffect(
+        useCallback(() => {
+            if (isSignedIn) {
+                const handleAuth = async () => {
+                    try {
+                        // setSignInData((prev) => ({ ...prev, loading: true }))
+
+                        setGoogleSigninLoader(true)
+
+                        const { data } = await axios.post(`${BASE_URL}/customer/googleCustomerSignIn`, {
+                            email: user?.primaryEmailAddress?.emailAddress,
+                        })
+
+                        setSignInData((prev) => ({
+                            ...prev, loading: false, user: {
+                                ...data?.response,
+                                // profile: [
+                                //     { url: user?.imageUrl }
+                                // ]
+                            }, success: true, error: null
+                        }))
+
+                        setGoogleSigninLoader(false)
+
+
+                        if (rememberMe) {
+                            await AsyncStorage.setItem("isAuthenticated", JSON.stringify(true))
+                        } else {
+                            await signOut()
+                        }
+
+                        await AsyncStorage.setItem("LoggedInUser", JSON.stringify({
                             ...data?.response,
                             // profile: [
                             //     { url: user?.imageUrl }
                             // ]
-                        }, success: true, error: null
-                    }))
+                        }))
+                        setAuthenticatedUser({
+                            ...data?.response,
+                            // profile: [
+                            //     { url: user?.imageUrl }
+                            // ]
+                        })
+                        setIsAuthenticated(true)
+                        router.push("/home")
 
-                    setGoogleSigninLoader(false)
-
-
-                    if (rememberMe) {
-                        await AsyncStorage.setItem("isAuthenticated", JSON.stringify(true))
-                    } else {
+                    } catch (error) {
                         await signOut()
+                        setGoogleSigninLoader(false)
+                        setSignInData((prev) => ({ ...prev, loading: false, user: null, success: false, error: error }))
+                        Toast.error(error?.response?.data?.message)
+                        console.log("Error ", error)
                     }
+                };
 
-                    await AsyncStorage.setItem("LoggedInUser", JSON.stringify({
-                        ...data?.response,
-                        // profile: [
-                        //     { url: user?.imageUrl }
-                        // ]
-                    }))
-                    setAuthenticatedUser({
-                        ...data?.response,
-                        // profile: [
-                        //     { url: user?.imageUrl }
-                        // ]
-                    })
-                    setIsAuthenticated(true)
-                    router.push("/home")
+                handleAuth();
+            }
 
-                } catch (error) {
-                    await signOut()
-                    setGoogleSigninLoader(false)
-                    setSignInData((prev) => ({ ...prev, loading: false, user: null, success: false, error: error }))
-                    Toast.error(error?.response?.data?.message)
-                    console.log("Error ", error)
-                }
+            // Optional cleanup when screen is unfocused
+            return () => {
+                console.log('Screen is unfocused');
             };
-
-            handleAuth();
-        }
-
-
-    }, [isSignedIn, router, rememberMe, user]);
+        }, [isSignedIn, router, rememberMe, user]) // You can pass dependencies here
+    );
 
 
     return (
