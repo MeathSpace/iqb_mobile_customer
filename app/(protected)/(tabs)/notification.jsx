@@ -194,15 +194,17 @@ const notification = () => {
                                 style={{
                                     paddingVertical: verticalScale(15),
                                     flexDirection: "row",
-                                    alignItems: "center",
+                                    // alignItems: "center",
                                     gap: scale(10),
-                                    borderRadius: scale(10),
+                                    borderRadius: scale(12),
                                     paddingHorizontal: scale(15),
-                                    backgroundColor: colors.background
+                                    backgroundColor: colors.cardColor,
+                                    borderColor: colors.queueBorder,
+                                    borderWidth: scale(1)
                                 }}
                             >
                                 <Image
-                                    style={{ height: scale(50), width: scale(50), borderRadius: scale(40) }}
+                                    style={{ height: scale(45), width: scale(45), borderRadius: scale(40) }}
                                     source={{ uri: item?.salonLogo?.[0]?.url }}
                                     contentFit="cover"
                                     transition={300}
@@ -219,7 +221,7 @@ const notification = () => {
                                     <CustomText
                                         style={{
                                             fontSize: scale(12),
-                                            color: "#696D6E"
+                                            color: colors.secondaryText
                                         }}
                                     >{item?.body}</CustomText>
 
