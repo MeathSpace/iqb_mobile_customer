@@ -1,4 +1,4 @@
-import { ActivityIndicator, Alert, Keyboard, Pressable, StyleSheet, Text, TextInput, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
+import { ActivityIndicator, Alert, Keyboard, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
@@ -18,8 +18,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const verification = () => {
 
     const { email,
-        firstName,
-        lastName,
+        fullName,
         gender,
         callingCode,
         phoneNumber,
@@ -81,7 +80,7 @@ const verification = () => {
 
             const signUpData = {
                 email,
-                name: `${firstName} ${lastName}`,
+                name: fullName,
                 gender,
                 dateOfBirth: selectedDate,
                 mobileCountryCode: callingCode,
@@ -91,7 +90,7 @@ const verification = () => {
 
             const googleSignUpData = {
                 email,
-                name: `${firstName} ${lastName}`,
+                name: fullName,
                 gender,
                 dateOfBirth: selectedDate,
                 mobileCountryCode: callingCode,
@@ -133,6 +132,7 @@ const verification = () => {
                 router.push("/home")
 
             } else {
+
                 const { data } = await axios.post(`${BASE_URL}/customer/signUp`, signUpData)
 
                 setSignInData((prev) => ({ ...prev, loading: false, user: data?.response, success: true, error: null }))
@@ -223,19 +223,9 @@ const verification = () => {
         }}>
             <CustomView style={{ justifyContent: "space-between" }}>
                 <View style={{ gap: verticalScale(20) }}>
-                    {/* {
-                        authType === "google" ? (
-                            <CustomText>sdvdsv</CustomText>
-                        ) : (
-                            <ProgressHeader
-                                progressOne={progressOne}
-                                progressTwo={progressTwo}
-                                progressThree={progressThree}
-                            />
-                        )
-                    } */}
 
-                    {authType === "google" ? (
+
+                    {/* {authType === "google" ? (
                         <ProgressHeader
                             progressOne={progressOne}
                             progressTwo={0.5}
@@ -247,8 +237,14 @@ const verification = () => {
                             progressTwo={progressTwo}
                             progressThree={progressThree}
                         />
-                    )}
+                    )} */}
 
+
+                    <ProgressHeader
+                        progressOne={progressOne}
+                        progressTwo={progressTwo}
+                        progressThree={progressThree}
+                    />
 
 
                     <View>
@@ -270,10 +266,10 @@ const verification = () => {
                             placeholder="Enter your otp"
                             placeholderTextColor={colors.secondaryText}
                             style={[false ? styles.inputFielderror : styles.inputField, {
-                                // backgroundColor: "#0BA3AD1A",
                                 borderWidth: scale(1),
-                                borderColor: "gray",
-                                fontFamily: "AirbnbCereal_W_Bk", color: colors.text
+                                borderColor: colors.queueBorder,
+                                backgroundColor: colors.cardColor,
+                                color: colors.text
                             }]}
                             onChangeText={(text) => {
                                 setVerificationCodeError("")
@@ -298,8 +294,20 @@ const verification = () => {
 
                     </View>
 
+                    <TouchableOpacity
+                        disabled={signupLoading}
+                        onPress={() => signupHandler()}
+                        style={styles.signinButton} activeOpacity={0.85}>
+                        {
+                            signupLoading ? (
+                                <ActivityIndicator size="small" color="#fff" />
+                            ) : (
+                                <CustomText style={styles.signinButtonText}>Verify & Create Account</CustomText>
+                            )
+                        }
+                    </TouchableOpacity>
 
-                    <Pressable
+                    {/* <Pressable
                         onPress={resendVerification}
                         style={[
                             styles.btn,
@@ -321,12 +329,37 @@ const verification = () => {
                                 </CustomText>
                             )
                         }
-                    </Pressable>
+                    </Pressable> */}
+
+                    <View
+                        style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                            justifyContent: "center", // centers the entire row
+                            marginHorizontal: "auto",
+                        }}
+                    >
+                        <CustomSecondaryText>Didn't receive the code? </CustomSecondaryText>
+
+                        <Pressable
+                            onPress={resendVerification}
+                            disabled={verificationCodeLoading || isCooldown}
+                        >
+                            {verificationCodeLoading ? (
+                                <ActivityIndicator size="small" color="#14b8a6" />
+                            ) : (
+                                <CustomText style={{ color: '#14b8a6' }}>
+                                    {isCooldown ? `Wait ${verificationTime}s` : "Resend"}
+                                </CustomText>
+                            )}
+                        </Pressable>
+                    </View>
 
 
 
                 </View>
-                <Pressable
+
+                {/* <Pressable
                     disabled={signupLoading}
                     onPress={() => signupHandler()}
                     style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode }]}>
@@ -337,7 +370,7 @@ const verification = () => {
                             <CustomText style={{ color: "#fff" }}>Done</CustomText>
                         )
                     }
-                </Pressable>
+                </Pressable> */}
             </CustomView>
         </TouchableWithoutFeedback>
     )
@@ -347,7 +380,7 @@ export default verification
 
 const styles = StyleSheet.create({
     heading: {
-        fontFamily: "AirbnbCereal_W_Bd",
+        fontFamily: "AirbnbCereal_W_XBd",
         fontSize: moderateScale(22),
         marginBottom: verticalScale(10)
     },
@@ -358,7 +391,7 @@ const styles = StyleSheet.create({
 
     inputField: {
         height: verticalScale(40),
-        borderRadius: scale(4),
+        borderRadius: scale(8),
         paddingHorizontal: scale(10),
         fontSize: moderateScale(14)
     },
@@ -373,5 +406,19 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         marginBlock: verticalScale(0)
+    },
+
+    signinButton: {
+        width: '100%',
+        backgroundColor: '#14b8a6', // bg-teal-500
+        paddingVertical: verticalScale(12), // py-4
+        borderRadius: scale(8), // rounded-xl
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    signinButtonText: {
+        color: '#fff', // text-white
+        fontFamily: "AirbnbCereal_W_XBd",
+        fontSize: scale(16),
     },
 })

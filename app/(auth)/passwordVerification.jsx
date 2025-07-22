@@ -1,4 +1,4 @@
-import { ActivityIndicator, Keyboard, Pressable, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native'
+import { ActivityIndicator, Keyboard, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import CustomView from '../../components/CustomView';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
@@ -118,10 +118,10 @@ const passwordVerification = () => {
                             placeholder="Enter your otp"
                             placeholderTextColor={colors.secondaryText}
                             style={[false ? styles.inputFielderror : styles.inputField, {
-                                // backgroundColor: "#0BA3AD1A",
                                 borderWidth: scale(1),
-                                borderColor: "gray",
-                                fontFamily: "AirbnbCereal_W_Bk", color: colors.text
+                                borderColor: colors.queueBorder,
+                                backgroundColor: colors.cardColor,
+                                color: colors.text
                             }]}
                             onChangeText={(text) => {
                                 setVerificationCodeError("")
@@ -147,7 +147,13 @@ const passwordVerification = () => {
                     </View>
 
 
-                    <Pressable
+                    <TouchableOpacity
+                        onPress={continueHandler}
+                        style={styles.signinButton} activeOpacity={0.85}>
+                        <CustomText style={styles.signinButtonText}>Verify & Continue</CustomText>
+                    </TouchableOpacity>
+
+                    {/* <Pressable
                         onPress={resendVerification}
                         style={[
                             styles.btn,
@@ -169,31 +175,42 @@ const passwordVerification = () => {
                                 </CustomText>
                             )
                         }
-                    </Pressable>
+                    </Pressable> */}
 
+                    <View
+                        style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                            justifyContent: "center", // centers the entire row
+                            marginHorizontal: "auto",
+                        }}
+                    >
+                        <CustomSecondaryText>Didn't receive the code? </CustomSecondaryText>
+
+                        <Pressable
+                            onPress={resendVerification}
+                            disabled={verificationCodeLoading || isCooldown}
+                        >
+                            {verificationCodeLoading ? (
+                                <ActivityIndicator size="small" color="#14b8a6" />
+                            ) : (
+                                <CustomText style={{ color: '#14b8a6' }}>
+                                    {isCooldown ? `Wait ${verificationTime}s` : "Resend"}
+                                </CustomText>
+                            )}
+                        </Pressable>
+                    </View>
 
 
                 </View>
 
-                <Pressable
+                {/* <Pressable
                     onPress={continueHandler}
                     style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode }]}
                 >
                     <CustomText style={{ color: "#fff" }}>Continue</CustomText>
-                </Pressable>
-
-                {/* <Pressable
-                    disabled={signupLoading}
-                    onPress={() => signupHandler()}
-                    style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode }]}>
-                    {
-                        signupLoading ? (
-                            <ActivityIndicator size="small" color="#fff" />
-                        ) : (
-                            <CustomText style={{ color: "#fff" }}>Done</CustomText>
-                        )
-                    }
                 </Pressable> */}
+
             </CustomView>
         </TouchableWithoutFeedback>
     )
@@ -204,7 +221,7 @@ export default passwordVerification
 
 const styles = StyleSheet.create({
     heading: {
-        fontFamily: "AirbnbCereal_W_Bd",
+        fontFamily: "AirbnbCereal_W_XBd",
         fontSize: moderateScale(22),
         marginBottom: verticalScale(10)
     },
@@ -230,6 +247,20 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         marginBlock: verticalScale(0)
+    },
+
+    signinButton: {
+        width: '100%',
+        backgroundColor: '#14b8a6', // bg-teal-500
+        paddingVertical: verticalScale(12), // py-4
+        borderRadius: scale(8), // rounded-xl
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    signinButtonText: {
+        color: '#fff', // text-white
+        fontFamily: "AirbnbCereal_W_XBd",
+        fontSize: scale(16),
     },
 })
 

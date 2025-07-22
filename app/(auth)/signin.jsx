@@ -1,4 +1,4 @@
-import { ActivityIndicator, Image, Keyboard, Pressable, StyleSheet, Text, TextInput, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
+import { ActivityIndicator, Image, Keyboard, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
 import React, { useState, useCallback, useEffect } from 'react'
 import CustomView from "../../components/CustomView"
 import CustomText from "../../components/CustomText"
@@ -234,7 +234,7 @@ const signin = () => {
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
 
             <CustomView style={{ alignItems: "center", justifyContent: "center" }}>
-                <View style={{ width: "100%", gap: verticalScale(25) }}>
+                <View style={{ width: "100%", gap: verticalScale(20) }}>
                     <Image
                         style={[styles.Logo, { tintColor: colors.text }]}
                         source={require("../../assets/images/iqbook.png")}
@@ -244,23 +244,27 @@ const signin = () => {
                     <View style={{
                         gap: verticalScale(10)
                     }}>
-                        <TextInput
-                            editable
-                            placeholder="Enter your email"
-                            placeholderTextColor={colors.secondaryText}
-                            style={[false ? styles.inputFielderror : styles.inputField, {
-                                // backgroundColor: "#0BA3AD1A",
-                                borderWidth: scale(1),
-                                borderColor: "gray",
-                                fontFamily: "AirbnbCereal_W_Md",
-                                color: colors.text
-                            }]}
-                            onChangeText={(text) => {
-                                setEmailError("")
-                                setEmail(text)
-                            }}
-                            value={email}
-                        />
+                        <View style={{
+                            gap: verticalScale(10)
+                        }}>
+                            <CustomText>Email</CustomText>
+                            <TextInput
+                                editable
+                                placeholder="Enter your email"
+                                placeholderTextColor={colors.secondaryText}
+                                style={[false ? styles.inputFielderror : styles.inputField, {
+                                    borderWidth: scale(1),
+                                    borderColor: colors.queueBorder,
+                                    backgroundColor: colors.cardColor,
+                                    color: colors.text
+                                }]}
+                                onChangeText={(text) => {
+                                    setEmailError("")
+                                    setEmail(text)
+                                }}
+                                value={email}
+                            />
+                        </View>
 
                         {
                             emailError && (
@@ -279,46 +283,55 @@ const signin = () => {
                     <View style={{
                         gap: verticalScale(10)
                     }}>
-                        <View style={styles.passwordInputContainer}>
-                            <TextInput
-                                editable
-                                placeholder="Enter your password"
-                                placeholderTextColor={colors.secondaryText}
-                                style={[
-                                    styles.inputField,
-                                    {
-                                        fontFamily: "AirbnbCereal_W_Md",
-                                        color: colors.text,
-                                        flex: 1,
-                                    }
-                                ]}
-                                onChangeText={(text) => {
-                                    setPasswordError("")
-                                    setPassword(text);
-                                }}
-                                value={password}
-                                secureTextEntry={!showPassword}
-                            />
-                            <Pressable
-                                onPress={() => setShowPassword(!showPassword)}
-                                style={styles.eyeIcon}
-                            >
-                                {showPassword ? (<EyeOffIcon />) : (<EyeIcon />)}
-                            </Pressable>
-                        </View>
+                        <View style={{
+                            gap: verticalScale(10)
+                        }}>
+                            <CustomText>Password</CustomText>
+                            <View style={[styles.passwordInputContainer, {
+                                borderColor: colors.queueBorder,
+                                backgroundColor: colors.cardColor,
+                                color: colors.text
+                            }]}>
+                                <TextInput
+                                    editable
+                                    placeholder="Enter your password"
+                                    placeholderTextColor={colors.secondaryText}
+                                    style={[
+                                        styles.inputField,
+                                        {
+                                            fontFamily: "AirbnbCereal_W_Md",
+                                            color: colors.text,
+                                            flex: 1,
+                                        }
+                                    ]}
+                                    onChangeText={(text) => {
+                                        setPasswordError("")
+                                        setPassword(text);
+                                    }}
+                                    value={password}
+                                    secureTextEntry={!showPassword}
+                                />
+                                <Pressable
+                                    onPress={() => setShowPassword(!showPassword)}
+                                    style={styles.eyeIcon}
+                                >
+                                    {showPassword ? (<EyeOffIcon color={colors.secondaryText} />) : (<EyeIcon color={colors.secondaryText} />)}
+                                </Pressable>
+                            </View>
 
-                        {
-                            passwordError && (
-                                <View style={{
-                                    flexDirection: "row",
-                                    alignItems: "center",
-                                    gap: scale(5),
-                                }}>
-                                    <ErrorIcon color='red' size={scale(16)} />
-                                    <CustomText style={{ fontSize: scale(12), color: "red", }}>{passwordError}</CustomText>
-                                </View>
-                            )
-                        }
+                            {
+                                passwordError && (
+                                    <View style={{
+                                        flexDirection: "row",
+                                        alignItems: "center",
+                                        gap: scale(5),
+                                    }}>
+                                        <ErrorIcon color='red' size={scale(16)} />
+                                        <CustomText style={{ fontSize: scale(12), color: "red", }}>{passwordError}</CustomText>
+                                    </View>
+                                )
+                            }
+                        </View>
                     </View>
 
                     <View
@@ -331,10 +344,12 @@ const signin = () => {
                     >
                         <View style={{ flexDirection: "row", alignItems: "center", gap: scale(10) }}>
                             <Checkbox
-                                style={styles.checkbox}
+                                style={{
+                                    borderRadius: scale(3),
+                                }}
                                 value={rememberMe}
                                 onValueChange={setRememberMe}
-                                color={rememberMe ? Colors.modeColor.colorCode : undefined}
+                                color={rememberMe ? '#14b8a6' : undefined}
                             />
                             <CustomSecondaryText>
                                 Remember Me
@@ -344,13 +359,13 @@ const signin = () => {
 
 
                         <Pressable onPress={() => router.push("/forgetPassword")}>
-                            <CustomSecondaryText>
+                            <CustomSecondaryText style={{ color: '#14b8a6' }}>
                                 Forgot Password ?
                             </CustomSecondaryText>
                         </Pressable>
                     </View>
 
-                    <Pressable
+                    {/* <Pressable
                         onPress={() => signinPressed()}
                         disabled={signInData?.loading}
                         style={[styles.auth_btn, { backgroundColor: Colors.modeColor.colorCode, marginBottom: verticalScale(10) }]}>
@@ -362,20 +377,33 @@ const signin = () => {
                             )
                         }
 
-                    </Pressable>
+                    </Pressable> */}
 
-                    <Pressable onPress={() => router.replace("/signup")}>
+                    <TouchableOpacity
+                        onPress={() => signinPressed()}
+                        disabled={signInData?.loading}
+                        style={styles.signinButton} activeOpacity={0.85}>
+                        {
+                            signInData?.loading ? (
+                                <ActivityIndicator size="small" color="#fff" />
+                            ) : (
+                                <CustomText style={styles.signinButtonText}>Sign in</CustomText>
+                            )
+                        }
+                    </TouchableOpacity>
+
+                    {/* <Pressable onPress={() => router.replace("/signup")}>
                         <CustomText style={[styles.subHeading, { color: colors.secondaryText }]}>Don't have an account ?<CustomText style={{ fontFamily: "AirbnbCereal_W_Md" }}> Sign up</CustomText></CustomText>
-                    </Pressable>
+                    </Pressable> */}
 
                     <View style={styles.divider}>
-                        <View style={{ flex: 1, height: verticalScale(1), backgroundColor: colors.text }} />
+                        <View style={{ flex: 1, height: verticalScale(0.5), backgroundColor: colors.secondaryText }} />
 
-                        <View style={{ padding: moderateScale(10) }}>
+                        <View style={{ paddingHorizontal: moderateScale(10) }}>
                             <CustomText style={{ color: colors.text }}>or</CustomText>
                         </View>
 
-                        <View style={{ flex: 1, height: verticalScale(1), backgroundColor: colors.text }} />
+                        <View style={{ flex: 1, height: verticalScale(0.5), backgroundColor: colors.secondaryText }} />
                     </View>
 
                     <Pressable
@@ -385,7 +413,9 @@ const signin = () => {
                             [styles.auth_btn,
                             {
                                 borderWidth: scale(1),
-                                borderColor: "gray",
+                                // borderColor: "gray",
+                                backgroundColor: colors.cardColor,
+                                borderColor: colors.queueBorder,
                                 flexDirection: "row",
                                 alignItems: "center",
                                 gap: scale(10),
@@ -393,7 +423,7 @@ const signin = () => {
                             ]}>
                         {
                             googleSigninLoader ? (
-                                <ActivityIndicator size="small" color="#000" />
+                                <ActivityIndicator size="small" color={colors.text} />
                             ) : (
                                 <>
                                     <Image
@@ -406,6 +436,10 @@ const signin = () => {
                             )
                         }
 
+                    </Pressable>
+
+                    <Pressable onPress={() => router.replace("/signup")}>
+                        <CustomText style={[styles.subHeading, { color: colors.secondaryText }]}>Don't have an account ?<CustomText style={{ color: '#14b8a6' }}> Sign up</CustomText></CustomText>
                     </Pressable>
                 </View>
             </CustomView>
@@ -459,8 +493,21 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        height: verticalScale(40),
         // marginBottom: verticalScale(20)
+    },
+
+    signinButton: {
+        width: '100%',
+        backgroundColor: '#14b8a6', // bg-teal-500
+        paddingVertical: verticalScale(12), // py-4
+        borderRadius: scale(8), // rounded-xl
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    signinButtonText: {
+        color: '#fff', // text-white
+        fontFamily: "AirbnbCereal_W_XBd",
+        fontSize: scale(16),
     },
 })
 

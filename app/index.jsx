@@ -1,4 +1,4 @@
-import { Image, Pressable, StyleSheet, Text, useColorScheme, View } from 'react-native'
+import { Image, Pressable, StyleSheet, Text, TouchableOpacity, useColorScheme, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
 import { Redirect, useRouter } from 'expo-router'
 import { useAuth } from '../context/AuthContext'
@@ -68,27 +68,33 @@ const index = () => {
         <CustomText style={styles.heading}>
           Welcome to iQBook
         </CustomText>
-        <CustomSecondaryText style={styles.sub_heading}>
+        <CustomSecondaryText style={[styles.sub_heading, { color: colors.secondaryText }]}>
           Instantly book, style your hair and mustache the way you want by the
           stylist of your choice.
         </CustomSecondaryText>
 
         {
           isAuthenticated ? (
-            <Pressable
+
+            <TouchableOpacity
               onPress={() => router.push("/home")}
-              style={[styles.auth_btn, { backgroundColor: Colors.modeColor.colorCode, marginBottom: verticalScale(10) }]}><CustomText style={{ color: "#fff" }}>Dashboard</CustomText>
-            </Pressable>
+              style={[styles.authButton, { marginBottom: verticalScale(10) }]} activeOpacity={0.85}>
+              <CustomText style={styles.authButtonText}>Register</CustomText>
+            </TouchableOpacity>
           ) : (
             <>
-              <Pressable
+              <TouchableOpacity
                 onPress={() => router.push("/signup")}
-                style={[styles.auth_btn, { backgroundColor: Colors.modeColor.colorCode, marginBottom: verticalScale(10) }]}><CustomText style={{ color: "#fff" }}>Register</CustomText>
-              </Pressable>
-              <Pressable
+                style={[styles.authButton, { marginBottom: verticalScale(10) }]} activeOpacity={0.85}>
+                <CustomText style={styles.authButtonText}>Register</CustomText>
+              </TouchableOpacity>
+
+
+              <TouchableOpacity
                 onPress={() => router.push("/signin")}
-                style={[styles.auth_btn, { borderWidth: moderateScale(1.5), borderColor: Colors.modeColor.colorCode }]}><CustomText style={{ color: Colors.modeColor.colorCode }}>Log In</CustomText>
-              </Pressable>
+                style={styles.authButton} activeOpacity={0.85}>
+                <CustomText style={styles.authButtonText}>Log In</CustomText>
+              </TouchableOpacity>
             </>
           )
         }
@@ -116,8 +122,8 @@ const styles = StyleSheet.create({
     marginBottom: verticalScale(15)
   },
   heading: {
-    fontFamily: "AirbnbCereal_W_Bd",
-    fontSize: moderateScale(22),
+    fontFamily: "AirbnbCereal_W_XBd",
+    fontSize: moderateScale(28),
     marginHorizontal: "auto",
     marginBottom: verticalScale(15)
   },
@@ -131,7 +137,22 @@ const styles = StyleSheet.create({
     borderRadius: scale(4),
     alignItems: "center",
     justifyContent: "center"
-  }
+  },
+
+
+  authButton: {
+    width: '100%',
+    backgroundColor: '#14b8a6', // bg-teal-500
+    paddingVertical: verticalScale(12), // py-4
+    borderRadius: scale(8), // rounded-xl
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  authButtonText: {
+    color: '#fff', // text-white
+    fontFamily: "AirbnbCereal_W_XBd",
+    fontSize: scale(16),
+  },
 })
 
 

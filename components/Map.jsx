@@ -1,4 +1,4 @@
-import { ActivityIndicator, Alert, FlatList, Keyboard, Linking, Modal, Platform, Pressable, StyleSheet, Text, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
+import { ActivityIndicator, Alert, FlatList, Keyboard, Linking, Modal, Platform, Pressable, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import MapView, { PROVIDER_GOOGLE, Marker, Region } from 'react-native-maps';
 import * as Location from 'expo-location';
@@ -11,7 +11,7 @@ import { Colors } from '../constants/Colors';
 import SalonCard from './SalonCard';
 import { Image } from 'expo-image';
 import { usePreventRemove, useTheme } from '@react-navigation/native';
-import { ArrowLeftIcon, CheckIcon, ClockIcon, CloseIcon, ContactIcon, CuttingIcon, EmailIcon, FacebookIcon, HeartFilledIcon, HeartIcon, InstagramIcon, MapIcon, MapScissorIcon, WhatsappIcon } from '../constants/icons';
+import { ArrowLeftIcon, CheckIcon, ClockIcon, CloseIcon, ContactIcon, CuttingIcon, EmailIcon, FacebookIcon, HeartFilledIcon, HeartIcon, InstagramIcon, MapIcon, MapScissorIcon, TiktokIcon, WebIcon, WhatsappIcon, XIcon } from '../constants/icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { BASE_URL } from '@/utils/api';
@@ -522,7 +522,7 @@ const Map = () => {
     const [tabData, setTabData] = useState([
         "Details",
         "Services",
-        "Barber"
+        "Stylists"
     ])
 
     const [selectedTab, setSelectedTab] = useState("Details")
@@ -723,7 +723,7 @@ const Map = () => {
                             <View
                                 style={{
                                     flex: 1,
-                                    backgroundColor: "#efefef"
+                                    backgroundColor: colors.background
                                 }}
                             />
                         ) : (
@@ -792,7 +792,7 @@ const Map = () => {
                     <FlatList
                         style={{
                             position: "absolute",
-                            bottom: Platform.OS === "ios" ? verticalScale(80) : verticalScale(10),
+                            bottom: Platform.OS === "ios" ? verticalScale(100) : verticalScale(20),
                             left: 0,
                             right: 0,
                             paddingHorizontal: scale(10),
@@ -1002,6 +1002,8 @@ const Map = () => {
                                                         left: scale(10),
                                                         zIndex: 10,
                                                         backgroundColor: colors.background,
+                                                        borderWidth: scale(1),
+                                                        borderColor: colors.queueBorder,
                                                         height: scale(40),
                                                         width: scale(40),
                                                         borderRadius: scale(30),
@@ -1011,6 +1013,37 @@ const Map = () => {
                                                 >
                                                     <ArrowLeftIcon color={colors.text} />
                                                 </Pressable>
+
+
+                                                <Pressable
+                                                    disabled={favouriteLoader}
+                                                    onPress={addToFavourites}
+                                                    style={{
+                                                        width: scale(30),
+                                                        height: scale(30),
+                                                        justifyContent: "center",
+                                                        alignItems: "center",
+                                                        borderRadius: scale(4),
+                                                        position: 'absolute',
+                                                        top: verticalScale(10),
+                                                        right: scale(10),
+                                                        zIndex: 10,
+                                                        backgroundColor: colors.background,
+                                                        borderWidth: scale(1),
+                                                        borderColor: colors.queueBorder,
+                                                        height: scale(40),
+                                                        width: scale(40),
+                                                        borderRadius: scale(30),
+                                                        justifyContent: "center",
+                                                        alignItems: "center"
+                                                    }}
+                                                >
+
+                                                    {
+                                                        salonInfoData?.data?.salonInfo?.isFavourite ? <HeartFilledIcon size={scale(20)} color='#E11D48' /> : <HeartIcon size={scale(16)} color='#E11D48' />
+                                                    }
+                                                </Pressable>
+
                                                 <FlatList
                                                     data={salonInfoData?.data?.salonInfo?.gallery?.slice(0, 5)}
                                                     style={{
@@ -1099,6 +1132,9 @@ const Map = () => {
                                                     borderTopLeftRadius: scale(20),
                                                     borderTopRightRadius: scale(20),
                                                 }}
+                                                handleIndicatorStyle={{
+                                                    backgroundColor: colors.secondaryText
+                                                }}
                                             // onChange={handleSheetChange}
                                             >
                                                 <View
@@ -1110,7 +1146,6 @@ const Map = () => {
                                                         justifyContent: "space-between"
                                                     }}
                                                 >
-                                                    {/* <CustomText>Add to Favorites</CustomText> */}
 
                                                     <View
                                                         style={{
@@ -1121,8 +1156,8 @@ const Map = () => {
                                                     >
                                                         <Image
                                                             style={{
-                                                                height: scale(37.25),
-                                                                width: scale(37.25),
+                                                                height: scale(40),
+                                                                width: scale(40),
                                                                 borderRadius: scale(20),
                                                                 position: "relative"
                                                             }}
@@ -1132,16 +1167,15 @@ const Map = () => {
                                                             transition={1000}
                                                         />
 
-                                                        <CustomText style={{ fontSize: scale(16) }}>{salonInfoData?.data?.salonInfo?.salonName}</CustomText>
+                                                        <CustomText style={{ fontSize: scale(18), fontFamily: "AirbnbCereal_W_XBd" }}>{salonInfoData?.data?.salonInfo?.salonName}</CustomText>
                                                     </View>
 
-                                                    <Pressable
+                                                    {/* <Pressable
                                                         disabled={favouriteLoader}
                                                         onPress={addToFavourites}
                                                         style={{
                                                             width: scale(30),
                                                             height: scale(30),
-                                                            // backgroundColor: "#E11D481A",
                                                             justifyContent: "center",
                                                             alignItems: "center",
                                                             borderRadius: scale(4)
@@ -1151,45 +1185,52 @@ const Map = () => {
                                                         {
                                                             salonInfoData?.data?.salonInfo?.isFavourite ? <HeartFilledIcon size={scale(16)} color='#E11D48' /> : <HeartIcon size={scale(16)} color='#E11D48' />
                                                         }
-                                                    </Pressable>
+                                                    </Pressable> */}
                                                 </View>
 
                                                 <View style={{
                                                     flexDirection: "row",
                                                     alignItems: "center",
                                                     gap: scale(10),
-                                                    padding: scale(10),
-                                                    justifyContent: "space-between"
+                                                    padding: scale(5),
+                                                    justifyContent: "space-between",
+                                                    backgroundColor: colors.cardColor,
+                                                    marginHorizontal: scale(10),
+                                                    borderRadius: scale(12)
                                                 }}>
+
                                                     {
                                                         tabData.map((item, index) => {
                                                             return (
                                                                 <Pressable
                                                                     key={index}
                                                                     style={[styles.tabBtn, {
-                                                                        backgroundColor: selectedTab === item ? Colors.modeColor.colorCode : "#00B0901A"
+                                                                        backgroundColor: selectedTab === item ? '#14b8a6' : colorScheme === "dark" ? "#3f3f46" : "#e4e4e7"
                                                                     }]}
                                                                     onPress={() => {
                                                                         setSelectedTab(item)
                                                                     }}
                                                                 ><CustomText style={{
                                                                     fontSize: scale(12),
-                                                                    color: selectedTab === item ? "#fff" : Colors.modeColor.colorCode
+                                                                    color: selectedTab === item ? "#fff" : colorScheme === "dark" ? "#fff" : "#000"
                                                                 }}>{item}</CustomText></Pressable>
                                                             )
                                                         })
                                                     }
-
                                                 </View>
 
-                                                <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
+                                                <BottomSheetScrollView contentContainerStyle={[styles.contentContainer, {
+                                                    position: "relative"
+                                                }]}>
                                                     {
                                                         selectedTab === "Details" && (
                                                             <>
                                                                 <View
                                                                     style={{
-                                                                        backgroundColor: "#00B0901A",
-                                                                        borderRadius: scale(4),
+                                                                        backgroundColor: colors.cardColor,
+                                                                        borderWidth: scale(1),
+                                                                        borderColor: colors.queueBorder,
+                                                                        borderRadius: scale(12),
                                                                         padding: scale(10),
                                                                         gap: verticalScale(5)
                                                                     }}
@@ -1200,18 +1241,19 @@ const Map = () => {
                                                                         }}
                                                                     >Description</CustomText>
 
-                                                                    <CustomText
+                                                                    <CustomSecondaryText
                                                                         style={{
                                                                             fontSize: scale(14),
-                                                                            color: "gray"
                                                                         }}
-                                                                    >{salonInfoData?.data?.salonInfo?.salonDesc}</CustomText>
+                                                                    >{salonInfoData?.data?.salonInfo?.salonDesc}</CustomSecondaryText>
                                                                 </View>
 
                                                                 <View
                                                                     style={{
-                                                                        backgroundColor: "#00B0901A",
-                                                                        borderRadius: scale(4),
+                                                                        backgroundColor: colors.cardColor,
+                                                                        borderRadius: scale(12),
+                                                                        borderWidth: scale(1),
+                                                                        borderColor: colors.queueBorder,
                                                                         padding: scale(10),
                                                                         gap: verticalScale(5),
                                                                         flexDirection: "row",
@@ -1227,14 +1269,13 @@ const Map = () => {
                                                                             }}
                                                                         >Contact Us</CustomText>
 
-                                                                        <CustomText
+                                                                        <CustomSecondaryText
                                                                             style={{
                                                                                 fontSize: scale(14),
-                                                                                color: "gray"
                                                                             }}
                                                                         >
                                                                             If you have any questions
-                                                                        </CustomText>
+                                                                        </CustomSecondaryText>
                                                                     </View>
 
                                                                     <View
@@ -1332,9 +1373,11 @@ const Map = () => {
 
                                                                     <View
                                                                         style={{
-                                                                            backgroundColor: "#0BA3AD1A",
-                                                                            borderBottomLeftRadius: scale(4),
-                                                                            borderBottomRightRadius: scale(4),
+                                                                            backgroundColor: colors.cardColor,
+                                                                            borderBottomLeftRadius: scale(12),
+                                                                            borderBottomRightRadius: scale(12),
+                                                                            borderWidth: scale(1),
+                                                                            borderColor: colors.queueBorder,
                                                                             padding: scale(10),
                                                                             gap: verticalScale(5),
                                                                             flexDirection: "row",
@@ -1350,15 +1393,14 @@ const Map = () => {
                                                                                 }}
                                                                             >Location</CustomText>
 
-                                                                            <CustomText
+                                                                            <CustomSecondaryText
                                                                                 style={{
                                                                                     fontSize: scale(14),
-                                                                                    color: "gray",
                                                                                     maxWidth: "90%"
                                                                                 }}
                                                                             >
                                                                                 {`${salonInfoData?.data?.salonInfo?.address}, ${salonInfoData?.data?.salonInfo?.city}, ${salonInfoData?.data?.salonInfo?.country}`}
-                                                                            </CustomText>
+                                                                            </CustomSecondaryText>
                                                                         </View>
 
                                                                         <Pressable
@@ -1380,8 +1422,10 @@ const Map = () => {
 
                                                                 <View
                                                                     style={{
-                                                                        backgroundColor: "#00B0901A",
-                                                                        borderRadius: scale(4),
+                                                                        backgroundColor: colors.cardColor,
+                                                                        borderColor: colors.queueBorder,
+                                                                        borderWidth: scale(1),
+                                                                        borderRadius: scale(12),
                                                                         padding: scale(10),
                                                                         gap: verticalScale(5),
                                                                         flexDirection: "row",
@@ -1397,14 +1441,13 @@ const Map = () => {
                                                                             }}
                                                                         >Follow us on</CustomText>
 
-                                                                        <CustomText
+                                                                        <CustomSecondaryText
                                                                             style={{
                                                                                 fontSize: scale(14),
-                                                                                color: "gray"
                                                                             }}
                                                                         >
                                                                             Social links
-                                                                        </CustomText>
+                                                                        </CustomSecondaryText>
                                                                     </View>
 
                                                                     <View
@@ -1441,6 +1484,50 @@ const Map = () => {
                                                                         >
                                                                             <FacebookIcon size={scale(18)} color={"#1877F2"} />
                                                                         </Pressable>
+
+
+                                                                        <Pressable
+                                                                            style={{
+                                                                                width: scale(30),
+                                                                                height: scale(30),
+                                                                                backgroundColor: colors.background,
+                                                                                justifyContent: "center",
+                                                                                alignItems: "center",
+                                                                                borderRadius: scale(4)
+                                                                            }}
+                                                                            onPress={() => openLink(salonInfoData?.data?.salonInfo?.twitterLink)}
+                                                                        >
+                                                                            <XIcon size={scale(18)} color={colors.text} />
+                                                                        </Pressable>
+
+                                                                        <Pressable
+                                                                            style={{
+                                                                                width: scale(30),
+                                                                                height: scale(30),
+                                                                                backgroundColor: colors.background,
+                                                                                justifyContent: "center",
+                                                                                alignItems: "center",
+                                                                                borderRadius: scale(4)
+                                                                            }}
+                                                                            onPress={() => openLink(salonInfoData?.data?.salonInfo?.tiktokLink)}
+                                                                        >
+                                                                            <TiktokIcon size={scale(18)} color={colors.text} />
+                                                                        </Pressable>
+
+                                                                        <Pressable
+                                                                            style={{
+                                                                                width: scale(30),
+                                                                                height: scale(30),
+                                                                                backgroundColor: colors.background,
+                                                                                justifyContent: "center",
+                                                                                alignItems: "center",
+                                                                                borderRadius: scale(4)
+                                                                            }}
+                                                                            onPress={() => openLink(salonInfoData?.data?.salonInfo?.webLink)}
+                                                                        >
+                                                                            <WebIcon size={scale(18)} color={colors.text} />
+                                                                        </Pressable>
+
                                                                     </View>
 
                                                                 </View>
@@ -1479,7 +1566,7 @@ const Map = () => {
                                                         )
                                                     }
 
-                                                    {
+                                                    {/* {
                                                         selectedTab === "Services" && (
                                                             serviceCategorySelected?.selected ? (
                                                                 <>
@@ -1759,10 +1846,71 @@ const Map = () => {
                                                             </>
 
                                                         )
+                                                    } */}
+
+                                                    {
+                                                        selectedTab === "Services" && (
+                                                            salonInfoData?.loading ? (
+                                                                [0, 1, 2, 3, 4, 5, 6, 7].map((_, index) => (
+                                                                    <Skeleton
+                                                                        key={index}
+                                                                        height={scale(80)}
+                                                                        borderRadius={scale(12)}
+                                                                        style={{
+                                                                            marginBottom: verticalScale(5),
+                                                                        }}
+                                                                    />
+                                                                ))
+                                                            ) : (
+                                                                salonInfoData?.data?.categorizedSalonServices?.map((item, index) => (
+                                                                    <React.Fragment key={item?.serviceCategoryName || index}>
+                                                                        <CustomText style={styles.serviceName}>
+                                                                            {item?.serviceCategoryName}
+                                                                        </CustomText>
+                                                                        {item?.services?.map((ser) => (
+                                                                            <View
+                                                                                key={ser.serviceId}
+                                                                                style={[
+                                                                                    styles.card,
+                                                                                    {
+                                                                                        backgroundColor: colors.cardColor,
+                                                                                        borderColor: colors.queueBorder,
+                                                                                        borderWidth: scale(1),
+                                                                                    },
+                                                                                ]}
+                                                                            >
+                                                                                <Image source={{ uri: ser?.serviceIcon?.url }} style={styles.icon} />
+                                                                                <View style={styles.cardContent}>
+                                                                                    <CustomText style={styles.serviceName}>{ser.serviceName}</CustomText>
+                                                                                    <CustomText style={[styles.serviceDesc, { color: colors.secondaryText }]}>
+                                                                                        {ser.serviceDesc}
+                                                                                    </CustomText>
+                                                                                    <View
+                                                                                        style={{
+                                                                                            flexDirection: "row",
+                                                                                            alignItems: "center",
+                                                                                            gap: scale(10),
+                                                                                            marginTop: verticalScale(5),
+                                                                                        }}
+                                                                                    >
+                                                                                        <CustomText style={styles.servicePrice}>
+                                                                                            {authenticatedUser?.currency} {ser.servicePrice}
+                                                                                        </CustomText>
+                                                                                        <CustomText style={[styles.serviceEWT, { color: colors.secondaryText }]}>
+                                                                                            ~ {ser.serviceEWT} mins
+                                                                                        </CustomText>
+                                                                                    </View>
+                                                                                </View>
+                                                                            </View>
+                                                                        ))}
+                                                                    </React.Fragment>
+                                                                ))
+                                                            )
+                                                        )
                                                     }
 
                                                     {
-                                                        selectedTab === "Barber" && (
+                                                        selectedTab === "Stylists" && (
                                                             <>
                                                                 <CustomText
                                                                     style={{
@@ -1802,9 +1950,22 @@ const Map = () => {
                                                         )
                                                     }
 
+                                                    <TouchableOpacity
+                                                        onPress={() => connectSalonPressed()}
+                                                        disabled={connectSalonLoader}
+                                                        style={styles.signinButton} activeOpacity={0.85}>
+                                                        {
+                                                            connectSalonLoader ? (
+                                                                <ActivityIndicator size="small" color="#fff" />
+                                                            ) : (
+                                                                <CustomText style={styles.signinButtonText}>Connect</CustomText>
+                                                            )
+                                                        }
+                                                    </TouchableOpacity>
+
                                                 </BottomSheetScrollView>
 
-                                                <View
+                                                {/* <View
                                                     style={{
                                                         flexDirection: "row",
                                                         alignItems: "center",
@@ -1828,13 +1989,7 @@ const Map = () => {
 
                                                     </Pressable>
 
-                                                    {/* <Pressable
-                                                        style={[styles.closebtn]}
-                                                        onPress={() => setSelectedCustomerSalon({ open: false, data: {} })}
-                                                    >
-                                                        <CustomText style={{ color: "#E11D48" }}>Cancel</CustomText>
-                                                    </Pressable> */}
-                                                </View>
+                                                </View> */}
 
                                             </BottomSheet>
                                         )
@@ -1932,7 +2087,7 @@ const styles = StyleSheet.create({
     contentContainer: {
         paddingHorizontal: scale(10),
         paddingTop: scale(10),
-        paddingBottom: Platform.OS === "ios" ? verticalScale(80) : verticalScale(10),
+        // paddingBottom: Platform.OS === "ios" ? verticalScale(80) : verticalScale(10),
         gap: verticalScale(10)
         // backgroundColor: "#fff",
     },
@@ -1948,10 +2103,9 @@ const styles = StyleSheet.create({
 
     tabBtn: {
         height: verticalScale(30),
-        backgroundColor: "gray",
         flex: 1,
         paddingInline: scale(10),
-        borderRadius: scale(4),
+        borderRadius: scale(8),
         justifyContent: "center",
         alignItems: "center"
     },
@@ -1959,8 +2113,65 @@ const styles = StyleSheet.create({
     map: {
         width: "100%",
         height: verticalScale(128),
-        borderTopLeftRadius: scale(4),
-        borderTopRightRadius: scale(4)
+        borderTopLeftRadius: scale(12),
+        borderTopRightRadius: scale(12)
+    },
+
+    signinButton: {
+        width: '100%',
+        backgroundColor: '#14b8a6', // bg-teal-500
+        paddingVertical: verticalScale(12), // py-4
+        borderRadius: scale(8), // rounded-xl
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginBottom: verticalScale(20),
+    },
+    signinButtonText: {
+        color: '#fff', // text-white
+        fontFamily: "AirbnbCereal_W_XBd",
+        fontSize: scale(16),
+    },
+
+
+    sectionHeader: {
+        fontSize: 18,
+        fontWeight: 'bold',
+        marginVertical: 10,
+        marginHorizontal: 16,
+    },
+    card: {
+        flexDirection: 'row',
+        padding: scale(12),
+        // marginHorizontal: 16,
+        marginBottom: verticalScale(8),
+        borderRadius: scale(12),
+    },
+    icon: {
+        width: scale(60),
+        height: scale(60),
+        borderRadius: scale(8),
+        marginRight: scale(12),
+        borderWidth: scale(1),
+        borderColor: '#efefef', // gray-200
+    },
+    cardContent: {
+        flex: 1,
+        justifyContent: 'center',
+    },
+    serviceName: {
+        fontSize: scale(16),
+        fontFamily: "AirbnbCereal_W_Bd"
+    },
+    serviceDesc: {
+        fontSize: scale(14),
+    },
+    servicePrice: {
+        fontSize: scale(14),
+        fontFamily: "AirbnbCereal_W_Bd",
+        color: '#14b8a6'
+    },
+    serviceEWT: {
+        fontSize: scale(12),
     },
 })
 

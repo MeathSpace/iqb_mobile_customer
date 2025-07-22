@@ -1,4 +1,4 @@
-import { Alert, BackHandler, Button, Keyboard, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
+import { Alert, BackHandler, Button, Keyboard, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import CustomScrollView from '../../components/CustomScrollView'
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router'
@@ -19,7 +19,7 @@ import { useNavigation, usePreventRemove, useTheme } from '@react-navigation/nat
 
 const personalInfo = () => {
 
-    const { email, authType } = useLocalSearchParams();
+    const { email, authType, password } = useLocalSearchParams();
 
     // console.log("email ", email)
     // console.log("authType ", authType ?? "none")
@@ -30,8 +30,8 @@ const personalInfo = () => {
 
     const router = useRouter()
 
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
+    const [fullName, setFullName] = useState("");
+    // const [lastName, setLastName] = useState("");
     const [genderOpen, setGenderOpen] = useState(false)
     const [gender, setGender] = useState("Male");
     const [date, setDate] = useState(new Date());
@@ -50,8 +50,8 @@ const personalInfo = () => {
 
     //Error States
 
-    const [firstNameError, setFirstNameError] = useState("");
-    const [lastNameError, setLastNameError] = useState("");
+    const [fullNameError, setFullNameError] = useState("");
+    // const [lastNameError, setLastNameError] = useState("");
     const [phoneNumberError, setPhoneNumberError] = useState("");
     const [dateOfBirthError, setDateOfBirthError] = useState("");
 
@@ -168,25 +168,14 @@ const personalInfo = () => {
 
 
     const saveHandler = () => {
-        if (!firstName) {
-            setFirstNameError("First name is required");
+        if (!fullName) {
+            setFullNameError("full name is required");
             return;
-        } else if (firstName.length < 2) {
-            setFirstNameError("First name must be at least 2 characters");
+        } else if (fullName.length < 2) {
+            setFullNameError("Full name must be at least 2 characters");
             return;
-        } else if (firstName.length > 20) {
-            setFirstNameError("First name must be at most 20 characters");
-            return;
-        }
-
-        if (!lastName) {
-            setLastNameError("Last name is required");
-            return;
-        } else if (lastName.length < 2) {
-            setLastNameError("Last name must be at least 2 characters");
-            return;
-        } else if (lastName.length > 20) {
-            setLastNameError("Last name must be at most 20 characters");
+        } else if (fullName.length > 20) {
+            setFullNameError("Full name must be at most 20 characters");
             return;
         }
 
@@ -219,12 +208,25 @@ const personalInfo = () => {
 
 
         if (authType === "google") {
+            // router.push({
+            //     pathname: "/verification",
+            //     params: {
+            //         email,
+            //         firstName,
+            //         lastName,
+            //         gender,
+            //         phoneNumber: updatedNumber,
+            //         callingCode: selectedCountry?.callingCode[0],
+            //         selectedDate,
+            //         authType
+            //     }
+            // });
+
             router.push({
                 pathname: "/verification",
                 params: {
                     email,
-                    firstName,
-                    lastName,
+                    fullName,
                     gender,
                     phoneNumber: updatedNumber,
                     callingCode: selectedCountry?.callingCode[0],
@@ -233,16 +235,29 @@ const personalInfo = () => {
                 }
             });
         } else {
+            // router.push({
+            //     pathname: "/passwordConfirmation",
+            //     params: {
+            //         email,
+            //         firstName,
+            //         lastName,
+            //         gender,
+            //         phoneNumber: updatedNumber,
+            //         callingCode: selectedCountry?.callingCode[0],
+            //         selectedDate,
+            //     }
+            // });
+
             router.push({
-                pathname: "/passwordConfirmation",
+                pathname: "/verification",
                 params: {
                     email,
-                    firstName,
-                    lastName,
+                    fullName,
                     gender,
                     phoneNumber: updatedNumber,
                     callingCode: selectedCountry?.callingCode[0],
-                    selectedDate
+                    selectedDate,
+                    password
                 }
             });
         }
@@ -279,389 +294,362 @@ const personalInfo = () => {
                 <View
                     style={{
                         flex: 1,
-                        justifyContent: "space-around",
-                        gap: verticalScale(20)
+                        justifyContent: "space-between"
                     }}
                 >
 
-                    {authType === "google" ? (
-                        <ProgressHeader
-                            progressOne={0.5}
-                            progressTwo={progressTwo}
-                            authType={"google"}
-                        />
-                    ) : (
+                    <View style={{
+                        gap: verticalScale(20),
+                    }}>
+                        {/* {authType === "google" ? (
+                            <ProgressHeader
+                                progressOne={0.5}
+                                progressTwo={progressTwo}
+                                authType={"google"}
+                            />
+                        ) : (
+                            <ProgressHeader
+                                progressOne={progressOne}
+                                progressTwo={progressTwo}
+                                progressThree={progressThree}
+                            />
+                        )} */}
+
                         <ProgressHeader
                             progressOne={progressOne}
                             progressTwo={progressTwo}
                             progressThree={progressThree}
                         />
-                    )}
 
-                    {/* <View>
-                        <CustomText>Here in the sign up flow user cannot go back on any page</CustomText>
-                    </View> */}
+                        <View>
+                            <CustomText style={styles.heading}>
+                                It's time to create a profile !
+                            </CustomText>
 
-                    <View>
-                        <CustomText style={styles.heading}>
-                            It's time to create a profile !
-                        </CustomText>
+                            <CustomSecondaryText>
+                                Tell us little more about yourself
+                            </CustomSecondaryText>
+                        </View>
 
-                        <CustomSecondaryText>
-                            Tell us little more about yourself
-                        </CustomSecondaryText>
-                    </View>
+                        <View style={styles.inputWrapper}>
+                            <CustomText>Full Name</CustomText>
 
-                    <View style={styles.inputWrapper}>
-                        <CustomText>First Name</CustomText>
-
-                        <TextInput
-                            editable
-                            placeholder="Enter your first name"
-                            placeholderTextColor={colors.secondaryText}
-                            style={[false ? styles.inputFielderror : styles.inputField, {
-                                // backgroundColor: "#0BA3AD1A", 
-                                borderWidth: scale(1),
-                                borderColor: "gray",
-                                fontFamily: "AirbnbCereal_W_Bk", color: colors.text
-                            }]}
-                            onChangeText={(text) => {
-                                setFirstNameError("")
-                                setFirstName(text)
-                            }}
-                            value={firstName}
-                        />
-
-                        {
-                            firstNameError && (
-                                <View style={{
-                                    flexDirection: "row",
-                                    alignItems: "center",
-                                    gap: scale(5),
-                                }}>
-                                    <ErrorIcon color='red' size={scale(16)} />
-                                    <CustomText style={{ fontSize: scale(12), color: "red" }}>{firstNameError}</CustomText>
-                                </View>
-                            )
-                        }
-
-                    </View>
-
-                    <View style={styles.inputWrapper}>
-                        <CustomText>Last Name</CustomText>
-
-                        <TextInput
-                            editable
-                            placeholder="Enter your last name"
-                            placeholderTextColor={colors.secondaryText}
-                            style={[false ? styles.inputFielderror : styles.inputField, {
-                                // backgroundColor: "#0BA3AD1A",
-                                borderWidth: scale(1),
-                                borderColor: "gray",
-                                fontFamily: "AirbnbCereal_W_Bk", color: colors.text
-                            }]}
-                            onChangeText={(text) => {
-                                setLastNameError("")
-                                setLastName(text)
-                            }}
-                            value={lastName}
-                        />
-
-                        {
-                            lastNameError && (
-                                <View style={{
-                                    flexDirection: "row",
-                                    alignItems: "center",
-                                    gap: scale(5),
-                                }}>
-                                    <ErrorIcon color='red' size={scale(16)} />
-                                    <CustomText style={{ fontSize: scale(12), color: "red" }}>{lastNameError}</CustomText>
-                                </View>
-                            )
-                        }
-                    </View>
-
-                    <View
-                        style={[styles.inputWrapper, {
-                            zIndex: 10
-                        }]}
-                    >
-                        <CustomText>Gender</CustomText>
-
-                        <Pressable
-                            onPress={() => setOpenGenderDrop((prev) => !prev)}
-                            style={[false ? styles.inputFielderror : styles.inputField, {
-                                // backgroundColor: "#0BA3AD1A",
-                                borderWidth: scale(1),
-                                borderColor: "gray",
-                                fontFamily: "AirbnbCereal_W_Bk", color: colors.text,
-                                flexDirection: "row",
-                                justifyContent: "space-between",
-                                alignItems: "center",
-                                position: "relative"
-                            }]}
-                        >
-                            <CustomText
-                                style={{
-                                    fontFamily: "AirbnbCereal_W_Bk"
+                            <TextInput
+                                editable
+                                placeholder="Enter your full name"
+                                placeholderTextColor={colors.secondaryText}
+                                style={[false ? styles.inputFielderror : styles.inputField, {
+                                    borderWidth: scale(1),
+                                    borderColor: colors.queueBorder,
+                                    backgroundColor: colors.cardColor,
+                                    color: colors.text
+                                }]}
+                                onChangeText={(text) => {
+                                    setFullNameError("")
+                                    setFullName(text)
                                 }}
-                            >{gender}</CustomText>
-
-                            <View><ArrowDownIcon size={scale(16)} color={colors.text} /></View>
+                                value={fullName}
+                            />
 
                             {
-                                openGenderDrop && (
-                                    <View
-                                        style={{
-                                            position: "absolute",
-                                            top: verticalScale(50),
-                                            backgroundColor: colors.card, // use themed color
-                                            left: 0,
-                                            right: 0,
-                                            borderRadius: scale(4),
-                                            zIndex: 999, // Higher than 100 to ensure it's above everything
-                                            elevation: 5, // Android support
-                                            paddingVertical: scale(8), // spacing
-                                            shadowColor: "#000", // iOS support
-                                            shadowOffset: { width: 0, height: 2 },
-                                            shadowOpacity: 0.1,
-                                            shadowRadius: 4,
-                                        }}
-                                    >
-                                        {
-                                            ["Male", "Female", "Other"].map((item, index) => (
-                                                <Pressable
-                                                    key={index}
-                                                    onPress={() => {
-                                                        setGender(item);
-                                                        setOpenGenderDrop(false); // close dropdown after selection
-                                                    }}
-                                                    style={{
-                                                        paddingVertical: scale(8),
-                                                        paddingHorizontal: scale(12),
-                                                        backgroundColor: colors.card, // solid background
-                                                    }}
-                                                >
-                                                    <CustomText style={{ color: colors.text, fontFamily: "AirbnbCereal_W_Bk" }}>
-                                                        {item}
-                                                    </CustomText>
-                                                </Pressable>
-                                            ))
-                                        }
+                                fullNameError && (
+                                    <View style={{
+                                        flexDirection: "row",
+                                        alignItems: "center",
+                                        gap: scale(5),
+                                    }}>
+                                        <ErrorIcon color='red' size={scale(16)} />
+                                        <CustomText style={{ fontSize: scale(12), color: "red" }}>{fullNameError}</CustomText>
                                     </View>
                                 )
                             }
 
+                        </View>
 
-                        </Pressable>
-                    </View>
-
-                    <View style={styles.inputWrapper}>
-                        <CustomText>Mobile Number</CustomText>
-                        <PhoneInput
-                            ref={phoneRef}
-                            initialCountry={selectedCountry.cca2.toLowerCase()}
-                            value={phoneNumber}
-                            onChangePhoneNumber={(number) => phoneNumberHandler(number)}
-                            onPressFlag={toggleCountryPicker}
-                            textStyle={{ color: colors.text, fontSize: moderateScale(14) }}
-                            style={[styles.inputField, {
-                                // backgroundColor: "#0BA3AD1A", 
-                                borderWidth: scale(1),
-                                borderColor: "gray",
-                                fontFamily: "AirbnbCereal_W_Bk", color: colors.text
+                        <View
+                            style={[styles.inputWrapper, {
+                                zIndex: 10
                             }]}
-                        />
-
-                        {
-                            phoneNumberError && (
-                                <View style={{
-                                    flexDirection: "row",
-                                    alignItems: "center",
-                                    gap: scale(5),
-                                }}>
-                                    <ErrorIcon color='red' size={scale(16)} />
-                                    <CustomText style={{ fontSize: scale(12), color: "red" }}>{phoneNumberError}</CustomText>
-                                </View>
-                            )
-                        }
-
-                        {countryPickerVisible && (
-                            <CountryPicker
-                                withFilter={true}
-                                withFlagButton={true}
-                                withFlag={true}
-                                withCountryNameButton={false}
-                                withEmoji={true}
-                                withCallingCode
-                                onSelect={onSelectCountry}
-                                onClose={() => setCountryPickerVisible(false)}
-                                visible={countryPickerVisible}
-                                containerButtonStyle={styles.countryPickerButton}
-                                theme={{
-                                    ...((colorScheme === 'dark' && DARK_THEME) || {}),
-                                    fontFamily: 'AirbnbCereal_W_Bk',
-                                }}
-                            />
-                        )}
-                    </View>
-
-
-
-                    <View style={[styles.inputWrapper, { position: "relative" }]}>
-                        <CustomText>Date of Birth</CustomText>
-
-                        <Pressable
-                            style={[
-                                false ? styles.inputFielderror : styles.inputDateField,
-                                {
-                                    // borderColor: colors.border,
-                                    // backgroundColor: "#0BA3AD1A",
-                                    borderWidth: scale(1),
-                                    borderColor: "gray",
-                                    fontFamily: "AirbnbCereal_W_Bk",
-                                    color: colors.text,
-                                    justifyContent: "center", // Ensures CalendarIcon stays aligned
-                                }
-                            ]}
-                            onPress={() => {
-                                setSelectedDate("")
-                                setDateOfBirthError("")
-                                setCalenderModal(true)
-                            }}
                         >
-                            {!calenderModal && !selectedDate && <CustomText style={{ color: colors.secondaryText, fontFamily: "AirbnbCereal_W_Bk" }}>YYYY-MM-DD</CustomText>}
-                            {!calenderModal && selectedDate && <CustomText style={{ fontFamily: "AirbnbCereal_W_Bk" }}>{selectedDate}</CustomText>}
-                            <CalendarIcon style={[styles.dateIcon, { color: colors.text }]} />
-                        </Pressable>
+                            <CustomText>Gender</CustomText>
 
-                        {
-                            dateOfBirthError && (
-                                <View style={{
+                            <Pressable
+                                onPress={() => setOpenGenderDrop((prev) => !prev)}
+                                style={[false ? styles.inputFielderror : styles.inputField, {
+                                    borderWidth: scale(1),
+                                    borderColor: colors.queueBorder,
+                                    backgroundColor: colors.cardColor,
+                                    color: colors.text,
                                     flexDirection: "row",
+                                    justifyContent: "space-between",
                                     alignItems: "center",
-                                    gap: scale(5),
-                                }}>
-                                    <ErrorIcon color='red' size={scale(16)} />
-                                    <CustomText style={{ fontSize: scale(12), color: "red", }}>{dateOfBirthError}</CustomText>
-                                </View>
-                            )
-                        }
+                                    position: "relative"
+                                }]}
+                            >
+                                <CustomText
+                                    style={{
+                                        fontFamily: "AirbnbCereal_W_Bk"
+                                    }}
+                                >{gender}</CustomText>
 
-                        {
-                            Platform.OS === "android" ? (
-                                calenderModal && (
-                                    <View style={{ position: "absolute", top: verticalScale(34), left: 0, zIndex: 100 }}>
-                                        <DateTimePicker
-                                            mode="date"
-                                            maximumDate={new Date()}
-                                            value={date}
-                                            display="default"
-                                            accentColor={Colors.modeColor.colorCode}
-                                            onChange={onChange}
-                                        />
-                                    </View>
-                                )
-                            ) : (
-                                <Modal
-                                    transparent={true}
-                                    visible={calenderModal}
-                                >
-                                    <Pressable
-                                        onPress={() => setCalenderModal(false)}
-                                        style={{
-                                            flex: 1,
-                                            backgroundColor: "rgba(0,0,0, 0.8)",
-                                            justifyContent: "center",
-                                            alignItems: "center",
-                                            position: "relative",
-                                            padding: scale(20)
-                                        }}
-                                    >
+                                <View><ArrowDownIcon size={scale(16)} color={colors.text} /></View>
+
+                                {
+                                    openGenderDrop && (
                                         <View
                                             style={{
-                                                backgroundColor: colors.background,
-                                                borderColor: colors.border,
-                                                borderWidth: scale(1),
-                                                padding: scale(10),
-                                                borderRadius: scale(10),
-                                                // iOS shadow
-                                                shadowColor: "#000",
-                                                shadowOffset: {
-                                                    width: 0,
-                                                    height: 2,
-                                                },
+                                                position: "absolute",
+                                                top: verticalScale(50),
+                                                backgroundColor: colors.card, // use themed color
+                                                left: 0,
+                                                right: 0,
+                                                borderRadius: scale(4),
+                                                zIndex: 999, // Higher than 100 to ensure it's above everything
+                                                elevation: 5, // Android support
+                                                paddingVertical: scale(8), // spacing
+                                                shadowColor: "#000", // iOS support
+                                                shadowOffset: { width: 0, height: 2 },
                                                 shadowOpacity: 0.1,
                                                 shadowRadius: 4,
                                             }}
                                         >
+                                            {
+                                                ["Male", "Female", "Other"].map((item, index) => (
+                                                    <Pressable
+                                                        key={index}
+                                                        onPress={() => {
+                                                            setGender(item);
+                                                            setOpenGenderDrop(false); // close dropdown after selection
+                                                        }}
+                                                        style={{
+                                                            paddingVertical: scale(8),
+                                                            paddingHorizontal: scale(12),
+                                                            backgroundColor: colors.card, // solid background
+                                                        }}
+                                                    >
+                                                        <CustomText style={{ color: colors.text, fontFamily: "AirbnbCereal_W_Bk" }}>
+                                                            {item}
+                                                        </CustomText>
+                                                    </Pressable>
+                                                ))
+                                            }
+                                        </View>
+                                    )
+                                }
+
+
+                            </Pressable>
+                        </View>
+
+                        <View style={styles.inputWrapper}>
+                            <CustomText>Mobile Number</CustomText>
+                            <PhoneInput
+                                ref={phoneRef}
+                                initialCountry={selectedCountry.cca2.toLowerCase()}
+                                value={phoneNumber}
+                                onChangePhoneNumber={(number) => phoneNumberHandler(number)}
+                                onPressFlag={toggleCountryPicker}
+                                textStyle={{ color: colors.text, fontSize: moderateScale(14) }}
+                                style={[styles.inputField, {
+                                    borderWidth: scale(1),
+                                    borderColor: colors.queueBorder,
+                                    backgroundColor: colors.cardColor,
+                                    color: colors.text,
+                                }]}
+                            />
+
+                            {
+                                phoneNumberError && (
+                                    <View style={{
+                                        flexDirection: "row",
+                                        alignItems: "center",
+                                        gap: scale(5),
+                                    }}>
+                                        <ErrorIcon color='red' size={scale(16)} />
+                                        <CustomText style={{ fontSize: scale(12), color: "red" }}>{phoneNumberError}</CustomText>
+                                    </View>
+                                )
+                            }
+
+                            {countryPickerVisible && (
+                                <CountryPicker
+                                    withFilter={true}
+                                    withFlagButton={true}
+                                    withFlag={true}
+                                    withCountryNameButton={false}
+                                    withEmoji={true}
+                                    withCallingCode
+                                    onSelect={onSelectCountry}
+                                    onClose={() => setCountryPickerVisible(false)}
+                                    visible={countryPickerVisible}
+                                    containerButtonStyle={styles.countryPickerButton}
+                                    theme={{
+                                        ...((colorScheme === 'dark' && DARK_THEME) || {}),
+                                        fontFamily: 'AirbnbCereal_W_Bk',
+                                    }}
+                                />
+                            )}
+                        </View>
+
+
+                        <View style={[styles.inputWrapper, { position: "relative" }]}>
+                            <CustomText>Date of Birth</CustomText>
+
+                            <Pressable
+                                style={[
+                                    false ? styles.inputFielderror : styles.inputDateField,
+                                    {
+                                        borderWidth: scale(1),
+                                        borderColor: colors.queueBorder,
+                                        backgroundColor: colors.cardColor,
+                                        color: colors.text,
+                                        justifyContent: "center", // Ensures CalendarIcon stays aligned
+                                    }
+                                ]}
+                                onPress={() => {
+                                    setSelectedDate("")
+                                    setDateOfBirthError("")
+                                    setCalenderModal(true)
+                                }}
+                            >
+                                {!calenderModal && !selectedDate && <CustomText style={{ color: colors.secondaryText, fontFamily: "AirbnbCereal_W_Bk" }}>YYYY-MM-DD</CustomText>}
+                                {!calenderModal && selectedDate && <CustomText style={{ fontFamily: "AirbnbCereal_W_Bk" }}>{selectedDate}</CustomText>}
+                                <CalendarIcon style={[styles.dateIcon, { color: colors.text }]} />
+                            </Pressable>
+
+                            {
+                                dateOfBirthError && (
+                                    <View style={{
+                                        flexDirection: "row",
+                                        alignItems: "center",
+                                        gap: scale(5),
+                                    }}>
+                                        <ErrorIcon color='red' size={scale(16)} />
+                                        <CustomText style={{ fontSize: scale(12), color: "red", }}>{dateOfBirthError}</CustomText>
+                                    </View>
+                                )
+                            }
+
+                            {
+                                Platform.OS === "android" ? (
+                                    calenderModal && (
+                                        <View style={{ position: "absolute", top: verticalScale(34), left: 0, zIndex: 100 }}>
                                             <DateTimePicker
                                                 mode="date"
                                                 maximumDate={new Date()}
                                                 value={date}
-                                                display="inline"
+                                                display="default"
                                                 accentColor={Colors.modeColor.colorCode}
                                                 onChange={onChange}
                                             />
                                         </View>
-
-                                        <View
+                                    )
+                                ) : (
+                                    <Modal
+                                        transparent={true}
+                                        visible={calenderModal}
+                                    >
+                                        <Pressable
+                                            onPress={() => setCalenderModal(false)}
                                             style={{
-                                                width: "100%",
-                                                position: "absolute",
-                                                bottom: verticalScale(40),
-                                                display: "flex",
-                                                flexDirection: "row",
+                                                flex: 1,
+                                                backgroundColor: "rgba(0,0,0, 0.8)",
+                                                justifyContent: "center",
                                                 alignItems: "center",
-                                                justifyContent: "space-between"
+                                                position: "relative",
+                                                padding: scale(20)
                                             }}
                                         >
-                                            <Pressable
-                                                onPress={() => {
-                                                    setCalenderModal(false)
-                                                }}
+                                            <View
                                                 style={{
-                                                    height: verticalScale(40),
-                                                    borderRadius: scale(4),
-                                                    width: "45%",
-                                                    marginHorizontal: "auto",
-                                                    backgroundColor: "#E11D48",
-                                                    justifyContent: "center",
-                                                    alignItems: "center"
+                                                    backgroundColor: colors.background,
+                                                    borderColor: colors.border,
+                                                    borderWidth: scale(1),
+                                                    padding: scale(10),
+                                                    borderRadius: scale(10),
+                                                    // iOS shadow
+                                                    shadowColor: "#000",
+                                                    shadowOffset: {
+                                                        width: 0,
+                                                        height: 2,
+                                                    },
+                                                    shadowOpacity: 0.1,
+                                                    shadowRadius: 4,
                                                 }}
                                             >
-                                                <CustomText style={{ color: "#fff" }}>Cancel</CustomText>
-                                            </Pressable>
+                                                <DateTimePicker
+                                                    mode="date"
+                                                    maximumDate={new Date()}
+                                                    value={date}
+                                                    display="inline"
+                                                    accentColor={'#14b8a6'}
+                                                    onChange={onChange}
+                                                />
+                                                <View
+                                                    style={{
 
-                                            <Pressable
-                                                onPress={onDoneIOS}
-                                                style={{
-                                                    height: verticalScale(40),
-                                                    borderRadius: scale(4),
-                                                    width: "45%",
-                                                    marginHorizontal: "auto",
-                                                    backgroundColor: Colors.modeColor.colorCode,
-                                                    justifyContent: "center",
-                                                    alignItems: "center"
-                                                }}
-                                            ><CustomText style={{ color: "#fff" }}>Done</CustomText>
-                                            </Pressable>
-                                        </View>
+                                                        gap: scale(10),
+                                                        marginTop: verticalScale(16),
+                                                        display: "flex",
+                                                        flexDirection: "row",
+                                                        alignItems: "center",
+                                                        justifyContent: "space-between"
+                                                    }}
+                                                >
+                                                    <Pressable
+                                                        onPress={() => {
+                                                            setCalenderModal(false)
+                                                        }}
+                                                        style={{
+                                                            height: verticalScale(40),
+                                                            borderRadius: scale(4),
+                                                            flex: 1,
+                                                            marginHorizontal: "auto",
+                                                            backgroundColor: "#ef4444",
+                                                            justifyContent: "center",
+                                                            alignItems: "center"
+                                                        }}
+                                                    >
+                                                        <CustomText style={{ color: "#fff" }}>Close</CustomText>
+                                                    </Pressable>
+
+                                                    <Pressable
+                                                        onPress={onDoneIOS}
+                                                        style={{
+                                                            height: verticalScale(40),
+                                                            borderRadius: scale(4),
+                                                            flex: 1,
+                                                            marginHorizontal: "auto",
+                                                            backgroundColor: '#14b8a6',
+                                                            justifyContent: "center",
+                                                            alignItems: "center"
+                                                        }}
+                                                    ><CustomText style={{ color: "#fff" }}>Done</CustomText>
+                                                    </Pressable>
+                                                </View>
+                                            </View>
 
 
-                                    </Pressable>
-                                </Modal>
-                            )
-                        }
+                                        </Pressable>
+                                    </Modal>
+                                )
+                            }
 
 
+                        </View>
                     </View>
 
-                    <Pressable
+                    {/* <Pressable
                         onPress={() => saveHandler()}
                         style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode }]}>
                         <CustomText style={{ color: "#fff" }}>Save & Next</CustomText>
-                    </Pressable>
+                    </Pressable> */}
+
+                    <TouchableOpacity
+                        onPress={() => saveHandler()}
+                        style={styles.signinButton} activeOpacity={0.85}>
+                        <CustomText style={styles.signinButtonText}>Save & Next</CustomText>
+                    </TouchableOpacity>
 
                 </View>
 
@@ -675,7 +663,7 @@ export default personalInfo
 
 const styles = StyleSheet.create({
     heading: {
-        fontFamily: "AirbnbCereal_W_Bd",
+        fontFamily: "AirbnbCereal_W_XBd",
         fontSize: moderateScale(22),
         marginBottom: verticalScale(10)
     },
@@ -686,13 +674,13 @@ const styles = StyleSheet.create({
 
     inputField: {
         height: verticalScale(40),
-        borderRadius: scale(4),
+        borderRadius: scale(8),
         paddingHorizontal: scale(10),
         fontSize: moderateScale(14)
     },
     inputDateField: {
         height: verticalScale(40),
-        borderRadius: scale(4),
+        borderRadius: scale(8),
         // borderWidth: moderateScale(1.5),
         paddingHorizontal: scale(10),
         fontSize: moderateScale(14),
@@ -738,7 +726,21 @@ const styles = StyleSheet.create({
         height: "50%",
         width: "50%",
         backgroundColor: "red"
-    }
+    },
+
+    signinButton: {
+        width: '100%',
+        backgroundColor: '#14b8a6', // bg-teal-500
+        paddingVertical: verticalScale(12), // py-4
+        borderRadius: scale(8), // rounded-xl
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    signinButtonText: {
+        color: '#fff', // text-white
+        fontFamily: "AirbnbCereal_W_XBd",
+        fontSize: scale(16),
+    },
 })
 
 

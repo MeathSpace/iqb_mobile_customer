@@ -839,7 +839,7 @@ const Dashboard = () => {
                                     <View style={{
                                         flexDirection: "row",
                                         alignItems: "center",
-                                        marginBottom: verticalScale(10)
+                                        // marginBottom: verticalScale(10)
                                     }}>
                                         <CustomText style={styles.heading}>Our Stylists
                                             {/* <CustomText style={[styles.heading, { color: Colors.modeColor.colorCode }]}>{homeDashboardData?.dashboardData?.barberOnDuty}</CustomText> */}
@@ -854,6 +854,7 @@ const Dashboard = () => {
                                                 backgroundColor: colors.cardColor,
                                                 alignItems: 'center',
                                                 justifyContent: 'center',
+                                                marginBottom: verticalScale(10)
                                             }}
                                         >
                                             <CustomText style={{ fontSize: scale(12), fontFamily: "AirbnbCereal_W_Bd" }}>
@@ -1098,7 +1099,7 @@ const styles = StyleSheet.create({
     heading: {
         fontSize: scale(20),
         fontFamily: "AirbnbCereal_W_XBd",
-        // marginBottom: verticalScale(10),
+        marginBottom: verticalScale(10),
     },
     grid: {
         flexDirection: 'row',

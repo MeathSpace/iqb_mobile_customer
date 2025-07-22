@@ -1872,51 +1872,50 @@ const editProfile = () => {
                                                     accentColor={Colors.modeColor.colorCode}
                                                     onChange={onChange}
                                                 />
-                                            </View>
 
-                                            <View
-                                                style={{
-                                                    width: "100%",
-                                                    position: "absolute",
-                                                    bottom: verticalScale(40),
-                                                    display: "flex",
-                                                    flexDirection: "row",
-                                                    alignItems: "center",
-                                                    justifyContent: "space-between"
-                                                }}
-                                            >
-                                                <Pressable
-                                                    onPress={() => {
-                                                        setCalenderModal(false)
-                                                    }}
+                                                <View
                                                     style={{
-                                                        height: verticalScale(40),
-                                                        borderRadius: scale(4),
-                                                        width: "45%",
-                                                        marginHorizontal: "auto",
-                                                        backgroundColor: "#E11D48",
-                                                        justifyContent: "center",
-                                                        alignItems: "center"
+                                                        gap: scale(10),
+                                                        marginTop: verticalScale(16),
+                                                        display: "flex",
+                                                        flexDirection: "row",
+                                                        alignItems: "center",
+                                                        justifyContent: "space-between"
                                                     }}
                                                 >
-                                                    <CustomText style={{ color: "#fff" }}>Cancel</CustomText>
-                                                </Pressable>
+                                                    <Pressable
+                                                        onPress={() => {
+                                                            setCalenderModal(false)
+                                                        }}
+                                                        style={{
+                                                            height: verticalScale(40),
+                                                            borderRadius: scale(4),
+                                                            flex: 1,
+                                                            marginHorizontal: "auto",
+                                                            backgroundColor: "#ef4444",
+                                                            justifyContent: "center",
+                                                            alignItems: "center"
+                                                        }}
+                                                    >
+                                                        <CustomText style={{ color: "#fff" }}>Close</CustomText>
+                                                    </Pressable>
 
-                                                <Pressable
-                                                    onPress={onDoneIOS}
-                                                    style={{
-                                                        height: verticalScale(40),
-                                                        borderRadius: scale(4),
-                                                        width: "45%",
-                                                        marginHorizontal: "auto",
-                                                        backgroundColor: Colors.modeColor.colorCode,
-                                                        justifyContent: "center",
-                                                        alignItems: "center"
-                                                    }}
-                                                ><CustomText style={{ color: "#fff" }}>Done</CustomText>
-                                                </Pressable>
+                                                    <Pressable
+                                                        onPress={onDoneIOS}
+                                                        style={{
+                                                            height: verticalScale(40),
+                                                            borderRadius: scale(4),
+                                                            flex: 1,
+                                                            marginHorizontal: "auto",
+                                                            backgroundColor: '#14b8a6',
+                                                            justifyContent: "center",
+                                                            alignItems: "center"
+                                                        }}
+                                                    ><CustomText style={{ color: "#fff" }}>Done</CustomText>
+                                                    </Pressable>
+                                                </View>
+
                                             </View>
-
 
                                         </Pressable>
                                     </Modal>

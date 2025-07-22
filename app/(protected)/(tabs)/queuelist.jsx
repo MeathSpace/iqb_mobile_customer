@@ -398,8 +398,6 @@ const QueueList = () => {
                         ) : (
                             <View style={{
                                 flex: 1,
-                                // justifyContent: "center",
-                                // alignItems: "center",
                                 paddingTop: verticalScale(20),
                             }}>
                                 <View style={[styles.noQueueContainer, {
@@ -563,7 +561,7 @@ const styles = StyleSheet.create({
 
 
     queueListContainer: {
-        flex: 0.95,
+        flex: 0.90,
         borderWidth: scale(1),
         borderRadius: scale(12),
         // padding: scale(12)

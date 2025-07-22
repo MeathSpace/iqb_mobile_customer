@@ -1,4 +1,4 @@
-import { Keyboard, Pressable, StyleSheet, Text, TextInput, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
+import { ActivityIndicator, Keyboard, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
 import React, { useState } from 'react'
 import CustomView from '../../components/CustomView';
 import CustomText from '../../components/CustomText';
@@ -19,7 +19,7 @@ const forgetPassword = () => {
 
     const router = useRouter()
 
-    const [email, setEmail] = useState("")
+    const [email, setEmail] = useState("arghya@yopmail.com")
     const [emailError, setEmailError] = useState(false);
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -83,10 +83,10 @@ const forgetPassword = () => {
                             placeholder="Enter your email"
                             placeholderTextColor={colors.secondaryText}
                             style={[false ? styles.inputFielderror : styles.inputField, {
-                                // backgroundColor: "#0BA3AD1A", 
                                 borderWidth: scale(1),
-                                borderColor: "gray",
-                                fontFamily: "AirbnbCereal_W_Bk", color: colors.text
+                                borderColor: colors.queueBorder,
+                                backgroundColor: colors.cardColor,
+                                color: colors.text
                             }]}
                             onChangeText={(text) => {
                                 setEmailError("")
@@ -112,12 +112,26 @@ const forgetPassword = () => {
 
                 </View>
 
-                <Pressable
+                {/* <Pressable
                     disabled={forgetLoader}
                     onPress={() => forgetHandler()}
                     style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode }]}>
                     <CustomText style={{ color: "#fff" }}>continue</CustomText>
-                </Pressable>
+                </Pressable> */}
+
+                <TouchableOpacity
+                    onPress={() => forgetHandler()}
+                    disabled={forgetLoader}
+                    style={styles.signinButton} activeOpacity={0.85}>
+                    {
+                        forgetLoader ? (
+                            <ActivityIndicator size="small" color="#fff" />
+                        ) : (
+                            <CustomText style={styles.signinButtonText}>Continue</CustomText>
+                        )
+                    }
+                </TouchableOpacity>
+
             </CustomView>
         </TouchableWithoutFeedback>
     )
@@ -127,7 +141,7 @@ export default forgetPassword
 
 const styles = StyleSheet.create({
     heading: {
-        fontFamily: "AirbnbCereal_W_Bd",
+        fontFamily: "AirbnbCereal_W_XBd",
         fontSize: moderateScale(22),
         marginBottom: verticalScale(10)
     },
@@ -138,7 +152,7 @@ const styles = StyleSheet.create({
 
     inputField: {
         height: verticalScale(40),
-        borderRadius: scale(4),
+        borderRadius: scale(8),
         paddingHorizontal: scale(10),
         fontSize: moderateScale(14)
     },
@@ -153,5 +167,19 @@ const styles = StyleSheet.create({
         alignItems: "center",
         justifyContent: "center",
         marginBlock: verticalScale(0)
+    },
+
+    signinButton: {
+        width: '100%',
+        backgroundColor: '#14b8a6', // bg-teal-500
+        paddingVertical: verticalScale(12), // py-4
+        borderRadius: scale(8), // rounded-xl
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    signinButtonText: {
+        color: '#fff', // text-white
+        fontFamily: "AirbnbCereal_W_XBd",
+        fontSize: scale(16),
     },
 })

@@ -18,6 +18,7 @@ import { useAuth } from '../../../context/AuthContext';
 import Skeleton from '../../../components/Skeleton';
 import { Toast } from 'toastify-react-native'
 import { Alert } from 'react-native';
+import CustomSecondaryText from '../../../components/CustomSecondaryText';
 
 const SalonItem = ({ item }) => {
 
@@ -886,10 +887,13 @@ const salon = () => {
                         borderTopLeftRadius: scale(20),
                         borderTopRightRadius: scale(20),
                     }}
+                    handleIndicatorStyle={{
+                        backgroundColor: colors.secondaryText
+                    }}
                 // onChange={handleSheetChange}
                 >
 
-                    <View style={{
+                    {/* <View style={{
                         paddingInline: scale(10),
                         marginVertical: verticalScale(10),
                         gap: verticalScale(5)
@@ -934,6 +938,31 @@ const salon = () => {
                             </CustomText>
 
                         </View>
+                    </View> */}
+
+                    <View
+                        style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                            gap: scale(10),
+                            padding: scale(10),
+                            // justifyContent: "space-between"
+                        }}
+                    >
+                        <Image
+                            style={{
+                                height: scale(40),
+                                width: scale(40),
+                                borderRadius: scale(20),
+                                position: "relative"
+                            }}
+                            source={salonInfoData?.data?.salonInfo?.salonLogo?.[0]?.url}
+                            // placeholder={{ blurhash }}
+                            contentFit="cover"
+                            transition={1000}
+                        />
+
+                        <CustomText style={{ fontSize: scale(18), fontFamily: "AirbnbCereal_W_XBd" }}>{salonInfoData?.data?.salonInfo?.salonName}</CustomText>
                     </View>
 
                     <View style={{
@@ -987,12 +1016,11 @@ const salon = () => {
                                             }}
                                         >Description</CustomText>
 
-                                        <CustomText
+                                        <CustomSecondaryText
                                             style={{
                                                 fontSize: scale(14),
-                                                color: "gray"
                                             }}
-                                        >{salonInfoData?.data?.salonInfo?.salonDesc}</CustomText>
+                                        >{salonInfoData?.data?.salonInfo?.salonDesc}</CustomSecondaryText>
                                     </View>
 
                                     <View
@@ -1001,53 +1029,45 @@ const salon = () => {
                                             borderRadius: scale(12),
                                             borderWidth: scale(1),
                                             borderColor: colors.queueBorder,
-                                            padding: scale(15),
-                                            gap: verticalScale(15),
-                                            // flexDirection: "column",
-                                            // alignItems: "center",
-                                            // justifyContent: "space-between"
+                                            padding: scale(10),
+                                            gap: verticalScale(5),
+                                            flexDirection: "row",
+                                            alignItems: "center",
+                                            justifyContent: "space-between"
                                         }}
                                     >
 
-                                        {/* <View>
+                                        <View>
                                             <CustomText
                                                 style={{
                                                     fontFamily: "AirbnbCereal_W_Bd",
                                                 }}
                                             >Contact Us</CustomText>
 
-                                            <CustomText
+                                            <CustomSecondaryText
                                                 style={{
                                                     fontSize: scale(14),
-                                                    color: "gray"
                                                 }}
                                             >
                                                 If you have any questions
-                                            </CustomText>
-                                        </View> */}
-
-                                        <CustomText
-                                            style={{
-                                                fontFamily: "AirbnbCereal_W_Bd",
-                                            }}
-                                        >Contact Us</CustomText>
+                                            </CustomSecondaryText>
+                                        </View>
 
                                         <View
                                             style={{
                                                 flexDirection: "row",
                                                 alignItems: "center",
-                                                justifyContent: "space-evenly",
-                                                gap: scale(10),
+                                                gap: scale(10)
                                             }}
                                         >
                                             <Pressable
                                                 style={{
-                                                    width: scale(45),
-                                                    height: scale(45),
-                                                    borderRadius: scale(30),
-                                                    backgroundColor: 'rgba(56, 189, 248, 0.1)',
+                                                    width: scale(30),
+                                                    height: scale(30),
+                                                    backgroundColor: colors.background,
                                                     justifyContent: "center",
                                                     alignItems: "center",
+                                                    borderRadius: scale(4)
                                                 }}
 
                                                 onPress={() => {
@@ -1056,55 +1076,55 @@ const salon = () => {
                                                     );
                                                 }}
                                             >
-                                                <ContactIcon size={scale(22)} color={'#38bdf8'} />
+                                                <ContactIcon size={scale(18)} color={"#4285F4"} />
                                             </Pressable>
 
                                             <Pressable
                                                 style={{
-                                                    width: scale(45),
-                                                    height: scale(45),
-                                                    borderRadius: scale(30),
-                                                    backgroundColor: 'rgba(13, 148, 136, 0.1)',
+                                                    width: scale(30),
+                                                    height: scale(30),
+                                                    backgroundColor: colors.background,
                                                     justifyContent: "center",
                                                     alignItems: "center",
+                                                    borderRadius: scale(4)
                                                 }}
                                                 onPress={() => {
                                                     openLink(``)
                                                 }}
                                             >
-                                                <WhatsappIcon size={scale(22)} color={'#14b8a6'} />
+                                                <WhatsappIcon size={scale(18)} color={"#25D366"} />
                                             </Pressable>
 
                                             <Pressable
                                                 style={{
-                                                    width: scale(45),
-                                                    height: scale(45),
-                                                    borderRadius: scale(30),
-                                                    backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                                                    width: scale(30),
+                                                    height: scale(30),
+                                                    backgroundColor: colors.background,
                                                     justifyContent: "center",
                                                     alignItems: "center",
+                                                    borderRadius: scale(4)
                                                 }}
                                                 onPress={() => {
                                                     openLink(`mailto:${salonInfoData?.data?.salonInfo?.salonEmail}`)
                                                 }}
                                             >
-                                                <EmailIcon size={scale(22)} color={'#ef4444'} />
+                                                <EmailIcon size={scale(18)} color={"#EA4335"} />
                                             </Pressable>
 
                                         </View>
 
                                     </View>
 
-                                    {/* <View>
+                                    <View>
 
                                         {
-                                            latitude && longitude && (
+                                            salonInfoData?.data?.salonInfo?.location?.coordinates?.latitude && salonInfoData?.data?.salonInfo?.location?.coordinates?.longitude && (
                                                 <MapView
                                                     provider={PROVIDER_GOOGLE}
                                                     initialCamera={{
                                                         center: {
-                                                            latitude: latitude,
-                                                            longitude: longitude
+                                                            latitude: salonInfoData?.data?.salonInfo?.location?.coordinates?.latitude,
+                                                            longitude: salonInfoData?.data?.salonInfo?.location?.coordinates?.longitude
                                                         },
                                                         zoom: 15, // 0 (world view) to ~20 (very close)
                                                         pitch: 0,
@@ -1128,9 +1148,11 @@ const salon = () => {
 
                                         <View
                                             style={{
-                                                backgroundColor: "#0BA3AD1A",
-                                                borderBottomLeftRadius: scale(4),
-                                                borderBottomRightRadius: scale(4),
+                                                backgroundColor: colors.cardColor,
+                                                borderBottomLeftRadius: scale(12),
+                                                borderBottomRightRadius: scale(12),
+                                                borderWidth: scale(1),
+                                                borderColor: colors.queueBorder,
                                                 padding: scale(10),
                                                 gap: verticalScale(5),
                                                 flexDirection: "row",
@@ -1146,15 +1168,14 @@ const salon = () => {
                                                     }}
                                                 >Location</CustomText>
 
-                                                <CustomText
+                                                <CustomSecondaryText
                                                     style={{
                                                         fontSize: scale(14),
-                                                        color: "gray",
                                                         maxWidth: "90%"
                                                     }}
                                                 >
                                                     {`${salonInfoData?.data?.salonInfo?.address}, ${salonInfoData?.data?.salonInfo?.city}, ${salonInfoData?.data?.salonInfo?.country}`}
-                                                </CustomText>
+                                                </CustomSecondaryText>
                                             </View>
 
                                             <Pressable
@@ -1172,122 +1193,115 @@ const salon = () => {
                                             </Pressable>
 
                                         </View>
-                                    </View> */}
+                                    </View>
 
 
                                     <View
                                         style={{
                                             backgroundColor: colors.cardColor,
-                                            borderRadius: scale(12),
-                                            borderWidth: scale(1),
                                             borderColor: colors.queueBorder,
-                                            padding: scale(15),
-                                            gap: verticalScale(15),
-                                            // flexDirection: "row",
-                                            // alignItems: "center",
-                                            // justifyContent: "space-between"
+                                            borderWidth: scale(1),
+                                            borderRadius: scale(12),
+                                            padding: scale(10),
+                                            gap: verticalScale(5),
+                                            flexDirection: "row",
+                                            alignItems: "center",
+                                            justifyContent: "space-between"
                                         }}
                                     >
 
-                                        {/* <View>
+                                        <View>
                                             <CustomText
                                                 style={{
                                                     fontFamily: "AirbnbCereal_W_Bd",
                                                 }}
                                             >Follow us on</CustomText>
 
-                                            <CustomText
+                                            <CustomSecondaryText
                                                 style={{
                                                     fontSize: scale(14),
-                                                    color: "gray"
                                                 }}
                                             >
                                                 Social links
-                                            </CustomText>
-                                        </View> */}
-
-                                        <CustomText
-                                            style={{
-                                                fontFamily: "AirbnbCereal_W_Bd",
-                                            }}
-                                        >Follow Us</CustomText>
+                                            </CustomSecondaryText>
+                                        </View>
 
                                         <View
                                             style={{
                                                 flexDirection: "row",
                                                 alignItems: "center",
-                                                justifyContent: "space-evenly",
                                                 gap: scale(10)
                                             }}
                                         >
                                             <Pressable
                                                 style={{
-                                                    width: scale(45),
-                                                    height: scale(45),
-                                                    borderRadius: scale(30),
+                                                    width: scale(30),
+                                                    height: scale(30),
                                                     backgroundColor: colors.background,
                                                     justifyContent: "center",
                                                     alignItems: "center",
+                                                    borderRadius: scale(4)
                                                 }}
                                                 onPress={() => openLink(salonInfoData?.data?.salonInfo?.instraLink)}
                                             >
-                                                <InstagramIcon size={scale(22)} color={"#E1306C"} />
+                                                <InstagramIcon size={scale(18)} color={"#E1306C"} />
                                             </Pressable>
 
                                             <Pressable
                                                 style={{
-                                                    width: scale(45),
-                                                    height: scale(45),
-                                                    borderRadius: scale(30),
+                                                    width: scale(30),
+                                                    height: scale(30),
                                                     backgroundColor: colors.background,
                                                     justifyContent: "center",
                                                     alignItems: "center",
+                                                    borderRadius: scale(4)
                                                 }}
                                                 onPress={() => openLink(salonInfoData?.data?.salonInfo?.facebookLink)}
                                             >
-                                                <FacebookIcon size={scale(22)} color={"#1877F2"} />
+                                                <FacebookIcon size={scale(18)} color={"#1877F2"} />
                                             </Pressable>
+
 
                                             <Pressable
                                                 style={{
-                                                    width: scale(45),
-                                                    height: scale(45),
-                                                    borderRadius: scale(30),
+                                                    width: scale(30),
+                                                    height: scale(30),
                                                     backgroundColor: colors.background,
                                                     justifyContent: "center",
                                                     alignItems: "center",
+                                                    borderRadius: scale(4)
                                                 }}
                                                 onPress={() => openLink(salonInfoData?.data?.salonInfo?.twitterLink)}
                                             >
-                                                <XIcon size={scale(22)} color={colors.text} />
+                                                <XIcon size={scale(18)} color={colors.text} />
                                             </Pressable>
 
                                             <Pressable
                                                 style={{
-                                                    width: scale(45),
-                                                    height: scale(45),
-                                                    borderRadius: scale(30),
+                                                    width: scale(30),
+                                                    height: scale(30),
                                                     backgroundColor: colors.background,
                                                     justifyContent: "center",
                                                     alignItems: "center",
+                                                    borderRadius: scale(4)
                                                 }}
                                                 onPress={() => openLink(salonInfoData?.data?.salonInfo?.tiktokLink)}
                                             >
-                                                <TiktokIcon size={scale(22)} color={colors.text} />
+                                                <TiktokIcon size={scale(18)} color={colors.text} />
                                             </Pressable>
 
                                             <Pressable
                                                 style={{
-                                                    width: scale(45),
-                                                    height: scale(45),
-                                                    borderRadius: scale(30),
+                                                    width: scale(30),
+                                                    height: scale(30),
                                                     backgroundColor: colors.background,
                                                     justifyContent: "center",
                                                     alignItems: "center",
+                                                    borderRadius: scale(4)
                                                 }}
                                                 onPress={() => openLink(salonInfoData?.data?.salonInfo?.webLink)}
                                             >
-                                                <WebIcon size={scale(22)} color={colors.text} />
+                                                <WebIcon size={scale(18)} color={colors.text} />
                                             </Pressable>
 
                                         </View>
@@ -1699,7 +1713,7 @@ const styles = StyleSheet.create({
     contentContainer: {
         paddingHorizontal: scale(10),
         paddingTop: scale(10),
-        paddingBottom: Platform.OS === "ios" ? verticalScale(80) : verticalScale(10),
+        paddingBottom: Platform.OS === "ios" ? verticalScale(100) : verticalScale(20),
         gap: verticalScale(10)
         // backgroundColor: "#fff",
     },

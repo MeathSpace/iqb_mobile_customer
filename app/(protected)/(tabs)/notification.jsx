@@ -236,44 +236,31 @@ const notification = () => {
                         ))
                     ) : (
                         <View style={{
-                            justifyContent: "center",
-                            alignItems: "center",
-                            minHeight: verticalScale(500)
+                            flex: 1,
+                            paddingTop: verticalScale(20),
                         }}>
-                            <View
-                                style={{
-                                    gap: verticalScale(12)
-                                }}
-                            >
-                                <View
-                                    style={{
-                                        width: scale(60),
-                                        height: scale(60),
-                                        backgroundColor: "#00B0901A",
-                                        marginHorizontal: "auto",
-                                        borderRadius: scale(50),
-                                        justifyContent: "center",
-                                        alignItems: "center"
-                                    }}
-                                >
-                                    <NotificationOffIcon
-                                        color={colors.text}
-                                        size={scale(40)}
-                                    />
+                            <View style={[styles.noQueueContainer, {
+                                borderColor: colors.queueBorder,
+                                backgroundColor: colors.cardColor,
+                            }]}>
+                                <View style={[styles.iconContainer, { backgroundColor: "rgba(13, 148, 136, 0.1)" }]}>
+                                    <NotificationOffIcon size={moderateScale(32)} color={"#14b8a6"} />
                                 </View>
-                                <CustomText
-                                    style={{
-                                        textAlign: "center",
-                                        fontSize: scale(16)
-                                    }}
-                                >No Notification</CustomText>
-                                <CustomSecondaryText
-                                    style={{
-                                        textAlign: "center"
-                                    }}
-                                >
+
+                                <CustomText style={{
+                                    fontFamily: "AirbnbCereal_W_XBd",
+                                    fontSize: scale(20),
+                                    textAlign: "center",
+                                }}>No Notification</CustomText>
+
+                                <CustomText style={{
+                                    fontFamily: "AirbnbCereal_W_Bd",
+                                    fontSize: scale(16),
+                                    textAlign: "center",
+                                    color: colors.secondaryText,
+                                }}>
                                     You don't have notification
-                                </CustomSecondaryText>
+                                </CustomText>
 
                             </View>
                         </View>
@@ -287,7 +274,25 @@ const notification = () => {
 
 export default notification
 
-const styles = StyleSheet.create({})
+const styles = StyleSheet.create({
+    noQueueContainer: {
+        width: '100%',
+        borderWidth: scale(1),
+        borderRadius: scale(12),
+        // flex: 0.90,
+        padding: scale(30),
+        gap: verticalScale(20)
+    },
+
+    iconContainer: {
+        width: scale(80),
+        height: scale(80),
+        borderRadius: scale(80),
+        justifyContent: "center",
+        alignItems: "center",
+        marginHorizontal: "auto",
+    }
+})
 
 // import { useState, useEffect, useRef } from 'react';
 // import { Text, View, Button, Platform } from 'react-native';

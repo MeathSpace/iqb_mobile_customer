@@ -1,4 +1,4 @@
-import { ActivityIndicator, Keyboard, Pressable, StyleSheet, Text, TextInput, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
+import { ActivityIndicator, Keyboard, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
 import React, { useState } from 'react'
 import { useLocalSearchParams, useRouter } from 'expo-router'
 import CustomView from '../../components/CustomView'
@@ -85,29 +85,16 @@ const forgetPasswordConfirmation = () => {
                     <View style={styles.inputWrapper}>
                         <CustomText>Password</CustomText>
 
-                        {/* <TextInput
-                            editable
-                            placeholder="Enter your password"
-                            placeholderTextColor={colors.secondaryText}
-                            style={[false ? styles.inputFielderror : styles.inputField, {
-                                backgroundColor: "#0BA3AD1A", fontFamily: "AirbnbCereal_W_Bk", color: colors.text
-                            }]}
-                            onChangeText={(text) => {
-                                setPasswordError("")
-                                setPassword(text)
-                            }}
-                            value={password}
-                        /> */}
-
-                        <View style={styles.passwordInputContainer}>
+                        <View style={[styles.passwordInputContainer, {
+                            borderColor: colors.queueBorder,
+                            backgroundColor: colors.cardColor,
+                            color: colors.text
+                        }]}>
                             <TextInput
                                 editable
                                 placeholder="Enter your password"
                                 placeholderTextColor={colors.secondaryText}
                                 style={[false ? styles.inputFielderror : styles.inputField, {
-                                    // borderWidth: scale(1),
-                                    // borderColor: "gray",
-                                    fontFamily: "AirbnbCereal_W_Bk",
                                     color: colors.text,
                                     flex: 1
                                 }]}
@@ -122,7 +109,7 @@ const forgetPasswordConfirmation = () => {
                                 onPress={() => setShowPassword(!showPassword)}
                                 style={styles.eyeIcon}
                             >
-                                {showPassword ? (<EyeOffIcon />) : (<EyeIcon />)}
+                                {showPassword ? (<EyeOffIcon color={colors.secondaryText} />) : (<EyeIcon color={colors.secondaryText} />)}
                             </Pressable>
                         </View>
 
@@ -144,30 +131,16 @@ const forgetPasswordConfirmation = () => {
                     <View style={styles.inputWrapper}>
                         <CustomText>Confirm password</CustomText>
 
-                        {/* <TextInput
-                            editable
-                            placeholder="Enter your confirm password"
-                            placeholderTextColor={colors.secondaryText}
-                            style={[false ? styles.inputFielderror : styles.inputField, {
-                                backgroundColor: "#0BA3AD1A", fontFamily: "AirbnbCereal_W_Bk", color: colors.text
-                            }]}
-                            onChangeText={(text) => {
-                                setConfirmPasswordError("")
-                                setConfirmPassword(text)
-                            }}
-                            value={confirmPassword}
-                        /> */}
-
-
-                        <View style={styles.passwordInputContainer}>
+                        <View style={[styles.passwordInputContainer, {
+                            borderColor: colors.queueBorder,
+                            backgroundColor: colors.cardColor,
+                            color: colors.text
+                        }]}>
                             <TextInput
                                 editable
                                 placeholder="Enter your confirm password"
                                 placeholderTextColor={colors.secondaryText}
                                 style={[false ? styles.inputFielderror : styles.inputField, {
-                                    // borderWidth: scale(1),
-                                    // borderColor: "gray",
-                                    fontFamily: "AirbnbCereal_W_Bk",
                                     color: colors.text,
                                     flex: 1
                                 }]}
@@ -182,7 +155,7 @@ const forgetPasswordConfirmation = () => {
                                 onPress={() => setShowConfirmPassword(!showConfirmPassword)}
                                 style={styles.eyeIcon}
                             >
-                                {showConfirmPassword ? (<EyeOffIcon />) : (<EyeIcon />)}
+                                {showConfirmPassword ? (<EyeOffIcon color={colors.secondaryText} />) : (<EyeIcon color={colors.secondaryText} />)}
                             </Pressable>
                         </View>
 
@@ -203,7 +176,7 @@ const forgetPasswordConfirmation = () => {
 
                 </View>
 
-                <Pressable
+                {/* <Pressable
                     onPress={resetHandler}
                     style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode }]}>
                     {
@@ -213,7 +186,20 @@ const forgetPasswordConfirmation = () => {
                             <CustomText style={{ color: "#fff" }}>Reset</CustomText>
                         )
                     }
-                </Pressable>
+                </Pressable> */}
+
+                <TouchableOpacity
+                    onPress={resetHandler}
+                    disabled={resetLoader}
+                    style={styles.signupButton} activeOpacity={0.85}>
+                    {
+                        resetLoader ? (
+                            <ActivityIndicator size="small" color="#fff" />
+                        ) : (
+                            <CustomText style={styles.signupButtonText}>Reset</CustomText>
+                        )
+                    }
+                </TouchableOpacity>
 
             </CustomView>
         </TouchableWithoutFeedback>
@@ -235,7 +221,7 @@ const styles = StyleSheet.create({
 
     inputField: {
         height: verticalScale(40),
-        borderRadius: scale(4),
+        borderRadius: scale(8),
         paddingHorizontal: scale(10),
         fontSize: moderateScale(14)
     },
@@ -271,5 +257,20 @@ const styles = StyleSheet.create({
         borderColor: "gray",
         gap: scale(10),
         paddingRight: scale(10),
+    },
+
+
+    signupButton: {
+        width: '100%',
+        backgroundColor: '#14b8a6', // bg-teal-500
+        paddingVertical: verticalScale(12), // py-4
+        borderRadius: scale(8), // rounded-xl
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    signupButtonText: {
+        color: '#fff', // text-white
+        fontFamily: "AirbnbCereal_W_XBd",
+        fontSize: scale(16),
     },
 })
