@@ -229,7 +229,7 @@ const signup = () => {
             }
 
             return () => {
-                console.log("Screen unfocused")
+                // console.log("Screen unfocused")
             }
         }, [isSignedIn, router, user])
     )

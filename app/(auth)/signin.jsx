@@ -289,7 +289,7 @@ const signin = () => {
 
             // Optional cleanup when screen is unfocused
             return () => {
-                console.log('Screen is unfocused');
+                // console.log('Screen is unfocused');
             };
         }, [isSignedIn, router, rememberMe, user]) // You can pass dependencies here
     );
@@ -546,7 +546,7 @@ const styles = StyleSheet.create({
 
     auth_btn: {
         height: verticalScale(40),
-        borderRadius: scale(4),
+        borderRadius: scale(8),
         alignItems: "center",
         justifyContent: "center",
     },
