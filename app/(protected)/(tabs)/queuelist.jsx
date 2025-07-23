@@ -218,7 +218,7 @@ const QueueList = () => {
 
                 </Pressable>
             </View>
-            
+
             <View style={{ flex: 1, paddingBottom: Platform.OS === 'ios' ? verticalScale(60) : 0 }}>
                 {
                     qlistData?.data?.length ? (
@@ -561,7 +561,7 @@ const styles = StyleSheet.create({
 
 
     queueListContainer: {
-        flex: 0.90,
+        flex: Platform.OS === "ios" ? 0.90 : 0.95,
         borderWidth: scale(1),
         borderRadius: scale(12),
         // padding: scale(12)
