@@ -880,7 +880,7 @@ const salon = () => {
                 <BottomSheet
                     ref={sheetRef}
                     index={0}
-                    snapPoints={Platform.OS === "ios" ? ["72%", "90%"] : ["68%", "87%"]}
+                    snapPoints={Platform.OS === "ios" ? ["72%", "90%"] : ["70%", "87%"]}
                     enableDynamicSizing={false}
                     backgroundStyle={{
                         backgroundColor: colors.background,
@@ -1256,7 +1256,7 @@ const salon = () => {
                                                     alignItems: "center",
                                                     borderRadius: scale(4)
                                                 }}
-                                                onPress={() => openLink(salonInfoData?.data?.salonInfo?.facebookLink)}
+                                                onPress={() => openLink(salonInfoData?.data?.salonInfo?.fbLink)}
                                             >
                                                 <FacebookIcon size={scale(18)} color={"#1877F2"} />
                                             </Pressable>

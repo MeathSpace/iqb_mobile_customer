@@ -659,7 +659,7 @@ const Dashboard = () => {
                                             keyExtractor={item => item}
                                             horizontal
                                             showsHorizontalScrollIndicator={false}
-                                        />) : homeAdvertisementData?.advertisementData?.length ? (<FlatList
+                                        />) : homeAdvertisementData?.advertisementData?.length > 0 ? (<FlatList
                                             style={{
                                                 overflow: "visible",
                                             }}
@@ -857,7 +857,7 @@ const Dashboard = () => {
                                                 marginBottom: verticalScale(10)
                                             }}
                                         >
-                                            <CustomText style={{ fontSize: scale(12), fontFamily: "AirbnbCereal_W_Bd" }}>
+                                            <CustomText style={{ fontSize: scale(14), fontFamily: "AirbnbCereal_W_Bd" }}>
                                                 {homeDashboardData?.dashboardData?.barberOnDuty}
                                             </CustomText>
                                         </View>
@@ -896,6 +896,7 @@ const Dashboard = () => {
                                                 columnWrapperStyle={{
                                                     columnGap: scale(10),
                                                 }}
+                                                ItemSeparatorComponent={() => <View style={{ height: scale(10) }} />}
                                                 data={homeDashboardData?.dashboardData?.barbers.slice(0, sliceBarber)}
                                                 renderItem={({ item }) => <BarberCard item={item} />}
                                                 keyExtractor={item => item.barberId}

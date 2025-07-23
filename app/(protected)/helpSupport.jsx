@@ -104,7 +104,8 @@ const helpSupport = () => {
                                 backgroundColor: colors.cardColor,
                                 borderWidth: scale(1),
                                 borderColor: colors.queueBorder,
-                                fontFamily: "AirbnbCereal_W_Md"
+                                fontFamily: "AirbnbCereal_W_Md",
+                                color: colors.text
                             }
                         ]}
                         value={subject}
@@ -137,6 +138,7 @@ const helpSupport = () => {
                                 // backgroundColor: "#00B0901A",
                                 backgroundColor: colors.cardColor,
                                 borderWidth: scale(1),
+                                color: colors.text,
                                 borderColor: colors.queueBorder,
                                 fontFamily: "AirbnbCereal_W_Md"
                             }

@@ -153,6 +153,20 @@ const notification = () => {
                 }}
                 showsVerticalScrollIndicator={false}
             >
+
+                <View style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                }}>
+                    <Pressable onPress={() => router.replace("/home")}><ArrowLeftIcon color={colors.text} /></Pressable>
+                    <CustomText style={{
+                        flex: 1,
+                        fontSize: scale(18),
+                        textAlign: "center",
+                        fontFamily: "AirbnbCereal_W_XBd",
+                    }}>Notification</CustomText>
+                </View>
+
                 {
                     notificationListData?.loading ? (
                         <>

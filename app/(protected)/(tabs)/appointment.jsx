@@ -514,6 +514,7 @@ import { useTheme } from '@react-navigation/native';
 import CustomSecondaryText from '../../../components/CustomSecondaryText';
 import { io } from "socket.io-client";
 import { Feather } from '@expo/vector-icons';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const appointment = () => {
 
@@ -553,7 +554,7 @@ const appointment = () => {
 
         // socket.emit("joinSalon", authenticatedUser?.salonId);
 
-        socket.emit("customerAppointmentList", { salonId: authenticatedUser?.salonId, email: authenticatedUser?.email })
+        socket.emit("customerAppointmentList", { salonId: authenticatedUser?.salonId, customerEmail: authenticatedUser?.email })
 
         socket.on("appointmentsUpdated", (appointmentData) => {
           setAppointmentListData((prev) => ({ ...prev, loading: false, data: appointmentData, success: true, error: null }))
@@ -661,6 +662,8 @@ const appointment = () => {
     sections.push({ title: 'Past', data: pastAppointments });
   }
 
+  console.log(newNotification.value)
+
   return (
     <CustomTabView
       style={{
@@ -679,7 +682,7 @@ const appointment = () => {
           style={styles.bellWrapper}
           activeOpacity={0.7}
           onPress={async () => {
-
+      
             if (newNotification.value) {
               await AsyncStorage.setItem(
                 "newNotification",
@@ -722,10 +725,10 @@ const appointment = () => {
             <View style={[styles.iconContainer, { backgroundColor: "rgba(13, 148, 136, 0.1)" }]}>
               <Feather name={"calendar"} size={moderateScale(32)} color={"#14b8a6"} />
             </View>
-            <Text style={styles.cardTitle}>No Appointments</Text>
-            <Text style={[styles.cardSubtitle, { color: colors.secondaryText }]}>
+            <CustomText style={styles.cardTitle}>No Appointments</CustomText>
+            <CustomText style={[styles.cardSubtitle, { color: colors.secondaryText }]}>
               You have no appointments to show.
-            </Text>
+            </CustomText>
             <TouchableOpacity
               onPress={() => {
                 setJoinModes((prev) => ({ ...prev, appointment: true, appointmentType: "Book" }));
@@ -839,18 +842,19 @@ const appointment = () => {
                       {item?.appointmentDate?.split("T")[0]} ({item?.timeSlots})
                     </CustomText>
 
-                    {section.title !== "Upcoming" && (
-                      <CustomText style={{ fontSize: scale(14), color: colors.secondaryText }}>
-                        {item.status}
-                      </CustomText>
-                    )}
+                    <CustomText style={[styles.meta, { color: colors.secondaryText }]}>
+                      {authenticatedUser?.currency}{" "}
+                      {item?.services?.reduce((sum, service) => sum + (service?.servicePrice || 0), 0)} •{" "}
+                      {item?.services.length} service{item?.services.length > 1 ? "s" : ""}
+                    </CustomText>
 
                     <View style={styles.footer}>
-                      <CustomText style={[styles.meta, { color: colors.secondaryText }]}>
-                        {authenticatedUser?.currency}{" "}
-                        {item?.services?.reduce((sum, service) => sum + (service?.servicePrice || 0), 0)} •{" "}
-                        {item?.services.length} item{item?.services.length > 1 ? "s" : ""}
-                      </CustomText>
+
+                      {section.title !== "Upcoming" && (
+                        <CustomText style={{ fontSize: scale(14), color: item.status === "served" ? '#14b8a6' : '#ef4444' }}>
+                          {item.status}
+                        </CustomText>
+                      )}
 
                       {section.title !== "Upcoming" && (
                         <TouchableOpacity

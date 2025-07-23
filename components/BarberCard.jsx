@@ -71,7 +71,7 @@ export default BarberCard
 const styles = StyleSheet.create({
     cardWrapper: {
         width: scale(160),
-        marginBottom: verticalScale(15),
+        marginBottom: scale(0),
         // gap: verticalScale(2),
         borderRadius: scale(10),
     },

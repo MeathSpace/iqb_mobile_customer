@@ -1125,7 +1125,7 @@ const Map = () => {
                                             <BottomSheet
                                                 ref={sheetRef}
                                                 index={0}
-                                                snapPoints={Platform.OS === "ios" ? ["72%", "90%"] : ["68%", "87%"]}
+                                                snapPoints={Platform.OS === "ios" ? ["72%", "90%"] : ["73%", "87%"]}
                                                 enableDynamicSizing={false}
                                                 backgroundStyle={{
                                                     backgroundColor: colors.background,
@@ -1894,7 +1894,7 @@ const Map = () => {
                                                                                         }}
                                                                                     >
                                                                                         <CustomText style={styles.servicePrice}>
-                                                                                            {authenticatedUser?.currency} {ser.servicePrice}
+                                                                                            {salonInfoData?.data?.salonInfo?.currency} {ser.servicePrice}
                                                                                         </CustomText>
                                                                                         <CustomText style={[styles.serviceEWT, { color: colors.secondaryText }]}>
                                                                                             ~ {ser.serviceEWT} mins
