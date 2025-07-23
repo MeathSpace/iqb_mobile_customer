@@ -363,14 +363,16 @@ const QueueList = () => {
 
                         </View>
                     )
-                        : qlistData?.data?.length ? (
+                        : qlistData?.data?.length > 0 ? (
                             <View
                                 style={[styles.queueListContainer, {
                                     borderColor: colors.queueBorder,
                                     backgroundColor: colors.cardColor,
                                 }]}
                             >
-                                <View style={[styles.queueListheader, { borderBottomColor: colors.queueBorder }]}>
+                                <View style={[styles.queueListheader, {
+                                    borderBottomColor: colors.queueBorder
+                                }]}>
                                     <CustomText style={[styles.queueListheaderText, { color: colors.secondaryText, width: "37%" }]}>BARBER</CustomText>
                                     <CustomText style={[styles.queueListheaderText, { color: colors.secondaryText, width: "33%", textAlign: "center" }]}>CUSTOMER</CustomText>
                                     <CustomText
@@ -458,32 +460,11 @@ const styles = StyleSheet.create({
         fontSize: scale(16),
     },
 
-    // title: {
-    //     fontFamily: "AirbnbCereal_W_Md"
-    // },
-    // qlistHeader: {
-    //     flexDirection: 'row',
-    //     justifyContent: 'space-between',
-    //     alignItems: 'center',
-    //     marginBottom: verticalScale(10),
-    // },
-
-    // btn: {
-    //     width: "45%",
-    //     height: verticalScale(35),
-    //     borderRadius: scale(4),
-    //     alignItems: "center",
-    //     justifyContent: "center",
-    //     elevation: 4,
-    // }
-
     header: {
         flexDirection: 'row',
         justifyContent: 'space-between',
         alignItems: 'center',
         height: verticalScale(40),
-        // paddingTop: verticalScale(5),
-        // paddingBottom: verticalScale(12),
     },
 
     bellWrapper: {
@@ -502,69 +483,10 @@ const styles = StyleSheet.create({
     },
 
 
-    // Queue List
-
-    // container: {
-    //     borderWidth: 1,
-    //     borderRadius: 12,
-    //     borderColor: '#e5e7eb',
-    //     overflow: 'hidden',
-    // },
-    // headerRow: {
-    //     flexDirection: 'row',
-    //     paddingVertical: 12,
-    //     paddingHorizontal: 16,
-    //     borderBottomWidth: 1,
-    //     borderColor: '#e5e7eb',
-    //     backgroundColor: 'transparent',
-    // },
-    // headerText: {
-    //     flex: 1,
-    //     fontWeight: '600',
-    //     fontSize: 13,
-    //     color: '#6b7280',
-    // },
-    // row: {
-    // flexDirection: 'row',
-    // paddingVertical: 12,
-    // paddingHorizontal: 16,
-    // alignItems: 'center',
-    // },
-    // barberCell: {
-    //     flex: 1,
-    //     flexDirection: 'row',
-    //     alignItems: 'center',
-    //     gap: 8,
-    // },
-    // barberName: {
-    //     fontWeight: '600',
-    // },
-    // customerCell: {
-    //     flex: 1,
-    //     fontSize: 14,
-    // },
-    // positionCell: {
-    //     flex: 1,
-    //     alignItems: 'flex-end',
-    // },
-    // positionText: {
-    //     fontWeight: '600',
-    // },
-    // etaText: {
-    //     fontSize: 12,
-    // },
-    // avatar: {
-    //     width: 40,
-    //     height: 40,
-    //     borderRadius: 20,
-    // },
-
-
     queueListContainer: {
         flex: Platform.OS === "ios" ? 0.90 : 0.95,
         borderWidth: scale(1),
         borderRadius: scale(12),
-        // padding: scale(12)
     },
 
     queueListheader: {

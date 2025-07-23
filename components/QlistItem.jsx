@@ -126,13 +126,17 @@ const QlistItem = ({ item, index, qlistLength }) => {
 
     return (
         <View style={[styles.queueItem, {
-            borderBottomColor: index !== qlistLength.length - 1 && colors.queueBorder,
-            borderBottomWidth: index !== qlistLength.length - 1 && scale(1),
+            borderBottomColor: index !== qlistLength.length - 1 ? colors.queueBorder : undefined,
+            borderBottomWidth: index !== qlistLength.length - 1 ? scale(1) : 0,
+            borderBottomLeftRadius: index === qlistLength.length - 1 ? scale(12) : 0,
+            borderBottomRightRadius: index === qlistLength.length - 1 ? scale(12) : 0,
             backgroundColor: authenticatedUser?.email === item?.customerEmail && colors.selected
         }]}>
             <View style={styles.barberContainer}>
                 <Image
-                    style={[styles.avatar, { borderColor: colors.cardBorder }]}
+                    style={[styles.avatar, {
+                        borderColor: colors.cardBorder
+                    }]}
                     source={{ uri: item?.barberProfile?.[0]?.url }}
                     contentFit="cover"
                     transition={300}
