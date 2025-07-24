@@ -193,7 +193,7 @@ const helpSupport = () => {
                     </TouchableOpacity>
 
                     <CustomText style={styles.contactText}>
-                        You can contact us on this number{" "}
+                        Contact us on{" "}{" "}
                         <CustomText style={styles.phoneNumber}>+44 1234567892</CustomText>
                     </CustomText>
 
@@ -254,6 +254,7 @@ const styles = StyleSheet.create({
     },
     contactText: {
         fontSize: scale(14),
+        textAlign: "center"
     },
     phoneNumber: {
         color: Colors.modeColor.colorCode,

@@ -24,6 +24,7 @@ const termService = () => {
         paddingHorizontal: scale(10),
         paddingBottom: Platform.OS === "ios" ? verticalScale(80) : verticalScale(20)
       }}
+      showsVerticalScrollIndicator={false}
     >
 
       <View style={{

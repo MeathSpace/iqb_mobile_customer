@@ -122,40 +122,6 @@ const Map = () => {
         }
     ];
 
-
-    const salonData = [
-        {
-            id: '1',
-            title: 'Glamour Grace Salon',
-            image: 'https://t4.ftcdn.net/jpg/01/81/61/29/360_F_181612908_uiOH8a4qWiNGuGS2Pg5dgwUIKJZ0C02w.jpg',
-            services: ['Haircuts', 'Coloring', 'Styling', 'Bridal Packages', 'Spa Treatments'],
-        },
-        {
-            id: '2',
-            title: 'Velvet & Ivy Spa',
-            image: 'https://img1.wsimg.com/isteam/ip/ecf2eb3f-f55b-4193-9e98-7c1b626bf779/Hero%20Picture.png',
-            services: ['Organic Facials', 'Aromatherapy Massages', 'Holistic Beauty Treatments'],
-        },
-        {
-            id: '3',
-            title: 'The Luxe Lotus',
-            image: 'https://cdn.magicdecor.in/com/2024/11/29145730/Beautiful-Seven-White-Horses-Art-Wallpaper-Mural-M-710x448.jpg',
-            services: ['Hair Extensions', 'Keratin Treatments', 'Luxury Manicures'],
-        },
-        {
-            id: '4',
-            title: 'Blush & Blossom Beauty',
-            image: 'https://cdn.magicdecor.in/com/2024/10/21145259/Monochrome-Geometric-Mural-Wallpaper-M-710x448.jpg',
-            services: ['Makeup Artistry', 'Eyelash Extensions', 'Skincare Consultations'],
-        },
-        {
-            id: '5',
-            title: 'Opulence Oasis Salon',
-            image: 'https://images.fresha.com/locations/location-profile-images/1246855/3931181/4534bff8-c5eb-41f3-be34-8b9d5cdf85a3-RitualRetreat-GB-England-Birmingham-KingsNorton-Fresha.jpg?class=width-small',
-            services: ['Hair Spa Therapies', 'Color Correction', 'Personalized Styling Sessions'],
-        },
-    ];
-
     const [selectedCustomerSalon, setSelectedCustomerSalon] = useState({
         open: false,
         data: {}
@@ -690,9 +656,9 @@ const Map = () => {
         const hours = Math.floor(totalMinutes / 60);
         const mins = totalMinutes % 60;
 
-        if (hours > 0 && mins > 0) return `${hours}hr ${mins}min`;
+        if (hours > 0 && mins > 0) return `${hours}hr ${mins}m`;
         if (hours > 0) return `${hours}hr`;
-        return `${mins}min`;
+        return `${mins}m`;
     }
 
     const hasUnsavedChanges = true
@@ -1219,7 +1185,9 @@ const Map = () => {
                                                     }
                                                 </View>
 
-                                                <BottomSheetScrollView contentContainerStyle={[styles.contentContainer, {
+                                                <BottomSheetScrollView 
+                                                showsVerticalScrollIndicator={false}
+                                                contentContainerStyle={[styles.contentContainer, {
                                                     position: "relative"
                                                 }]}>
                                                     {
@@ -1897,7 +1865,7 @@ const Map = () => {
                                                                                             {salonInfoData?.data?.salonInfo?.currency} {ser.servicePrice}
                                                                                         </CustomText>
                                                                                         <CustomText style={[styles.serviceEWT, { color: colors.secondaryText }]}>
-                                                                                            ~ {ser.serviceEWT} mins
+                                                                                            ~ {formatMinutesToHrMin(ser.serviceEWT)}
                                                                                         </CustomText>
                                                                                     </View>
                                                                                 </View>

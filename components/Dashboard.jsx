@@ -588,7 +588,7 @@ const Dashboard = () => {
                                         <CustomText style={styles.heading}>Live Queue Status</CustomText>
                                         <View style={styles.grid}>
                                             {statusData.map((item, index) => (
-                                                <View key={index} style={[styles.statusCard, { backgroundColor: colors.cardColor, borderColor: colors.cardBorder }]}>
+                                                <View key={index} style={[styles.statusCard, { backgroundColor: colors.cardColor, borderColor: colors.queueBorder }]}>
                                                     <View style={[styles.iconContainer, { backgroundColor: item.bgColor }]}>
                                                         <Feather name={item.icon} size={24} color={item.iconColor} />
                                                     </View>
@@ -619,7 +619,7 @@ const Dashboard = () => {
                             return (
                                 <View style={[styles.hintCard, {
                                     backgroundColor: colors.cardColor,
-                                    borderColor: colors.cardBorder
+                                    borderColor: colors.queueBorder
                                 }]}>
                                     <View style={[styles.hintIconWrapper, {
                                         backgroundColor: colors.background,
@@ -891,6 +891,7 @@ const Dashboard = () => {
                                             <FlatList
                                                 key={2}
                                                 style={{
+                                                    
                                                     overflow: "visible",
                                                 }}
                                                 columnWrapperStyle={{
@@ -928,6 +929,7 @@ const Dashboard = () => {
                                                     borderRadius: scale(4),
                                                     justifyContent: "center",
                                                     alignItems: "center",
+                                                    marginTop: verticalScale(15)
                                                     // marginBottom: verticalScale(20)
                                                 }}
                                             >

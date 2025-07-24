@@ -298,7 +298,7 @@ const MyFavourites = () => {
                         }]}>
                             <View style={[styles.iconContainer, { backgroundColor: 'rgba(239, 68, 68, 0.1)' }]}>
 
-                                <HeartDislikeIcon
+                                <HeartIcon
                                     color={'#ef4444'}
                                     size={scale(32)}
                                 />

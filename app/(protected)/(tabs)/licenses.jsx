@@ -23,7 +23,9 @@ const licenses = () => {
         paddingBottom: Platform.OS === 'ios' ? verticalScale(80) : verticalScale(20),
       }}
     >
-      <ScrollView contentContainerStyle={styles.scrollContent}>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        contentContainerStyle={styles.scrollContent}>
 
         <View style={{
           flexDirection: "row",

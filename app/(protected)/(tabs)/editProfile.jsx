@@ -1470,7 +1470,7 @@ const editProfile = () => {
                                                 width: scale(90),
                                                 borderRadius: scale(90),
                                                 borderWidth: scale(3),
-                                                borderColor: colors.cardColor,
+                                                borderColor: colors.queueBorder,
 
 
                                             }}
@@ -1493,7 +1493,7 @@ const editProfile = () => {
                                         padding: scale(6),
                                         borderRadius: moderateScale(20),
                                         borderWidth: scale(3),
-                                        borderColor: colors.cardColor
+                                        borderColor: colors.queueBorder
                                     }}
                                     onPress={pickImage}>
                                     <CameraIcon color={"#fff"} size={moderateScale(16)} />

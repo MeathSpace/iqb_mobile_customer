@@ -662,7 +662,7 @@ const appointment = () => {
     sections.push({ title: 'Past', data: pastAppointments });
   }
 
-  console.log(newNotification.value)
+  // console.log(newNotification.value)
 
   return (
     <CustomTabView
@@ -682,7 +682,7 @@ const appointment = () => {
           style={styles.bellWrapper}
           activeOpacity={0.7}
           onPress={async () => {
-      
+
             if (newNotification.value) {
               await AsyncStorage.setItem(
                 "newNotification",
@@ -851,7 +851,14 @@ const appointment = () => {
                     <View style={styles.footer}>
 
                       {section.title !== "Upcoming" && (
-                        <CustomText style={{ fontSize: scale(14), color: item.status === "served" ? '#14b8a6' : '#ef4444' }}>
+                        <CustomText style={{
+                          fontSize: scale(14),
+                          backgroundColor: item.status === "served" ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)',
+                          color: item.status === "served" ? '#14b8a6' : '#ef4444',
+                          paddingHorizontal: scale(10),
+                          paddingVertical: verticalScale(3),
+                          borderRadius: scale(15)
+                        }}>
                           {item.status}
                         </CustomText>
                       )}
@@ -879,6 +886,7 @@ const appointment = () => {
                 paddingBottom: Platform.OS === "ios" ? verticalScale(70) : verticalScale(20),
                 gap: verticalScale(15),
               }}
+              showsVerticalScrollIndicator={false}
               stickySectionHeadersEnabled={false}
             />
           </>

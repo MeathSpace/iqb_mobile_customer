@@ -15,13 +15,13 @@ const BarberCard = ({ item }) => {
         const hours = Math.floor(totalMinutes / 60);
         const mins = totalMinutes % 60;
 
-        if (hours > 0 && mins > 0) return `${hours} hr ${mins} min`;
-        if (hours > 0) return `${hours} hr`;
-        return `${mins} min`;
+        if (hours > 0 && mins > 0) return `${hours}hr ${mins}m`;
+        if (hours > 0) return `${hours}hr`;
+        return `${mins}m`;
     }
 
     return (
-        <View style={[styles.cardWrapper, { backgroundColor: colors.cardColor, borderColor: colors.cardBorder, borderWidth: scale(1) }]}>
+        <View style={[styles.cardWrapper, { backgroundColor: colors.cardColor, borderColor: colors.queueBorder, borderWidth: scale(1) }]}>
             <View style={{ position: "relative" }}>
                 <Image
                     style={styles.cardImage}

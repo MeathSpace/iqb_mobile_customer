@@ -3,7 +3,7 @@ import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import BottomSheet, { BottomSheetScrollView, BottomSheetView } from '@gorhom/bottom-sheet';
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
-import { useFocusEffect } from 'expo-router';
+import { Link, useFocusEffect } from 'expo-router';
 import { Image } from 'expo-image';
 import { useTheme } from '@react-navigation/native';
 import { Colors } from '../../../constants/Colors';
@@ -453,15 +453,23 @@ const salon = () => {
     const latitude = salonInfoData?.data?.salonInfo?.location?.coordinates?.latitude
     const longitude = salonInfoData?.data?.salonInfo?.location?.coordinates?.longitude
 
+    // const openLink = async (url) => {
+
+    //     const supported = await Linking.canOpenURL(url);
+    //     if (supported) {
+    //         await Linking.openURL(url);
+    //     } else {
+    //         console.warn("Can't open URL:", url);
+    //     }
+    // };
+
     const openLink = async (url) => {
-        const supported = await Linking.canOpenURL(url);
-        if (supported) {
+        if (url) {
             await Linking.openURL(url);
         } else {
-            console.warn("Can't open URL:", url);
+            console.warn("Invalid URL || Cannot Open it");
         }
     };
-
 
     const [serviceCategoryData, setServiceCategoryData] = useState({
         data: null,
@@ -615,9 +623,9 @@ const salon = () => {
         const hours = Math.floor(totalMinutes / 60);
         const mins = totalMinutes % 60;
 
-        if (hours > 0 && mins > 0) return `${hours}hr ${mins}min`;
+        if (hours > 0 && mins > 0) return `${hours}hr ${mins}m`;
         if (hours > 0) return `${hours}hr`;
-        return `${mins}min`;
+        return `${mins}m`;
     }
 
     // console.log("categorizedSalonServices ", JSON.stringify(salonInfoData?.data?.categorizedSalonServices, null, 2));
@@ -996,7 +1004,9 @@ const salon = () => {
                         }
                     </View>
 
-                    <BottomSheetScrollView contentContainerStyle={styles.contentContainer}>
+                    <BottomSheetScrollView 
+                    showsVerticalScrollIndicator={false}
+                    contentContainerStyle={styles.contentContainer}>
                         {
                             selectedTab === "Details" && (
                                 <>
@@ -1641,7 +1651,7 @@ const salon = () => {
                                                                 {authenticatedUser?.currency} {ser.servicePrice}
                                                             </CustomText>
                                                             <CustomText style={[styles.serviceEWT, { color: colors.secondaryText }]}>
-                                                                ~ {ser.serviceEWT} mins
+                                                                ~ {formatMinutesToHrMin(ser.serviceEWT)}
                                                             </CustomText>
                                                         </View>
                                                     </View>

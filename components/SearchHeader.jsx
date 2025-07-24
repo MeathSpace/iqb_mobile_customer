@@ -114,8 +114,8 @@ const SearchHeader = () => {
         }]}>
             <View style={[styles.searchWrapper,
             {
-                backgroundColor: colors.background,
-                borderColor: colors.border,
+                backgroundColor: colors.cardColor,
+                borderColor: colors.queueBorder,
                 borderWidth: scale(1),
                 borderRadius: scale(20)
             }]}>
@@ -207,10 +207,6 @@ const styles = StyleSheet.create({
         borderRadius: moderateScale(4),
         paddingHorizontal: scale(10),
         height: verticalScale(40),
-        shadowColor: '#000',
-        shadowOpacity: 0.1,
-        shadowRadius: 4,
-        elevation: 3,
     },
     input: {
         flex: 1,

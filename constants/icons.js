@@ -236,3 +236,7 @@ export const MapScissorIcon = ({ size = moderateScale(24), color = 'black', styl
 export const SparkleIcon = ({ size = moderateScale(24), color = 'black', style }) => (
     <Ionicons name="sparkles-outline" size={size} color={color} style={style} />
 );
+
+export const NoUserIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <FontAwesome5 name="user-alt-slash" size={size} color={color} style={style} />
+);

@@ -72,6 +72,13 @@ const ProtectedLayout = () => {
                     animation: 'fade',
                 }} />
 
+            <Stack.Screen
+                name="singleJoinModal"
+                options={{
+                    presentation: 'transparentModal',
+                    animation: 'fade',
+                }} />
+
         </Stack>
     )
 }
