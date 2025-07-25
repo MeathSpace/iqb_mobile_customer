@@ -79,6 +79,20 @@ const ProtectedLayout = () => {
                     animation: 'fade',
                 }} />
 
+            <Stack.Screen
+                name="groupAddMemberModal"
+                options={{
+                    presentation: 'transparentModal',
+                    animation: 'fade',
+                }} />
+
+            <Stack.Screen
+                name="groupJoinModal"
+                options={{
+                    presentation: 'transparentModal',
+                    animation: 'fade',
+                }} />
+
         </Stack>
     )
 }

@@ -1,3 +1,20 @@
+// import { StyleSheet, Text, View } from 'react-native'
+// import React from 'react'
+
+// const groupJoinSuccessPage = () => {
+//   return (
+//     <View>
+//       <Text>groupJoinSuccessPage</Text>
+//     </View>
+//   )
+// }
+
+// export default groupJoinSuccessPage
+
+// const styles = StyleSheet.create({})
+
+
+
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
 import CustomText from '../../components/CustomText'
@@ -7,7 +24,7 @@ import { useTheme } from '@react-navigation/native'
 import { CheckIcon } from '../../constants/icons'
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 
-const SingleJoinSuccessPage = () => {
+const GroupJoinSuccessPage = () => {
 
     const router = useRouter()
     const { colors } = useTheme();
@@ -26,7 +43,7 @@ const SingleJoinSuccessPage = () => {
                 </View>
                 <CustomText style={styles.cardTitle}>Queue Joined!</CustomText>
                 <CustomText style={[styles.cardSubtitle, { color: colors.secondaryText }]}>
-                    You have successfully joined the queue. You will be notified when it's your turn.
+                    Your group has successfully joined the queue.
                 </CustomText>
                 <TouchableOpacity
                     onPress={() => router.dismissTo("/queuelist")}
@@ -44,7 +61,7 @@ const SingleJoinSuccessPage = () => {
     )
 }
 
-export default SingleJoinSuccessPage
+export default GroupJoinSuccessPage
 
 const styles = StyleSheet.create({
     upcomingCard: {

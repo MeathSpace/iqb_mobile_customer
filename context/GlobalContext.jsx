@@ -1,6 +1,7 @@
-import { createContext, useState, useContext, useEffect, useRef } from 'react';
+import { createContext, useState, useContext, useEffect, useRef, useCallback } from 'react';
 import { useAuth } from './AuthContext';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useFocusEffect } from 'expo-router';
 
 const GlobalContext = createContext();
 
@@ -31,10 +32,16 @@ export const GlobalProvider = ({ children }) => {
     useEffect(() => {
         if (authenticatedUser && !hasRun.current) {
             setCustomerName(authenticatedUser.name);
+            setMemberName(authenticatedUser?.name)
             hasRun.current = true;
         }
     }, [authenticatedUser]);
 
+    // useEffect(() => {
+    //     setMemberName(authenticatedUser?.name)
+    // }, [])
+
+    const [memberName, setMemberName] = useState("")
     const [groupJoinMembers, setGroupJoinMembers] = useState([])
     const [removeGroupMember, setRemoveGroupMember] = useState({
         remove: false,
@@ -93,6 +100,9 @@ export const GlobalProvider = ({ children }) => {
         value: false
     })
 
+    const [selectedMemberServices, setSelectedMemberServices] = useState([])
+    const [selectedMemberBarber, setSelectedMemberBarber] = useState({})
+
     const value = {
         selectedBarber,
         setSelectedBarber,
@@ -123,7 +133,14 @@ export const GlobalProvider = ({ children }) => {
         notificationListData,
         setNotificationListData,
         newNotification,
-        setNewNotification
+        setNewNotification,
+        memberName,
+        setMemberName,
+
+        selectedMemberServices,
+        setSelectedMemberServices,
+        selectedMemberBarber,
+        setSelectedMemberBarber
     };
 
     return (

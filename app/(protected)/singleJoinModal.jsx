@@ -44,7 +44,7 @@ const singleJoinModal = () => {
     const { newNotification, setNewNotification } = useGlobal()
     const [singleJoinLoader, setSingleJoinLoader] = useState(false)
 
-    console.log(router)
+    // console.log(router)
 
     const singleJoinPressed = async () => {
         try {
