@@ -1,6 +1,6 @@
 import { ActivityIndicator, Keyboard, KeyboardAvoidingView, Platform, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, View } from 'react-native'
-import React, { useState } from 'react'
-import { useRouter } from 'expo-router'
+import React, { useCallback, useState } from 'react'
+import { useFocusEffect, useRouter } from 'expo-router'
 import { useTheme } from '@react-navigation/native'
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 import CustomText from '../../components/CustomText';
@@ -12,7 +12,12 @@ const groupAddMemberModal = () => {
     const router = useRouter()
     const { colors } = useTheme();
 
-    const { memberName, setMemberName } = useGlobal()
+    const {
+        memberName,
+        setMemberName,
+        setSelectedMemberServices,
+        setSelectedMemberBarber,
+    } = useGlobal()
     const [memberNameError, setMemberNameError] = useState("")
 
     const addMemberPressed = () => {
@@ -26,7 +31,8 @@ const groupAddMemberModal = () => {
             setMemberNameError("Member name must be at most 20 characters");
             return;
         }
-
+        setSelectedMemberServices([])
+        setSelectedMemberBarber(null)
         router.replace("/groupJoin")
     }
 

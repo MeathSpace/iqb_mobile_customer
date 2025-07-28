@@ -1,6 +1,6 @@
-import { ActivityIndicator, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useState } from 'react'
-import { useLocalSearchParams, useRouter } from 'expo-router';
+import { ActivityIndicator, BackHandler, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useCallback, useState } from 'react'
+import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import CustomText from '../../components/CustomText';
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 import { useTheme } from '@react-navigation/native';
@@ -46,6 +46,23 @@ const singleJoinModal = () => {
 
     // console.log(router)
 
+    useFocusEffect(
+        useCallback(() => {
+            const onBackPress = () => {
+                if (singleJoinLoader) {
+                    // Prevent back during loading
+                    return true; // <-- prevents default back behavior
+                }
+                return false; // allow default back
+            };
+
+            const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
+
+            return () => subscription.remove();
+        }, [singleJoinLoader])
+    );
+
+
     const singleJoinPressed = async () => {
         try {
             const singleJoinData = {
@@ -66,7 +83,6 @@ const singleJoinModal = () => {
             const { data } = await axios.post(`${BASE_URL}/mobileRoutes/singleJoinQueue`, singleJoinData)
 
             Toast.success(data?.message)
-            setSingleJoinLoader(false)
 
             await AsyncStorage.setItem(
                 "newNotification",
@@ -93,7 +109,11 @@ const singleJoinModal = () => {
 
     return (
         <Pressable
-            onPress={() => router.back()}
+            onPress={() => {
+                if (!singleJoinLoader) {
+                    router.back();
+                }
+            }}
             style={{
                 flex: 1,
                 backgroundColor: "rgba(0,0,0,0.5)",
@@ -153,7 +173,11 @@ const singleJoinModal = () => {
 
                 <View style={styles.buttonRow}>
                     <TouchableOpacity
-                        onPress={() => router.back()}
+                        onPress={() => {
+                            if (!singleJoinLoader) {
+                                router.back();
+                            }
+                        }}
                         style={[styles.button, {
                             // backgroundColor: '#ef4444'
                         }]}>

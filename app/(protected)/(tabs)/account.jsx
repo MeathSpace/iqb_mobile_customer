@@ -593,11 +593,11 @@ const account = () => {
           }}
         >
           <NotificationIcon size={moderateScale(24)} color={colors.notificationBellColor} />
-          {
+          {/* {
             newNotification.value && (
               <View style={styles.badge} />
             )
-          }
+          } */}
 
         </Pressable>
       </View>

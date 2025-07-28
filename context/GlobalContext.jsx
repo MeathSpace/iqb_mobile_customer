@@ -101,7 +101,7 @@ export const GlobalProvider = ({ children }) => {
     })
 
     const [selectedMemberServices, setSelectedMemberServices] = useState([])
-    const [selectedMemberBarber, setSelectedMemberBarber] = useState({})
+    const [selectedMemberBarber, setSelectedMemberBarber] = useState(null)
 
     const value = {
         selectedBarber,
@@ -140,7 +140,7 @@ export const GlobalProvider = ({ children }) => {
         selectedMemberServices,
         setSelectedMemberServices,
         selectedMemberBarber,
-        setSelectedMemberBarber
+        setSelectedMemberBarber,
     };
 
     return (

@@ -76,7 +76,6 @@ const GroupJoinBarber = () => {
     const totalTime = selectedMemberServices?.reduce((acc, service) => acc + service.serviceEWT, 0);
     const totalServices = selectedMemberServices?.length;
 
-    // console.log("barberList ", barberList?.data)
     return (
         <SafeAreaView
             style={{
@@ -222,20 +221,31 @@ const GroupJoinBarber = () => {
                                 Toast.error("Please select a service")
                                 return
                             }
+                            // setGroupJoinMembers((prev) => [...prev, {
+                            //     id: Date.now(),
+                            //     memberName,
+                            //     selectedServices: selectedMemberServices,
+                            //     selectedMemberBarber
+                            // }])
 
-                            // router.push({
-                            //     pathname: "/groupJoinMembers",
-                            //     params: {
-                            //         selectedServices: JSON.stringify(selectedMemberServices),
-                            //         selectedMemberBarber: JSON.stringify(selectedMemberBarber)
-                            //     },
-                            // });
-                            setGroupJoinMembers((prev) => [...prev, {
-                                id: Date.now(),
-                                memberName,
-                                selectedServices: selectedMemberServices,
-                                selectedMemberBarber
-                            }])
+                            setGroupJoinMembers((prev) => {
+                                const newMember = {
+                                    id: Date.now(),
+                                    memberName,
+                                    selectedServices: selectedMemberServices,
+                                    selectedMemberBarber
+                                };
+
+                                const updated = [...prev, newMember];
+
+                                // If any memberName matches the authenticatedUser name, move it to the top
+                                return updated.sort((a, b) => {
+                                    if (a.memberName === authenticatedUser?.name) return -1;
+                                    if (b.memberName === authenticatedUser?.name) return 1;
+                                    return 0;
+                                });
+                            });
+
                             router.push("/groupJoinMembers")
                             setSelectedMemberBarber({})
                             setSelectedMemberServices([])

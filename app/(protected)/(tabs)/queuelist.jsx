@@ -4,7 +4,7 @@ import CustomTabView from '../../../components/CustomTabView';
 import CustomText from '../../../components/CustomText';
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 import { Colors } from '../../../constants/Colors';
-import { useTheme } from '@react-navigation/native';
+import { usePreventRemove, useTheme } from '@react-navigation/native';
 import QlistItem from '../../../components/QlistItem';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useGlobal } from '../../../context/GlobalContext';
@@ -174,6 +174,13 @@ const QueueList = () => {
     ];
 
 
+    usePreventRemove(
+        true, // This boolean determines if removal should be prevented
+        ({ data }) => {
+
+        }
+    );
+
     return (
         <CustomTabView
             style={{
@@ -210,11 +217,11 @@ const QueueList = () => {
                     }}
                 >
                     <NotificationIcon size={moderateScale(24)} color={colors.notificationBellColor} />
-                    {
+                    {/* {
                         newNotification.value && (
                             <View style={styles.badge} />
                         )
-                    }
+                    } */}
 
                 </Pressable>
             </View>

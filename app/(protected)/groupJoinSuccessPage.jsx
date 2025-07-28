@@ -1,33 +1,30 @@
-// import { StyleSheet, Text, View } from 'react-native'
-// import React from 'react'
-
-// const groupJoinSuccessPage = () => {
-//   return (
-//     <View>
-//       <Text>groupJoinSuccessPage</Text>
-//     </View>
-//   )
-// }
-
-// export default groupJoinSuccessPage
-
-// const styles = StyleSheet.create({})
-
-
-
 import { StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import React, { useRef } from 'react'
 import CustomText from '../../components/CustomText'
 import { useRouter } from 'expo-router'
 import { SafeAreaView } from 'react-native-safe-area-context'
-import { useTheme } from '@react-navigation/native'
+import { usePreventRemove, useTheme } from '@react-navigation/native'
 import { CheckIcon } from '../../constants/icons'
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
+import { useGlobal } from '../../context/GlobalContext'
 
 const GroupJoinSuccessPage = () => {
 
     const router = useRouter()
     const { colors } = useTheme();
+
+    const LiveQueueNavigationRef = useRef(false);
+    const homeNavigationRef = useRef(false);
+
+    usePreventRemove(true, ({ data }) => {
+        if (LiveQueueNavigationRef?.current && !homeNavigationRef?.current) {
+            router.push("/queuelist");
+        } else if (!LiveQueueNavigationRef?.current && homeNavigationRef?.current) {
+            router.push("/home");
+        } else {
+            // Block back action silently
+        }
+    });
 
     return (
         <SafeAreaView
@@ -46,14 +43,24 @@ const GroupJoinSuccessPage = () => {
                     Your group has successfully joined the queue.
                 </CustomText>
                 <TouchableOpacity
-                    onPress={() => router.dismissTo("/queuelist")}
+                    onPress={() => {
+                        LiveQueueNavigationRef.current = true;
+                        homeNavigationRef.current = false
+                        router.back();
+                    }}
                     style={styles.bookButton}
                     activeOpacity={0.85}
                 >
                     <CustomText style={styles.bookButtonText}>Go to Live Queue</CustomText>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => router.dismissTo("/home")}>
+                <TouchableOpacity
+                    onPress={() => {
+                        LiveQueueNavigationRef.current = false;
+                        homeNavigationRef.current = true
+                        router.back();
+                    }}
+                >
                     <CustomText style={{ color: '#14b8a6', textAlign: "center", fontFamily: "AirbnbCereal_W_XBd" }}>Go back to home</CustomText>
                 </TouchableOpacity>
             </View>
@@ -111,3 +118,5 @@ const styles = StyleSheet.create({
     },
 
 })
+
+

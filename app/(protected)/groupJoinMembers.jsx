@@ -1,8 +1,8 @@
-import { FlatList, Platform, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
+import { Alert, FlatList, Platform, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useRouter } from 'expo-router'
-import { useTheme } from '@react-navigation/native'
+import { useFocusEffect, useNavigation, useRouter } from 'expo-router'
+import { usePreventRemove, useTheme } from '@react-navigation/native'
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 import CustomText from '../../components/CustomText'
 import { AddIcon, ArrowLeftIcon, DeleteIcon, PeopleIcon, ProfileIcon } from '../../constants/icons'
@@ -11,6 +11,7 @@ import CustomSecondaryText from '../../components/CustomSecondaryText'
 import { AntDesign, Feather } from '@expo/vector-icons'
 import { useAuth } from '../../context/AuthContext'
 import { useGlobal } from '../../context/GlobalContext'
+import { Toast } from 'toastify-react-native'
 
 const GroupJoinMembers = () => {
 
@@ -35,7 +36,7 @@ const GroupJoinMembers = () => {
         memberName,
         setMemberName,
         setSelectedMemberServices,
-        setSelectedMemberBarber
+        setSelectedMemberBarber,
     } = useGlobal()
 
     const removeGroupMember = (member) => {
@@ -43,15 +44,91 @@ const GroupJoinMembers = () => {
         setGroupJoinMembers(filteredData)
     }
 
+    const editNavigationAllowRef = useRef(false)
+
     const editMember = (item) => {
-        const filteredData = groupJoinMembers.filter((member) => member.id !== member.id)
+        const filteredData = groupJoinMembers.filter((member) => member.id !== item.id)
         setGroupJoinMembers(filteredData)
 
         setMemberName(item.memberName)
         setSelectedMemberServices(item.selectedServices)
         setSelectedMemberBarber(item.selectedMemberBarber)
-        router.replace("/groupJoin")
+
+        editNavigationAllowRef.current = true
+        router.back()
     }
+
+
+    const totalServicePrice = groupJoinMembers?.reduce((total, member) => {
+        const memberTotal = member.selectedServices?.reduce((sum, service) => {
+            return sum + (service.servicePrice || 0);
+        }, 0);
+        return total + memberTotal;
+    }, 0);
+
+    const totalServiceEwt = groupJoinMembers?.reduce((total, member) => {
+        const memberTotal = member.selectedServices?.reduce((sum, service) => {
+            return sum + (service.serviceEWT || 0);
+        }, 0);
+        return total + memberTotal;
+    }, 0);
+
+    const totalServicesLength = groupJoinMembers?.reduce(
+        (total, item) => total + (item?.selectedServices?.length || 0),
+        0
+    );
+
+
+
+    // usePreventRemove(true, ({ data }) => {
+    //     // Block back action silently
+    //     if (editNavigationAllowRef?.current) {
+    //         console.log("UnBlocked")
+    //         router.push("/groupJoin")
+
+    //     } else {
+    //         console.log("Blocked ..")
+    //     }
+
+    // });
+
+
+    usePreventRemove(true, ({ data }) => {
+        if (editNavigationAllowRef.current) {
+            // Already allowed
+            router.push('/groupJoin');
+        } else {
+            // Show confirmation alert
+            Alert.alert(
+                'Discard group join data?',
+                'All selected members will be cleared, and the group join information will be reset.',
+                [
+                {
+                    text: 'Cancel',
+                    style: 'cancel',
+                    onPress: () => {
+                        // Do nothing: block remains
+                    },
+                },
+                {
+                    text: 'OK',
+                    style: 'destructive',
+                    onPress: () => {
+                        // editNavigationAllowRef.current = true; // temporarily allow
+                        // router.push('/groupJoin'); // now push
+                        setMemberName(authenticatedUser?.name)
+                        setSelectedMemberBarber(null)
+                        setSelectedMemberServices([])
+                        setGroupJoinMembers([])
+                        router.push("/queuelist")
+                    },
+                },
+                ],
+                { cancelable: true }
+            );
+        }
+    });
+
 
     return (
         <SafeAreaView
@@ -183,7 +260,7 @@ const GroupJoinMembers = () => {
                 }
             />
 
-            {true ? (
+            {groupJoinMembers?.length > 0 ? (
                 <View
                     style={{
                         backgroundColor: colors.cardColor,
@@ -207,16 +284,37 @@ const GroupJoinMembers = () => {
                         <CustomText
                             style={{ fontFamily: "AirbnbCereal_W_XBd", fontSize: scale(18) }}
                         >
-                            {authenticatedUser?.currency} 20.5
+                            {authenticatedUser?.currency} {totalServicePrice}
                         </CustomText>
                         <CustomSecondaryText>
-                            1 member |{" "}
-                            {formatMinutesToHrMin(15)}
+                            {groupJoinMembers?.length} {groupJoinMembers?.length === 1 ? 'member' : 'members'} |{" "}
+                            {formatMinutesToHrMin(totalServiceEwt)}
                         </CustomSecondaryText>
                     </View>
 
                     <TouchableOpacity
-                        onPress={() => router.push("/groupJoinModal")}
+                        onPress={() => {
+
+                            if (!groupJoinMembers || groupJoinMembers.length < 2) {
+                                Toast.error("At least two members are needed");
+                                return;
+                            }
+
+                            if (groupJoinMembers.length > 5) {
+                                Toast.error("You can only add up to 5 members in a group");
+                                return;
+                            }
+
+                            router.push({
+                                pathname: "/groupJoinModal",
+                                params: {
+                                    groupJoinMembers: JSON.stringify(groupJoinMembers),
+                                    totalServicePrice,
+                                    totalServiceEwt,
+                                    totalServicesLength
+                                }
+                            });
+                        }}
                         style={styles.queueButton}
                         activeOpacity={0.85}
                     >
@@ -286,3 +384,40 @@ const styles = StyleSheet.create({
         fontSize: scale(16),
     },
 })
+
+
+// import { usePreventRemove } from '@react-navigation/native';
+// import { useRouter, Stack } from 'expo-router';
+// import { useRef } from 'react';
+// import { View, Text, Button, StyleSheet } from 'react-native';
+
+// const GroupJoinMembers = () => {
+
+//     const router = useRouter();
+//     const allowNavigationRef = useRef(false);
+
+//     usePreventRemove(true, ({ data }) => {
+//         if (allowNavigationRef.current) {
+//             // console.log("Triggered jjj")
+//             router.push("/queuelist"); // or router.replace(), router.back() etc.
+//         }
+//         // Block back action silently
+//     });
+
+//     return (
+//         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+//             <Text>Prevent Back Navigation</Text>
+//             <Button
+//                 title="Allow Back & Go"
+//                 onPress={() => {
+//                     allowNavigationRef.current = true;
+//                     router.back(); // or router.dismiss(), etc.
+//                 }}
+//             />
+//         </View>
+//     )
+// }
+
+// export default GroupJoinMembers
+
+// const styles = StyleSheet.create({})
