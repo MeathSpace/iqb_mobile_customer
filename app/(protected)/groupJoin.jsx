@@ -1068,12 +1068,12 @@
 
 // THE TOP IS OLD GROUP JOIN
 
-import { FlatList, Keyboard, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'; // Removed unused TouchableOpacity
-import React, { useEffect, useState } from 'react';
+import { Alert, FlatList, Keyboard, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'; // Removed unused TouchableOpacity
+import React, { useEffect, useRef, useState } from 'react';
 import CustomText from '../../components/CustomText';
 import { useRouter } from 'expo-router';
 import { SafeAreaInsetsContext, SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { useTheme } from '@react-navigation/native';
+import { usePreventRemove, useTheme } from '@react-navigation/native';
 import { AddIcon, ArrowLeftIcon, CheckIcon, SearchIcon } from '../../constants/icons';
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 import { Image } from 'expo-image';
@@ -1198,7 +1198,17 @@ const GroupJoin = () => {
     }
 
     // const [selectedMemberServices, setSelectedMemberServices] = useState([]);
-    const { selectedMemberServices, setSelectedMemberServices } = useGlobal()
+    // const { selectedMemberServices, setSelectedMemberServices } = useGlobal()
+    const {
+        groupJoinMembers,
+        setGroupJoinMembers,
+        memberName,
+        setMemberName,
+        selectedMemberServices,
+        setSelectedMemberServices,
+        setSelectedMemberBarber,
+    } = useGlobal()
+
 
     const addServiceHandler = (service) => {
         setSelectedMemberServices((prev) => {
@@ -1218,6 +1228,42 @@ const GroupJoin = () => {
     const totalPrice = selectedMemberServices.reduce((acc, service) => acc + service.servicePrice, 0);
     const totalTime = selectedMemberServices.reduce((acc, service) => acc + service.serviceEWT, 0);
     const totalServices = selectedMemberServices.length;
+
+
+    const allowGroupJoinExitRef = useRef(false);
+
+    usePreventRemove(true, ({ data }) => {
+        if (allowGroupJoinExitRef.current) {
+            setSelectedMemberServices([])
+            setSelectedMemberBarber(null)
+            setGroupJoinMembers([])
+            setMemberName(authenticatedUser?.name)
+            router.push("/queuelist"); // or router.push("/something")
+            return;
+        }
+
+        Alert.alert(
+            'Discard group join data?',
+            'All selected members will be cleared, and the group join information will be reset.',
+            [
+                {
+                    text: "Cancel",
+                    style: 'destructive',
+                    onPress: () => {
+                        // Do nothing, block navigation
+                    },
+                },
+                {
+                    text: "OK",
+                    onPress: () => {
+                        allowGroupJoinExitRef.current = true;
+                        router.back(); // or router.push("/home") etc.
+                    },
+                },
+            ],
+            { cancelable: true }
+        );
+    });
 
     return (
 

@@ -105,14 +105,15 @@ const GroupJoinMembers = () => {
                 [
                     {
                         text: 'Cancel',
-                        style: 'cancel',
+                        style: 'destructive',
+                        // style: 'cancel',
                         onPress: () => {
                             // Do nothing: block remains
                         },
                     },
                     {
                         text: 'OK',
-                        style: 'destructive',
+                        // style: 'destructive',
                         onPress: () => {
                             // editNavigationAllowRef.current = true; // temporarily allow
                             // router.push('/groupJoin'); // now push

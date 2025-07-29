@@ -382,7 +382,9 @@ const appointmentCalendar = () => {
         return isActive ? (
             <Animated.View style={[styles.boxOpenWrapper, {
                 flex: flexAnim,
-                backgroundColor: colors.background,
+                backgroundColor: colors.cardColor,
+                borderWidth: scale(1),
+                borderColor: colors.queueBorder
             }]}>
                 <ScrollView
                     style={{ flex: 1 }}
@@ -1020,7 +1022,9 @@ const appointmentCalendar = () => {
         ) : (
             <Pressable
                 style={[styles.boxCloseWrapper, {
-                    backgroundColor: colors.background
+                    backgroundColor: colors.cardColor,
+                    borderWidth: scale(1),
+                    borderColor: colors.queueBorder
                 }]}
                 onPress={() => setActiveSection(key)}
             >
