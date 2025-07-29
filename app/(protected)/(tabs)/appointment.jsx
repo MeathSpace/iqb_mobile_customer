@@ -510,7 +510,7 @@ import { useAuth } from '../../../context/AuthContext';
 import axios from 'axios';
 import { BASE_URL } from '@/utils/api';
 import Skeleton from '../../../components/Skeleton';
-import { useTheme } from '@react-navigation/native';
+import { usePreventRemove, useTheme } from '@react-navigation/native';
 import CustomSecondaryText from '../../../components/CustomSecondaryText';
 import { io } from "socket.io-client";
 import { Feather } from '@expo/vector-icons';
@@ -663,6 +663,13 @@ const appointment = () => {
   }
 
   // console.log(newNotification.value)
+
+  usePreventRemove(
+    true, // This boolean determines if removal should be prevented
+    ({ data }) => {
+
+    }
+  );
 
   return (
     <CustomTabView

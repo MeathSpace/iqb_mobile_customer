@@ -501,7 +501,10 @@ const Dashboard = () => {
                                             {/* Join Queue Button */}
                                             <TouchableOpacity
                                                 onPress={() => router.push("/joinpopup")}
-                                                style={styles.joinQueue} activeOpacity={0.85}>
+                                                style={[styles.joinQueue, {
+                                                    borderWidth: scale(1),
+                                                    borderColor: colors.queueBorder
+                                                }]} activeOpacity={0.85}>
                                                 <CustomText style={styles.joinQueueText}>Join Queue</CustomText>
                                             </TouchableOpacity>
 
@@ -511,7 +514,10 @@ const Dashboard = () => {
                                                     setJoinModes((prev) => ({ ...prev, appointment: true, appointmentType: "Book" }));
                                                     router.push("/appointmentCalendar");
                                                 }}
-                                                style={styles.bookAhead} activeOpacity={0.85}>
+                                                style={[styles.bookAhead, {
+                                                    borderWidth: scale(1),
+                                                    borderColor: colors.queueBorder
+                                                }]} activeOpacity={0.85}>
                                                 <CustomText style={styles.bookAheadText}>Book Ahead</CustomText>
                                             </TouchableOpacity>
                                         </View>
@@ -891,7 +897,7 @@ const Dashboard = () => {
                                             <FlatList
                                                 key={2}
                                                 style={{
-                                                    
+
                                                     overflow: "visible",
                                                 }}
                                                 columnWrapperStyle={{

@@ -5,11 +5,18 @@ import CustomText from '../../components/CustomText'
 import { Colors } from '../../constants/Colors'
 import { useRouter } from 'expo-router'
 import { useTheme } from '@react-navigation/native'
+import { useAuth } from '../../context/AuthContext'
+import { useGlobal } from '../../context/GlobalContext'
 
 const joinpopup = () => {
 
     const router = useRouter()
     const { colors } = useTheme()
+    const { authenticatedUser } = useAuth()
+
+    const {
+        setMemberName,
+    } = useGlobal()
 
     return (
         <Pressable
@@ -88,7 +95,11 @@ const joinpopup = () => {
                     >Join the queue with multiple people at once. Ideal for friends or family members visiting the salon together.</CustomText>
 
                     <TouchableOpacity
-                        onPress={() => router.replace("/groupJoin")}
+                        // onPress={() => router.replace("/groupJoin")}
+                        onPress={() => {
+                            setMemberName(authenticatedUser?.name)
+                            router.replace("/groupHostMemberModal")
+                        }}
                         style={styles.queueButton} activeOpacity={0.85}>
                         <CustomText style={styles.queueButtonText}>Group Join</CustomText>
                     </TouchableOpacity>

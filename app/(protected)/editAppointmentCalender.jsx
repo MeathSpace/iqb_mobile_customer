@@ -7,6 +7,7 @@ import {
     Platform,
     TextInput,
     Animated,
+    TouchableOpacity,
 } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
@@ -391,13 +392,23 @@ const editAppointmentCalender = () => {
             Toast.error("Please select a date")
             return
         }
-        //  else if (!appointmentNote) {
-        //     Toast.error("Please select an appointment note")
-        //     return
-        // }
+
+
+        // router.push({
+        //     pathname: "/joinConfirmation",
+        //     params: {
+        //         selectedCustomerBookAppointmentServices: JSON.stringify(selectCustomerServices),
+        //         selectedCustomerBookAppointmentBarber: JSON.stringify(selectedCustomerBarber),
+        //         selectedBookCalenderTimeslot: JSON.stringify(selectedEngageTimeSlot),
+        //         selectedBookCalenderDate: JSON.stringify(selectedCalenderDate),
+        //         selectedBookAppointmentNote: JSON.stringify(appointmentNote),
+        //         appointmentId: selectedEditAppointmentData?._id,
+        //         editAppointment: true
+        //     },
+        // });
 
         router.push({
-            pathname: "/joinConfirmation",
+            pathname: "/editAppointmentCalenderModal",
             params: {
                 selectedCustomerBookAppointmentServices: JSON.stringify(selectCustomerServices),
                 selectedCustomerBookAppointmentBarber: JSON.stringify(selectedCustomerBarber),
@@ -411,20 +422,19 @@ const editAppointmentCalender = () => {
     }
 
 
+    function formatMinutesToHrMin(totalMinutes) {
+        const hours = Math.floor(totalMinutes / 60);
+        const mins = totalMinutes % 60;
+
+        if (hours > 0 && mins > 0) return `${hours}hr ${mins}min`;
+        if (hours > 0) return `${hours}hr`;
+        return `${mins}min`;
+    }
+
     const renderSection = (key, title, content) => {
         const isActive = activeSection === key
 
         if (scrolling && !isActive) return null
-
-
-        function formatMinutesToHrMin(totalMinutes) {
-            const hours = Math.floor(totalMinutes / 60);
-            const mins = totalMinutes % 60;
-
-            if (hours > 0 && mins > 0) return `${hours}hr ${mins}min`;
-            if (hours > 0) return `${hours}hr`;
-            return `${mins}min`;
-        }
 
         return isActive ? (
             <Animated.View style={[styles.boxOpenWrapper, {
@@ -604,15 +614,15 @@ const editAppointmentCalender = () => {
                                                         paddingHorizontal: scale(5),
                                                         borderRadius: scale(4)
                                                     }}>
-                                                        <ClockIcon size={scale(12)} color={Colors.modeColor.colorCode} />
-                                                        <CustomText style={{ fontSize: scale(12), color: Colors.modeColor.colorCode }}>{formatMinutesToHrMin(item?.serviceEWT)}</CustomText>
+                                                        <ClockIcon size={scale(12)} color={'#14b8a6'} />
+                                                        <CustomText style={{ fontSize: scale(12), color: '#14b8a6' }}>{formatMinutesToHrMin(item?.serviceEWT)}</CustomText>
                                                     </View>
 
                                                     <CustomText
                                                         style={{
                                                             fontFamily: "AirbnbCereal_W_Blk",
                                                             fontSize: scale(18),
-                                                            color: Colors.modeColor.colorCode
+                                                            color: '#14b8a6'
                                                         }}
                                                     >{authenticatedUser?.currency} {item?.servicePrice}</CustomText>
                                                 </View>
@@ -750,13 +760,13 @@ const editAppointmentCalender = () => {
                                             ]}
                                         >
                                             <LeftIcon
-                                                color={Colors.modeColor.colorCode}
+                                                color={'#14b8a6'}
                                                 size={scale(16)}
                                             />
                                         </Pressable>
 
                                         <Pressable onPress={goToNextMonth} style={styles.navButton}>
-                                            <RightIcon color={Colors.modeColor.colorCode} size={scale(16)} />
+                                            <RightIcon color={'#14b8a6'} size={scale(16)} />
                                         </Pressable>
                                     </View>
                                 </View>
@@ -789,7 +799,7 @@ const editAppointmentCalender = () => {
                                             <CustomText
                                                 style={{
                                                     fontSize: scale(16),
-                                                    color: disableDates?.includes(day?.fullDate) ? "#000" : Colors.modeColor.colorCode,
+                                                    color: disableDates?.includes(day?.fullDate) ? "#000" : '#14b8a6',
                                                 }}
                                             >{day.date}</CustomText>
 
@@ -955,12 +965,12 @@ const editAppointmentCalender = () => {
                                                         height: verticalScale(40),
                                                         justifyContent: "center",
                                                         alignItems: "center",
-                                                        // borderColor: Colors.modeColor.colorCode,
+                                                        // borderColor: '#14b8a6',
                                                         // borderWidth: scale(1),
                                                         borderRadius: scale(8)
                                                     }}>
                                                     <CustomText style={{
-                                                        color: Colors.modeColor.colorCode,
+                                                        color: '#14b8a6',
                                                         fontSize: moderateScale(12)
                                                     }}>{item?.timeInterval}</CustomText>
                                                 </Pressable>
@@ -981,7 +991,7 @@ const editAppointmentCalender = () => {
                                         flexGrow: 1,
                                         width: "98%",
                                         // borderWidth: scale(1),
-                                        minHeight: verticalScale(200),
+                                        minHeight: verticalScale(150),
                                         // borderColor: "#DDDDDD",
                                         padding: scale(16),
                                         borderRadius: scale(4),
@@ -1026,7 +1036,7 @@ const editAppointmentCalender = () => {
                             marginBottom: -verticalScale(15),
                             // position: "absolute",
                         }}>
-                            <View>
+                            {/* <View>
                                 <CustomText
                                     style={{
                                         fontSize: scale(18),
@@ -1039,7 +1049,7 @@ const editAppointmentCalender = () => {
                                         color: "gray"
                                     }}
                                 >{selectCustomerServices.length} services | {formatMinutesToHrMin(selectCustomerServices?.reduce((acc, item) => acc + item.serviceEWT, 0))}</CustomText>
-                            </View>
+                            </View> */}
 
                             <Pressable
                                 onPress={() => {
@@ -1050,8 +1060,9 @@ const editAppointmentCalender = () => {
                                 }}
                                 style={{
                                     height: verticalScale(40),
-                                    width: scale(100),
-                                    backgroundColor: Colors.modeColor.colorCode,
+                                    flex: 1,
+                                    // width: scale(100),
+                                    backgroundColor: '#14b8a6',
                                     borderRadius: scale(6),
                                     justifyContent: "center",
                                     alignItems: "center"
@@ -1094,6 +1105,30 @@ const editAppointmentCalender = () => {
                     style={{ flex: 1 }}
                     behavior={Platform.OS === 'ios' ? 'padding' : undefined}
                 >
+
+                    {/* Header */}
+                    <View
+                        style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                            gap: scale(10),
+                            marginBottom: verticalScale(20),
+                        }}
+                    >
+                        <Pressable onPress={() => router.replace("/appointment")}>
+                            <ArrowLeftIcon color={colors.text} />
+                        </Pressable>
+                        <CustomText
+                            style={{
+                                flex: 1,
+                                fontFamily: "AirbnbCereal_W_XBd",
+                                fontSize: scale(20),
+                            }}
+                        >
+                            Edit Appointment
+                        </CustomText>
+                    </View>
+
                     <View style={{ flex: 1, gap: verticalScale(15) }}>
                         {renderSection(
                             'services',
@@ -1138,7 +1173,7 @@ const editAppointmentCalender = () => {
                         )}
                     </View>
 
-                    {!scrolling && (
+                    {/* {!scrolling && (
                         <View style={styles.footer}>
                             <Pressable
                                 onPress={() => {
@@ -1153,7 +1188,64 @@ const editAppointmentCalender = () => {
                                 <CustomText style={{ color: '#fff' }}>Next</CustomText>
                             </Pressable>
                         </View>
-                    )}
+                    )} */}
+
+
+                    {/* Footer */}
+                    {selectCustomerServices.length > 0 ? (
+                        <View
+                            style={{
+                                backgroundColor: colors.cardColor,
+                                borderTopColor: colors.queueBorder,
+                                borderTopWidth: scale(1),
+                                // height:
+                                //     Platform.OS === "ios"
+                                //         ? insets.bottom + verticalScale(60)
+                                //         : verticalScale(80),
+                                padding: scale(10),
+                                // position: "absolute",
+                                // bottom: 0,
+                                // left: 0,
+                                // right: 0,
+                                flexDirection: "row",
+                                alignItems: "center",
+                                justifyContent: "space-between",
+                            }}
+                        >
+                            <View style={{ marginBottom: verticalScale(15) }}>
+                                <CustomText
+                                    style={{ fontFamily: "AirbnbCereal_W_XBd", fontSize: scale(18) }}
+                                >
+                                    {/* {authenticatedUser?.currency} {totalPrice.toFixed(2)} */}
+                                    {authenticatedUser?.currency} {selectCustomerServices.reduce((acc, item) => acc + item.servicePrice, 0)}
+                                </CustomText>
+                                <CustomSecondaryText>
+                                    {selectCustomerServices.length} {selectCustomerServices.length === 1 ? "service" : "services"} |{" "}
+                                    {formatMinutesToHrMin(
+                                        selectCustomerServices.reduce((acc, item) => acc + item.serviceEWT, 0)
+                                    )}
+                                </CustomSecondaryText>
+
+                            </View>
+
+                            <TouchableOpacity
+                                // onPress={() => {
+                                //     // router.push({
+                                //     //     pathname: "/singleJoinBarber",
+                                //     //     params: {
+                                //     //         data: JSON.stringify(selectedServices),
+                                //     //     },
+                                //     // });
+                                // }}
+                                onPress={continueHandler}
+                                style={styles.queueButton}
+                                activeOpacity={0.85}
+                            >
+                                <CustomText style={styles.queueButtonText}>Continue</CustomText>
+                            </TouchableOpacity>
+                        </View>
+                    ) : null}
+
                 </KeyboardAvoidingView>
             </SafeAreaView>
         </Animated.View>
@@ -1214,7 +1306,7 @@ const styles = StyleSheet.create({
     searchButton: {
         height: verticalScale(40),
         borderRadius: scale(10),
-        backgroundColor: Colors.modeColor.colorCode,
+        backgroundColor: '#14b8a6',
         paddingHorizontal: scale(25),
         justifyContent: 'center',
         alignItems: 'center',
@@ -1259,7 +1351,7 @@ const styles = StyleSheet.create({
     },
     navButton: {
         backgroundColor: "#00B0901A",
-        // borderColor: Colors.modeColor.colorCode,
+        // borderColor: '#14b8a6',
         // borderWidth: scale(1),
         width: scale(30),
         height: scale(30),
@@ -1281,6 +1373,23 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         gap: verticalScale(5)
+    },
+
+
+
+    queueButton: {
+        width: '40%',
+        backgroundColor: '#14b8a6', // bg-teal-500
+        paddingVertical: verticalScale(12), // py-4
+        borderRadius: scale(8), // rounded-xl
+        marginBottom: verticalScale(15), // mb-6
+        alignItems: 'center',
+        justifyContent: 'center',
+    },
+    queueButtonText: {
+        color: '#fff', // text-white
+        fontFamily: "AirbnbCereal_W_XBd",
+        fontSize: scale(16),
     },
 
 })

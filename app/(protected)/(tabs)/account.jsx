@@ -440,7 +440,7 @@ const account = () => {
     setRememberMe, 
     newNotification, 
     setNewNotification,
-    hasRun
+    // hasRun
    } = useGlobal();
 
   const { setIsAuthenticated, authenticatedUser, setAuthenticatedUser } = useAuth()
@@ -464,7 +464,7 @@ const account = () => {
     await AsyncStorage.removeItem("isAuthenticated")
     setIsAuthenticated(false)
     setAuthenticatedUser(null)
-    hasRun.current = false;
+    // hasRun.current = false;
     router.replace("/")
   }
 

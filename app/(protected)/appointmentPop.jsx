@@ -96,7 +96,7 @@ const appointmentPop = () => {
             >
                 <CustomText
                     style={{
-                        fontFamily: "AirbnbCereal_W_Blk",
+                        fontFamily: "AirbnbCereal_W_XBd",
                         fontSize: scale(16),
                         textAlign: "center"
                     }}
@@ -115,7 +115,7 @@ const appointmentPop = () => {
                         style={{
                             height: verticalScale(35),
                             width: "48%",
-                            backgroundColor: "#E11D481A",
+                            backgroundColor: '#ef4444',
                             borderRadius: scale(4),
                             justifyContent: "center",
                             alignItems: "center"
@@ -123,9 +123,9 @@ const appointmentPop = () => {
                     >
                         {
                             (deleteAppointmentLoader) ? (
-                                <ActivityIndicator size="small" color="#E11D48" />
+                                <ActivityIndicator size="small" color="#fff" />
                             ) : (
-                                <CustomText style={{ color: "#E11D48" }}>Cancel</CustomText>
+                                <CustomText style={{ color: "#fff" }}>Delete</CustomText>
                             )
                         }
 
@@ -143,7 +143,7 @@ const appointmentPop = () => {
                         style={{
                             height: verticalScale(35),
                             width: "48%",
-                            backgroundColor: "#0BA3AD",
+                            backgroundColor: '#2dd4bf',
                             borderRadius: scale(4),
                             justifyContent: "center",
                             alignItems: "center"

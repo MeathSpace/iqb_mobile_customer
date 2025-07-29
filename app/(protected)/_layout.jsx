@@ -87,11 +87,42 @@ const ProtectedLayout = () => {
                 }} />
 
             <Stack.Screen
+                name="groupHostMemberModal"
+                options={{
+                    presentation: 'transparentModal',
+                    animation: 'fade',
+                }} />
+
+            <Stack.Screen
                 name="groupJoinModal"
                 options={{
                     presentation: 'transparentModal',
                     animation: 'fade',
                 }} />
+
+            <Stack.Screen
+                name="appointmentCalenderModal"
+                options={{
+                    presentation: 'transparentModal',
+                    animation: 'fade',
+                }} />
+
+            <Stack.Screen
+                name="editAppointmentCalenderModal"
+                options={{
+                    presentation: 'transparentModal',
+                    animation: 'fade',
+                }} />
+
+            <Stack.Screen
+                name="appointmentSuccessPage"
+                options={{
+                    presentation: 'card',
+                    animation: 'default',
+                }}
+            />
+
+
 
         </Stack>
     )

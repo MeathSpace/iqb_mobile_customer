@@ -959,6 +959,30 @@ const SingleJoin = () => {
                 </CustomText>
             </View>
 
+            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+                {/* Search Input */}
+                <View style={styles.inputContainer}>
+                    <TextInput
+                        placeholder="Search services by category"
+                        placeholderTextColor={colors.secondaryText}
+                        value={searchServiceQuery}
+                        onChangeText={handleChange}
+                        style={[
+                            styles.input,
+                            {
+                                borderWidth: scale(1),
+                                borderColor: colors.queueBorder,
+                                backgroundColor: colors.cardColor,
+                                color: colors.text,
+                            },
+                        ]}
+                    />
+                    <Pressable style={styles.searchButton}>
+                        <SearchIcon size={scale(20)} color="white" />
+                    </Pressable>
+                </View>
+            </TouchableWithoutFeedback>
+
             {/* Categories */}
             {servicesCategoryList?.loading ? (
                 <FlatList
@@ -1045,30 +1069,6 @@ const SingleJoin = () => {
                     }}
                 />
             )}
-
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-                {/* Search Input */}
-                <View style={styles.inputContainer}>
-                    <TextInput
-                        placeholder="Search services by category"
-                        placeholderTextColor={colors.secondaryText}
-                        value={searchServiceQuery}
-                        onChangeText={handleChange}
-                        style={[
-                            styles.input,
-                            {
-                                borderWidth: scale(1),
-                                borderColor: colors.queueBorder,
-                                backgroundColor: colors.cardColor,
-                                color: colors.text,
-                            },
-                        ]}
-                    />
-                    <Pressable style={styles.searchButton}>
-                        <SearchIcon size={scale(20)} color="white" />
-                    </Pressable>
-                </View>
-            </TouchableWithoutFeedback>
 
             {/* Scrollable List Area */}
             <View style={{
