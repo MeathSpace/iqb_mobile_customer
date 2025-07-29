@@ -432,7 +432,16 @@ const account = () => {
   const { colors } = useTheme()
   const { signOut } = useClerk()
   const { isSignedIn } = useUser()
-  const { setSelectedBarber, setSelectedBarberServices, setCustomerName, rememberMe, setRememberMe, newNotification, setNewNotification } = useGlobal();
+  const { 
+    setSelectedBarber, 
+    setSelectedBarberServices, 
+    setCustomerName, 
+    rememberMe, 
+    setRememberMe, 
+    newNotification, 
+    setNewNotification,
+    hasRun
+   } = useGlobal();
 
   const { setIsAuthenticated, authenticatedUser, setAuthenticatedUser } = useAuth()
   const router = useRouter()
@@ -455,6 +464,7 @@ const account = () => {
     await AsyncStorage.removeItem("isAuthenticated")
     setIsAuthenticated(false)
     setAuthenticatedUser(null)
+    hasRun.current = false;
     router.replace("/")
   }
 

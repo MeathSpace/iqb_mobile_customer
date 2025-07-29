@@ -11,7 +11,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.iqbook.iqb",
-      "buildNumber": "21",
+      "buildNumber": "22",
       "config": {
         "googleMapsApiKey": "AIzaSyCFTy8N-ZV2Oji8QbpQjuzXHwuC-kNSdmU"
       },
@@ -68,9 +68,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "534c7c91-23ce-44be-84b7-28139f754f31"
+        "projectId": "a912a935-9575-4ef0-be44-656c47d4c86f"
       }
     },
-    "owner": "sagnik26"
+    "owner": "sagnikn00"
   }
 }

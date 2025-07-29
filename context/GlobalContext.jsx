@@ -37,9 +37,6 @@ export const GlobalProvider = ({ children }) => {
         }
     }, [authenticatedUser]);
 
-    // useEffect(() => {
-    //     setMemberName(authenticatedUser?.name)
-    // }, [])
 
     const [memberName, setMemberName] = useState("")
     const [groupJoinMembers, setGroupJoinMembers] = useState([])
@@ -141,6 +138,7 @@ export const GlobalProvider = ({ children }) => {
         setSelectedMemberServices,
         selectedMemberBarber,
         setSelectedMemberBarber,
+        hasRun
     };
 
     return (

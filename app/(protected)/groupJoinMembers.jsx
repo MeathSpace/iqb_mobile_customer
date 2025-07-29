@@ -103,26 +103,26 @@ const GroupJoinMembers = () => {
                 'Discard group join data?',
                 'All selected members will be cleared, and the group join information will be reset.',
                 [
-                {
-                    text: 'Cancel',
-                    style: 'cancel',
-                    onPress: () => {
-                        // Do nothing: block remains
+                    {
+                        text: 'Cancel',
+                        style: 'cancel',
+                        onPress: () => {
+                            // Do nothing: block remains
+                        },
                     },
-                },
-                {
-                    text: 'OK',
-                    style: 'destructive',
-                    onPress: () => {
-                        // editNavigationAllowRef.current = true; // temporarily allow
-                        // router.push('/groupJoin'); // now push
-                        setMemberName(authenticatedUser?.name)
-                        setSelectedMemberBarber(null)
-                        setSelectedMemberServices([])
-                        setGroupJoinMembers([])
-                        router.push("/queuelist")
+                    {
+                        text: 'OK',
+                        style: 'destructive',
+                        onPress: () => {
+                            // editNavigationAllowRef.current = true; // temporarily allow
+                            // router.push('/groupJoin'); // now push
+                            setMemberName(authenticatedUser?.name)
+                            setSelectedMemberBarber(null)
+                            setSelectedMemberServices([])
+                            setGroupJoinMembers([])
+                            router.push("/queuelist")
+                        },
                     },
-                },
                 ],
                 { cancelable: true }
             );
@@ -144,7 +144,7 @@ const GroupJoinMembers = () => {
                 data={groupJoinMembers}
                 contentContainerStyle={{
                     gap: verticalScale(10),
-                    paddingBottom: verticalScale(60)
+                    paddingBottom: Platform.OS === "ios" ? verticalScale(60) : verticalScale(100)
                 }}
                 renderItem={({ item }) => {
                     return (
@@ -214,7 +214,6 @@ const GroupJoinMembers = () => {
                                     <CustomSecondaryText>Stylist: {item?.selectedMemberBarber?.name}</CustomSecondaryText>
                                     <CustomText style={{
                                         fontFamily: "AirbnbCereal_W_Bd",
-                                        fontSize: scale(16)
                                     }}>Subtotal: {authenticatedUser?.currency} {item?.selectedServices?.reduce((acc, service) => acc + service.servicePrice, 0)} ({formatMinutesToHrMin(item?.selectedServices?.reduce((acc, service) => acc + service.serviceEWT, 0))})</CustomText>
                                 </View>
                             </View>
@@ -246,7 +245,9 @@ const GroupJoinMembers = () => {
                 keyExtractor={(item, index) => item.id}
                 showsVerticalScrollIndicator={false}
                 ListFooterComponent={
-                    <TouchableOpacity
+                    groupJoinMembers?.length === 5 ? (
+                        null
+                    ) : (<TouchableOpacity
                         onPress={() => {
                             setMemberName("")
                             router.push("/groupAddMemberModal")
@@ -256,7 +257,7 @@ const GroupJoinMembers = () => {
                         }]}>
                         <AddIcon color={colors.text} />
                         <CustomText>Add Member</CustomText>
-                    </TouchableOpacity>
+                    </TouchableOpacity>)
                 }
             />
 
