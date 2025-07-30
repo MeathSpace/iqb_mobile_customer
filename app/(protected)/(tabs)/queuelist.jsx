@@ -26,7 +26,7 @@ const QueueList = () => {
         data: null,
         loading: false,
         error: null,
-        success: false
+        success: false,
     })
 
     const fetchQlist = async () => {
@@ -41,12 +41,38 @@ const QueueList = () => {
                 }
             })
 
-            setQlistData((prev) => ({ ...prev, loading: false, data: data?.response, success: true, error: null }))
+            setQlistData((prev) => ({ ...prev, loading: false, data: data?.response, success: true, error: null, isJoinedQueue: data?.isJoinedQueue }))
 
         } catch (error) {
 
             setQlistData((prev) => ({ ...prev, loading: false, data: null, success: false, error: error }))
             console.log("Error fetching queue list ", error)
+        }
+    }
+
+    const [showHideQueBtn, setShowHideQueBtn] = useState({
+        data: null,
+        loading: false,
+        error: null,
+        success: false,
+    })
+
+    const fetchShowHideQueueButton = async () => {
+        try {
+
+            setShowHideQueBtn((prev) => ({ ...prev, loading: true }))
+
+            const { data } = await axios.post(`${BASE_URL}/customer/showHideJoinQueueButton`, {
+                customerEmail: authenticatedUser?.email
+            })
+
+            // console.log(data)
+
+            setShowHideQueBtn((prev) => ({ ...prev, loading: false, data: data?.response, success: true, error: null }))
+
+        } catch (error) {
+            setShowHideQueBtn((prev) => ({ ...prev, loading: false, data: null, success: false, error: error }))
+            console.log("Error fetching queue button status ", error)
         }
     }
 
@@ -59,11 +85,25 @@ const QueueList = () => {
 
             fetchQlist()
 
-            socket.emit("joinSalon", authenticatedUser?.salonId);
+            fetchShowHideQueueButton()
+
+            socket.emit("joinSalon", authenticatedUser?.salonId); // this is for queue list
+            // socket.emit("customerJoinQueueButton", {
+            //     salonId: authenticatedUser?.salonId,
+            //     customerEmail: authenticatedUser?.email
+            // }); // this is for show/hide joinqueue button
 
             socket.on("queueUpdated", (queueData) => {
+                console.log("Queue Data ", queueData)
                 setQlistData((prev) => ({ ...prev, loading: false, data: queueData, success: true, error: null }))
             })
+
+            // socket.on("queueButtonToggle", (toggleData) => {
+            //     console.log("toggleData ", toggleData)
+            //     setShowHideQueBtn((prev) => ({ ...prev, loading: false, data: toggleData, success: true, error: null }))
+            //     // console.log("toggleData ", toggleData)
+            //     // setQlistData((prev) => ({ ...prev, loading: false, data: queueData, success: true, error: null }))
+            // })
 
         }, [authenticatedUser])
     )
@@ -93,6 +133,10 @@ const QueueList = () => {
 
         }
     );
+
+    // console.log("showHideQueBtn ", showHideQueBtn?.data)
+
+    // console.log(qlistData)
 
     return (
         <CustomTabView
@@ -140,7 +184,7 @@ const QueueList = () => {
             </View>
 
             <View style={{ flex: 1, paddingBottom: Platform.OS === 'ios' ? verticalScale(60) : 0 }}>
-                {
+                {/* {
                     qlistData?.data?.length ? (
                         <View
                             style={{
@@ -157,103 +201,34 @@ const QueueList = () => {
 
                         </View>
                     ) : null
-                }
-
-
-                {/* {
-                    qlistData?.loading ? (<FlatList
-                        data={[0, 1, 2, 3, 4, 5, 6, 7, 8]}
-                        contentContainerStyle={{
-                            overflow: "visible",
-                            paddingTop: verticalScale(10),
-                            gap: verticalScale(10)
-                        }}
-                        renderItem={({ item, index }) => <Skeleton
-                            height={verticalScale(70)}
-                        />
-                        }
-                        keyExtractor={item => item}
-                        showsVerticalScrollIndicator={false}
-                        ListFooterComponent={<View style={{ height: Platform.OS === "ios" ? verticalScale(60) : 0 }} />}
-                    />) : qlistData?.data?.length ? (
-                        <FlatList
-                            data={qlistData?.data}
-                            contentContainerStyle={{
-                                overflow: "visible",
-                                paddingTop: verticalScale(10),
-                                gap: verticalScale(10)
-                            }}
-                            renderItem={({ item, index }) => <QlistItem item={item} index={index} qlistLength={qlistData?.data} />}
-                            keyExtractor={item => item._id}
-                            showsVerticalScrollIndicator={false}
-                            ListFooterComponent={<View style={{ height: Platform.OS === "ios" ? verticalScale(60) : 0 }} />}
-
-                            refreshControl={
-                                <RefreshControl
-                                    refreshing={refreshing}
-                                    onRefresh={onRefresh}
-                                    colors={['black']}
-                                    progressBackgroundColor={'#fff'}
-                                />
-                            }
-                        />
-
-                    ) : (
-                        <View style={{
-                            flex: 1,
-                            justifyContent: "center",
-                            alignItems: "center",
-                        }}>
-                            <View
-                                style={{
-                                    gap: verticalScale(12)
-                                }}
-                            >
-                                <View
-                                    style={{
-                                        width: scale(60),
-                                        height: scale(60),
-                                        backgroundColor: colors.background,
-                                        marginHorizontal: "auto",
-                                        borderRadius: scale(50),
-                                        justifyContent: "center",
-                                        alignItems: "center"
-                                    }}
-                                >
-                                    <PeopleIcon
-                                        color={colors.text}
-                                        size={scale(40)}
-                                    />
-                                </View>
-                                <CustomText
-                                    style={{
-                                        textAlign: "center",
-                                        fontSize: scale(16)
-                                    }}
-                                >Queue's Open - Join now</CustomText>
-                                <CustomSecondaryText
-                                    style={{
-                                        textAlign: "center"
-                                    }}
-                                >No waiting, no hassle! Be the first to join the queue and get served right away. Tap below to grab your spot now.</CustomSecondaryText>
-                                <Pressable
-                                    onPress={() => router.push("/joinpopup")}
-                                    style={{
-                                        height: verticalScale(40),
-                                        paddingInline: scale(30),
-                                        backgroundColor: Colors.modeColor.colorCode,
-                                        marginHorizontal: "auto",
-                                        justifyContent: "center",
-                                        alignItems: "center",
-                                        borderRadius: scale(4),
-                                    }}
-                                ><CustomText style={{
-                                    color: "#fff"
-                                }}>Join Queue</CustomText></Pressable>
-                            </View>
-                        </View>
-                    )
                 } */}
+
+                {
+                    showHideQueBtn?.loading ? (
+                        <Skeleton
+                            height={verticalScale(50)}
+                            borderRadius={scale(12)}
+                            style={{
+                                marginBottom: verticalScale(15),
+
+                            }} />
+                    ) : !showHideQueBtn?.data?.isJoinedQueue && qlistData?.data?.length > 0 ? (
+                        <View
+                            style={{
+                                flexDirection: "row",
+                                alignItems: "center",
+                                gap: scale(10)
+                            }}
+                        >
+                            <TouchableOpacity
+                                onPress={() => router.push("/joinpopup")}
+                                style={styles.queueButton} activeOpacity={0.85}>
+                                <CustomText style={styles.queueButtonText}>Join Queue</CustomText>
+                            </TouchableOpacity>
+
+                        </View>
+                    ) : (null)
+                }
 
                 {
                     qlistData?.loading ? (
@@ -305,7 +280,13 @@ const QueueList = () => {
                                 </View>
                                 <FlatList
                                     data={qlistData?.data}
-                                    renderItem={({ item, index }) => <QlistItem item={item} index={index} qlistLength={qlistData?.data} />}
+                                    renderItem={({ item, index }) => <QlistItem
+                                        item={item}
+                                        index={index}
+                                        qlistLength={qlistData?.data}
+                                        setQlistData={setQlistData}
+                                        setShowHideQueBtn={setShowHideQueBtn}
+                                    />}
                                     keyExtractor={item => item._id}
                                     refreshControl={
                                         <RefreshControl

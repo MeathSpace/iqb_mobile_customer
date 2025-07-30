@@ -97,10 +97,10 @@ const GroupJoinBarber = () => {
                     flex: 1,
                     fontFamily: "AirbnbCereal_W_XBd",
                     fontSize: scale(20),
-                }}>Group Join</CustomText>
+                }}>Group Join (Stylists)</CustomText>
             </View>
 
-            <CustomText style={{ fontFamily: "AirbnbCereal_W_XBd", fontSize: scale(22), marginBottom: verticalScale(10) }}>Select Stylist</CustomText>
+            {/* <CustomText style={{ fontFamily: "AirbnbCereal_W_XBd", fontSize: scale(22), marginBottom: verticalScale(10) }}>Select Stylist</CustomText> */}
 
             {
                 barberList?.loading ? (

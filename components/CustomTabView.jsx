@@ -58,7 +58,9 @@ const styles = StyleSheet.create({
         flex: 1,
         // justifyContent: 'center',
         alignItems: 'center',
-        padding: scale(10)
+        justifyContent: "center",
+        padding: scale(10),
+        // backgroundColor: "red"
     },
     btn: {
         paddingVertical: verticalScale(8),
@@ -78,7 +80,8 @@ const styles = StyleSheet.create({
         // borderColor: '#e5e7eb',
         borderWidth: scale(1),
         gap: verticalScale(20),
-        marginTop: verticalScale(40)
+        marginBottom: verticalScale(60)
+        // marginTop: verticalScale(40)
     },
 
     iconContainer: {

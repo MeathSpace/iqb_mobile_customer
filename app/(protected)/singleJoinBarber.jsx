@@ -111,10 +111,10 @@ const SingleJoinBarber = () => {
                     flex: 1,
                     fontFamily: "AirbnbCereal_W_XBd",
                     fontSize: scale(20),
-                }}>Single Join</CustomText>
+                }}>Single Join (Stylists)</CustomText>
             </View>
 
-            <CustomText style={{ fontFamily: "AirbnbCereal_W_XBd", fontSize: scale(22), marginBottom: verticalScale(10) }}>Select Stylist</CustomText>
+            {/* <CustomText style={{ fontFamily: "AirbnbCereal_W_XBd", fontSize: scale(22), marginBottom: verticalScale(10) }}>Select Stylist</CustomText> */}
 
             {
                 barberList?.loading ? (
@@ -181,7 +181,7 @@ const SingleJoinBarber = () => {
                 ) : (
                     <View style={[styles.upcomingCard, { backgroundColor: colors.cardColor, borderColor: colors.cardBorder }]}>
                         <View style={[styles.iconContainer, { backgroundColor: "rgba(13, 148, 136, 0.1)" }]}>
-                            <ProfileIcon size={scale(32)}color={"#14b8a6"} />
+                            <ProfileIcon size={scale(32)} color={"#14b8a6"} />
                         </View>
                         <CustomText style={styles.cardTitle}>No Stylists</CustomText>
                         <CustomText style={[styles.cardSubtitle, { color: colors.secondaryText }]}>

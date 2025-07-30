@@ -11,7 +11,7 @@ import { Colors } from '../constants/Colors';
 import SalonCard from './SalonCard';
 import { Image } from 'expo-image';
 import { usePreventRemove, useTheme } from '@react-navigation/native';
-import { ArrowLeftIcon, CheckIcon, ClockIcon, CloseIcon, ContactIcon, CuttingIcon, EmailIcon, FacebookIcon, HeartFilledIcon, HeartIcon, InstagramIcon, MapIcon, MapScissorIcon, TiktokIcon, WebIcon, WhatsappIcon, XIcon } from '../constants/icons';
+import { AddIcon, ArrowLeftIcon, CheckIcon, ClockIcon, CloseIcon, ContactIcon, CuttingIcon, EmailIcon, FacebookIcon, HeartFilledIcon, HeartIcon, InstagramIcon, MapIcon, MapScissorIcon, TiktokIcon, WebIcon, WhatsappIcon, XIcon } from '../constants/icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import { BASE_URL } from '@/utils/api';
@@ -772,166 +772,14 @@ const Map = () => {
                             item={item}
                             setSelectedCustomerSalon={setSelectedCustomerSalon}
                             setSelectedConnectSalonId={setSelectedConnectSalonId}
+                            map={true}
+                            connectSalonPressed={connectSalonPressed}
+                            connectSalonLoader={connectSalonLoader}
                         />}
                         keyExtractor={item => item._id}
                         horizontal
                         showsHorizontalScrollIndicator={false}
                     />
-
-                    {/* <Modal
-                        animationType="fade"
-                        transparent={true}
-                        visible={selectedCustomerSalon.open}
-                        onRequestClose={() => setSelectedCustomerSalon({ open: false, data: {} })}
-                    >
-                        <Pressable
-                            style={styles.modalWrapper}
-                            onPress={() => setSelectedCustomerSalon({ open: false, data: {} })}
-                        >
-                            <Pressable
-                                style={[styles.modalContainer,
-                                {
-                                    backgroundColor: colors.background,
-                                    borderColor: colors.border,
-                                    borderWidth: scale(1),
-                                }
-                                ]}
-                                onPress={() => { }}
-                            >
-                                {
-                                    selectedCustomerSalon?.data?.gallery?.length ? (
-                                        <Image
-                                            style={styles.modalImage}
-                                            source={{ uri: selectedCustomerSalon?.data?.gallery?.[0]?.url }}
-                                            contentFit="cover"
-                                            transition={300}
-                                        />
-                                    ) : (
-                                        <Image
-                                            style={styles.modalImage}
-                                            source={require('@/assets/images/dummygallery.jpg')}
-                                            contentFit="cover"
-                                            transition={300}
-                                        />
-                                    )
-                                }
-
-                                <View style={{ marginBottom: verticalScale(5), flexDirection: "row", alignItems: "center", gap: scale(10) }}>
-                                    <Image
-                                        style={{ height: moderateScale(35), width: moderateScale(35), borderRadius: moderateScale(20) }}
-                                        source={selectedCustomerSalon?.data?.salonLogo?.[0]?.url}
-                                        // placeholder={{ blurhash }}
-                                        contentFit="cover"
-                                        transition={300}
-                                    />
-                                    <CustomText style={styles.modalTitle}>{selectedCustomerSalon?.data?.salonName}</CustomText>
-                                </View>
-
-                                <View
-                                    style={{
-                                        marginTop: verticalScale(20),
-                                    }}
-                                >
-                                    <CustomText
-                                        style={{
-                                            fontFamily: "AirbnbCereal_W_Blk"
-                                        }}
-                                    >Explore all services</CustomText>
-                                    <View
-                                        style={{
-                                            flexDirection: "row",
-                                            alignItems: "center",
-                                            flexDirection: "row",
-                                            flexWrap: "wrap",
-                                            paddingVertical: verticalScale(20),
-                                            gap: scale(25),
-                                        }}
-                                    >
-
-                                        {
-                                            serviceCategoryData?.loading ? (
-                                                [0, 1, 2, 3, 4, 5, 6, 7].map((item, index) => {
-                                                    return (
-                                                        <View
-                                                            key={index}
-                                                            style={{
-                                                                gap: verticalScale(10),
-                                                                width: scale(65),
-                                                            }}
-                                                        >
-
-                                                            <Skeleton
-                                                                width={scale(60)}
-                                                                height={scale(60)}
-                                                                borderRadius={scale(30)}
-                                                            >
-
-                                                            </Skeleton>
-
-                                                        </View>
-                                                    )
-                                                })
-                                            ) : (
-                                                serviceCategoryData?.data?.map((item, index) => {
-                                                    return (
-                                                        <View
-                                                            key={item?._id}
-                                                            style={{
-                                                                gap: verticalScale(10),
-                                                                width: scale(65),
-                                                                marginBottom: verticalScale(10)
-                                                            }}
-                                                        >
-
-                                                            <View
-                                                                style={{
-                                                                    width: scale(55),
-                                                                    height: scale(55),
-                                                                    borderRadius: scale(30),
-                                                                    backgroundColor: colors.background,
-                                                                    marginHorizontal: "auto"
-                                                                }}
-                                                            >
-                                                                <Image
-                                                                    style={{ width: "100%", height: "100%", borderRadius: scale(30) }}
-                                                                    source={{ uri: item?.serviceCategoryImage?.url.replace("http", "https") }}
-                                                                    contentFit="cover"
-                                                                    transition={1000}
-                                                                />
-                                                            </View>
-                                                            <CustomText
-                                                                style={{
-                                                                    fontFamily: "AirbnbCereal_W_Md",
-                                                                    fontSize: scale(12),
-                                                                    textAlign: "center",
-                                                                    color: "gray",
-                                                                }}
-                                                            >{item.serviceCategoryName}</CustomText>
-                                                        </View>
-                                                    )
-                                                })
-                                            )
-                                        }
-
-                                    </View>
-                                </View>
-
-                                <Pressable
-                                    style={[styles.modalbtn, { backgroundColor: Colors.modeColor.colorCode }]}
-                                    onPress={() => connectSalonPressed()}
-                                >
-                                    <CustomText style={{ color: "#fff" }}>Connect</CustomText>
-                                </Pressable>
-
-                                <Pressable
-                                    style={[styles.closebtn]}
-                                    onPress={() => setSelectedCustomerSalon({ open: false, data: {} })}
-                                >
-                                    <CustomText style={{ color: "#E11D48" }}>Cancel</CustomText>
-                                </Pressable>
-                            </Pressable>
-                        </Pressable>
-                    </Modal> */}
 
 
                     <Modal
@@ -1136,7 +984,6 @@ const Map = () => {
                                         )
                                     }
 
-
                                     <BottomSheet
                                         ref={sheetRef}
                                         index={0}
@@ -1194,7 +1041,33 @@ const Map = () => {
                                                                 transition={1000}
                                                             />
 
-                                                            <CustomText style={{ fontSize: scale(18), fontFamily: "AirbnbCereal_W_XBd" }}>{salonInfoData?.data?.salonInfo?.salonName}</CustomText>
+                                                            <View style={{
+                                                                flex: 1,
+                                                                flexDirection: "row",
+                                                                alignItems: "center",
+                                                                justifyContent: "space-between"
+                                                            }}>
+                                                                <CustomText style={{ fontSize: scale(18), fontFamily: "AirbnbCereal_W_XBd" }}>{salonInfoData?.data?.salonInfo?.salonName}</CustomText>
+                                                                <TouchableOpacity
+                                                                    onPress={() => connectSalonPressed()}
+                                                                    disabled={connectSalonLoader}
+                                                                    style={styles.signinButton} activeOpacity={0.85}>
+                                                                    {
+                                                                        connectSalonLoader ? (
+                                                                            <ActivityIndicator size="small" color="#fff" />
+                                                                        ) : (
+                                                                            <View style={{
+                                                                                flexDirection: "row",
+                                                                                alignItems: "center",
+                                                                                gap: scale(2)
+                                                                            }}>
+                                                                                <CustomText style={styles.signinButtonText}>Connect</CustomText>
+                                                                                <AddIcon size={scale(14)} color='#fff' />
+                                                                            </View>
+                                                                        )
+                                                                    }
+                                                                </TouchableOpacity>
+                                                            </View>
                                                         </View>
 
                                                     </View>
@@ -1669,7 +1542,7 @@ const Map = () => {
                                                             )
                                                         }
 
-                                                        <TouchableOpacity
+                                                        {/* <TouchableOpacity
                                                             onPress={() => connectSalonPressed()}
                                                             disabled={connectSalonLoader}
                                                             style={styles.signinButton} activeOpacity={0.85}>
@@ -1680,7 +1553,7 @@ const Map = () => {
                                                                     <CustomText style={styles.signinButtonText}>Connect</CustomText>
                                                                 )
                                                             }
-                                                        </TouchableOpacity>
+                                                        </TouchableOpacity> */}
 
                                                     </BottomSheetScrollView>
                                                 </>
@@ -1813,19 +1686,34 @@ const styles = StyleSheet.create({
         borderTopRightRadius: scale(12)
     },
 
+    // signinButton: {
+    //     width: '100%',
+    //     backgroundColor: '#14b8a6', // bg-teal-500
+    //     paddingVertical: verticalScale(12), // py-4
+    //     borderRadius: scale(8), // rounded-xl
+    //     alignItems: 'center',
+    //     justifyContent: 'center',
+    //     marginBottom: verticalScale(20),
+    // },
+
+    //  signinButtonText: {
+    //     color: '#fff', // text-white
+    //     fontFamily: "AirbnbCereal_W_XBd",
+    //     fontSize: scale(16),
+    // },
+
     signinButton: {
-        width: '100%',
         backgroundColor: '#14b8a6', // bg-teal-500
-        paddingVertical: verticalScale(12), // py-4
+        paddingHorizontal: scale(6), // py-4
+        paddingVertical: verticalScale(6), // py-4
         borderRadius: scale(8), // rounded-xl
         alignItems: 'center',
         justifyContent: 'center',
-        marginBottom: verticalScale(20),
     },
     signinButtonText: {
         color: '#fff', // text-white
         fontFamily: "AirbnbCereal_W_XBd",
-        fontSize: scale(16),
+        fontSize: scale(12),
     },
 
 

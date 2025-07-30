@@ -118,6 +118,7 @@ const passwordVerification = () => {
                             placeholder="Enter your otp"
                             placeholderTextColor={colors.secondaryText}
                             style={[false ? styles.inputFielderror : styles.inputField, {
+                                fontFamily: "AirbnbCereal_W_Md",
                                 borderWidth: scale(1),
                                 borderColor: colors.queueBorder,
                                 backgroundColor: colors.cardColor,

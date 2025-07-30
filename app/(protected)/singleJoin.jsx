@@ -955,7 +955,7 @@ const SingleJoin = () => {
                         fontSize: scale(20),
                     }}
                 >
-                    Single Join
+                    Single Join (Services)
                 </CustomText>
             </View>
 

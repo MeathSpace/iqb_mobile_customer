@@ -1,4 +1,4 @@
-import { ActivityIndicator, BackHandler, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Alert, BackHandler, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useCallback, useState } from 'react'
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import { useTheme } from '@react-navigation/native';
@@ -109,7 +109,12 @@ const GroupJoinModal = () => {
 
         } catch (error) {
             setGroupJoinLoader(false)
-            Toast.error(error?.response?.data?.message)
+            // Toast.error(error?.response?.data?.message)
+            Alert.alert(
+                "Notice",
+                error?.response?.data?.message,
+                [{ text: "OK" }]
+            );
             console.log("Error doing group join ", error)
         }
     }
@@ -141,7 +146,7 @@ const GroupJoinModal = () => {
                 }}>Confirm Group Booking</CustomText> */}
                 <View style={styles.iconContainer}>
                     <CheckIcon style={{
-                        backgroundColor: colors.background,
+                        backgroundColor: colors.tabBackground,
                         padding: scale(3),
                         borderRadius: scale(50),
                     }}
@@ -153,7 +158,7 @@ const GroupJoinModal = () => {
 
                 <View style={{
                     borderRadius: scale(10),
-                    backgroundColor: colors.background,
+                    backgroundColor: colors.tabBackground,
                     padding: scale(10),
                     gap: verticalScale(10)
                 }}>

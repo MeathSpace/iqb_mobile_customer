@@ -120,7 +120,7 @@ const editAppointmentCalenderModal = () => {
                 }]}>
                 <View style={styles.iconContainer}>
                     <CheckIcon style={{
-                        backgroundColor: colors.background,
+                        backgroundColor: colors.tabBackground,
                         padding: scale(3),
                         borderRadius: scale(50),
                     }}
@@ -138,7 +138,7 @@ const editAppointmentCalenderModal = () => {
 
                     <View style={{
                         marginTop: verticalScale(5),
-                        backgroundColor: colors.background, // Optional: subtle background to group
+                        backgroundColor: colors.tabBackground, // Optional: subtle background to group
                         padding: scale(8),
                         borderRadius: scale(6),
                         gap: verticalScale(4)

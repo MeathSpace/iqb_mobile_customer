@@ -125,7 +125,8 @@ const Dashboard = () => {
                         setHomeDashboardData((prev) => ({ ...prev, loading: true }))
 
                         const { data } = await axios.post(`${BASE_URL}/customer/customerDashboard`, {
-                            salonId: authenticatedUser?.salonId
+                            salonId: authenticatedUser?.salonId,
+                            customerEmail: authenticatedUser?.email
                         })
 
                         setHomeDashboardData((prev) => ({ ...prev, loading: false, dashboardData: data?.response, success: true, error: null }))
@@ -180,6 +181,7 @@ const Dashboard = () => {
             };
         }, [authenticatedUser])
     );
+
 
     const { colors } = useTheme()
 
@@ -408,6 +410,16 @@ const Dashboard = () => {
         },
     ];
 
+
+    function formatMinutesToHrMin(totalMinutes) {
+        const hours = Math.floor(totalMinutes / 60);
+        const mins = totalMinutes % 60;
+
+        if (hours > 0 && mins > 0) return `${hours}hr ${mins}m`;
+        if (hours > 0) return `${hours}hr`;
+        return `${mins}m`;
+    }
+
     return (
         <CustomTabView
             style={{
@@ -432,96 +444,91 @@ const Dashboard = () => {
                         case "hero": {
                             return (
                                 <>
-                                    {/* <CustomText style={{ fontFamily: "AirbnbCereal_W_Bd" }}>Hello, {authenticatedUser.name} 👋</CustomText>
                                     {
                                         homeDashboardData?.loading ? (
-                                            <View style={{
-                                                marginBottom: verticalScale(15),
-                                                marginTop: verticalScale(10)
-                                            }}>
-                                                <Skeleton height={verticalScale(30)} />
-                                            </View>
-                                        ) : homeDashboardData?.dashboardData?.salonInfo?.salonDesc?.length ? (<CustomText style={{ fontSize: scale(14), marginBottom: verticalScale(15), marginTop: verticalScale(10) }}>
-                                            {homeDashboardData?.dashboardData?.salonInfo?.salonDesc}
-                                        </CustomText>) : (
-                                            <CustomText style={{ fontSize: scale(14), marginBottom: verticalScale(15), marginTop: verticalScale(10) }}>
-                                                This salon currently doesn't have a description.
-                                            </CustomText>
+                                            <Skeleton
+                                                borderRadius={scale(20)}
+                                                height={verticalScale(90)}
+                                            />
+                                        ) : homeDashboardData?.dashboardData?.isJoinedData?.length > 0 ? (
+                                            <LinearGradient
+                                                colors={['#14b8a6', '#0d9488']}
+                                                style={styles.card}
+                                                start={{ x: 0, y: 0 }}
+                                                end={{ x: 1, y: 1 }}
+                                            >
+                                                <View style={styles.topRow}>
+                                                    <View>
+                                                        <View style={{
+                                                            flexDirection: "row",
+                                                            alignItems: "center",
+                                                            gap: scale(10),
+
+                                                        }}>
+                                                            <CustomText
+                                                                style={[styles.title, {}]}
+                                                                numberOfLines={1}
+                                                                ellipsizeMode="tail"
+                                                            >{homeDashboardData?.dashboardData?.isJoinedData?.[0]?.name}</CustomText>
+                                                            {/* <View style={styles.moreWrapper}>
+                                                                <CustomText style={styles.moreText}>+4 more</CustomText>
+                                                            </View> */}
+                                                        </View>
+
+                                                        <CustomText style={styles.subtitle}>{homeDashboardData?.dashboardData?.isJoinedData?.[0]?.barberName}</CustomText>
+                                                    </View>
+                                                    <View>
+                                                        <CustomText style={[styles.title, {
+                                                            marginLeft: "auto"
+                                                        }]}>{homeDashboardData?.dashboardData?.isJoinedData?.[0]?.qPosition === 1 ? "Next" : `#${homeDashboardData?.dashboardData?.isJoinedData?.[0]?.qPosition}`}</CustomText>
+                                                        <CustomText style={styles.subtitle}>~{formatMinutesToHrMin(homeDashboardData?.dashboardData?.isJoinedData?.[0]?.customerEWT)}</CustomText>
+                                                    </View>
+                                                </View>
+
+                                                {/* +4 more text inside the card */}
+
+                                            </LinearGradient>
+                                        ) : (
+                                            <LinearGradient
+                                                colors={['#14b8a6', '#0d9488']}
+                                                style={styles.card}
+                                                start={{ x: 0, y: 0 }}
+                                                end={{ x: 1, y: 1 }}
+                                            >
+                                                <View style={styles.topRow}>
+                                                    <View>
+                                                        <CustomText style={styles.title}>Your Visit, Your Way</CustomText>
+                                                        <CustomText style={styles.subtitle}>Join the queue or book for later.</CustomText>
+                                                    </View>
+                                                    <CalendarIcon color="white" style={styles.icon} />
+                                                </View>
+
+                                                <View style={styles.btnContainer}>
+                                                    <TouchableOpacity
+                                                        onPress={() => router.push("/joinpopup")}
+                                                        style={[styles.joinQueue, {
+                                                            borderWidth: scale(1),
+                                                            borderColor: colors.queueBorder
+                                                        }]} activeOpacity={0.85}>
+                                                        <CustomText style={styles.joinQueueText}>Join Queue</CustomText>
+                                                    </TouchableOpacity>
+
+                                                    <TouchableOpacity
+                                                        onPress={() => {
+                                                            setJoinModes((prev) => ({ ...prev, appointment: true, appointmentType: "Book" }));
+                                                            router.push("/appointmentCalendar");
+                                                        }}
+                                                        style={[styles.bookAhead, {
+                                                            borderWidth: scale(1),
+                                                            borderColor: colors.queueBorder
+                                                        }]} activeOpacity={0.85}>
+                                                        <CustomText style={styles.bookAheadText}>Book</CustomText>
+                                                    </TouchableOpacity>
+                                                </View>
+                                            </LinearGradient >
                                         )
-                                    } */}
+                                    }
 
-                                    {/* <View style={{
-                                        flexDirection: "row",
-                                        gap: verticalScale(10),
-                                        marginVertical: verticalScale(5)
-                                    }}>
-                                        <Pressable
-                                            onPress={() => router.push("/joinpopup")}
-                                            style={[styles.btn, {
-                                                backgroundColor: Colors.modeColor.colorCode, shadowColor: Colors.modeColor.colorCode,
-                                            }]}>
-                                            <CustomText style={{ color: "#fff", fontSize: scale(14) }}>Join Queue</CustomText>
-                                        </Pressable>
-
-                                        <Pressable
-                                            onPress={() => {
-                                                setJoinModes((prev) => ({ ...prev, appointment: true, appointmentType: "Book" }));
-                                                router.push("/appointmentCalendar");
-                                            }}
-                                            style={[styles.btn, {
-                                                backgroundColor: Colors.modeColor.colorCode2,
-                                                shadowColor: Colors.modeColor.colorCode,
-                                                borderColor: Colors.modeColor.colorCode,
-                                                borderWidth: scale(1)
-                                            }]}>
-                                            <CustomText
-                                                style={{
-                                                    color: Colors.modeColor.colorCode,
-                                                    fontSize: scale(14),
-                                                }}>Book Appointment</CustomText>
-                                        </Pressable>
-                                    </View> */}
-
-
-                                    <LinearGradient
-                                        colors={['#14b8a6', '#0d9488']}
-                                        style={styles.card}
-                                        start={{ x: 0, y: 0 }}
-                                        end={{ x: 1, y: 1 }}
-                                    >
-                                        <View style={styles.topRow}>
-                                            <View>
-                                                <CustomText style={styles.title}>Your Visit, Your Way</CustomText>
-                                                <CustomText style={styles.subtitle}>Join the queue or book for later.</CustomText>
-                                            </View>
-                                            <CalendarIcon color="white" style={styles.icon} />
-                                        </View>
-
-                                        <View style={styles.btnContainer}>
-                                            {/* Join Queue Button */}
-                                            <TouchableOpacity
-                                                onPress={() => router.push("/joinpopup")}
-                                                style={[styles.joinQueue, {
-                                                    borderWidth: scale(1),
-                                                    borderColor: colors.queueBorder
-                                                }]} activeOpacity={0.85}>
-                                                <CustomText style={styles.joinQueueText}>Join Queue</CustomText>
-                                            </TouchableOpacity>
-
-                                            {/* Book Ahead Button */}
-                                            <TouchableOpacity
-                                                onPress={() => {
-                                                    setJoinModes((prev) => ({ ...prev, appointment: true, appointmentType: "Book" }));
-                                                    router.push("/appointmentCalendar");
-                                                }}
-                                                style={[styles.bookAhead, {
-                                                    borderWidth: scale(1),
-                                                    borderColor: colors.queueBorder
-                                                }]} activeOpacity={0.85}>
-                                                <CustomText style={styles.bookAheadText}>Book Ahead</CustomText>
-                                            </TouchableOpacity>
-                                        </View>
-                                    </LinearGradient>
 
                                 </>
 
@@ -1206,4 +1213,16 @@ const styles = StyleSheet.create({
         // color: '#374151', // text-gray-700
     },
 
+    moreWrapper: {
+        alignSelf: 'flex-end',
+        backgroundColor: '#0f766e',
+        paddingHorizontal: scale(6),
+        paddingVertical: verticalScale(4),
+        borderRadius: scale(8)
+    },
+    moreText: {
+        color: '#fff',
+        fontSize: moderateScale(12),
+        fontFamily: 'AirbnbCereal_W_Bd',
+    }
 })

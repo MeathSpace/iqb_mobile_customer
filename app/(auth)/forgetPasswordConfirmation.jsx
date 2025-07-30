@@ -95,6 +95,7 @@ const forgetPasswordConfirmation = () => {
                                 placeholder="Enter your password"
                                 placeholderTextColor={colors.secondaryText}
                                 style={[false ? styles.inputFielderror : styles.inputField, {
+                                    fontFamily: "AirbnbCereal_W_Md",
                                     color: colors.text,
                                     flex: 1
                                 }]}
@@ -141,6 +142,7 @@ const forgetPasswordConfirmation = () => {
                                 placeholder="Enter your confirm password"
                                 placeholderTextColor={colors.secondaryText}
                                 style={[false ? styles.inputFielderror : styles.inputField, {
+                                    fontFamily: "AirbnbCereal_W_Md",
                                     color: colors.text,
                                     flex: 1
                                 }]}

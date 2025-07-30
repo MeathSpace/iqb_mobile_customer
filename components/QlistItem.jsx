@@ -102,14 +102,17 @@
 // });
 
 
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
 import { scale, verticalScale } from 'react-native-size-matters';
 import CustomText from './CustomText';
 import { Image } from 'expo-image'
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '@react-navigation/native';
+import axios from 'axios'
+import { BASE_URL } from '@/utils/api';
+import { Toast } from 'toastify-react-native';
 
-const QlistItem = ({ item, index, qlistLength }) => {
+const QlistItem = ({ item, index, qlistLength, setQlistData, setShowHideQueBtn }) => {
 
     const { colors } = useTheme()
     const { authenticatedUser } = useAuth()
@@ -124,14 +127,79 @@ const QlistItem = ({ item, index, qlistLength }) => {
         return `${mins}m`;
     }
 
+    const cancelQueuePressed = (item) => {
+        Alert.alert(
+            "Cancel Queue",
+            "Are you sure you want to cancel this queue?",
+            [
+                {
+                    text: "No",
+                    style: "cancel"
+                },
+                {
+                    text: "Yes",
+                    onPress: async () => {
+                        try {
+                            const cancelQueueData = {
+                                salonId: authenticatedUser?.salonId,
+                                barberId: item?.barberId,
+                                customerEmail: item?.customerEmail,
+                                _id: item?._id
+                            };
+
+                            const { data } = await axios.post(`${BASE_URL}/mobileRoutes/cancelQueueByCustomer`, cancelQueueData);
+
+                            Toast.success(data?.message || "Customer cancelled successfully");
+
+                            setQlistData((prev) => ({ ...prev, loading: true }))
+
+                            const { data: queuelistData } = await axios.get(`${BASE_URL}/mobileRoutes/getQlistBySalonId`, {
+                                params: {
+                                    salonId: authenticatedUser?.salonId,
+                                    customerEmail: authenticatedUser?.email
+                                }
+                            })
+
+                            setQlistData((prev) => ({ ...prev, loading: false, data: queuelistData?.response, success: true, error: null, isJoinedQueue: queuelistData?.isJoinedQueue }))
+
+
+                            setShowHideQueBtn((prev) => ({ ...prev, loading: true }))
+
+                            const { data: showhideQueueBtnDta } = await axios.post(`${BASE_URL}/customer/showHideJoinQueueButton`, {
+                                customerEmail: authenticatedUser?.email
+                            })
+
+                            // console.log(data)
+
+                            setShowHideQueBtn((prev) => ({ ...prev, loading: false, data: showhideQueueBtnDta?.response, success: true, error: null }))
+
+
+                        } catch (error) {
+                            Toast.error(error?.response?.data?.message)
+                            console.log("Canceled queue error ", error?.response?.data);
+                            setQlistData((prev) => ({ ...prev, loading: false, data: null, success: false, error: error }))
+                            setShowHideQueBtn((prev) => ({ ...prev, loading: false, data: null, success: false, error: error }))
+                        }
+                    }
+                }
+            ]
+        );
+    };
+
     return (
-        <View style={[styles.queueItem, {
-            borderBottomColor: index !== qlistLength.length - 1 ? colors.queueBorder : undefined,
-            borderBottomWidth: index !== qlistLength.length - 1 ? scale(1) : 0,
-            borderBottomLeftRadius: index === qlistLength.length - 1 ? scale(12) : 0,
-            borderBottomRightRadius: index === qlistLength.length - 1 ? scale(12) : 0,
-            backgroundColor: authenticatedUser?.email === item?.customerEmail && colors.selected
-        }]}>
+        <TouchableOpacity
+            onPress={() => {
+                if (authenticatedUser?.email === item?.customerEmail) {
+                    cancelQueuePressed(item)
+                }
+            }}
+            style={[styles.queueItem, {
+                borderBottomColor: index !== qlistLength.length - 1 ? colors.queueBorder : undefined,
+                borderBottomWidth: index !== qlistLength.length - 1 ? scale(1) : 0,
+                borderBottomLeftRadius: index === qlistLength.length - 1 ? scale(12) : 0,
+                borderBottomRightRadius: index === qlistLength.length - 1 ? scale(12) : 0,
+                backgroundColor: authenticatedUser?.email === item?.customerEmail && colors.selected
+            }]}>
             <View style={styles.barberContainer}>
                 <Image
                     style={[styles.avatar, {
@@ -165,7 +233,7 @@ const QlistItem = ({ item, index, qlistLength }) => {
                     fontSize: scale(13),
                 }}>~{formatMinutesToHrMin(item.customerEWT)}</CustomText>
             </View>
-        </View>
+        </TouchableOpacity>
     )
 }
 

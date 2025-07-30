@@ -30,11 +30,13 @@ const termService = () => {
       <View style={{
         flexDirection: "row",
         alignItems: "center",
+        gap: scale(3)
       }}>
         <Pressable onPress={() => router.replace("/about")}><ArrowLeftIcon color={colors.text} /></Pressable>
         <CustomText style={{
           flex: 1,
-          textAlign: "center",
+          fontSize: scale(18),
+          // textAlign: "center",
           fontFamily: "AirbnbCereal_W_XBd",
         }}>Terms of Services</CustomText>
       </View>

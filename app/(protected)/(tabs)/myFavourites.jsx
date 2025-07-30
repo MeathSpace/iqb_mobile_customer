@@ -152,11 +152,12 @@ const MyFavourites = () => {
             <View style={{
                 flexDirection: "row",
                 alignItems: "center",
+                gap: scale(3)
             }}>
                 <Pressable onPress={() => router.replace("/account")}><ArrowLeftIcon color={colors.text} /></Pressable>
                 <CustomText style={{
                     flex: 1,
-                    textAlign: "center",
+                    // textAlign: "center",
                     fontFamily: "AirbnbCereal_W_XBd",
                     fontSize: scale(18)
                 }}>My Favorites</CustomText>
@@ -290,6 +291,8 @@ const MyFavourites = () => {
 
                     <View style={{
                         flex: 1,
+                        justifyContent: "center",
+                        alignItems: "center",
                         paddingTop: verticalScale(20),
                     }}>
                         <View style={[styles.noQueueContainer, {

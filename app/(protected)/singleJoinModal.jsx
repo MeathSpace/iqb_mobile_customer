@@ -1,4 +1,4 @@
-import { ActivityIndicator, BackHandler, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Alert, BackHandler, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useCallback, useState } from 'react'
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router';
 import CustomText from '../../components/CustomText';
@@ -102,7 +102,12 @@ const singleJoinModal = () => {
         } catch (error) {
 
             setSingleJoinLoader(false)
-            Toast.error(error?.response?.data?.message)
+            // Toast.error(error?.response?.data?.message)
+            Alert.alert(
+                "Notice",
+                error?.response?.data?.message,
+                [{ text: "OK" }]
+            );
             console.log("Error doing single join ", error)
         }
     }
@@ -129,7 +134,7 @@ const singleJoinModal = () => {
                 }]}>
                 <View style={styles.iconContainer}>
                     <CheckIcon style={{
-                        backgroundColor: colors.background,
+                        backgroundColor: colors.tabBackground,
                         padding: scale(3),
                         borderRadius: scale(50),
                     }}
@@ -147,7 +152,7 @@ const singleJoinModal = () => {
                     {/* Group barber name and pricing together in a styled container */}
                     <View style={{
                         marginTop: verticalScale(5),
-                        backgroundColor: colors.background, // Optional: subtle background to group
+                        backgroundColor: colors.tabBackground, // Optional: subtle background to group
                         padding: scale(8),
                         borderRadius: scale(6),
                         gap: verticalScale(4)

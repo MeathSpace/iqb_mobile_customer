@@ -188,12 +188,13 @@ const About = () => {
     >
       <View style={{
         flexDirection: "row",
-        alignItems: "center"
+        alignItems: "center",
+        gap: scale(3)
       }}>
         <Pressable onPress={() => router.replace("/account")}><ArrowLeftIcon color={colors.text} /></Pressable>
         <CustomText style={{
           flex: 1,
-          textAlign: "center",
+          // textAlign: "center",
           fontSize: scale(18),
           fontFamily: "AirbnbCereal_W_XBd",
         }}>About</CustomText>

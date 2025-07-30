@@ -998,6 +998,9 @@ const editProfile = () => {
     useFocusEffect(
         useCallback(() => {
             const onBackPress = () => {
+                setFullNameError("")
+                setPhoneNumberError("")
+                setDateOfBirthError("")
                 router.push('/account'); // 👈 or replace('/account') if you don’t want to go back to this screen
                 return true; // prevent default behavior
             };
@@ -1424,12 +1427,18 @@ const editProfile = () => {
 
                         <View style={{
                             flexDirection: "row",
-                            alignItems: "center"
+                            alignItems: "center",
+                            gap: scale(3)
                         }}>
-                            <Pressable onPress={() => router.replace("/account")}><ArrowLeftIcon color={colors.text} /></Pressable>
+                            <Pressable onPress={() => {
+                                setFullNameError("")
+                                setPhoneNumberError("")
+                                setDateOfBirthError("")
+                                router.replace("/account")
+                            }}><ArrowLeftIcon color={colors.text} /></Pressable>
                             <CustomText style={{
                                 flex: 1,
-                                textAlign: "center",
+                                // textAlign: "center",
                                 fontSize: scale(18),
                                 fontFamily: "AirbnbCereal_W_XBd",
                             }}>Manage Account</CustomText>
@@ -1510,10 +1519,10 @@ const editProfile = () => {
                                 fontSize: scale(18),
                                 fontFamily: "AirbnbCereal_W_XBd",
                             }}>{authenticatedUser?.name}</CustomText>
-                            <CustomText style={{
+                            <CustomSecondaryText style={{
                                 textAlign: "center",
 
-                            }}>{authenticatedUser?.email}</CustomText>
+                            }}>{authenticatedUser?.email}</CustomSecondaryText>
                         </View>
 
                         {/* <View style={styles.inputWrapper}>
@@ -1604,6 +1613,7 @@ const editProfile = () => {
                                     // borderWidth: scale(1),
                                     // borderColor: "gray",
                                     // fontFamily: "AirbnbCereal_W_Bk",
+                                    fontFamily: "AirbnbCereal_W_Md",
                                     color: colors.text,
                                     backgroundColor: colors.cardColor,
                                     borderWidth: scale(1),
@@ -1658,7 +1668,7 @@ const editProfile = () => {
                             >
                                 <CustomText
                                     style={{
-                                        fontFamily: "AirbnbCereal_W_Bk"
+                                        fontFamily: "AirbnbCereal_W_Md",
                                     }}
                                 >{gender}</CustomText>
 
@@ -1721,7 +1731,7 @@ const editProfile = () => {
                                 initialValue={phoneNumber}
                                 onChangePhoneNumber={(number) => phoneNumberHandler(number)}
                                 onPressFlag={toggleCountryPicker}
-                                textStyle={{ color: colors.text, fontSize: moderateScale(14) }}
+                                textStyle={{ color: colors.text, fontSize: moderateScale(14), fontFamily: "AirbnbCereal_W_Md", }}
                                 style={[styles.inputField, {
                                     // borderWidth: scale(1),
                                     // borderColor: "gray",
@@ -1761,7 +1771,7 @@ const editProfile = () => {
                                     containerButtonStyle={styles.countryPickerButton}
                                     theme={{
                                         ...((colorScheme === 'dark' && DARK_THEME) || {}),
-                                        fontFamily: 'AirbnbCereal_W_Bk',
+                                        fontFamily: "AirbnbCereal_W_Md",
                                     }}
                                 />
                             )}
@@ -1777,6 +1787,7 @@ const editProfile = () => {
                                         // borderWidth: scale(1),
                                         // borderColor: "gray",
                                         // fontFamily: "AirbnbCereal_W_Bk",
+                                        fontFamily: "AirbnbCereal_W_Md",
                                         color: colors.text,
                                         backgroundColor: colors.cardColor,
                                         borderWidth: scale(1),
@@ -1786,8 +1797,8 @@ const editProfile = () => {
                                 ]}
                                 onPress={() => setCalenderModal(true)}
                             >
-                                {!calenderModal && !selectedDate && <CustomText style={{ color: colors.secondaryText, fontFamily: "AirbnbCereal_W_Bk" }}>YYYY-MM-DD</CustomText>}
-                                {!calenderModal && selectedDate && <CustomText style={{ fontFamily: "AirbnbCereal_W_Bk" }}>{selectedDate}</CustomText>}
+                                {!calenderModal && !selectedDate && <CustomText style={{ color: colors.secondaryText, fontFamily: "AirbnbCereal_W_Md", }}>YYYY-MM-DD</CustomText>}
+                                {!calenderModal && selectedDate && <CustomText style={{ fontFamily: "AirbnbCereal_W_Md", }}>{selectedDate}</CustomText>}
                                 <CalendarIcon style={[styles.dateIcon, { color: colors.text }]} />
                             </Pressable>
 

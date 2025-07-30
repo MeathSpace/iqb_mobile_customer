@@ -1324,7 +1324,7 @@ const styles = StyleSheet.create({
     },
     dayBox: {
         width: scale(60),
-        height: verticalScale(100),
+        height: verticalScale(70),
         backgroundColor: "#00B0901A",
         // borderColor: "#DDDDDD",
         // borderWidth: scale(0.6),

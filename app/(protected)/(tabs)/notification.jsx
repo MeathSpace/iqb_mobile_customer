@@ -157,12 +157,13 @@ const notification = () => {
                 <View style={{
                     flexDirection: "row",
                     alignItems: "center",
+                    gap: scale(3)
                 }}>
                     <Pressable onPress={() => router.replace("/home")}><ArrowLeftIcon color={colors.text} /></Pressable>
                     <CustomText style={{
                         flex: 1,
                         fontSize: scale(18),
-                        textAlign: "center",
+                        // textAlign: "center",
                         fontFamily: "AirbnbCereal_W_XBd",
                     }}>Notification</CustomText>
                 </View>
@@ -251,6 +252,7 @@ const notification = () => {
                     ) : (
                         <View style={{
                             flex: 1,
+
                             paddingTop: verticalScale(20),
                         }}>
                             <View style={[styles.noQueueContainer, {

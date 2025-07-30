@@ -180,7 +180,7 @@ const passwordConfirmation = () => {
                                 style={[false ? styles.inputFielderror : styles.inputField, {
                                     // borderWidth: scale(1),
                                     // borderColor: "gray",
-                                    fontFamily: "AirbnbCereal_W_Bk",
+                                    fontFamily: "AirbnbCereal_W_Md",
                                     color: colors.text,
                                     flex: 1
                                 }]}
@@ -240,7 +240,7 @@ const passwordConfirmation = () => {
                                 style={[false ? styles.inputFielderror : styles.inputField, {
                                     // borderWidth: scale(1),
                                     // borderColor: "gray",
-                                    fontFamily: "AirbnbCereal_W_Bk",
+                                    fontFamily: "AirbnbCereal_W_Md",
                                     color: colors.text,
                                     flex: 1
                                 }]}

@@ -339,6 +339,7 @@ const personalInfo = () => {
                                 placeholder="Enter your full name"
                                 placeholderTextColor={colors.secondaryText}
                                 style={[false ? styles.inputFielderror : styles.inputField, {
+                                    fontFamily: "AirbnbCereal_W_Md",
                                     borderWidth: scale(1),
                                     borderColor: colors.queueBorder,
                                     backgroundColor: colors.cardColor,
@@ -388,7 +389,7 @@ const personalInfo = () => {
                             >
                                 <CustomText
                                     style={{
-                                        fontFamily: "AirbnbCereal_W_Bk"
+                                        fontFamily: "AirbnbCereal_W_Md",
                                     }}
                                 >{gender}</CustomText>
 
@@ -449,7 +450,7 @@ const personalInfo = () => {
                                 value={phoneNumber}
                                 onChangePhoneNumber={(number) => phoneNumberHandler(number)}
                                 onPressFlag={toggleCountryPicker}
-                                textStyle={{ color: colors.text, fontSize: moderateScale(14) }}
+                                textStyle={{ color: colors.text, fontSize: moderateScale(14), fontFamily: "AirbnbCereal_W_Md", }}
                                 style={[styles.inputField, {
                                     borderWidth: scale(1),
                                     borderColor: colors.queueBorder,
@@ -499,6 +500,7 @@ const personalInfo = () => {
                                 style={[
                                     false ? styles.inputFielderror : styles.inputDateField,
                                     {
+                                        fontFamily: "AirbnbCereal_W_Md",
                                         borderWidth: scale(1),
                                         borderColor: colors.queueBorder,
                                         backgroundColor: colors.cardColor,
@@ -512,8 +514,8 @@ const personalInfo = () => {
                                     setCalenderModal(true)
                                 }}
                             >
-                                {!calenderModal && !selectedDate && <CustomText style={{ color: colors.secondaryText, fontFamily: "AirbnbCereal_W_Bk" }}>YYYY-MM-DD</CustomText>}
-                                {!calenderModal && selectedDate && <CustomText style={{ fontFamily: "AirbnbCereal_W_Bk" }}>{selectedDate}</CustomText>}
+                                {!calenderModal && !selectedDate && <CustomText style={{ color: colors.secondaryText, fontFamily: "AirbnbCereal_W_Md" }}>YYYY-MM-DD</CustomText>}
+                                {!calenderModal && selectedDate && <CustomText style={{ fontFamily: "AirbnbCereal_W_Md" }}>{selectedDate}</CustomText>}
                                 <CalendarIcon style={[styles.dateIcon, { color: colors.text }]} />
                             </Pressable>
 

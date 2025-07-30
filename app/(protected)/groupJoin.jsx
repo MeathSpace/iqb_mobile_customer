@@ -1293,7 +1293,7 @@ const GroupJoin = () => {
                         fontSize: scale(20),
                     }}
                 >
-                    Group Join
+                    Group Join (Services)
                 </CustomText>
             </View>
 
