@@ -1345,6 +1345,16 @@ const editProfile = () => {
 
     const [openGenderDrop, setOpenGenderDrop] = useState(false)
 
+
+    const ddmmformatDate = (dateString) => {
+        const date = new Date(dateString);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+    }
+
+
     return (
         <KeyboardAvoidingView
             style={{ flex: 1 }}
@@ -1797,8 +1807,8 @@ const editProfile = () => {
                                 ]}
                                 onPress={() => setCalenderModal(true)}
                             >
-                                {!calenderModal && !selectedDate && <CustomText style={{ color: colors.secondaryText, fontFamily: "AirbnbCereal_W_Md", }}>YYYY-MM-DD</CustomText>}
-                                {!calenderModal && selectedDate && <CustomText style={{ fontFamily: "AirbnbCereal_W_Md", }}>{selectedDate}</CustomText>}
+                                {!calenderModal && !selectedDate && <CustomText style={{ color: colors.secondaryText, fontFamily: "AirbnbCereal_W_Md", }}>DD/MM/YYYY</CustomText>}
+                                {!calenderModal && selectedDate && <CustomText style={{ fontFamily: "AirbnbCereal_W_Md", }}>{ddmmformatDate(selectedDate)}</CustomText>}
                                 <CalendarIcon style={[styles.dateIcon, { color: colors.text }]} />
                             </Pressable>
 

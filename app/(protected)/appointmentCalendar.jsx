@@ -347,20 +347,6 @@ const appointmentCalendar = () => {
             Toast.error("Please select a date")
             return
         }
-
-
-        // router.push({
-        //     pathname: "/joinConfirmation",
-        //     params: {
-        //         selectedCustomerBookAppointmentServices: JSON.stringify(selectCustomerServices),
-        //         selectedCustomerBookAppointmentBarber: JSON.stringify(selectedCustomerBarber),
-        //         selectedBookCalenderTimeslot: JSON.stringify(selectedEngageTimeSlot),
-        //         selectedBookCalenderDate: JSON.stringify(selectedCalenderDate),
-        //         selectedBookAppointmentNote: JSON.stringify(appointmentNote),
-        //         bookAppointment: true
-        //     },
-        // });
-
         router.push({
             pathname: "/appointmentCalenderModal",
             params: {
@@ -373,6 +359,11 @@ const appointmentCalendar = () => {
             },
         });
     }
+
+    // setContinueService(true)
+    // setScrolling(false)
+    // setActiveSection("barber")
+    // setAddIconPressCount(0)
 
     function formatMinutesToHrMin(totalMinutes) {
         const hours = Math.floor(totalMinutes / 60);
@@ -991,21 +982,8 @@ const appointmentCalendar = () => {
                             marginBottom: -verticalScale(15),
                             // position: "absolute",
                         }}>
-                            {/* <View>
-                                <CustomText
-                                    style={{
-                                        fontSize: scale(18),
-                                        fontFamily: "AirbnbCereal_W_Blk"
-                                    }}
-                                >{authenticatedUser?.currency} {selectCustomerServices.reduce((acc, item) => acc + item.servicePrice, 0)}</CustomText>
-                                <CustomText
-                                    style={{
-                                        fontSize: scale(12),
-                                        color: "gray"
-                                    }}
-                                >{selectCustomerServices.length} services | {formatMinutesToHrMin(selectCustomerServices.reduce((acc, item) => acc + item.serviceEWT, 0))}</CustomText>
-                            </View> */}
 
+                            {/* 
                             <Pressable
                                 onPress={() => {
                                     setContinueService(true)
@@ -1026,7 +1004,7 @@ const appointmentCalendar = () => {
                                 <CustomText style={{
                                     color: "#fff", fontSize: scale(16)
                                 }}>Continue</CustomText>
-                            </Pressable>
+                            </Pressable> */}
                         </View>
                     )
                 }
@@ -1068,8 +1046,9 @@ const appointmentCalendar = () => {
                         style={{
                             flexDirection: "row",
                             alignItems: "center",
+                            height: verticalScale(40),
                             gap: scale(10),
-                            marginBottom: verticalScale(20),
+                            // marginBottom: verticalScale(20),
                         }}
                     >
                         <Pressable onPress={() => router.replace("/appointment")}>
@@ -1130,42 +1109,25 @@ const appointmentCalendar = () => {
                         )}
                     </View>
 
-                    {/* {!scrolling && (
+                    {!scrolling && (
                         <View style={styles.footer}>
-                            <Pressable
-                                onPress={() => {
-                                    // router.replace("/appointment")
-                                    router.dismiss()
-                                }}
-                                style={styles.searchButton}>
-                                <CustomText style={{ color: '#fff' }}>Back</CustomText>
-                            </Pressable>
+                            <View />
                             <Pressable
                                 onPress={continueHandler}
                                 style={styles.searchButton}>
-                                <CustomText style={{ color: '#fff' }}>Next</CustomText>
+                                <CustomText style={{ color: '#fff' }}>Confirm</CustomText>
                             </Pressable>
                         </View>
-                    )} */}
+                    )}
 
 
-
-                    {/* Footer */}
-                    {selectCustomerServices.length > 0 ? (
+                    {/* {selectCustomerServices.length > 0 ? (
                         <View
                             style={{
                                 backgroundColor: colors.cardColor,
                                 borderTopColor: colors.queueBorder,
                                 borderTopWidth: scale(1),
-                                // height:
-                                //     Platform.OS === "ios"
-                                //         ? insets.bottom + verticalScale(60)
-                                //         : verticalScale(80),
                                 padding: scale(10),
-                                // position: "absolute",
-                                // bottom: 0,
-                                // left: 0,
-                                // right: 0,
                                 flexDirection: "row",
                                 alignItems: "center",
                                 justifyContent: "space-between",
@@ -1175,7 +1137,6 @@ const appointmentCalendar = () => {
                                 <CustomText
                                     style={{ fontFamily: "AirbnbCereal_W_XBd", fontSize: scale(18) }}
                                 >
-                                    {/* {authenticatedUser?.currency} {totalPrice.toFixed(2)} */}
                                     {authenticatedUser?.currency} {selectCustomerServices.reduce((acc, item) => acc + item.servicePrice, 0)}
                                 </CustomText>
                                 <CustomSecondaryText>
@@ -1184,18 +1145,9 @@ const appointmentCalendar = () => {
                                         selectCustomerServices.reduce((acc, item) => acc + item.serviceEWT, 0)
                                     )}
                                 </CustomSecondaryText>
-
                             </View>
 
                             <TouchableOpacity
-                                // onPress={() => {
-                                //     // router.push({
-                                //     //     pathname: "/singleJoinBarber",
-                                //     //     params: {
-                                //     //         data: JSON.stringify(selectedServices),
-                                //     //     },
-                                //     // });
-                                // }}
                                 onPress={continueHandler}
                                 style={styles.queueButton}
                                 activeOpacity={0.85}
@@ -1203,7 +1155,7 @@ const appointmentCalendar = () => {
                                 <CustomText style={styles.queueButtonText}>Continue</CustomText>
                             </TouchableOpacity>
                         </View>
-                    ) : null}
+                    ) : null} */}
 
                 </KeyboardAvoidingView>
             </SafeAreaView>
@@ -1216,48 +1168,23 @@ export default appointmentCalendar
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        // backgroundColor: '#00B0901A',
-        paddingHorizontal: scale(15),
+        // paddingHorizontal: scale(15),
     },
     boxOpenWrapper: {
-        // backgroundColor: '#fff',
         borderRadius: scale(20),
         height: verticalScale(300),
-        padding: scale(25),
-
-        // iOS shadow
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 1,
-        },
-        shadowOpacity: 0.3,
-        shadowRadius: 3,
-        padding: scale(25),
-
-        elevation: 3,
+        padding: scale(20),
     },
     boxCloseWrapper: {
         height: verticalScale(60),
-        // backgroundColor: '#fff',
         borderRadius: scale(15),
         paddingHorizontal: scale(25),
         justifyContent: 'center',
-
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 1,
-        },
-        shadowOpacity: 0.3,
-        shadowRadius: 3,
-        elevation: 3,
     },
     footer: {
         flexDirection: 'row',
         alignItems: 'center',
         justifyContent: 'space-between',
-        // marginVertical: verticalScale(15),
     },
     clearAll: {
         textDecorationLine: 'underline',
@@ -1271,47 +1198,29 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
 
-
-
-
-
-
-
     serviceItem: {
         width: "100%",
         height: verticalScale(124),
-        // borderWidth: scale(0.5),
-        // borderColor: "#D2D2D2",
-        // borderRadius: scale(8),
         paddingVertical: verticalScale(8),
-        // paddingHorizontal: scale(10),
         backgroundColor: "#fff",
-        // elevation: 1
     },
 
 
     barberItem: {
         width: "100%",
         height: verticalScale(145),
-        // borderWidth: scale(0.5),
-        // borderColor: "#D2D2D2",
         borderRadius: scale(8),
         paddingVertical: verticalScale(8),
-        // paddingHorizontal: scale(10),
         backgroundColor: "#fff",
-        // elevation: 1
     },
 
     navButtons: {
         flexDirection: 'row',
         justifyContent: 'center',
         gap: scale(10)
-        // marginBottom: 10,
     },
     navButton: {
         backgroundColor: "#00B0901A",
-        // borderColor: '#14b8a6',
-        // borderWidth: scale(1),
         width: scale(30),
         height: scale(30),
         borderRadius: scale(25),
@@ -1326,8 +1235,6 @@ const styles = StyleSheet.create({
         width: scale(60),
         height: verticalScale(70),
         backgroundColor: "#00B0901A",
-        // borderColor: "#DDDDDD",
-        // borderWidth: scale(0.6),
         borderRadius: scale(4),
         alignItems: 'center',
         justifyContent: 'center',

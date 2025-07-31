@@ -36,22 +36,106 @@ const Map = () => {
     const mapRef = useRef(null);
 
 
-    useEffect(() => {
-        (async () => {
-            const { status } = await Location.requestForegroundPermissionsAsync();
-            if (status !== 'granted') {
-                Alert.alert('Permission denied', 'Location access is required to show your position.');
-                return;
-            }
+    // useEffect(() => {
+    //     (async () => {
+    //         const { status } = await Location.requestForegroundPermissionsAsync();
+    //         if (status !== 'granted') {
+    //             Alert.alert('Permission denied', 'Location access is required to show your position.');
+    //             return;
+    //         }
 
-            const location = await Location.getCurrentPositionAsync({});
-            setRegion({
-                latitude: location.coords.latitude,
-                longitude: location.coords.longitude,
-                latitudeDelta: 0.015,
-                longitudeDelta: 0.0121,
-            });
-        })();
+    //         const location = await Location.getCurrentPositionAsync({});
+    //         setRegion({
+    //             latitude: location.coords.latitude,
+    //             longitude: location.coords.longitude,
+    //             latitudeDelta: 0.015,
+    //             longitudeDelta: 0.0121,
+    //         });
+
+    //         const { data } = await axios.get(`${BASE_URL}/mobileRoutes/getSalonsByLocation`, {
+    //             params: {
+    //                 latitude: location.coords.latitude,
+    //                 longitude: location.coords.longitude,
+    //             }
+    //         })
+
+    //         setSearchCitySalons((prev) => ({ ...prev, loading: false, data: data?.response, success: true, error: null }))
+
+    //     })();
+    // }, []);
+
+
+    useEffect(() => {
+        let isMounted = true;
+
+        const fetchLocationAndSalons = async () => {
+            try {
+                // Request permission
+                const { status } = await Location.requestForegroundPermissionsAsync();
+                if (status !== 'granted') {
+                    if (isMounted) {
+                        Alert.alert(
+                            'Permission Denied',
+                            'Location access is required to show your position.'
+                        );
+                        setSearchCitySalons((prev) => ({
+                            ...prev,
+                            loading: false,
+                            error: 'Permission denied',
+                            success: false,
+                        }));
+                    }
+                    return;
+                }
+
+                // Get location
+                const location = await Location.getCurrentPositionAsync({});
+                const { latitude, longitude } = location.coords;
+
+                if (isMounted) {
+                    setRegion({
+                        latitude,
+                        longitude,
+                        latitudeDelta: 0.015,
+                        longitudeDelta: 0.0121,
+                    });
+                }
+
+                // Fetch salons by location
+                const { data } = await axios.get(`${BASE_URL}/mobileRoutes/getSalonsByLocation`, {
+                    params: { latitude, longitude },
+                    timeout: 10000, // optional timeout for safety
+                });
+
+                if (isMounted) {
+                    setSearchCitySalons((prev) => ({
+                        ...prev,
+                        loading: false,
+                        data: data?.response || [],
+                        success: true,
+                        error: null,
+                    }));
+                }
+            } catch (error) {
+                if (isMounted) {
+                    console.error('Error fetching location or salons:', error.message);
+                    setSearchCitySalons((prev) => ({
+                        ...prev,
+                        loading: false,
+                        data: [],
+                        success: false,
+                        error: error?.message || 'An unexpected error occurred',
+                    }));
+                }
+            }
+        };
+
+        setSearchCitySalons((prev) => ({ ...prev, loading: true, error: null, success: false }));
+        fetchLocationAndSalons();
+
+        return () => {
+            isMounted = false;
+        };
     }, []);
 
 
@@ -211,232 +295,6 @@ const Map = () => {
         }
     }
 
-    const serviceCategories = [
-        {
-            name: "Cutting",
-            image: require("../assets/images/1.png"),
-            services: [
-                {
-                    name: "Hair Cut",
-                    vip: true,
-                    est: 15,
-                    price: 49,
-                    serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
-                    image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-                },
-                {
-                    name: "Hair Cut",
-                    vip: true,
-                    est: 15,
-                    price: 49,
-                    serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
-                    image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-                },
-            ]
-        },
-        {
-            name: "Trim",
-            image: require("../assets/images/2.png"),
-            services: [
-                {
-                    name: "Hair Cut",
-                    vip: true,
-                    est: 15,
-                    price: 49,
-                    serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
-                    image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-                },
-                {
-                    name: "Hair Cut",
-                    vip: true,
-                    est: 15,
-                    price: 49,
-                    serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
-                    image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-                },
-            ]
-        },
-        {
-            name: "Styling",
-            image: require("../assets/images/1.png"),
-            services: [
-                {
-                    name: "Hair Cut",
-                    vip: true,
-                    est: 15,
-                    price: 49,
-                    serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
-                    image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-                },
-                {
-                    name: "Hair Cut",
-                    vip: true,
-                    est: 15,
-                    price: 49,
-                    serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
-                    image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-                },
-            ]
-        },
-        {
-            name: "Hair Dye",
-            image: require("../assets/images/4.png"),
-            services: [
-                {
-                    name: "Hair Cut",
-                    vip: true,
-                    est: 15,
-                    price: 49,
-                    serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
-                    image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-                },
-                {
-                    name: "Hair Cut",
-                    vip: true,
-                    est: 15,
-                    price: 49,
-                    serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
-                    image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-                },
-            ]
-        },
-
-        {
-            name: "More",
-            image: require("../assets/images/5.png"),
-            services: [
-                {
-                    name: "Hair Cut",
-                    vip: true,
-                    est: 15,
-                    price: 49,
-                    serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
-                    image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-                },
-                {
-                    name: "Hair Cut",
-                    vip: true,
-                    est: 15,
-                    price: 49,
-                    serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
-                    image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-                },
-            ]
-        },
-        {
-            name: "Cutting",
-            image: require("../assets/images/6.png"),
-            services: [
-                {
-                    name: "Hair Cut",
-                    vip: true,
-                    est: 15,
-                    price: 49,
-                    serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
-                    image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-                },
-                {
-                    name: "Hair Cut",
-                    vip: true,
-                    est: 15,
-                    price: 49,
-                    serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
-                    image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-                },
-            ]
-        },
-        {
-            name: "Trim",
-            image: require("../assets/images/7.png"),
-            services: [
-                {
-                    name: "Hair Cut",
-                    vip: true,
-                    est: 15,
-                    price: 49,
-                    serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
-                    image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-                },
-                {
-                    name: "Hair Cut",
-                    vip: true,
-                    est: 15,
-                    price: 49,
-                    serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
-                    image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-                },
-            ]
-        },
-        {
-            name: "Trim",
-            image: require("../assets/images/2.png"),
-            services: [
-                {
-                    name: "Hair Cut",
-                    vip: true,
-                    est: 15,
-                    price: 49,
-                    serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
-                    image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-                },
-                {
-                    name: "Hair Cut",
-                    vip: true,
-                    est: 15,
-                    price: 49,
-                    serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
-                    image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-                },
-            ]
-        },
-        // {
-        //     name: "Styling",
-        //     image: require("../assets/images/1.png"),
-        //     services: [
-        //         {
-        //             name: "Hair Cut",
-        //             vip: true,
-        //             est: 15,
-        //             price: 49,
-        //             serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
-        //             image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-        //         },
-        //         {
-        //             name: "Hair Cut",
-        //             vip: true,
-        //             est: 15,
-        //             price: 49,
-        //             serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
-        //             image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-        //         },
-        //     ]
-        // },
-        // {
-        //     name: "Cutting",
-        //     image: require("../assets/images/4.png"),
-        //     services: [
-        //         {
-        //             name: "Hair Cut",
-        //             vip: true,
-        //             est: 15,
-        //             price: 49,
-        //             serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
-        //             image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-        //         },
-        //         {
-        //             name: "Hair Cut",
-        //             vip: true,
-        //             est: 15,
-        //             price: 49,
-        //             serviceDesc: "Lorem ipsum dolor sit amet consectetur adipisicing elit. Quos, ut asperiores nesciunt obcaecati vel veritatis voluptate nulla accusamus iste in odio, eos aliquam saepe officiis architecto at, doloremque suscipit! Voluptatem error illum rem veritatis ea consectetur repellendus, repudiandae possimus ullam perferendis sequi a, quos explicabo tenetur quod vitae consequatur similique numquam neque eos voluptatibus. Saepe facere velit officia numquam, sed harum totam magnam voluptate accusamus dicta, aliquid rerum ab dignissimos rem fugiat sunt aliquam nihil corrupti! Commodi, facere minus molestiae, eius ducimus deleniti aut et error, sed optio tempore. Culpa, quisquam eum soluta voluptates dignissimos aut dolorem quo mollitia quos, nostrum quis pariatur. Molestias, beatae unde aut reiciendis distinctio ullam quos enim, non dolorum dignissimos adipisci est alias nam quibusdam maiores ducimus in vitae eos maxime corporis eius aperiam. Nesciunt ut ipsum, qui labore ullam quisquam dolor animi quidem odit facilis sed ipsa magni a fugiat sint facere iure ex culpa quaerat neque optio distinctio natus magnam aut. Adipisci, delectus praesentium. Adipisci recusandae vel, accusantium repellat commodi nesciunt voluptatum pariatur eum sapiente, perferendis dolores similique a, eveniet ratione? Iste, itaque. Nihil beatae autem laboriosam excepturi culpa, repudiandae nostrum repellat laudantium, amet impedit architecto quos sit iure? Nostrum quia iste adipisci.",
-        //             image: "https://t3.ftcdn.net/jpg/02/99/04/20/360_F_299042079_vGBD7wIlSeNl7vOevWHiL93G4koMM967.jpg",
-        //         },
-        //     ]
-        // },
-
-    ]
-
-
     // Salon Info for connect Salon
 
     const [salonInfoData, setSalonInfoData] = useState({
@@ -572,45 +430,6 @@ const Map = () => {
         }, [serviceCategorySelected, selectecConnectSalonId])
     )
 
-    const [selectCustomerServices, setSelectedCustomerServices] = useState([])
-    const [selectedCustomerBarber, setSelectedCustomerBarber] = useState(null)
-
-    const addServiceHandler = (service) => {
-        const updatedSalonServices = salonServicesCategoryData?.data?.map((item) => {
-            return item?.serviceId === service?.serviceId ? { ...service, selected: true } : item
-        })
-
-        setSalonServicesCategoryData({
-            data: updatedSalonServices,
-            loading: false,
-            error: null,
-            success: false
-        })
-
-        setSelectedCustomerServices([...selectCustomerServices, service])
-    }
-
-    const removeServiceHandler = (service) => {
-        const updatedSalonServices = salonServicesCategoryData?.data?.map((item) => {
-            return item?.serviceId === service?.serviceId ? { ...service, selected: false } : item
-        })
-
-        setSalonServicesCategoryData({
-            data: updatedSalonServices,
-            loading: false,
-            error: null,
-            success: false
-        })
-
-        setSelectedCustomerServices((prev) => {
-
-            const filteredArray = prev.filter((item) => {
-                return item?.serviceId !== service?.serviceId
-            })
-
-            return filteredArray
-        })
-    }
 
     const [favouriteLoader, setFavouriteLoader] = useState(false)
 
@@ -637,14 +456,10 @@ const Map = () => {
                 }
             });
 
-            // Toast.success("Successfully added to favourites")
-
             Alert.alert("Success", "Successfully added to favourites");
 
         } catch (error) {
             setFavouriteLoader(false)
-            // Toast.error(error?.response?.data?.message);
-            // Toast doesnot come in the modal
             Alert.alert("Error", error?.response?.data?.message || "Something went wrong");
             console.log("Error in favourite salon ", error?.response?.data);
         }
@@ -664,15 +479,8 @@ const Map = () => {
     const hasUnsavedChanges = true
 
     usePreventRemove(
-        hasUnsavedChanges, // This boolean determines if removal should be prevented
+        hasUnsavedChanges,
         ({ data }) => {
-            // The action is still passed, but we're choosing not to dispatch it,
-            // effectively making "going back" impossible through these means.
-            // Alert.alert(
-            //     'Cannot Go Back',
-            //     'You cannot go back during the signup flow. Please complete the current step.',
-            //     [{ text: 'OK', onPress: () => null }] // Only an 'OK' button
-            // );
         }
     );
 
@@ -711,13 +519,14 @@ const Map = () => {
                                             if (salon?.location?.coordinates?.latitude && salon?.location?.coordinates?.longitude) {
                                                 return (
                                                     <Marker
-                                                        key={index}
+                                                        key={salon._id}
                                                         coordinate={{
                                                             latitude: salon?.location?.coordinates?.latitude,
                                                             longitude: salon?.location?.coordinates?.longitude,
                                                         }}
                                                         title={salon.salonName}
                                                         description={salon.address}
+                                                        tracksViewChanges={false}
                                                         onPress={() => {
                                                             setSelectedMarker(salon.salonId)
                                                         }}
@@ -788,413 +597,393 @@ const Map = () => {
                         visible={selectedCustomerSalon.open}
                         onRequestClose={() => setSelectedCustomerSalon({ open: false, data: {} })}
                     >
-                        <View
+
+                        <SafeAreaView
                             style={{
                                 flex: 1,
                                 justifyContent: "center",
                                 alignItems: "center",
+                                backgroundColor: colors.background
                             }}
                         >
-                            <SafeAreaView>
-                                <GestureHandlerRootView style={[styles.container, {
-                                    backgroundColor: colors.background,
-                                }]}>
+                            <GestureHandlerRootView style={[styles.container, {
+                                backgroundColor: colors.background,
+                            }]}>
+
+                                {
+                                    salonInfoData?.loading ? (
+                                        <Skeleton
+                                            height={verticalScale(200)}
+                                            width={scale(400)}
+                                        />
+                                    ) : salonInfoData?.data?.salonInfo?.gallery?.length > 0 ? (
+                                        <View style={{ position: 'relative' }}>
+                                            <Pressable
+                                                onPress={() => setSelectedCustomerSalon({ open: false, data: {} })}
+                                                style={{
+                                                    position: 'absolute',
+                                                    top: verticalScale(10),
+                                                    left: scale(10),
+                                                    zIndex: 10,
+                                                    backgroundColor: colors.background,
+                                                    borderWidth: scale(1),
+                                                    borderColor: colors.queueBorder,
+                                                    height: scale(40),
+                                                    width: scale(40),
+                                                    borderRadius: scale(30),
+                                                    justifyContent: "center",
+                                                    alignItems: "center"
+                                                }}
+                                            >
+                                                <ArrowLeftIcon color={colors.text} />
+                                            </Pressable>
+
+
+                                            <Pressable
+                                                disabled={favouriteLoader}
+                                                onPress={addToFavourites}
+                                                style={{
+                                                    width: scale(30),
+                                                    height: scale(30),
+                                                    justifyContent: "center",
+                                                    alignItems: "center",
+                                                    borderRadius: scale(4),
+                                                    position: 'absolute',
+                                                    top: verticalScale(10),
+                                                    right: scale(10),
+                                                    zIndex: 10,
+                                                    backgroundColor: colors.background,
+                                                    borderWidth: scale(1),
+                                                    borderColor: colors.queueBorder,
+                                                    height: scale(40),
+                                                    width: scale(40),
+                                                    borderRadius: scale(30),
+                                                    justifyContent: "center",
+                                                    alignItems: "center"
+                                                }}
+                                            >
+
+                                                {
+                                                    salonInfoData?.data?.salonInfo?.isFavourite ? <HeartFilledIcon size={scale(20)} color='#E11D48' /> : <HeartIcon size={scale(16)} color='#E11D48' />
+                                                }
+                                            </Pressable>
+
+                                            <FlatList
+                                                data={salonInfoData?.data?.salonInfo?.gallery?.slice(0, 5)}
+                                                style={{
+                                                    position: "relative"
+                                                }}
+                                                renderItem={({ item }) => <SalonItem item={item} />}
+                                                keyExtractor={item => item._id}
+                                                ref={flatlistRef}
+                                                horizontal={true}
+                                                showsHorizontalScrollIndicator={false}
+                                                // snapToAlignment="start"
+                                                decelerationRate="fast"
+                                                snapToInterval={scale(400)}
+                                                pagingEnabled={true}
+                                                onMomentumScrollEnd={(event) => {
+                                                    const offsetX = event.nativeEvent.contentOffset.x;
+                                                    const index = Math.round(offsetX / scale(400));
+                                                    setCurrentIndex(index);
+                                                }}
+                                                initialNumToRender={3}
+                                                maxToRenderPerBatch={3}
+                                            />
+                                            <View
+                                                style={{
+                                                    position: "absolute",
+                                                    bottom: Platform.OS === "ios" ? verticalScale(40) : verticalScale(30),
+                                                    alignSelf: "center",
+                                                    flexDirection: "row",
+                                                    gap: scale(8),
+                                                    alignItems: "center"
+                                                }}
+                                            >
+                                                {
+                                                    salonInfoData?.data?.salonInfo?.gallery?.slice(0, 5)?.map((item, index) => {
+                                                        return (
+                                                            <Pressable
+                                                                onPress={() => {
+                                                                    setCurrentIndex(index);
+                                                                    flatlistRef.current?.scrollToIndex({ animated: true, index });
+                                                                }}
+                                                                key={index}
+                                                                style={{
+                                                                    width: index === currentIndex ? scale(25) : scale(10),
+                                                                    height: scale(10),
+                                                                    borderRadius: scale(30),
+                                                                    backgroundColor: index === currentIndex ? Colors.modeColor.colorCode : "#fff"
+                                                                }}
+                                                            ></Pressable>
+                                                        )
+                                                    })
+                                                }
+
+                                            </View>
+                                        </View>
+
+                                    ) : (
+                                        <View
+                                            style={{
+                                                width: "100%",
+                                                height: verticalScale(200),
+                                                position: 'relative'
+                                            }}
+                                        >
+                                            <Image
+                                                style={{
+                                                    width: scale(350),
+                                                    height: verticalScale(200),
+                                                }}
+                                                source={require('@/assets/images/dummygallery.jpg')}
+                                                contentFit="cover"
+                                                transition={300}
+                                            />
+
+                                            <Pressable
+                                                onPress={() => setSelectedCustomerSalon({ open: false, data: {} })}
+                                                style={{
+                                                    position: 'absolute',
+                                                    top: verticalScale(10),
+                                                    left: scale(10),
+                                                    zIndex: 10,
+                                                    backgroundColor: colors.background,
+                                                    borderWidth: scale(1),
+                                                    borderColor: colors.queueBorder,
+                                                    height: scale(40),
+                                                    width: scale(40),
+                                                    borderRadius: scale(30),
+                                                    justifyContent: "center",
+                                                    alignItems: "center"
+                                                }}
+                                            >
+                                                <ArrowLeftIcon color={colors.text} />
+                                            </Pressable>
+
+
+                                            <Pressable
+                                                disabled={favouriteLoader}
+                                                onPress={addToFavourites}
+                                                style={{
+                                                    width: scale(30),
+                                                    height: scale(30),
+                                                    justifyContent: "center",
+                                                    alignItems: "center",
+                                                    borderRadius: scale(4),
+                                                    position: 'absolute',
+                                                    top: verticalScale(10),
+                                                    right: scale(10),
+                                                    zIndex: 10,
+                                                    backgroundColor: colors.background,
+                                                    borderWidth: scale(1),
+                                                    borderColor: colors.queueBorder,
+                                                    height: scale(40),
+                                                    width: scale(40),
+                                                    borderRadius: scale(30),
+                                                    justifyContent: "center",
+                                                    alignItems: "center"
+                                                }}
+                                            >
+
+                                                {
+                                                    salonInfoData?.data?.salonInfo?.isFavourite ? <HeartFilledIcon size={scale(20)} color='#E11D48' /> : <HeartIcon size={scale(16)} color='#E11D48' />
+                                                }
+                                            </Pressable>
+                                        </View>
+                                    )
+                                }
+
+                                <BottomSheet
+                                    ref={sheetRef}
+                                    index={0}
+                                    snapPoints={Platform.OS === "ios" ? ["72%", "90%"] : ["73%", "87%"]}
+                                    enableDynamicSizing={false}
+                                    backgroundStyle={{
+                                        backgroundColor: colors.background,
+                                        borderTopLeftRadius: scale(20),
+                                        borderTopRightRadius: scale(20),
+                                    }}
+                                    handleIndicatorStyle={{
+                                        backgroundColor: colors.secondaryText
+                                    }}
+                                // onChange={handleSheetChange}
+                                >
+
 
                                     {
                                         salonInfoData?.loading ? (
-                                            <Skeleton
-                                                height={verticalScale(200)}
-                                                width={scale(400)}
-                                            />
-                                        ) : salonInfoData?.data?.salonInfo?.gallery?.length > 0 ? (
-                                            <View style={{ position: 'relative' }}>
-                                                <Pressable
-                                                    onPress={() => setSelectedCustomerSalon({ open: false, data: {} })}
-                                                    style={{
-                                                        position: 'absolute',
-                                                        top: verticalScale(10),
-                                                        left: scale(10),
-                                                        zIndex: 10,
-                                                        backgroundColor: colors.background,
-                                                        borderWidth: scale(1),
-                                                        borderColor: colors.queueBorder,
-                                                        height: scale(40),
-                                                        width: scale(40),
-                                                        borderRadius: scale(30),
-                                                        justifyContent: "center",
-                                                        alignItems: "center"
-                                                    }}
-                                                >
-                                                    <ArrowLeftIcon color={colors.text} />
-                                                </Pressable>
-
-
-                                                <Pressable
-                                                    disabled={favouriteLoader}
-                                                    onPress={addToFavourites}
-                                                    style={{
-                                                        width: scale(30),
-                                                        height: scale(30),
-                                                        justifyContent: "center",
-                                                        alignItems: "center",
-                                                        borderRadius: scale(4),
-                                                        position: 'absolute',
-                                                        top: verticalScale(10),
-                                                        right: scale(10),
-                                                        zIndex: 10,
-                                                        backgroundColor: colors.background,
-                                                        borderWidth: scale(1),
-                                                        borderColor: colors.queueBorder,
-                                                        height: scale(40),
-                                                        width: scale(40),
-                                                        borderRadius: scale(30),
-                                                        justifyContent: "center",
-                                                        alignItems: "center"
-                                                    }}
-                                                >
-
-                                                    {
-                                                        salonInfoData?.data?.salonInfo?.isFavourite ? <HeartFilledIcon size={scale(20)} color='#E11D48' /> : <HeartIcon size={scale(16)} color='#E11D48' />
-                                                    }
-                                                </Pressable>
-
-                                                <FlatList
-                                                    data={salonInfoData?.data?.salonInfo?.gallery?.slice(0, 5)}
-                                                    style={{
-                                                        position: "relative"
-                                                    }}
-                                                    renderItem={({ item }) => <SalonItem item={item} />}
-                                                    keyExtractor={item => item._id}
-                                                    ref={flatlistRef}
-                                                    horizontal={true}
-                                                    showsHorizontalScrollIndicator={false}
-                                                    // snapToAlignment="start"
-                                                    decelerationRate="fast"
-                                                    snapToInterval={scale(400)}
-                                                    pagingEnabled={true}
-                                                    onMomentumScrollEnd={(event) => {
-                                                        const offsetX = event.nativeEvent.contentOffset.x;
-                                                        const index = Math.round(offsetX / scale(400));
-                                                        setCurrentIndex(index);
-                                                    }}
-                                                    initialNumToRender={3}
-                                                    maxToRenderPerBatch={3}
-                                                />
+                                            <View style={{ flex: 1, padding: scale(10) }}>
+                                                <Skeleton height={verticalScale(60)} style={{ marginBottom: verticalScale(10) }} />
+                                                <Skeleton height={verticalScale(60)} style={{ marginBottom: verticalScale(10) }} />
+                                                <Skeleton height={verticalScale(128)} style={{ marginBottom: verticalScale(10) }} />
+                                                <Skeleton height={verticalScale(60)} style={{ marginBottom: verticalScale(10) }} />
+                                            </View>
+                                        ) : (
+                                            <>
                                                 <View
                                                     style={{
-                                                        position: "absolute",
-                                                        bottom: Platform.OS === "ios" ? verticalScale(40) : verticalScale(30),
-                                                        alignSelf: "center",
                                                         flexDirection: "row",
-                                                        gap: scale(8),
-                                                        alignItems: "center"
-                                                    }}
-                                                >
-                                                    {
-                                                        salonInfoData?.data?.salonInfo?.gallery?.slice(0, 5)?.map((item, index) => {
-                                                            return (
-                                                                <Pressable
-                                                                    onPress={() => {
-                                                                        setCurrentIndex(index);
-                                                                        flatlistRef.current?.scrollToIndex({ animated: true, index });
-                                                                    }}
-                                                                    key={index}
-                                                                    style={{
-                                                                        width: index === currentIndex ? scale(25) : scale(10),
-                                                                        height: scale(10),
-                                                                        borderRadius: scale(30),
-                                                                        backgroundColor: index === currentIndex ? Colors.modeColor.colorCode : "#fff"
-                                                                    }}
-                                                                ></Pressable>
-                                                            )
-                                                        })
-                                                    }
-
-                                                </View>
-                                            </View>
-
-                                        ) : (
-                                            <View
-                                                style={{
-                                                    width: "100%",
-                                                    height: verticalScale(200),
-                                                    position: 'relative'
-                                                }}
-                                            >
-                                                <Image
-                                                    style={{
-                                                        width: scale(350),
-                                                        height: verticalScale(200),
-                                                    }}
-                                                    source={require('@/assets/images/dummygallery.jpg')}
-                                                    contentFit="cover"
-                                                    transition={300}
-                                                />
-
-                                                <Pressable
-                                                    onPress={() => setSelectedCustomerSalon({ open: false, data: {} })}
-                                                    style={{
-                                                        position: 'absolute',
-                                                        top: verticalScale(10),
-                                                        left: scale(10),
-                                                        zIndex: 10,
-                                                        backgroundColor: colors.background,
-                                                        borderWidth: scale(1),
-                                                        borderColor: colors.queueBorder,
-                                                        height: scale(40),
-                                                        width: scale(40),
-                                                        borderRadius: scale(30),
-                                                        justifyContent: "center",
-                                                        alignItems: "center"
-                                                    }}
-                                                >
-                                                    <ArrowLeftIcon color={colors.text} />
-                                                </Pressable>
-
-
-                                                <Pressable
-                                                    disabled={favouriteLoader}
-                                                    onPress={addToFavourites}
-                                                    style={{
-                                                        width: scale(30),
-                                                        height: scale(30),
-                                                        justifyContent: "center",
                                                         alignItems: "center",
-                                                        borderRadius: scale(4),
-                                                        position: 'absolute',
-                                                        top: verticalScale(10),
-                                                        right: scale(10),
-                                                        zIndex: 10,
-                                                        backgroundColor: colors.background,
-                                                        borderWidth: scale(1),
-                                                        borderColor: colors.queueBorder,
-                                                        height: scale(40),
-                                                        width: scale(40),
-                                                        borderRadius: scale(30),
-                                                        justifyContent: "center",
-                                                        alignItems: "center"
+                                                        gap: scale(10),
+                                                        padding: scale(10),
+                                                        justifyContent: "space-between"
                                                     }}
                                                 >
 
-                                                    {
-                                                        salonInfoData?.data?.salonInfo?.isFavourite ? <HeartFilledIcon size={scale(20)} color='#E11D48' /> : <HeartIcon size={scale(16)} color='#E11D48' />
-                                                    }
-                                                </Pressable>
-                                            </View>
-                                        )
-                                    }
-
-                                    <BottomSheet
-                                        ref={sheetRef}
-                                        index={0}
-                                        snapPoints={Platform.OS === "ios" ? ["72%", "90%"] : ["73%", "87%"]}
-                                        enableDynamicSizing={false}
-                                        backgroundStyle={{
-                                            backgroundColor: colors.background,
-                                            borderTopLeftRadius: scale(20),
-                                            borderTopRightRadius: scale(20),
-                                        }}
-                                        handleIndicatorStyle={{
-                                            backgroundColor: colors.secondaryText
-                                        }}
-                                    // onChange={handleSheetChange}
-                                    >
-
-
-                                        {
-                                            salonInfoData?.loading ? (
-                                                <View style={{ flex: 1, padding: scale(10) }}>
-                                                    <Skeleton height={verticalScale(60)} style={{ marginBottom: verticalScale(10) }} />
-                                                    <Skeleton height={verticalScale(60)} style={{ marginBottom: verticalScale(10) }} />
-                                                    <Skeleton height={verticalScale(128)} style={{ marginBottom: verticalScale(10) }} />
-                                                    <Skeleton height={verticalScale(60)} style={{ marginBottom: verticalScale(10) }} />
-                                                </View>
-                                            ) : (
-                                                <>
                                                     <View
                                                         style={{
                                                             flexDirection: "row",
                                                             alignItems: "center",
-                                                            gap: scale(10),
-                                                            padding: scale(10),
-                                                            justifyContent: "space-between"
+                                                            gap: scale(10)
                                                         }}
                                                     >
-
-                                                        <View
+                                                        <Image
                                                             style={{
-                                                                flexDirection: "row",
-                                                                alignItems: "center",
-                                                                gap: scale(10)
+                                                                height: scale(40),
+                                                                width: scale(40),
+                                                                borderRadius: scale(20),
+                                                                position: "relative"
                                                             }}
-                                                        >
-                                                            <Image
-                                                                style={{
-                                                                    height: scale(40),
-                                                                    width: scale(40),
-                                                                    borderRadius: scale(20),
-                                                                    position: "relative"
-                                                                }}
-                                                                source={salonInfoData?.data?.salonInfo?.salonLogo?.[0]?.url}
-                                                                // placeholder={{ blurhash }}
-                                                                contentFit="cover"
-                                                                transition={1000}
-                                                            />
+                                                            source={salonInfoData?.data?.salonInfo?.salonLogo?.[0]?.url}
+                                                            // placeholder={{ blurhash }}
+                                                            contentFit="cover"
+                                                            transition={1000}
+                                                        />
 
-                                                            <View style={{
-                                                                flex: 1,
-                                                                flexDirection: "row",
-                                                                alignItems: "center",
-                                                                justifyContent: "space-between"
-                                                            }}>
-                                                                <CustomText style={{ fontSize: scale(18), fontFamily: "AirbnbCereal_W_XBd" }}>{salonInfoData?.data?.salonInfo?.salonName}</CustomText>
-                                                                <TouchableOpacity
-                                                                    onPress={() => connectSalonPressed()}
-                                                                    disabled={connectSalonLoader}
-                                                                    style={styles.signinButton} activeOpacity={0.85}>
-                                                                    {
-                                                                        connectSalonLoader ? (
-                                                                            <ActivityIndicator size="small" color="#fff" />
-                                                                        ) : (
-                                                                            <View style={{
-                                                                                flexDirection: "row",
-                                                                                alignItems: "center",
-                                                                                gap: scale(2)
-                                                                            }}>
-                                                                                <CustomText style={styles.signinButtonText}>Connect</CustomText>
-                                                                                <AddIcon size={scale(14)} color='#fff' />
-                                                                            </View>
-                                                                        )
-                                                                    }
-                                                                </TouchableOpacity>
-                                                            </View>
+                                                        <View style={{
+                                                            flex: 1,
+                                                            flexDirection: "row",
+                                                            alignItems: "center",
+                                                            justifyContent: "space-between"
+                                                        }}>
+                                                            <CustomText style={{ fontSize: scale(18), fontFamily: "AirbnbCereal_W_XBd" }}>{salonInfoData?.data?.salonInfo?.salonName}</CustomText>
+                                                            <TouchableOpacity
+                                                                onPress={() => connectSalonPressed()}
+                                                                disabled={connectSalonLoader}
+                                                                style={styles.signinButton} activeOpacity={0.85}>
+                                                                {
+                                                                    connectSalonLoader ? (
+                                                                        <ActivityIndicator size="small" color="#fff" />
+                                                                    ) : (
+                                                                        <View style={{
+                                                                            flexDirection: "row",
+                                                                            alignItems: "center",
+                                                                            gap: scale(2)
+                                                                        }}>
+                                                                            <CustomText style={styles.signinButtonText}>Connect</CustomText>
+                                                                            <AddIcon size={scale(14)} color='#fff' />
+                                                                        </View>
+                                                                    )
+                                                                }
+                                                            </TouchableOpacity>
                                                         </View>
-
                                                     </View>
 
-                                                    <View style={{
-                                                        flexDirection: "row",
-                                                        alignItems: "center",
-                                                        gap: scale(10),
-                                                        padding: scale(5),
-                                                        justifyContent: "space-between",
-                                                        backgroundColor: colors.cardColor,
-                                                        marginHorizontal: scale(10),
-                                                        borderRadius: scale(12)
-                                                    }}>
+                                                </View>
 
-                                                        {
-                                                            tabData.map((item, index) => {
-                                                                return (
-                                                                    <Pressable
-                                                                        key={index}
-                                                                        style={[styles.tabBtn, {
-                                                                            backgroundColor: selectedTab === item ? '#14b8a6' : colorScheme === "dark" ? "#3f3f46" : "#e4e4e7"
-                                                                        }]}
-                                                                        onPress={() => {
-                                                                            setSelectedTab(item)
-                                                                        }}
-                                                                    ><CustomText style={{
-                                                                        fontSize: scale(12),
-                                                                        color: selectedTab === item ? "#fff" : colorScheme === "dark" ? "#fff" : "#000"
-                                                                    }}>{item}</CustomText></Pressable>
-                                                                )
-                                                            })
-                                                        }
-                                                    </View>
+                                                <View style={{
+                                                    flexDirection: "row",
+                                                    alignItems: "center",
+                                                    gap: scale(10),
+                                                    padding: scale(5),
+                                                    justifyContent: "space-between",
+                                                    backgroundColor: colors.cardColor,
+                                                    marginHorizontal: scale(10),
+                                                    borderRadius: scale(12)
+                                                }}>
 
-                                                    <BottomSheetScrollView
-                                                        showsVerticalScrollIndicator={false}
-                                                        contentContainerStyle={[styles.contentContainer, {
-                                                            position: "relative"
-                                                        }]}>
-                                                        {
-                                                            selectedTab === "Details" && (
-                                                                <>
-                                                                    <View
+                                                    {
+                                                        tabData.map((item, index) => {
+                                                            return (
+                                                                <Pressable
+                                                                    key={index}
+                                                                    style={[styles.tabBtn, {
+                                                                        backgroundColor: selectedTab === item ? '#14b8a6' : colorScheme === "dark" ? "#3f3f46" : "#e4e4e7"
+                                                                    }]}
+                                                                    onPress={() => {
+                                                                        setSelectedTab(item)
+                                                                    }}
+                                                                ><CustomText style={{
+                                                                    fontSize: scale(12),
+                                                                    color: selectedTab === item ? "#fff" : colorScheme === "dark" ? "#fff" : "#000"
+                                                                }}>{item}</CustomText></Pressable>
+                                                            )
+                                                        })
+                                                    }
+                                                </View>
+
+                                                <BottomSheetScrollView
+                                                    showsVerticalScrollIndicator={false}
+                                                    contentContainerStyle={[styles.contentContainer, {
+                                                        position: "relative"
+                                                    }]}>
+                                                    {
+                                                        selectedTab === "Details" && (
+                                                            <>
+                                                                <View
+                                                                    style={{
+                                                                        backgroundColor: colors.cardColor,
+                                                                        borderWidth: scale(1),
+                                                                        borderColor: colors.queueBorder,
+                                                                        borderRadius: scale(12),
+                                                                        padding: scale(10),
+                                                                        gap: verticalScale(5)
+                                                                    }}
+                                                                >
+                                                                    <CustomText
                                                                         style={{
-                                                                            backgroundColor: colors.cardColor,
-                                                                            borderWidth: scale(1),
-                                                                            borderColor: colors.queueBorder,
-                                                                            borderRadius: scale(12),
-                                                                            padding: scale(10),
-                                                                            gap: verticalScale(5)
+                                                                            fontFamily: "AirbnbCereal_W_Bd",
                                                                         }}
-                                                                    >
+                                                                    >Description</CustomText>
+
+                                                                    <CustomSecondaryText
+                                                                        style={{
+                                                                            fontSize: scale(14),
+                                                                        }}
+                                                                    >{salonInfoData?.data?.salonInfo?.salonDesc}</CustomSecondaryText>
+                                                                </View>
+
+                                                                <View
+                                                                    style={{
+                                                                        backgroundColor: colors.cardColor,
+                                                                        borderRadius: scale(12),
+                                                                        borderWidth: scale(1),
+                                                                        borderColor: colors.queueBorder,
+                                                                        padding: scale(10),
+                                                                        gap: verticalScale(5),
+                                                                        flexDirection: "row",
+                                                                        alignItems: "center",
+                                                                        justifyContent: "space-between"
+                                                                    }}
+                                                                >
+
+                                                                    <View>
                                                                         <CustomText
                                                                             style={{
                                                                                 fontFamily: "AirbnbCereal_W_Bd",
                                                                             }}
-                                                                        >Description</CustomText>
+                                                                        >Contact Us</CustomText>
 
                                                                         <CustomSecondaryText
                                                                             style={{
                                                                                 fontSize: scale(14),
                                                                             }}
-                                                                        >{salonInfoData?.data?.salonInfo?.salonDesc}</CustomSecondaryText>
+                                                                        >
+                                                                            If you have any questions
+                                                                        </CustomSecondaryText>
                                                                     </View>
 
                                                                     <View
                                                                         style={{
-                                                                            backgroundColor: colors.cardColor,
-                                                                            borderRadius: scale(12),
-                                                                            borderWidth: scale(1),
-                                                                            borderColor: colors.queueBorder,
-                                                                            padding: scale(10),
-                                                                            gap: verticalScale(5),
                                                                             flexDirection: "row",
                                                                             alignItems: "center",
-                                                                            justifyContent: "space-between"
+                                                                            gap: scale(10),
                                                                         }}
                                                                     >
 
-                                                                        <View>
-                                                                            <CustomText
-                                                                                style={{
-                                                                                    fontFamily: "AirbnbCereal_W_Bd",
-                                                                                }}
-                                                                            >Contact Us</CustomText>
-
-                                                                            <CustomSecondaryText
-                                                                                style={{
-                                                                                    fontSize: scale(14),
-                                                                                }}
-                                                                            >
-                                                                                If you have any questions
-                                                                            </CustomSecondaryText>
-                                                                        </View>
-
-                                                                        <View
-                                                                            style={{
-                                                                                flexDirection: "row",
-                                                                                alignItems: "center",
-                                                                                gap: scale(10),
-                                                                            }}
-                                                                        >
-
-                                                                            {salonInfoData?.data?.salonInfo?.mobileCountryCode &&
-                                                                                salonInfoData?.data?.salonInfo?.contactTel && (
-                                                                                    <Pressable
-                                                                                        style={{
-                                                                                            width: scale(30),
-                                                                                            height: scale(30),
-                                                                                            backgroundColor: colors.background,
-                                                                                            justifyContent: "center",
-                                                                                            alignItems: "center",
-                                                                                            borderRadius: scale(4),
-                                                                                        }}
-                                                                                        onPress={() => {
-                                                                                            Linking.openURL(
-                                                                                                `tel:${salonInfoData.data.salonInfo.mobileCountryCode}${salonInfoData.data.salonInfo.contactTel}`
-                                                                                            );
-                                                                                        }}
-                                                                                    >
-                                                                                        <ContactIcon size={scale(18)} color={"#4285F4"} />
-                                                                                    </Pressable>
-                                                                                )}
-
-
-                                                                            {salonInfoData?.data?.salonInfo?.whatsappNumber && (
+                                                                        {salonInfoData?.data?.salonInfo?.mobileCountryCode &&
+                                                                            salonInfoData?.data?.salonInfo?.contactTel && (
                                                                                 <Pressable
                                                                                     style={{
                                                                                         width: scale(30),
@@ -1204,100 +993,18 @@ const Map = () => {
                                                                                         alignItems: "center",
                                                                                         borderRadius: scale(4),
                                                                                     }}
-                                                                                    onPress={() =>
-                                                                                        openLink(`https://wa.me/${salonInfoData.data.salonInfo.whatsappNumber}`)
-                                                                                    }
+                                                                                    onPress={() => {
+                                                                                        Linking.openURL(
+                                                                                            `tel:${salonInfoData.data.salonInfo.mobileCountryCode}${salonInfoData.data.salonInfo.contactTel}`
+                                                                                        );
+                                                                                    }}
                                                                                 >
-                                                                                    <WhatsappIcon size={scale(18)} color={"#25D366"} />
+                                                                                    <ContactIcon size={scale(18)} color={"#4285F4"} />
                                                                                 </Pressable>
                                                                             )}
 
 
-                                                                            {salonInfoData?.data?.salonInfo?.salonEmail && (
-                                                                                <Pressable
-                                                                                    style={{
-                                                                                        width: scale(30),
-                                                                                        height: scale(30),
-                                                                                        backgroundColor: colors.background,
-                                                                                        justifyContent: "center",
-                                                                                        alignItems: "center",
-                                                                                        borderRadius: scale(4),
-                                                                                    }}
-                                                                                    onPress={() =>
-                                                                                        openLink(`mailto:${salonInfoData.data.salonInfo.salonEmail}`)
-                                                                                    }
-                                                                                >
-                                                                                    <EmailIcon size={scale(18)} color={"#EA4335"} />
-                                                                                </Pressable>
-                                                                            )}
-                                                                        </View>
-
-
-                                                                    </View>
-
-                                                                    <View>
-
-                                                                        {
-                                                                            salonInfoData?.data?.salonInfo?.location?.coordinates?.latitude && salonInfoData?.data?.salonInfo?.location?.coordinates?.longitude && (
-                                                                                <MapView
-                                                                                    provider={PROVIDER_GOOGLE}
-                                                                                    initialCamera={{
-                                                                                        center: {
-                                                                                            latitude: salonInfoData?.data?.salonInfo?.location?.coordinates?.latitude,
-                                                                                            longitude: salonInfoData?.data?.salonInfo?.location?.coordinates?.longitude
-                                                                                        },
-                                                                                        zoom: 15, // 0 (world view) to ~20 (very close)
-                                                                                        pitch: 0,
-                                                                                        heading: 0,
-                                                                                    }}
-                                                                                    scrollEnabled={false}
-                                                                                    zoomEnabled={false}
-                                                                                    rotateEnabled={false}
-                                                                                    pitchEnabled={false}
-                                                                                    style={[styles.map,
-                                                                                    {
-                                                                                        // borderColor: "#efefef", 
-                                                                                        // borderWidth: scale(1) 
-                                                                                    }
-                                                                                    ]}
-                                                                                    pointerEvents={Platform.OS === "ios" ? "none" : "auto"}
-                                                                                    customMapStyle={colorScheme === "dark" ? darkMapStyle : []}
-                                                                                />
-                                                                            )
-                                                                        }
-
-                                                                        <View
-                                                                            style={{
-                                                                                backgroundColor: colors.cardColor,
-                                                                                borderBottomLeftRadius: scale(12),
-                                                                                borderBottomRightRadius: scale(12),
-                                                                                borderWidth: scale(1),
-                                                                                borderColor: colors.queueBorder,
-                                                                                padding: scale(10),
-                                                                                gap: verticalScale(5),
-                                                                                flexDirection: "row",
-                                                                                alignItems: "center",
-                                                                                justifyContent: "space-between"
-                                                                            }}
-                                                                        >
-
-                                                                            <View>
-                                                                                <CustomText
-                                                                                    style={{
-                                                                                        fontFamily: "AirbnbCereal_W_Bd",
-                                                                                    }}
-                                                                                >Location</CustomText>
-
-                                                                                <CustomSecondaryText
-                                                                                    style={{
-                                                                                        fontSize: scale(14),
-                                                                                        maxWidth: "90%"
-                                                                                    }}
-                                                                                >
-                                                                                    {`${salonInfoData?.data?.salonInfo?.address}, ${salonInfoData?.data?.salonInfo?.city}, ${salonInfoData?.data?.salonInfo?.country}`}
-                                                                                </CustomSecondaryText>
-                                                                            </View>
-
+                                                                        {salonInfoData?.data?.salonInfo?.whatsappNumber && (
                                                                             <Pressable
                                                                                 style={{
                                                                                     width: scale(30),
@@ -1305,22 +1012,77 @@ const Map = () => {
                                                                                     backgroundColor: colors.background,
                                                                                     justifyContent: "center",
                                                                                     alignItems: "center",
-                                                                                    borderRadius: scale(4)
+                                                                                    borderRadius: scale(4),
                                                                                 }}
-                                                                                onPress={() => openLink(`https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`)}
+                                                                                onPress={() =>
+                                                                                    openLink(`https://wa.me/${salonInfoData.data.salonInfo.whatsappNumber}`)
+                                                                                }
                                                                             >
-                                                                                <MapIcon size={scale(18)} color={"#fbbf24"} />
+                                                                                <WhatsappIcon size={scale(18)} color={"#25D366"} />
                                                                             </Pressable>
+                                                                        )}
 
-                                                                        </View>
+
+                                                                        {salonInfoData?.data?.salonInfo?.salonEmail && (
+                                                                            <Pressable
+                                                                                style={{
+                                                                                    width: scale(30),
+                                                                                    height: scale(30),
+                                                                                    backgroundColor: colors.background,
+                                                                                    justifyContent: "center",
+                                                                                    alignItems: "center",
+                                                                                    borderRadius: scale(4),
+                                                                                }}
+                                                                                onPress={() =>
+                                                                                    openLink(`mailto:${salonInfoData.data.salonInfo.salonEmail}`)
+                                                                                }
+                                                                            >
+                                                                                <EmailIcon size={scale(18)} color={"#EA4335"} />
+                                                                            </Pressable>
+                                                                        )}
                                                                     </View>
+
+
+                                                                </View>
+
+                                                                <View>
+
+                                                                    {
+                                                                        salonInfoData?.data?.salonInfo?.location?.coordinates?.latitude && salonInfoData?.data?.salonInfo?.location?.coordinates?.longitude && (
+                                                                            <MapView
+                                                                                provider={PROVIDER_GOOGLE}
+                                                                                initialCamera={{
+                                                                                    center: {
+                                                                                        latitude: salonInfoData?.data?.salonInfo?.location?.coordinates?.latitude,
+                                                                                        longitude: salonInfoData?.data?.salonInfo?.location?.coordinates?.longitude
+                                                                                    },
+                                                                                    zoom: 15, // 0 (world view) to ~20 (very close)
+                                                                                    pitch: 0,
+                                                                                    heading: 0,
+                                                                                }}
+                                                                                scrollEnabled={false}
+                                                                                zoomEnabled={false}
+                                                                                rotateEnabled={false}
+                                                                                pitchEnabled={false}
+                                                                                style={[styles.map,
+                                                                                {
+                                                                                    // borderColor: "#efefef", 
+                                                                                    // borderWidth: scale(1) 
+                                                                                }
+                                                                                ]}
+                                                                                pointerEvents={Platform.OS === "ios" ? "none" : "auto"}
+                                                                                customMapStyle={colorScheme === "dark" ? darkMapStyle : []}
+                                                                            />
+                                                                        )
+                                                                    }
 
                                                                     <View
                                                                         style={{
                                                                             backgroundColor: colors.cardColor,
-                                                                            borderColor: colors.queueBorder,
+                                                                            borderBottomLeftRadius: scale(12),
+                                                                            borderBottomRightRadius: scale(12),
                                                                             borderWidth: scale(1),
-                                                                            borderRadius: scale(12),
+                                                                            borderColor: colors.queueBorder,
                                                                             padding: scale(10),
                                                                             gap: verticalScale(5),
                                                                             flexDirection: "row",
@@ -1334,215 +1096,263 @@ const Map = () => {
                                                                                 style={{
                                                                                     fontFamily: "AirbnbCereal_W_Bd",
                                                                                 }}
-                                                                            >Follow us on</CustomText>
+                                                                            >Location</CustomText>
 
                                                                             <CustomSecondaryText
                                                                                 style={{
                                                                                     fontSize: scale(14),
+                                                                                    maxWidth: "90%"
                                                                                 }}
                                                                             >
-                                                                                Social links
+                                                                                {`${salonInfoData?.data?.salonInfo?.address}, ${salonInfoData?.data?.salonInfo?.city}, ${salonInfoData?.data?.salonInfo?.country}`}
                                                                             </CustomSecondaryText>
                                                                         </View>
 
+                                                                        <Pressable
+                                                                            style={{
+                                                                                width: scale(30),
+                                                                                height: scale(30),
+                                                                                backgroundColor: colors.background,
+                                                                                justifyContent: "center",
+                                                                                alignItems: "center",
+                                                                                borderRadius: scale(4)
+                                                                            }}
+                                                                            onPress={() => openLink(`https://www.google.com/maps/search/?api=1&query=${latitude},${longitude}`)}
+                                                                        >
+                                                                            <MapIcon size={scale(18)} color={"#fbbf24"} />
+                                                                        </Pressable>
+
+                                                                    </View>
+                                                                </View>
+
+                                                                <View
+                                                                    style={{
+                                                                        backgroundColor: colors.cardColor,
+                                                                        borderColor: colors.queueBorder,
+                                                                        borderWidth: scale(1),
+                                                                        borderRadius: scale(12),
+                                                                        padding: scale(10),
+                                                                        gap: verticalScale(5),
+                                                                        flexDirection: "row",
+                                                                        alignItems: "center",
+                                                                        justifyContent: "space-between"
+                                                                    }}
+                                                                >
+
+                                                                    <View>
+                                                                        <CustomText
+                                                                            style={{
+                                                                                fontFamily: "AirbnbCereal_W_Bd",
+                                                                            }}
+                                                                        >Follow us on</CustomText>
+
+                                                                        <CustomSecondaryText
+                                                                            style={{
+                                                                                fontSize: scale(14),
+                                                                            }}
+                                                                        >
+                                                                            Social links
+                                                                        </CustomSecondaryText>
+                                                                    </View>
+
+                                                                    <View
+                                                                        style={{
+                                                                            flexDirection: "row",
+                                                                            alignItems: "center",
+                                                                            gap: scale(10),
+                                                                        }}
+                                                                    >
+                                                                        {salonInfoData?.data?.salonInfo?.instraLink && (
+                                                                            <Pressable
+                                                                                style={{
+                                                                                    width: scale(30),
+                                                                                    height: scale(30),
+                                                                                    backgroundColor: colors.background,
+                                                                                    justifyContent: "center",
+                                                                                    alignItems: "center",
+                                                                                    borderRadius: scale(4),
+                                                                                }}
+                                                                                onPress={() => openLink(salonInfoData.data.salonInfo.instraLink)}
+                                                                            >
+                                                                                <InstagramIcon size={scale(18)} color={"#E1306C"} />
+                                                                            </Pressable>
+                                                                        )}
+
+                                                                        {salonInfoData?.data?.salonInfo?.fbLink && (
+                                                                            <Pressable
+                                                                                style={{
+                                                                                    width: scale(30),
+                                                                                    height: scale(30),
+                                                                                    backgroundColor: colors.background,
+                                                                                    justifyContent: "center",
+                                                                                    alignItems: "center",
+                                                                                    borderRadius: scale(4),
+                                                                                }}
+                                                                                onPress={() => openLink(salonInfoData.data.salonInfo.fbLink)}
+                                                                            >
+                                                                                <FacebookIcon size={scale(18)} color={"#1877F2"} />
+                                                                            </Pressable>
+                                                                        )}
+
+                                                                        {salonInfoData?.data?.salonInfo?.twitterLink && (
+                                                                            <Pressable
+                                                                                style={{
+                                                                                    width: scale(30),
+                                                                                    height: scale(30),
+                                                                                    backgroundColor: colors.background,
+                                                                                    justifyContent: "center",
+                                                                                    alignItems: "center",
+                                                                                    borderRadius: scale(4),
+                                                                                }}
+                                                                                onPress={() => openLink(salonInfoData.data.salonInfo.twitterLink)}
+                                                                            >
+                                                                                <XIcon size={scale(18)} color={colors.text} />
+                                                                            </Pressable>
+                                                                        )}
+
+                                                                        {salonInfoData?.data?.salonInfo?.tiktokLink && (
+                                                                            <Pressable
+                                                                                style={{
+                                                                                    width: scale(30),
+                                                                                    height: scale(30),
+                                                                                    backgroundColor: colors.background,
+                                                                                    justifyContent: "center",
+                                                                                    alignItems: "center",
+                                                                                    borderRadius: scale(4),
+                                                                                }}
+                                                                                onPress={() => openLink(salonInfoData.data.salonInfo.tiktokLink)}
+                                                                            >
+                                                                                <TiktokIcon size={scale(18)} color={colors.text} />
+                                                                            </Pressable>
+                                                                        )}
+
+                                                                        {salonInfoData?.data?.salonInfo?.webLink && (
+                                                                            <Pressable
+                                                                                style={{
+                                                                                    width: scale(30),
+                                                                                    height: scale(30),
+                                                                                    backgroundColor: colors.background,
+                                                                                    justifyContent: "center",
+                                                                                    alignItems: "center",
+                                                                                    borderRadius: scale(4),
+                                                                                }}
+                                                                                onPress={() => openLink(salonInfoData.data.salonInfo.webLink)}
+                                                                            >
+                                                                                <WebIcon size={scale(18)} color={colors.text} />
+                                                                            </Pressable>
+                                                                        )}
+                                                                    </View>
+
+
+                                                                </View>
+
+                                                            </>
+                                                        )
+                                                    }
+
+                                                    {
+                                                        selectedTab === "Services" && (
+                                                            salonInfoData?.loading ? (
+                                                                [0, 1, 2, 3, 4, 5, 6, 7].map((_, index) => (
+                                                                    <Skeleton
+                                                                        key={index}
+                                                                        height={scale(80)}
+                                                                        borderRadius={scale(12)}
+                                                                        style={{
+                                                                            marginBottom: verticalScale(5),
+                                                                        }}
+                                                                    />
+                                                                ))
+                                                            ) : (
+                                                                salonInfoData?.data?.categorizedSalonServices?.map((item, index) => (
+                                                                    <React.Fragment key={item?.serviceCategoryName || index}>
+                                                                        <CustomText style={styles.serviceName}>
+                                                                            {item?.serviceCategoryName}
+                                                                        </CustomText>
+                                                                        {item?.services?.map((ser) => (
+                                                                            <View
+                                                                                key={ser.serviceId}
+                                                                                style={[
+                                                                                    styles.card,
+                                                                                    {
+                                                                                        backgroundColor: colors.cardColor,
+                                                                                        borderColor: colors.queueBorder,
+                                                                                        borderWidth: scale(1),
+                                                                                    },
+                                                                                ]}
+                                                                            >
+                                                                                <Image source={{ uri: ser?.serviceIcon?.url }} style={styles.icon} />
+                                                                                <View style={styles.cardContent}>
+                                                                                    <CustomText style={styles.serviceName}>{ser.serviceName}</CustomText>
+                                                                                    <CustomText style={[styles.serviceDesc, { color: colors.secondaryText }]}>
+                                                                                        {ser.serviceDesc}
+                                                                                    </CustomText>
+                                                                                    <View
+                                                                                        style={{
+                                                                                            flexDirection: "row",
+                                                                                            alignItems: "center",
+                                                                                            gap: scale(10),
+                                                                                            marginTop: verticalScale(5),
+                                                                                        }}
+                                                                                    >
+                                                                                        <CustomText style={styles.servicePrice}>
+                                                                                            {salonInfoData?.data?.salonInfo?.currency} {ser.servicePrice}
+                                                                                        </CustomText>
+                                                                                        <CustomText style={[styles.serviceEWT, { color: colors.secondaryText }]}>
+                                                                                            ~ {formatMinutesToHrMin(ser.serviceEWT)}
+                                                                                        </CustomText>
+                                                                                    </View>
+                                                                                </View>
+                                                                            </View>
+                                                                        ))}
+                                                                    </React.Fragment>
+                                                                ))
+                                                            )
+                                                        )
+                                                    }
+
+                                                    {
+                                                        selectedTab === "Stylists" && (
+                                                            <>
+                                                                <CustomText
+                                                                    style={{
+                                                                        fontFamily: "AirbnbCereal_W_Blk"
+                                                                    }}
+                                                                >Explore all stylists</CustomText>
+
+                                                                {
+                                                                    salonInfoData?.data?.barbers?.length > 0 ? (
                                                                         <View
                                                                             style={{
                                                                                 flexDirection: "row",
-                                                                                alignItems: "center",
-                                                                                gap: scale(10),
+                                                                                flexWrap: "wrap",
+                                                                                gap: scale(10)
                                                                             }}
                                                                         >
-                                                                            {salonInfoData?.data?.salonInfo?.instraLink && (
-                                                                                <Pressable
-                                                                                    style={{
-                                                                                        width: scale(30),
-                                                                                        height: scale(30),
-                                                                                        backgroundColor: colors.background,
-                                                                                        justifyContent: "center",
-                                                                                        alignItems: "center",
-                                                                                        borderRadius: scale(4),
-                                                                                    }}
-                                                                                    onPress={() => openLink(salonInfoData.data.salonInfo.instraLink)}
-                                                                                >
-                                                                                    <InstagramIcon size={scale(18)} color={"#E1306C"} />
-                                                                                </Pressable>
-                                                                            )}
 
-                                                                            {salonInfoData?.data?.salonInfo?.fbLink && (
-                                                                                <Pressable
-                                                                                    style={{
-                                                                                        width: scale(30),
-                                                                                        height: scale(30),
-                                                                                        backgroundColor: colors.background,
-                                                                                        justifyContent: "center",
-                                                                                        alignItems: "center",
-                                                                                        borderRadius: scale(4),
-                                                                                    }}
-                                                                                    onPress={() => openLink(salonInfoData.data.salonInfo.fbLink)}
-                                                                                >
-                                                                                    <FacebookIcon size={scale(18)} color={"#1877F2"} />
-                                                                                </Pressable>
-                                                                            )}
+                                                                            {
+                                                                                salonInfoData?.data?.barbers?.map((item, index) => {
+                                                                                    return (<BarberCard key={item?.barberId} item={item} />)
+                                                                                })
+                                                                            }
 
-                                                                            {salonInfoData?.data?.salonInfo?.twitterLink && (
-                                                                                <Pressable
-                                                                                    style={{
-                                                                                        width: scale(30),
-                                                                                        height: scale(30),
-                                                                                        backgroundColor: colors.background,
-                                                                                        justifyContent: "center",
-                                                                                        alignItems: "center",
-                                                                                        borderRadius: scale(4),
-                                                                                    }}
-                                                                                    onPress={() => openLink(salonInfoData.data.salonInfo.twitterLink)}
-                                                                                >
-                                                                                    <XIcon size={scale(18)} color={colors.text} />
-                                                                                </Pressable>
-                                                                            )}
-
-                                                                            {salonInfoData?.data?.salonInfo?.tiktokLink && (
-                                                                                <Pressable
-                                                                                    style={{
-                                                                                        width: scale(30),
-                                                                                        height: scale(30),
-                                                                                        backgroundColor: colors.background,
-                                                                                        justifyContent: "center",
-                                                                                        alignItems: "center",
-                                                                                        borderRadius: scale(4),
-                                                                                    }}
-                                                                                    onPress={() => openLink(salonInfoData.data.salonInfo.tiktokLink)}
-                                                                                >
-                                                                                    <TiktokIcon size={scale(18)} color={colors.text} />
-                                                                                </Pressable>
-                                                                            )}
-
-                                                                            {salonInfoData?.data?.salonInfo?.webLink && (
-                                                                                <Pressable
-                                                                                    style={{
-                                                                                        width: scale(30),
-                                                                                        height: scale(30),
-                                                                                        backgroundColor: colors.background,
-                                                                                        justifyContent: "center",
-                                                                                        alignItems: "center",
-                                                                                        borderRadius: scale(4),
-                                                                                    }}
-                                                                                    onPress={() => openLink(salonInfoData.data.salonInfo.webLink)}
-                                                                                >
-                                                                                    <WebIcon size={scale(18)} color={colors.text} />
-                                                                                </Pressable>
-                                                                            )}
                                                                         </View>
+                                                                    ) : (
+                                                                        <View style={{
+                                                                            height: verticalScale(180),
+                                                                            justifyContent: "center",
+                                                                            alignItems: "center",
+                                                                        }}>
+                                                                            <CustomText>No barbers available</CustomText>
+                                                                        </View>
+                                                                    )
+                                                                }
 
+                                                            </>
+                                                        )
+                                                    }
 
-                                                                    </View>
-
-                                                                </>
-                                                            )
-                                                        }
-
-                                                        {
-                                                            selectedTab === "Services" && (
-                                                                salonInfoData?.loading ? (
-                                                                    [0, 1, 2, 3, 4, 5, 6, 7].map((_, index) => (
-                                                                        <Skeleton
-                                                                            key={index}
-                                                                            height={scale(80)}
-                                                                            borderRadius={scale(12)}
-                                                                            style={{
-                                                                                marginBottom: verticalScale(5),
-                                                                            }}
-                                                                        />
-                                                                    ))
-                                                                ) : (
-                                                                    salonInfoData?.data?.categorizedSalonServices?.map((item, index) => (
-                                                                        <React.Fragment key={item?.serviceCategoryName || index}>
-                                                                            <CustomText style={styles.serviceName}>
-                                                                                {item?.serviceCategoryName}
-                                                                            </CustomText>
-                                                                            {item?.services?.map((ser) => (
-                                                                                <View
-                                                                                    key={ser.serviceId}
-                                                                                    style={[
-                                                                                        styles.card,
-                                                                                        {
-                                                                                            backgroundColor: colors.cardColor,
-                                                                                            borderColor: colors.queueBorder,
-                                                                                            borderWidth: scale(1),
-                                                                                        },
-                                                                                    ]}
-                                                                                >
-                                                                                    <Image source={{ uri: ser?.serviceIcon?.url }} style={styles.icon} />
-                                                                                    <View style={styles.cardContent}>
-                                                                                        <CustomText style={styles.serviceName}>{ser.serviceName}</CustomText>
-                                                                                        <CustomText style={[styles.serviceDesc, { color: colors.secondaryText }]}>
-                                                                                            {ser.serviceDesc}
-                                                                                        </CustomText>
-                                                                                        <View
-                                                                                            style={{
-                                                                                                flexDirection: "row",
-                                                                                                alignItems: "center",
-                                                                                                gap: scale(10),
-                                                                                                marginTop: verticalScale(5),
-                                                                                            }}
-                                                                                        >
-                                                                                            <CustomText style={styles.servicePrice}>
-                                                                                                {salonInfoData?.data?.salonInfo?.currency} {ser.servicePrice}
-                                                                                            </CustomText>
-                                                                                            <CustomText style={[styles.serviceEWT, { color: colors.secondaryText }]}>
-                                                                                                ~ {formatMinutesToHrMin(ser.serviceEWT)}
-                                                                                            </CustomText>
-                                                                                        </View>
-                                                                                    </View>
-                                                                                </View>
-                                                                            ))}
-                                                                        </React.Fragment>
-                                                                    ))
-                                                                )
-                                                            )
-                                                        }
-
-                                                        {
-                                                            selectedTab === "Stylists" && (
-                                                                <>
-                                                                    <CustomText
-                                                                        style={{
-                                                                            fontFamily: "AirbnbCereal_W_Blk"
-                                                                        }}
-                                                                    >Explore all stylists</CustomText>
-
-                                                                    {
-                                                                        salonInfoData?.data?.barbers?.length > 0 ? (
-                                                                            <View
-                                                                                style={{
-                                                                                    flexDirection: "row",
-                                                                                    flexWrap: "wrap",
-                                                                                    gap: scale(10)
-                                                                                }}
-                                                                            >
-
-                                                                                {
-                                                                                    salonInfoData?.data?.barbers?.map((item, index) => {
-                                                                                        return (<BarberCard key={item?.barberId} item={item} />)
-                                                                                    })
-                                                                                }
-
-                                                                            </View>
-                                                                        ) : (
-                                                                            <View style={{
-                                                                                height: verticalScale(180),
-                                                                                justifyContent: "center",
-                                                                                alignItems: "center",
-                                                                            }}>
-                                                                                <CustomText>No barbers available</CustomText>
-                                                                            </View>
-                                                                        )
-                                                                    }
-
-                                                                </>
-                                                            )
-                                                        }
-
-                                                        {/* <TouchableOpacity
+                                                    {/* <TouchableOpacity
                                                             onPress={() => connectSalonPressed()}
                                                             disabled={connectSalonLoader}
                                                             style={styles.signinButton} activeOpacity={0.85}>
@@ -1555,18 +1365,18 @@ const Map = () => {
                                                             }
                                                         </TouchableOpacity> */}
 
-                                                    </BottomSheetScrollView>
-                                                </>
-                                            )
-                                        }
+                                                </BottomSheetScrollView>
+                                            </>
+                                        )
+                                    }
 
 
 
-                                    </BottomSheet>
+                                </BottomSheet>
 
-                                </GestureHandlerRootView>
-                            </SafeAreaView>
-                        </View>
+                            </GestureHandlerRootView>
+                        </SafeAreaView>
+
                     </Modal>
 
                 </View >
@@ -1759,6 +1569,37 @@ const styles = StyleSheet.create({
     },
 })
 
+const MemoizedMarker = React.memo(({ salon, selectedMarker, onPress }) => (
+    <Marker
+        coordinate={{
+            latitude: salon?.location?.coordinates?.latitude,
+            longitude: salon?.location?.coordinates?.longitude,
+        }}
+        title={salon.salonName}
+        description={salon.address}
+        onPress={() => onPress(salon.salonId)}
+    >
+        <View
+            style={{
+                backgroundColor: colors.background,
+                padding: scale(2),
+                borderRadius: scale(8),
+                borderWidth: scale(1),
+                borderColor: colors.border,
+            }}
+        >
+            <View
+                style={{
+                    padding: scale(8),
+                    borderRadius: scale(6),
+                    backgroundColor: selectedMarker === salon.salonId ? "#0BA3AD" : "#efefef"
+                }}
+            >
+                <MapScissorIcon color={selectedMarker === salon.salonId ? "#fff" : "#000"} />
+            </View>
+        </View>
+    </Marker>
+));
 
 
 

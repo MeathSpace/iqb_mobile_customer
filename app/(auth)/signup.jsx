@@ -5,7 +5,7 @@ import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import { Link, useFocusEffect, useRouter } from 'expo-router';
 import { useState } from 'react';
 import CustomText from '../../components/CustomText';
-import { useTheme } from '@react-navigation/native';
+import { usePreventRemove, useTheme } from '@react-navigation/native';
 import { Colors } from '@/constants/Colors';
 import { useAuth } from '../../context/AuthContext'
 import AsyncStorage from '@react-native-async-storage/async-storage';
@@ -234,7 +234,9 @@ const signup = () => {
         }, [isSignedIn, router, user])
     )
 
-
+    usePreventRemove(
+        true, ({ data }) => { }
+    )
     return (
         <TouchableWithoutFeedback
             onPress={Keyboard.dismiss}>

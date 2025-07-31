@@ -432,16 +432,16 @@ const account = () => {
   const { colors } = useTheme()
   const { signOut } = useClerk()
   const { isSignedIn } = useUser()
-  const { 
-    setSelectedBarber, 
-    setSelectedBarberServices, 
-    setCustomerName, 
-    rememberMe, 
-    setRememberMe, 
-    newNotification, 
+  const {
+    setSelectedBarber,
+    setSelectedBarberServices,
+    setCustomerName,
+    rememberMe,
+    setRememberMe,
+    newNotification,
     setNewNotification,
     // hasRun
-   } = useGlobal();
+  } = useGlobal();
 
   const { setIsAuthenticated, authenticatedUser, setAuthenticatedUser } = useAuth()
   const router = useRouter()
@@ -566,6 +566,7 @@ const account = () => {
       router.push("/myFavourites")
     }
   };
+
 
   return (
     <View

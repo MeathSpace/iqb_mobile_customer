@@ -18,26 +18,7 @@ const SearchHeader = () => {
     const { authenticatedUser, setSearchSalon } = useAuth()
     const { searchCitySalons, setSearchCitySalons } = useGlobal()
 
-    const allCities = [
-        { id: '1', title: 'Mumbai', latitude: 19.0760, longitude: 72.8777 },
-        { id: '2', title: 'Delhi', latitude: 28.6139, longitude: 77.2090 },
-        { id: '3', title: 'Bengaluru', latitude: 12.9716, longitude: 77.5946 },
-        { id: '4', title: 'Hyderabad', latitude: 17.3850, longitude: 78.4867 },
-        { id: '5', title: 'Ahmedabad', latitude: 23.0225, longitude: 72.5714 },
-        { id: '6', title: 'Chennai', latitude: 13.0827, longitude: 80.2707 },
-        { id: '7', title: 'Kolkata', latitude: 22.5726, longitude: 88.3639 },
-        { id: '8', title: 'Pune', latitude: 18.5204, longitude: 73.8567 },
-        { id: '9', title: 'Jaipur', latitude: 26.9124, longitude: 75.7873 },
-        { id: '10', title: 'Surat', latitude: 21.1702, longitude: 72.8311 },
-    ];
-
-
-
     const [query, setQuery] = useState('');
-    const [filteredCities, setFilteredCities] = useState(allCities);
-
-
-    // console.log("searchCitySalons  asvwev", searchCitySalons)
 
     const timeoutRef = useRef(null);
 
@@ -45,14 +26,6 @@ const SearchHeader = () => {
     const handleTextChange = (text) => {
         clearTimeout(timeoutRef.current);
         setQuery(text);
-        // if (!text) {
-        //     setFilteredCities(allCities);
-        //     return;
-        // }
-        // const filtered = allCities.filter((item) =>
-        //     item.title.toLowerCase().includes(text.toLowerCase())
-        // );
-        // setFilteredCities(filtered);
     };
 
     useEffect(() => {
@@ -96,20 +69,11 @@ const SearchHeader = () => {
 
     }, [query])
 
-    const handleSelect = (item) => {
-        // setSearchSalon(item);
-        // setQuery(item.title);
-        // setFilteredCities([]);
-        setSearchSalon()
-        console.log("City Salons")
-    };
-
     const router = useRouter()
     const { newNotification, setNewNotification } = useGlobal()
 
     return (
         <View style={[styles.container, {
-            // backgroundColor: colors.tabBackground
             backgroundColor: colors.background
         }]}>
             <View style={[styles.searchWrapper,
@@ -121,7 +85,7 @@ const SearchHeader = () => {
             }]}>
                 <TextInput
                     style={[styles.input, { color: colors.text }]}
-                    placeholder="Search city"
+                    placeholder="Search city or salon name"
                     placeholderTextColor={colors.secondaryText}
                     value={query}
                     onChangeText={handleTextChange}

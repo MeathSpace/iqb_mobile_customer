@@ -1,5 +1,5 @@
-import { Alert, BackHandler, Button, Keyboard, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
-import React, { useEffect, useRef, useState } from 'react'
+import { Alert, BackHandler, Button, InteractionManager, Keyboard, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import CustomScrollView from '../../components/CustomScrollView'
 import { useFocusEffect, useLocalSearchParams, useRouter } from 'expo-router'
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
@@ -235,19 +235,6 @@ const personalInfo = () => {
                 }
             });
         } else {
-            // router.push({
-            //     pathname: "/passwordConfirmation",
-            //     params: {
-            //         email,
-            //         firstName,
-            //         lastName,
-            //         gender,
-            //         phoneNumber: updatedNumber,
-            //         callingCode: selectedCountry?.callingCode[0],
-            //         selectedDate,
-            //     }
-            // });
-
             router.push({
                 pathname: "/verification",
                 params: {
@@ -274,13 +261,33 @@ const personalInfo = () => {
             // The action is still passed, but we're choosing not to dispatch it,
             // effectively making "going back" impossible through these means.
             Alert.alert(
-                'Cannot Go Back',
-                'You cannot go back during the signup flow. Please complete the current step.',
-                [{ text: 'OK', onPress: () => null }] // Only an 'OK' button
+                'Confirm',
+                'If you go back now, your signup progress will be lost. Are you sure you want to exit?',
+                [
+                    {
+                        text: 'Cancel',
+                        style: 'cancel',
+                        onPress: () => null, // Do nothing, stay on screen
+                    },
+                    {
+                        text: 'OK', onPress: () => {
+                            router.push("/signup")
+                        }
+                    },
+                ] // Only an 'OK' button
             );
         }
     );
 
+    // console.log("selected Date ", selectedDate)
+
+    const ddmmformatDate = (dateString) => {
+        const date = new Date(dateString);
+        const day = String(date.getDate()).padStart(2, '0');
+        const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+        const year = date.getFullYear();
+        return `${day}/${month}/${year}`;
+    }
 
     return (
         <CustomScrollView>
@@ -514,8 +521,8 @@ const personalInfo = () => {
                                     setCalenderModal(true)
                                 }}
                             >
-                                {!calenderModal && !selectedDate && <CustomText style={{ color: colors.secondaryText, fontFamily: "AirbnbCereal_W_Md" }}>YYYY-MM-DD</CustomText>}
-                                {!calenderModal && selectedDate && <CustomText style={{ fontFamily: "AirbnbCereal_W_Md" }}>{selectedDate}</CustomText>}
+                                {!calenderModal && !selectedDate && <CustomText style={{ color: colors.secondaryText, fontFamily: "AirbnbCereal_W_Md" }}>DD/MM/YYYY</CustomText>}
+                                {!calenderModal && selectedDate && <CustomText style={{ fontFamily: "AirbnbCereal_W_Md" }}>{ddmmformatDate(selectedDate)}</CustomText>}
                                 <CalendarIcon style={[styles.dateIcon, { color: colors.text }]} />
                             </Pressable>
 
