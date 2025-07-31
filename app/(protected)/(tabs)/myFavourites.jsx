@@ -172,6 +172,7 @@ const MyFavourites = () => {
                                 width='95%'
                                 height={verticalScale(140)}
                                 style={{
+                                    marginTop: index === 0 ? verticalScale(10) : 0,
                                     borderRadius: scale(12),
                                     marginHorizontal: "auto",
                                     marginBottom: verticalScale(10)

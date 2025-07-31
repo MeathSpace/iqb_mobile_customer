@@ -178,18 +178,16 @@ const About = () => {
   return (
     <View
       style={{
-        flex: 1,
         backgroundColor: colors.background,
-        paddingHorizontal: scale(16),
-        paddingTop: verticalScale(10),
-        paddingBottom:
-          Platform.OS === "ios" ? verticalScale(80) : verticalScale(20),
+        flex: 1,
+        paddingHorizontal: scale(10),
       }}
     >
       <View style={{
         flexDirection: "row",
         alignItems: "center",
-        gap: scale(3)
+        gap: scale(3),
+        height: verticalScale(40),
       }}>
         <Pressable onPress={() => router.replace("/account")}><ArrowLeftIcon color={colors.text} /></Pressable>
         <CustomText style={{
@@ -208,7 +206,7 @@ const About = () => {
           borderWidth: scale(1),
           borderColor: colors.queueBorder,
           overflow: "hidden",
-          marginTop: verticalScale(20)
+          // marginTop: verticalScale(20)
         }}
       >
         {aboutData.map((item, index) => (

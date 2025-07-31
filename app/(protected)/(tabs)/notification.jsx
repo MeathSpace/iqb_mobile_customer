@@ -146,7 +146,22 @@ const notification = () => {
                 gap: verticalScale(10),
             }}
         >
-            <ScrollView
+
+            <View style={{
+                flexDirection: "row",
+                alignItems: "center",
+                gap: scale(3)
+            }}>
+                <Pressable onPress={() => router.replace("/home")}><ArrowLeftIcon color={colors.text} /></Pressable>
+                <CustomText style={{
+                    flex: 1,
+                    fontSize: scale(18),
+                    // textAlign: "center",
+                    fontFamily: "AirbnbCereal_W_XBd",
+                }}>Notification</CustomText>
+            </View>
+
+            {/* <ScrollView
                 contentContainerStyle={{
                     gap: verticalScale(10),
                     paddingBottom: verticalScale(20),
@@ -239,13 +254,6 @@ const notification = () => {
                                             color: colors.secondaryText
                                         }}
                                     >{item?.body}</CustomText>
-
-                                    {/* <CustomText
-                                        style={{
-                                            fontSize: scale(12),
-                                            color: "#696D6E"
-                                        }}
-                                    >{item?.time?.split("T")[0]}</CustomText> */}
                                 </View>
                             </View>
                         ))
@@ -283,7 +291,121 @@ const notification = () => {
                     )
 
                 }
+            </ScrollView> */}
+
+            <ScrollView
+                contentContainerStyle={{
+                    gap: verticalScale(10),
+                    paddingBottom: verticalScale(20),
+                    flexGrow: 1,
+                    justifyContent: "center",
+                    alignItems: "center",
+                }}
+                showsVerticalScrollIndicator={false}
+            >
+                {
+                    notificationListData?.loading ? (
+                        <>
+                            <Skeleton
+                                height={verticalScale(70)}
+                                style={{
+                                    borderRadius: scale(10),
+                                }}
+                            />
+                            <Skeleton
+                                height={verticalScale(70)}
+                                style={{
+                                    borderRadius: scale(10),
+                                }}
+                            />
+                            <Skeleton
+                                height={verticalScale(70)}
+                                style={{
+                                    borderRadius: scale(10),
+                                }}
+                            />
+                            <Skeleton
+                                height={verticalScale(70)}
+                                style={{
+                                    borderRadius: scale(10),
+                                }}
+                            />
+                            <Skeleton
+                                height={verticalScale(70)}
+                                style={{
+                                    borderRadius: scale(10),
+                                }}
+                            />
+                        </>
+                    ) : !notificationListData?.notificationData?.length > 0 ? (
+                        notificationListData?.notificationData?.map((item, index) => (
+                            <View
+                                key={index}
+                                style={{
+                                    paddingVertical: verticalScale(15),
+                                    flexDirection: "row",
+                                    // alignItems: "center",
+                                    gap: scale(10),
+                                    borderRadius: scale(12),
+                                    paddingHorizontal: scale(15),
+                                    backgroundColor: colors.cardColor,
+                                    borderColor: colors.queueBorder,
+                                    borderWidth: scale(1)
+                                }}
+                            >
+                                <Image
+                                    style={{ height: scale(45), width: scale(45), borderRadius: scale(40) }}
+                                    source={{ uri: item?.salonLogo?.[0]?.url }}
+                                    contentFit="cover"
+                                    transition={300}
+                                />
+
+                                <View style={{ gap: verticalScale(5), flex: 1 }}>
+                                    <CustomText
+                                        style={{
+                                            fontSize: scale(14),
+                                            fontFamily: "AirbnbCereal_W_Bd"
+                                        }}
+                                    >{item?.title}</CustomText>
+
+                                    <CustomText
+                                        style={{
+                                            fontSize: scale(12),
+                                            color: colors.secondaryText
+                                        }}
+                                    >{item?.body}</CustomText>
+                                </View>
+                            </View>
+                        ))
+                    ) : (
+                        <View style={[styles.noQueueContainer, {
+                            borderColor: colors.queueBorder,
+                            backgroundColor: colors.cardColor,
+                        }]}>
+                            <View style={[styles.iconContainer, { backgroundColor: "rgba(13, 148, 136, 0.1)" }]}>
+                                <NotificationOffIcon size={moderateScale(32)} color={"#14b8a6"} />
+                            </View>
+
+                            <CustomText style={{
+                                fontFamily: "AirbnbCereal_W_XBd",
+                                fontSize: scale(20),
+                                textAlign: "center",
+                            }}>No Notification</CustomText>
+
+                            <CustomText style={{
+                                fontFamily: "AirbnbCereal_W_Bd",
+                                fontSize: scale(16),
+                                textAlign: "center",
+                                color: colors.secondaryText,
+                            }}>
+                                You don't have notification
+                            </CustomText>
+                        </View>
+                    )
+
+                }
             </ScrollView>
+
         </View>
     )
 }

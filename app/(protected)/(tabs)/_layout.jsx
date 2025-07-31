@@ -64,8 +64,10 @@ export default function TabLayout() {
                                 },
                                 default: {},
                             }),
-                            height: Platform.OS === "ios" ? verticalScale(90) : verticalScale(70) + insets.bottom,
-                            paddingBottom: insets.bottom,   
+                            // height: Platform.OS === "ios" ? verticalScale(90) : verticalScale(70) + insets.bottom,
+                            // paddingBottom: insets.bottom, 
+                            // height: insets.bottom,
+                            paddingTop: verticalScale(15),
                             backgroundColor: colors.cardColor,
                             borderTopWidth: scale(1),
                             borderTopColor: colors.queueBorder,
@@ -79,7 +81,7 @@ export default function TabLayout() {
                         tabBarLabelStyle: {
                             fontFamily: 'AirbnbCereal_W_Md',
                             fontSize: scale(9.8),
-                            marginTop: verticalScale(4)
+                            marginTop: verticalScale(2)
                         },
                         tabBarItemStyle: {
                         }

@@ -17,6 +17,7 @@ import { NotificationIcon, PeopleIcon, RefreshIcon } from '../../../constants/ic
 import { io } from "socket.io-client";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Feather } from '@expo/vector-icons';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 
 const QueueList = () => {
 
@@ -183,26 +184,10 @@ const QueueList = () => {
                 </Pressable>
             </View>
 
-            <View style={{ flex: 1, paddingBottom: Platform.OS === 'ios' ? verticalScale(60) : 0 }}>
-                {/* {
-                    qlistData?.data?.length ? (
-                        <View
-                            style={{
-                                flexDirection: "row",
-                                alignItems: "center",
-                                gap: scale(10)
-                            }}
-                        >
-                            <TouchableOpacity
-                                onPress={() => router.push("/joinpopup")}
-                                style={styles.queueButton} activeOpacity={0.85}>
-                                <CustomText style={styles.queueButtonText}>Join Queue</CustomText>
-                            </TouchableOpacity>
-
-                        </View>
-                    ) : null
-                } */}
-
+            <View style={{
+                flex: 1,
+                paddingBottom: Platform.OS === 'ios' ? verticalScale(60) : 0
+            }}>
                 {
                     showHideQueBtn?.loading ? (
                         <Skeleton
@@ -301,7 +286,8 @@ const QueueList = () => {
                         ) : (
                             <View style={{
                                 flex: 1,
-                                paddingTop: verticalScale(20),
+                                justifyContent: "center",
+                                alignItems: "center",
                             }}>
                                 <View style={[styles.noQueueContainer, {
                                     borderColor: colors.queueBorder,
@@ -422,4 +408,37 @@ const styles = StyleSheet.create({
         marginHorizontal: "auto",
     }
 });
+
+
+// import { Platform, StyleSheet, Text, View } from 'react-native'
+// import React from 'react'
+// import { scale, verticalScale } from 'react-native-size-matters'
+// import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
+
+// const queuelist = () => {
+
+//     const insets = useSafeAreaInsets();
+
+//     return (
+//         <View style={{
+//             flex: 1,
+//             backgroundColor: "red",
+//             justifyContent: "center",
+//             alignItems: "center",
+//             paddingBottom: Platform.OS === "ios" ? insets.bottom : undefined
+//         }}>
+//             <View style={{
+//                 height: scale(200),
+//                 width: scale(200),
+//                 backgroundColor: "#fff"
+//             }}>
+
+//             </View>
+//         </View>
+//     )
+// }
+
+// export default queuelist
+
+// const styles = StyleSheet.create({})
 

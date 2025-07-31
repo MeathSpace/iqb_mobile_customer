@@ -728,24 +728,32 @@ const appointment = () => {
             />
           ))
         ) : !hasUpcoming && !hasPast ? (
-          <View style={[styles.upcomingCard, { backgroundColor: colors.cardColor, borderColor: colors.cardBorder }]}>
-            <View style={[styles.iconContainer, { backgroundColor: "rgba(13, 148, 136, 0.1)" }]}>
-              <Feather name={"calendar"} size={moderateScale(32)} color={"#14b8a6"} />
+          <View style={{
+            flex: 1,
+            justifyContent: "center",
+            alignItems: "center",
+            paddingBottom: Platform.OS === 'ios' ? verticalScale(60) : 0,
+          }}>
+
+            <View style={[styles.upcomingCard, { backgroundColor: colors.cardColor, borderColor: colors.cardBorder }]}>
+              <View style={[styles.iconContainer, { backgroundColor: "rgba(13, 148, 136, 0.1)" }]}>
+                <Feather name={"calendar"} size={moderateScale(32)} color={"#14b8a6"} />
+              </View>
+              <CustomText style={styles.cardTitle}>No Appointments</CustomText>
+              <CustomText style={[styles.cardSubtitle, { color: colors.secondaryText }]}>
+                You have no appointments to show.
+              </CustomText>
+              <TouchableOpacity
+                onPress={() => {
+                  setJoinModes((prev) => ({ ...prev, appointment: true, appointmentType: "Book" }));
+                  router.push("/appointmentCalendar");
+                }}
+                style={styles.bookButton}
+                activeOpacity={0.85}
+              >
+                <CustomText style={styles.bookButtonText}>Book Appointment</CustomText>
+              </TouchableOpacity>
             </View>
-            <CustomText style={styles.cardTitle}>No Appointments</CustomText>
-            <CustomText style={[styles.cardSubtitle, { color: colors.secondaryText }]}>
-              You have no appointments to show.
-            </CustomText>
-            <TouchableOpacity
-              onPress={() => {
-                setJoinModes((prev) => ({ ...prev, appointment: true, appointmentType: "Book" }));
-                router.push("/appointmentCalendar");
-              }}
-              style={styles.bookButton}
-              activeOpacity={0.85}
-            >
-              <CustomText style={styles.bookButtonText}>Book Appointment</CustomText>
-            </TouchableOpacity>
           </View>
         ) : (
           <>
@@ -971,13 +979,15 @@ const styles = StyleSheet.create({
     // marginBottom: verticalScale(20)
   },
   bookButton: {
-    width: '100%',
+    // flexDirection: "row",
+    // width: '100%',
     backgroundColor: '#14b8a6', // bg-teal-500
     paddingVertical: verticalScale(16), // py-4
     borderRadius: scale(12), // rounded-xl
+    paddingHorizontal: scale(60)
     // marginBottom: verticalScale(15), // mb-6
-    alignItems: 'center',
-    justifyContent: 'center'
+    // alignItems: 'center',
+    // justifyContent: 'center'
   },
   bookButtonText: {
     color: '#fff', // text-white

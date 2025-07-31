@@ -15,12 +15,11 @@ const termService = () => {
   return (
     <ScrollView
       style={{
+        backgroundColor: colors.background,
         flex: 1,
-        // backgroundColor: "#00B0901A"
-        backgroundColor: colors.background
+        // paddingHorizontal: scale(10),
       }}
       contentContainerStyle={{
-        paddingTop: verticalScale(10),
         paddingHorizontal: scale(10),
         paddingBottom: Platform.OS === "ios" ? verticalScale(80) : verticalScale(20)
       }}
@@ -30,7 +29,8 @@ const termService = () => {
       <View style={{
         flexDirection: "row",
         alignItems: "center",
-        gap: scale(3)
+        gap: scale(3),
+        height: verticalScale(40),
       }}>
         <Pressable onPress={() => router.replace("/about")}><ArrowLeftIcon color={colors.text} /></Pressable>
         <CustomText style={{
@@ -47,7 +47,7 @@ const termService = () => {
         borderColor: colors.queueBorder,
         padding: scale(12),
         borderRadius: scale(12),
-        marginTop: verticalScale(20)
+        // marginTop: verticalScale(20)
       }}>
         <CustomText style={styles.heading}>Welcome to our salon app!</CustomText>
         <CustomText style={styles.paragraph}>
