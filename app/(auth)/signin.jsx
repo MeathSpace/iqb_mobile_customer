@@ -13,7 +13,7 @@ import * as Linking from 'expo-linking'
 import * as WebBrowser from 'expo-web-browser'
 import * as AuthSession from 'expo-auth-session'
 import { useClerk, useSSO, useUser } from '@clerk/clerk-expo'
-import { useTheme } from '@react-navigation/native';
+import { usePreventRemove, useTheme } from '@react-navigation/native';
 import { Colors } from '@/constants/Colors';
 import { ErrorIcon, EyeIcon, EyeOffIcon } from '../../constants/icons';
 import axios from 'axios';
@@ -125,7 +125,10 @@ const signin = () => {
 
     const googleSigninPressed = useCallback(async () => {
         try {
-
+            setEmail("")
+            setPassword("")
+            setEmailError("")
+            setPasswordError("")
             setGoogleClicked(true)
 
             // Start the authentication process by calling `startSSOFlow()`
@@ -294,6 +297,13 @@ const signin = () => {
         }, [isSignedIn, router, rememberMe, user]) // You can pass dependencies here
     );
 
+
+    usePreventRemove(
+        true, // This boolean determines if removal should be prevented
+        ({ data }) => {
+
+        }
+    );
 
     return (
         <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
@@ -504,7 +514,7 @@ const signin = () => {
 
                     </Pressable>
 
-                    <Pressable onPress={() => router.replace("/signup")}>
+                    <Pressable onPress={() => router.push("/signup")}>
                         <CustomText style={[styles.subHeading, { color: colors.secondaryText }]}>Don't have an account ?<CustomText style={{ color: '#14b8a6' }}> Sign up</CustomText></CustomText>
                     </Pressable>
                 </View>

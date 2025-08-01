@@ -56,7 +56,7 @@ const index = () => {
     await AsyncStorage.removeItem("isAuthenticated")
     setIsAuthenticated(false)
     setAuthenticatedUser(null)
-    router.replace("/")
+    // router.push("/index")
   }
 
 

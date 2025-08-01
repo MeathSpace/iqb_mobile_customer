@@ -1,14 +1,22 @@
 import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import { Redirect, Slot, Stack } from 'expo-router'
+import React, { useEffect } from 'react'
+import { Redirect, Slot, Stack, useRouter } from 'expo-router'
 import { useAuth } from '../../context/AuthContext'
 
 const ProtectedLayout = () => {
     const { isAuthenticated } = useAuth()
+    const router = useRouter()
 
     if (!isAuthenticated) {
-        return <Redirect href="/" />
+        return <Redirect href="/signin" />
     }
+
+    // useEffect(() => {
+    //     if (!isAuthenticated) {
+    //         router.push("/s")
+    //         console.log("Loged out")
+    //     }
+    // }, [isAuthenticated])
 
     return (
         <Stack
@@ -107,8 +115,6 @@ const ProtectedLayout = () => {
                     animation: 'default',
                 }}
             />
-
-
 
         </Stack>
     )

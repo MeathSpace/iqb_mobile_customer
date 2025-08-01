@@ -83,18 +83,18 @@ const index = () => {
             </TouchableOpacity>
           ) : (
             <>
-              <TouchableOpacity
-                onPress={() => router.push("/signup")}
-                style={[styles.authButton, { marginBottom: verticalScale(10) }]} activeOpacity={0.85}>
-                <CustomText style={styles.authButtonText}>Register</CustomText>
-              </TouchableOpacity>
+<TouchableOpacity
+  onPress={() => router.push("/signup")}
+  style={[styles.authButton, { marginBottom: verticalScale(10) }]} activeOpacity={0.85}>
+  <CustomText style={styles.authButtonText}>Register</CustomText>
+</TouchableOpacity>
 
 
-              <TouchableOpacity
-                onPress={() => router.push("/signin")}
-                style={styles.authButton} activeOpacity={0.85}>
-                <CustomText style={styles.authButtonText}>Log In</CustomText>
-              </TouchableOpacity>
+<TouchableOpacity
+  onPress={() => router.push("/signin")}
+  style={styles.authButton} activeOpacity={0.85}>
+  <CustomText style={styles.authButtonText}>Log In</CustomText>
+</TouchableOpacity>
             </>
           )
         }
@@ -140,20 +140,65 @@ const styles = StyleSheet.create({
   },
 
 
-  authButton: {
-    width: '100%',
-    backgroundColor: '#14b8a6', // bg-teal-500
-    paddingVertical: verticalScale(12), // py-4
-    borderRadius: scale(8), // rounded-xl
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  authButtonText: {
-    color: '#fff', // text-white
-    fontFamily: "AirbnbCereal_W_XBd",
-    fontSize: scale(16),
-  },
+authButton: {
+  width: '100%',
+  backgroundColor: '#14b8a6', // bg-teal-500
+  paddingVertical: verticalScale(12), // py-4
+  borderRadius: scale(8), // rounded-xl
+  alignItems: 'center',
+  justifyContent: 'center',
+},
+authButtonText: {
+  color: '#fff', // text-white
+  fontFamily: "AirbnbCereal_W_XBd",
+  fontSize: scale(16),
+},
 })
 
 
+// import { SafeAreaView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+// import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
+// import React from 'react'
+// import { useRouter } from 'expo-router'
+// import CustomText from '../components/CustomText';
 
+// const initialScreen = () => {
+
+//   const router = useRouter()
+
+//   return (
+//     <SafeAreaView>
+//       <TouchableOpacity
+//         onPress={() => router.push("/signup")}
+//         style={[styles.authButton, { marginBottom: verticalScale(10) }]} activeOpacity={0.85}>
+//         <CustomText style={styles.authButtonText}>Register</CustomText>
+//       </TouchableOpacity>
+
+
+//       <TouchableOpacity
+//         onPress={() => router.push("/signin")}
+//         style={styles.authButton} activeOpacity={0.85}>
+//         <CustomText style={styles.authButtonText}>Log In</CustomText>
+//       </TouchableOpacity>
+//     </SafeAreaView>
+//   )
+// }
+
+// export default initialScreen
+
+// const styles = StyleSheet.create({
+
+//   authButton: {
+//     width: '100%',
+//     backgroundColor: '#14b8a6', // bg-teal-500
+//     paddingVertical: verticalScale(12), // py-4
+//     borderRadius: scale(8), // rounded-xl
+//     alignItems: 'center',
+//     justifyContent: 'center',
+//   },
+//   authButtonText: {
+//     color: '#fff', // text-white
+//     fontFamily: "AirbnbCereal_W_XBd",
+//     fontSize: scale(16),
+//   },
+// })

@@ -27,17 +27,6 @@ export const GlobalProvider = ({ children }) => {
 
     const { authenticatedUser } = useAuth()
 
-    // const hasRun = useRef(false);
-
-    // useEffect(() => {
-    //     if (authenticatedUser && !hasRun.current) {
-    //         setCustomerName(authenticatedUser.name);
-    //         setMemberName(authenticatedUser?.name)
-    //         hasRun.current = true;
-    //     }
-    // }, [authenticatedUser]);
-
-
     const [memberName, setMemberName] = useState("")
     const [groupJoinMembers, setGroupJoinMembers] = useState([])
     const [removeGroupMember, setRemoveGroupMember] = useState({

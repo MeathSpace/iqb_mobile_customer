@@ -413,7 +413,7 @@ const signup = () => {
 
                     <Pressable onPress={async () => {
                         await signOut()
-                        router.replace("/signin")
+                        router.push("/signin")
                     }}>
                         <CustomText style={[styles.subHeading, { color: colors.secondaryText }]}>Already a member ? <CustomText style={{ color: '#14b8a6' }}> Log In</CustomText></CustomText>
                     </Pressable>
