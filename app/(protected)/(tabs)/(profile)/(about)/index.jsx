@@ -8,7 +8,7 @@ import {
 import React from "react";
 import { useRouter } from "expo-router";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
-import CustomText from "../../../components/CustomText";
+import CustomText from "../../../../../components/CustomText";
 import {
   CertificateIcon,
   GlobalIcon,
@@ -16,10 +16,10 @@ import {
   TermServiceIcon,
   RightIcon,
   ArrowLeftIcon,
-} from "../../../constants/icons";
+} from "../../../../../constants/icons";
 import { useTheme } from "@react-navigation/native";
 
-const About = () => {
+const index = () => {
   const router = useRouter();
   const { colors } = useTheme();
 
@@ -68,7 +68,7 @@ const About = () => {
         gap: scale(3),
         height: verticalScale(40),
       }}>
-        <Pressable onPress={() => router.replace("/account")}><ArrowLeftIcon color={colors.text} /></Pressable>
+        <Pressable onPress={() => router.back()}><ArrowLeftIcon color={colors.text} /></Pressable>
         <CustomText style={{
           flex: 1,
           // textAlign: "center",
@@ -149,7 +149,7 @@ const About = () => {
   );
 };
 
-export default About;
+export default index;
 
 const styles = StyleSheet.create({
   versionWrapper: {

@@ -8,21 +8,21 @@ import {
     Text,
     View,
 } from 'react-native';
-import SalonCard from '../../../components/SalonCard';
+import SalonCard from '../../../../components/SalonCard';
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import CustomTabView from '../../../components/CustomTabView';
-import { ArrowLeftIcon, CarIcon, ExternalLinkIcon, HeartDislikeIcon, HeartFilledIcon, HeartIcon } from '../../../constants/icons';
+import CustomTabView from '../../../../components/CustomTabView';
+import { ArrowLeftIcon, CarIcon, ExternalLinkIcon, HeartDislikeIcon, HeartFilledIcon, HeartIcon } from '../../../../constants/icons';
 import { Image } from 'expo-image';
-import CustomText from '../../../components/CustomText';
+import CustomText from '../../../../components/CustomText';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useTheme } from '@react-navigation/native';
-import { useAuth } from '../../../context/AuthContext';
+import { useAuth } from '../../../../context/AuthContext';
 import axios from 'axios';
 import { BASE_URL } from '@/utils/api';
 import { Toast } from 'toastify-react-native'
-import Skeleton from '../../../components/Skeleton';
-import CustomSecondaryText from '../../../components/CustomSecondaryText';
+import Skeleton from '../../../../components/Skeleton';
+import CustomSecondaryText from '../../../../components/CustomSecondaryText';
 
 const MyFavourites = () => {
 
@@ -154,7 +154,7 @@ const MyFavourites = () => {
                 alignItems: "center",
                 gap: scale(3)
             }}>
-                <Pressable onPress={() => router.replace("/account")}><ArrowLeftIcon color={colors.text} /></Pressable>
+                <Pressable onPress={() => router.back()}><ArrowLeftIcon color={colors.text} /></Pressable>
                 <CustomText style={{
                     flex: 1,
                     // textAlign: "center",

@@ -506,7 +506,7 @@ const index = () => {
       darkBg: '#1e3a8a33',
       lightColor: '#0284c7',
       darkColor: '#93c5fd',
-      route: "/about",
+      route: "/(about)",
       display: true
     },
   ];

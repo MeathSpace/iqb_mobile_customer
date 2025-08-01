@@ -1,9 +1,9 @@
 import { Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native'
 import React from 'react'
-import CustomTabView from '../../../components/CustomTabView'
-import CustomText from '../../../components/CustomText'
+import CustomTabView from '../../../../../components/CustomTabView'
+import CustomText from '../../../../../components/CustomText'
 import { scale, verticalScale } from 'react-native-size-matters'
-import { ArrowLeftIcon } from '../../../constants/icons'
+import { ArrowLeftIcon } from '../../../../../constants/icons'
 import { useRouter } from 'expo-router'
 import { useTheme } from '@react-navigation/native'
 
@@ -31,7 +31,7 @@ const privacyPolicy = () => {
           gap: scale(3),
           height: verticalScale(40),
         }}>
-          <Pressable onPress={() => router.replace("/about")}><ArrowLeftIcon color={colors.text} /></Pressable>
+          <Pressable onPress={() => router.back()}><ArrowLeftIcon color={colors.text} /></Pressable>
           <CustomText style={{
             flex: 1,
             fontSize: scale(18),

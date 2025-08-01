@@ -1,11 +1,11 @@
 import { Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native'
 import React from 'react'
-import CustomText from '../../../components/CustomText'
+import CustomText from '../../../../../components/CustomText'
 import { scale, verticalScale } from 'react-native-size-matters'
 import { useRouter } from 'expo-router'
 import { Colors } from '@/constants/Colors';
 import { useTheme } from '@react-navigation/native'
-import { ArrowLeftIcon } from '../../../constants/icons'
+import { ArrowLeftIcon } from '../../../../../constants/icons'
 
 const termService = () => {
 
@@ -32,7 +32,7 @@ const termService = () => {
         gap: scale(3),
         height: verticalScale(40),
       }}>
-        <Pressable onPress={() => router.replace("/about")}><ArrowLeftIcon color={colors.text} /></Pressable>
+        <Pressable onPress={() => router.back()}><ArrowLeftIcon color={colors.text} /></Pressable>
         <CustomText style={{
           flex: 1,
           fontSize: scale(18),

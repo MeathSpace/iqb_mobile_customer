@@ -13,8 +13,17 @@ const _layout = () => {
             />
 
             <Stack.Screen
-                name="myFavourites"
+                name="termService"
             />
+
+            <Stack.Screen
+                name="privacyPolicy"
+            />
+
+            <Stack.Screen
+                name="licenses"
+            />
+
         </Stack>
     )
 }
