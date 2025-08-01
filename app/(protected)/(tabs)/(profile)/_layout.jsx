@@ -15,6 +15,20 @@ const _layout = () => {
             <Stack.Screen
                 name="myFavourites"
             />
+
+            <Stack.Screen
+                name="helpSupport"
+                options={{
+                    presentation: 'transparentModal',
+                    animation: 'fade',
+                }} />
+
+            <Stack.Screen
+                name="connectSalon"
+                options={{
+                    presentation: 'transparentModal',
+                    animation: 'fade',
+                }} />
         </Stack>
     )
 }

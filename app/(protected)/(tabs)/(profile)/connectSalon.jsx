@@ -1,13 +1,13 @@
 import { ActivityIndicator, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
-import { CloseIcon, ErrorIcon } from '../../constants/icons';
-import CustomText from '../../components/CustomText'
-import { Colors } from '../../constants/Colors';
+import { CloseIcon, ErrorIcon } from '../../../../constants/icons';
+import CustomText from '../../../../components/CustomText'
+import { Colors } from '../../../../constants/Colors';
 import { useRouter } from 'expo-router';
 import { useTheme } from '@react-navigation/native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../../../context/AuthContext';
 import axios from 'axios';
 import { BASE_URL } from '@/utils/api';
 import { Toast } from 'toastify-react-native'

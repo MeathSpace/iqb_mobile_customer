@@ -10,13 +10,13 @@ import {
     TouchableOpacity
 } from 'react-native'
 import React, { useEffect, useRef, useState } from 'react'
-import { CloseIcon, ErrorIcon } from '../../constants/icons'
+import { CloseIcon, ErrorIcon } from '../../../../constants/icons'
 import { scale, verticalScale } from 'react-native-size-matters';
-import { Colors } from '../../constants/Colors';
-import CustomText from '../../components/CustomText';
+import { Colors } from '../../../../constants/Colors';
+import CustomText from '../../../../components/CustomText';
 import { useRouter } from 'expo-router';
 import { useTheme } from '@react-navigation/native';
-import { useAuth } from '../../context/AuthContext';
+import { useAuth } from '../../../../context/AuthContext';
 import axios from 'axios';
 import { BASE_URL } from '@/utils/api';
 import { Toast } from 'toastify-react-native'

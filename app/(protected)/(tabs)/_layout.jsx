@@ -145,21 +145,6 @@ export default function TabLayout() {
                         }}
                     />
 
-                    {/* <Tabs.Screen
-                        name="account"
-                        options={{
-                            title: 'Profile',
-                            tabBarIcon: ({ color, focused }) => (
-                                <AnimatedTabIcon
-                                    focused={focused}
-                                    color={color}
-                                    // theme={theme}
-                                    Icon={ProfileIcon}
-                                />
-                            ),
-                        }}
-                    /> */}
-
                     <Tabs.Screen
                         name="(profile)"
                         options={{
