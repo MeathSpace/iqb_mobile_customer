@@ -44,7 +44,8 @@ const connectSalon = () => {
     }
 
     return (
-        <View
+        <Pressable
+            onPress={() => router.back()}
             style={{
                 flex: 1,
                 backgroundColor: "rgba(0,0,0,0.2)",
@@ -52,7 +53,8 @@ const connectSalon = () => {
                 alignItems: "center"
             }}
         >
-            <View
+            <Pressable
+                onPress={() => { }}
                 style={{
                     width: "95%",
                     height: verticalScale(280),
@@ -128,8 +130,8 @@ const connectSalon = () => {
                 </Pressable>
 
 
-            </View>
-        </View>
+            </Pressable>
+        </Pressable>
     )
 }
 

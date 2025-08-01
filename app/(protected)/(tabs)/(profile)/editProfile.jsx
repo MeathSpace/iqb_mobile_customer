@@ -960,12 +960,12 @@
 
 import { ActivityIndicator, Alert, BackHandler, Keyboard, KeyboardAvoidingView, Modal, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import CustomScrollView from '../../../components/CustomScrollView'
+import CustomScrollView from '../../../../components/CustomScrollView'
 import { useTheme } from '@react-navigation/native'
 import { useFocusEffect, useRouter } from 'expo-router'
 import DateTimePicker from "@react-native-community/datetimepicker";
-import { ArrowDownIcon, ArrowLeftIcon, CalendarIcon, CameraIcon, ErrorIcon, RightIcon } from '../../../constants/icons'
-import CustomText from '../../../components/CustomText'
+import { ArrowDownIcon, ArrowLeftIcon, CalendarIcon, CameraIcon, ErrorIcon, RightIcon } from '../../../../constants/icons'
+import CustomText from '../../../../components/CustomText'
 import CountryPicker, { DARK_THEME }
     from 'react-native-country-picker-modal';
 import DropDownPicker from 'react-native-dropdown-picker'
@@ -973,16 +973,16 @@ import PhoneInput
     from 'react-native-phone-input';
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import { Colors } from '@/constants/Colors';
-import { useAuth } from '../../../context/AuthContext'
+import { useAuth } from '../../../../context/AuthContext'
 import { Image } from 'expo-image'
-import CustomSecondaryText from '../../../components/CustomSecondaryText'
+import CustomSecondaryText from '../../../../components/CustomSecondaryText'
 import * as ImagePicker from 'expo-image-picker';
-import CustomTabView from '../../../components/CustomTabView'
+import CustomTabView from '../../../../components/CustomTabView'
 import axios from 'axios'
 import { BASE_URL } from '@/utils/api';
 import { Toast } from 'toastify-react-native'
 import AsyncStorage from '@react-native-async-storage/async-storage'
-import Skeleton from '../../../components/Skeleton';
+import Skeleton from '../../../../components/Skeleton';
 
 const editProfile = () => {
 
@@ -994,22 +994,6 @@ const editProfile = () => {
     const { setIsAuthenticated, authenticatedUser, setAuthenticatedUser } = useAuth()
     const phoneRef = useRef(null);
 
-
-    useFocusEffect(
-        useCallback(() => {
-            const onBackPress = () => {
-                setFullNameError("")
-                setPhoneNumberError("")
-                setDateOfBirthError("")
-                router.push('/account'); // 👈 or replace('/account') if you don’t want to go back to this screen
-                return true; // prevent default behavior
-            };
-
-            const subscription = BackHandler.addEventListener('hardwareBackPress', onBackPress);
-
-            return () => subscription.remove(); // ✅ correct way
-        }, [])
-    );
 
     useFocusEffect(
         useCallback(() => {
@@ -1262,7 +1246,7 @@ const editProfile = () => {
 
             Toast.success("Profile updated successfully")
 
-            router.replace("/account")
+            router.back()
 
         } catch (error) {
             setUpdateProfileLoader(false)
@@ -1444,7 +1428,7 @@ const editProfile = () => {
                                 setFullNameError("")
                                 setPhoneNumberError("")
                                 setDateOfBirthError("")
-                                router.replace("/account")
+                                router.back()
                             }}><ArrowLeftIcon color={colors.text} /></Pressable>
                             <CustomText style={{
                                 flex: 1,

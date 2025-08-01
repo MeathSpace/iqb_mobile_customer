@@ -9,7 +9,7 @@ import {
     Alert,
     TouchableOpacity
 } from 'react-native'
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { CloseIcon, ErrorIcon } from '../../constants/icons'
 import { scale, verticalScale } from 'react-native-size-matters';
 import { Colors } from '../../constants/Colors';
@@ -82,10 +82,25 @@ const helpSupport = () => {
             );
         }
     };
+
+    const subjectTimeoutRef = useRef(null);
+    const bodyTimeoutRef = useRef(null);
+
+    useEffect(() => {
+        return () => {
+            if (subjectTimeoutRef.current) clearTimeout(subjectTimeoutRef.current);
+            if (bodyTimeoutRef.current) clearTimeout(bodyTimeoutRef.current);
+        };
+    }, []);
     return (
-        <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+        <TouchableWithoutFeedback onPress={() => {
+            router.back()
+            Keyboard.dismiss
+        }}>
             <View style={styles.overlay}>
-                <View style={[styles.container, { backgroundColor: colors.background, borderColor: colors.cardBorder }]}>
+                <Pressable
+                    onPress={() => { }}
+                    style={[styles.container, { backgroundColor: colors.background, borderColor: colors.cardBorder }]}>
                     <CustomText style={styles.title}>Help & Support</CustomText>
 
                     <CustomText style={[styles.description, { color: colors.secondaryText }]}>
@@ -109,9 +124,21 @@ const helpSupport = () => {
                             }
                         ]}
                         value={subject}
+                        // onChangeText={(text) => {
+                        //     setSubjectError("")
+                        //     setSubject(text)
+                        // }}
                         onChangeText={(text) => {
-                            setSubjectError("")
-                            setSubject(text)
+                            setSubjectError("");
+                            setSubject(text);
+
+                            if (subjectTimeoutRef.current) {
+                                clearTimeout(subjectTimeoutRef.current);
+                            }
+
+                            subjectTimeoutRef.current = setTimeout(() => {
+                                Keyboard.dismiss();
+                            }, 3000);
                         }}
                     />
 
@@ -147,10 +174,24 @@ const helpSupport = () => {
                         placeholderTextColor="gray"
                         placeholder="Explain the problem"
                         value={body}
+                        // onChangeText={(text) => {
+                        //     setBodyError("")
+                        //     setBody(text)
+                        // }}
+
                         onChangeText={(text) => {
-                            setBodyError("")
-                            setBody(text)
+                            setBodyError("");
+                            setBody(text);
+
+                            if (bodyTimeoutRef.current) {
+                                clearTimeout(bodyTimeoutRef.current);
+                            }
+
+                            bodyTimeoutRef.current = setTimeout(() => {
+                                Keyboard.dismiss();
+                            }, 3000);
                         }}
+
                     />
 
                     {
@@ -206,7 +247,7 @@ const helpSupport = () => {
                             color="#E11D48"
                         />
                     </Pressable>
-                </View>
+                </Pressable>
             </View>
 
         </TouchableWithoutFeedback>

@@ -1,16 +1,53 @@
-import { Pressable, StyleSheet, Text, View } from 'react-native'
+import { ActivityIndicator, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
-import React from 'react'
+import React, { useState } from 'react'
 import { useTheme } from '@react-navigation/native';
 import { Image } from 'expo-image';
 import CustomText from './CustomText';
 import { useGlobal } from '../context/GlobalContext';
-import { MapIcon } from '../constants/icons';
+import { AddIcon, MapIcon } from '../constants/icons';
+import axios from 'axios';
+import { BASE_URL } from '@/utils/api';
+import { useAuth } from '../context/AuthContext';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-const SalonCard = ({ item, setSelectedCustomerSalon, setSelectedConnectSalonId, favourite = false }) => {
+const SalonCard = ({ item, setSelectedCustomerSalon, setSelectedConnectSalonId, map = false }) => {
 
     const { colors } = useTheme()
-    const { selectedSalonLocation, setSelectedSalonLocation } = useGlobal()
+    const { setSearchCitySalon } = useGlobal()
+
+    const [salonCardConnectLoader, setSalonCardConnectLoader] = useState(false)
+    const { authenticatedUser, setAuthenticatedUser } = useAuth()
+
+    const connectSalonCardPressed = async (selectSalonId) => {
+
+        try {
+
+            setSalonCardConnectLoader(true)
+
+            const { data } = await axios.post(`${BASE_URL}/customer/customerConnectSalon`, {
+                salonId: selectSalonId,
+                email: authenticatedUser?.email
+            })
+
+            console.log(data)
+
+            setAuthenticatedUser(data?.response)
+            await AsyncStorage.setItem("LoggedInUser", JSON.stringify(data?.response))
+            setSearchCitySalons({
+                data: null,
+                loading: false,
+                error: null,
+                success: false
+            })
+
+            setSalonCardConnectLoader(false)
+
+        } catch (error) {
+            console.log("Error connecting salon ", error)
+            setSalonCardConnectLoader(false)
+        }
+    }
 
     return (
         <Pressable onPress={() => {
@@ -20,7 +57,7 @@ const SalonCard = ({ item, setSelectedCustomerSalon, setSelectedConnectSalonId, 
                 data: item
             })
         }}>
-            <View style={[styles.cardWrapper, { width: favourite ? "100%" : scale(280), backgroundColor: colors.background }]}>
+            <View style={[styles.cardWrapper, { width: scale(280), backgroundColor: colors.background }]}>
                 {/* <Image
                     style={styles.cardImage}
                     source={{ uri: item?.gallery?.[0]?.url }}
@@ -57,27 +94,28 @@ const SalonCard = ({ item, setSelectedCustomerSalon, setSelectedConnectSalonId, 
                     <CustomText style={{ fontSize: moderateScale(14), fontFamily: "AirbnbCereal_W_Md" }}>{item.salonName}</CustomText>
                 </View>
 
-
-                {/* <Pressable
+                <TouchableOpacity
                     onPress={() => {
-                        setSelectedSalonLocation({ ...item?.location?.coordinates, address: item?.address, salonName: item?.salonName })
+                        // setSelectedConnectSalonId()
+                        connectSalonCardPressed(item?.salonId)
                     }}
-                    style={{
-                        width: "90%",
-                        height: verticalScale(30),
-                        marginHorizontal: "auto",
-                        backgroundColor: "#0BA3AD1A",
-                        marginBottom: verticalScale(10),
-                        justifyContent: "center",
-                        alignItems: "center",
-                        borderRadius: scale(4),
-                        flexDirection: "row",
-                        gap: scale(10)
-                    }}
-                >
-                    <MapIcon size={scale(18)}/>
-                    <CustomText style={{ color: "##0BA3AD" }}>See location</CustomText>
-                </Pressable> */}
+                    disabled={!map || salonCardConnectLoader}
+                    style={styles.connectButton} activeOpacity={0.85}>
+                    {
+                        salonCardConnectLoader ? (
+                            <ActivityIndicator size="small" color="#fff" />
+                        ) : (
+                            <View style={{
+                                flexDirection: "row",
+                                alignItems: "center",
+                                gap: scale(2)
+                            }}>
+                                <CustomText style={styles.connectButtonText}>Connect</CustomText>
+                                <AddIcon size={scale(16)} color='#fff' />
+                            </View>
+                        )
+                    }
+                </TouchableOpacity>
 
             </View>
         </Pressable>
@@ -109,5 +147,22 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         gap: scale(10),
-    }
+    },
+
+    connectButton: {
+        backgroundColor: '#14b8a6', // bg-teal-500
+        paddingHorizontal: scale(6), // py-4
+        paddingVertical: verticalScale(10), // py-4
+        borderRadius: scale(8), // rounded-xl
+        alignItems: 'center',
+        justifyContent: 'center',
+        width: "90%",
+        marginHorizontal: "auto",
+        marginBottom: verticalScale(10)
+    },
+    connectButtonText: {
+        color: '#fff', // text-white
+        fontFamily: "AirbnbCereal_W_XBd",
+        fontSize: scale(16),
+    },
 })

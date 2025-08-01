@@ -295,6 +295,8 @@ const Map = () => {
         }
     }
 
+  
+
     // Salon Info for connect Salon
 
     const [salonInfoData, setSalonInfoData] = useState({
@@ -582,8 +584,9 @@ const Map = () => {
                             setSelectedCustomerSalon={setSelectedCustomerSalon}
                             setSelectedConnectSalonId={setSelectedConnectSalonId}
                             map={true}
-                            connectSalonPressed={connectSalonPressed}
-                            connectSalonLoader={connectSalonLoader}
+                            // connectSalonCardPressed={connectSalonCardPressed}
+                            // connectSalonLoader={connectSalonLoader}
+                            // selectecConnectSalonId={selectecConnectSalonId}
                         />}
                         keyExtractor={item => item._id}
                         horizontal

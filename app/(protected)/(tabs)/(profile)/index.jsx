@@ -408,25 +408,25 @@
 
 import { Alert, FlatList, Platform, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React from 'react'
-import CustomTabView from '../../../components/CustomTabView'
-import CustomText from '../../../components/CustomText'
-import { useAuth } from '../../../context/AuthContext'
+import CustomTabView from '../../../../components/CustomTabView'
+import CustomText from '../../../../components/CustomText'
+import { useAuth } from '../../../../context/AuthContext'
 import { Link, useRouter } from 'expo-router'
 import { useClerk, useUser } from '@clerk/clerk-expo'
 import { Image } from 'expo-image'
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import { SafeAreaView } from 'react-native-safe-area-context'
 import { useTheme } from '@react-navigation/native'
-import CustomSecondaryText from '../../../components/CustomSecondaryText'
-import CustomView from '../../../components/CustomView'
-import { AboutIcon, ArrowLeftIcon, HeartIcon, HelpIcon, LogoutIcon, NotificationIcon, PeopleIcon, ProfileIcon, RightIcon, SalonIcon, UserIcon } from '../../../constants/icons'
-import { Colors } from '../../../constants/Colors'
-import { useGlobal } from '../../../context/GlobalContext'
+import CustomSecondaryText from '../../../../components/CustomSecondaryText'
+import CustomView from '../../../../components/CustomView'
+import { AboutIcon, ArrowLeftIcon, HeartIcon, HelpIcon, LogoutIcon, NotificationIcon, PeopleIcon, ProfileIcon, RightIcon, SalonIcon, UserIcon } from '../../../../constants/icons'
+import { Colors } from '../../../../constants/Colors'
+import { useGlobal } from '../../../../context/GlobalContext'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Feather } from '@expo/vector-icons'
 
-const account = () => {
+const index = () => {
 
 
   const { colors } = useTheme()
@@ -464,38 +464,9 @@ const account = () => {
     await AsyncStorage.removeItem("isAuthenticated")
     setIsAuthenticated(false)
     setAuthenticatedUser(null)
-    // hasRun.current = false;
     router.replace("/")
   }
 
-  const accountDetails = [
-    {
-      id: 1,
-      title: "My favourites",
-      icon: <HeartIcon color={colors.text} />,
-      route: "/"
-    },
-    {
-      id: 2,
-      title: "Change Salon",
-      icon: <SalonIcon color={colors.text} />,
-      route: "/(protected)/account/payment"
-    },
-    {
-      id: 3,
-      title: "Help & Support",
-      icon: <HelpIcon color={colors.text} />,
-      route: "/(protected)/account/notifications",
-      route: "/helpSupport"
-    },
-    {
-      id: 4,
-      title: "About",
-      icon: <AboutIcon color={colors.text} />,
-      route: "/(protected)/account/settings",
-      route: "/about"
-    }
-  ]
 
   const profileOptions = [
     {
@@ -675,7 +646,7 @@ const account = () => {
   )
 }
 
-export default account
+export default index
 
 const styles = StyleSheet.create({
   header: {
