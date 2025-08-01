@@ -32,7 +32,7 @@ const licenses = () => {
           alignItems: "center",
           gap: scale(3)
         }}>
-          <Pressable onPress={() => router.replace("/about")}><ArrowLeftIcon color={colors.text} /></Pressable>
+          <Pressable onPress={() => router.back()}><ArrowLeftIcon color={colors.text} /></Pressable>
           <CustomText style={{
             flex: 1,
             fontSize: scale(18),
