@@ -31,7 +31,10 @@ const connectSalon = () => {
 
             setAuthenticatedUser({ ...authenticatedUser, salonId: 0 })
             await AsyncStorage.setItem("LoggedInUser", JSON.stringify({ ...authenticatedUser, salonId: 0 }))
-            router.replace("/home")
+            // router.replace("/home")
+
+            router.dismiss(); // this is alias for `router.back()` inside modal
+            router.replace("/home");
 
             setConnectSalonLoader(false)
 

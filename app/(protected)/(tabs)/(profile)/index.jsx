@@ -104,33 +104,6 @@ const index = () => {
   ];
 
 
-  const menuOptionPressed = (item) => {
-    if (item.title === "Change Salon") {
-      Alert.alert(
-        "Confirm",
-        "Are you sure you want to disconnect?",
-        [
-          {
-            text: "Cancel",
-            style: "cancel",
-          },
-          {
-            text: "Yes, Disconnect",
-            onPress: async () => {
-              setAuthenticatedUser({ ...authenticatedUser, salonId: "" })
-              await AsyncStorage.setItem("LoggedInUser", JSON.stringify({ ...authenticatedUser, salonId: "" }))
-            },
-            style: "destructive",
-          },
-        ],
-        { cancelable: true }
-      );
-    } else if (item.title === "My favourites") {
-      router.push("/myFavourites")
-    }
-  };
-
-
   return (
     <View
       style={{
