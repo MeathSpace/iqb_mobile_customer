@@ -10,6 +10,7 @@ import { ClerkProvider } from '@clerk/clerk-expo'
 import { tokenCache } from '@clerk/clerk-expo/token-cache'
 import { StatusBar } from 'expo-status-bar';
 import ToastManager from 'toastify-react-native'
+import AppInitializer from './appInitializer'
 
 SplashScreen.preventAutoHideAsync();
 
@@ -117,12 +118,13 @@ const RootLayout = () => {
           // publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY}
           publishableKey='pk_test_bGVnYWwtamF2ZWxpbi00LmNsZXJrLmFjY291bnRzLmRldiQ'
           tokenCache={tokenCache}>
+          {/* <AppInitializer> */}
           <ThemeProvider value={colorScheme === 'dark' ? MyDarkTheme : MyLightTheme}>
-            {/* <Slot /> */}
             <Stack screenOptions={{ headerShown: false }} />
             <StatusBar style="auto" />
             <ToastManager />
           </ThemeProvider>
+          {/* </AppInitializer> */}
         </ClerkProvider>
       </GlobalProvider>
     </AuthProvider>
