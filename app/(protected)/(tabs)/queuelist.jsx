@@ -236,6 +236,7 @@ const QueueList = () => {
                             </View>
                             <FlatList
                                 data={[0, 1, 2, 3, 4, 5, 6, 7, 8]}
+                                contentContainerStyle={{ padding: scale(5)}}
                                 renderItem={({ item, index }) => <Skeleton width='100%' height={verticalScale(60)} style={{
                                     marginBottom: verticalScale(5)
                                 }} />}
