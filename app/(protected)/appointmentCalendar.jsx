@@ -99,7 +99,7 @@ const appointmentCalendar = () => {
                 } catch (error) {
 
                     setSalonBarber((prev) => ({ ...prev, loading: false, data: null, success: false, error: error }))
-                    console.log("Error fetching barbers by multiple service Id", error)
+                    console.log("Error fetching barbers by multiple service Id", error?.response?.data)
                 }
             }
 
@@ -983,7 +983,7 @@ const appointmentCalendar = () => {
                             // position: "absolute",
                         }}>
 
-                            {/* 
+                            
                             <Pressable
                                 onPress={() => {
                                     setContinueService(true)
@@ -1004,7 +1004,7 @@ const appointmentCalendar = () => {
                                 <CustomText style={{
                                     color: "#fff", fontSize: scale(16)
                                 }}>Continue</CustomText>
-                            </Pressable> */}
+                            </Pressable>
                         </View>
                     )
                 }

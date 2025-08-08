@@ -337,7 +337,7 @@ const notification = () => {
                                 }}
                             />
                         </>
-                    ) : !notificationListData?.notificationData?.length > 0 ? (
+                    ) : notificationListData?.notificationData?.length > 0 ? (
                         notificationListData?.notificationData?.map((item, index) => (
                             <View
                                 key={index}

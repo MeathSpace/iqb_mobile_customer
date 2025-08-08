@@ -789,6 +789,13 @@ const salon = () => {
         }
     ]
 
+    const scrollRef = useRef(null);
+
+    useEffect(() => {
+        if (scrollRef.current) {
+            scrollRef.current.scrollTo({ y: 0, animated: false });
+        }
+    }, [selectedTab]);
 
     return (
         <CustomTabView
@@ -966,7 +973,9 @@ const salon = () => {
 
                                 <BottomSheetScrollView
                                     showsVerticalScrollIndicator={false}
-                                    contentContainerStyle={styles.contentContainer}>
+                                    contentContainerStyle={styles.contentContainer}
+                                    ref={scrollRef}
+                                >
                                     {
                                         selectedTab === "Details" && (
                                             <>

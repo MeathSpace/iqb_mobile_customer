@@ -23,7 +23,7 @@ import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 import Constants from 'expo-constants';
 import AsyncStorage from '@react-native-async-storage/async-storage'
-
+import { io } from "socket.io-client";
 
 
 import { LinearGradient } from 'expo-linear-gradient';
@@ -113,6 +113,13 @@ const Dashboard = () => {
         success: false
     })
 
+    const [customerLivetData, setCustomerLiveData] = useState({
+        liveQueueData: null,
+        loading: false,
+        error: null,
+        success: false
+    })
+
     // console.log("homeDashboardData ", homeDashboardData)
 
     useFocusEffect(
@@ -170,9 +177,30 @@ const Dashboard = () => {
                     }
                 }
 
+                const fetchCustomerLiveQueueData = async () => {
+                    try {
+
+                        setCustomerLiveData((prev) => ({ ...prev, loading: true }))
+
+                        const { data } = await axios.post(`${BASE_URL}/customer/customerLiveQueue`, {
+                            salonId: authenticatedUser?.salonId,
+                            customerEmail: authenticatedUser?.email
+                        })
+
+                        setCustomerLiveData((prev) => ({ ...prev, loading: false, liveQueueData: data?.response, success: true, error: null }))
+
+
+                    } catch (error) {
+                        setCustomerLiveData((prev) => ({ ...prev, loading: false, liveQueueData: null, success: false, error: error }))
+                        console.error("Error fetching customer live queue data: ", error)
+                    }
+                }
+
+                fetchCustomerLiveQueueData()
                 fetchDashboardData()
                 fetchAdvertisementData()
                 fetchServiceCategoryData()
+
             }
 
             return () => {
@@ -182,6 +210,26 @@ const Dashboard = () => {
         }, [authenticatedUser])
     );
 
+
+    const socket = io("https://iqb-final.onrender.com", {
+        transports: ['websocket'],
+    });
+
+
+    useFocusEffect(
+        useCallback(() => {
+
+            socket.emit("joinSalon", authenticatedUser.salonId);
+            console.log("Connect")
+
+            socket.on("liveSalonData", (salonDashboardData) => {
+                // console.log(salonDashboardData)
+                console.log("Socket ", salonDashboardData)
+                setHomeDashboardData((prev) => ({ ...prev, loading: false, dashboardData: salonDashboardData?.response, success: true, error: null }))
+            })
+
+        }, [authenticatedUser])
+    )
 
     const { colors } = useTheme()
 
@@ -445,12 +493,12 @@ const Dashboard = () => {
                             return (
                                 <>
                                     {
-                                        homeDashboardData?.loading ? (
+                                        customerLivetData?.loading ? (
                                             <Skeleton
                                                 borderRadius={scale(20)}
                                                 height={verticalScale(90)}
                                             />
-                                        ) : homeDashboardData?.dashboardData?.isJoinedData?.length > 0 ? (
+                                        ) : customerLivetData?.liveQueueData?.isJoinedData?.length > 0 ? (
                                             <LinearGradient
                                                 colors={['#14b8a6', '#0d9488']}
                                                 style={styles.card}

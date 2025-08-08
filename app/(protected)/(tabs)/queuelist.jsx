@@ -95,7 +95,6 @@ const QueueList = () => {
             // }); // this is for show/hide joinqueue button
 
             socket.on("queueUpdated", (queueData) => {
-                console.log("Queue Data ", queueData)
                 setQlistData((prev) => ({ ...prev, loading: false, data: queueData, success: true, error: null }))
             })
 
