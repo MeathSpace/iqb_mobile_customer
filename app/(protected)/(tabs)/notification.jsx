@@ -1,4 +1,4 @@
-import { Platform, Pressable, ScrollView, StyleSheet, Text, View } from 'react-native'
+import { Alert, Platform, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useCallback, useEffect } from 'react'
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import { useFocusEffect, useRouter } from 'expo-router';
@@ -14,6 +14,7 @@ import { useAuth } from '../../../context/AuthContext';
 import Skeleton from '../../../components/Skeleton';
 import { io } from "socket.io-client";
 import CustomSecondaryText from '../../../components/CustomSecondaryText';
+import { Toast } from 'toastify-react-native';
 
 const notification = () => {
 
@@ -132,15 +133,60 @@ const notification = () => {
         }, [])
     )
 
+
+    const cancelNotificationPressed = (item) => {
+        Alert.alert(
+            "Delete Notification",
+            "Are you sure you want to delete this notification ?",
+            [
+                {
+                    text: "No",
+                    style: "cancel"
+                },
+                {
+                    text: "Yes",
+                    onPress: async () => {
+                        try {
+                            const cancelNotificationData = {
+                                customerEmail: authenticatedUser?.email,
+                                id: item?._id
+                            };
+
+                            const { data } = await axios.post(`${BASE_URL}/mobileRoutes/deleteNotifications`, cancelNotificationData);
+
+                            Toast.success(data?.message || "Customer cancelled successfully");
+
+                            setNotificationListData((prev) => ({ ...prev, loading: true }))
+
+                            const { data:notificationListData } = await axios.post(`${BASE_URL}/mobileRoutes/getAllNotificationsByCustomerEmail`, {
+                                email: authenticatedUser?.email
+                            })
+
+                            // console.log(JSON.stringify(data?.response, null, 2));
+
+                            setNotificationListData((prev) => ({ ...prev, loading: false, notificationData: notificationListData?.response, success: true, error: null }))
+
+
+                        } catch (error) {
+                            Toast.error(error?.response?.data?.message)
+                            console.log("Canceled queue error ", error?.response?.data);
+                            setQlistData((prev) => ({ ...prev, loading: false, data: null, success: false, error: error }))
+                            setShowHideQueBtn((prev) => ({ ...prev, loading: false, data: null, success: false, error: error }))
+                        }
+                    }
+                }
+            ]
+        );
+    };
+
+
     return (
         <View
             style={{
                 paddingHorizontal: scale(10),
                 paddingTop: verticalScale(10),
-                // backgroundColor: "#00B0901A",
                 backgroundColor: colors.background,
                 paddingVertical: verticalScale(0),
-                // paddingTop: verticalScale(10),
                 flex: 1,
                 paddingBottom: Platform.OS === "ios" ? verticalScale(80) : verticalScale(20),
                 gap: verticalScale(10),
@@ -156,142 +202,9 @@ const notification = () => {
                 <CustomText style={{
                     flex: 1,
                     fontSize: scale(18),
-                    // textAlign: "center",
                     fontFamily: "AirbnbCereal_W_XBd",
                 }}>Notification</CustomText>
             </View>
-
-            {/* <ScrollView
-                contentContainerStyle={{
-                    gap: verticalScale(10),
-                    paddingBottom: verticalScale(20),
-                }}
-                showsVerticalScrollIndicator={false}
-            >
-
-                <View style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: scale(3)
-                }}>
-                    <Pressable onPress={() => router.replace("/home")}><ArrowLeftIcon color={colors.text} /></Pressable>
-                    <CustomText style={{
-                        flex: 1,
-                        fontSize: scale(18),
-                        // textAlign: "center",
-                        fontFamily: "AirbnbCereal_W_XBd",
-                    }}>Notification</CustomText>
-                </View>
-
-                {
-                    notificationListData?.loading ? (
-                        <>
-                            <Skeleton
-                                height={verticalScale(70)}
-                                style={{
-                                    borderRadius: scale(10),
-                                }}
-                            />
-                            <Skeleton
-                                height={verticalScale(70)}
-                                style={{
-                                    borderRadius: scale(10),
-                                }}
-                            />
-                            <Skeleton
-                                height={verticalScale(70)}
-                                style={{
-                                    borderRadius: scale(10),
-                                }}
-                            />
-                            <Skeleton
-                                height={verticalScale(70)}
-                                style={{
-                                    borderRadius: scale(10),
-                                }}
-                            />
-                            <Skeleton
-                                height={verticalScale(70)}
-                                style={{
-                                    borderRadius: scale(10),
-                                }}
-                            />
-                        </>
-                    ) : notificationListData?.notificationData?.length > 0 ? (
-                        notificationListData?.notificationData?.map((item, index) => (
-                            <View
-                                key={index}
-                                style={{
-                                    paddingVertical: verticalScale(15),
-                                    flexDirection: "row",
-                                    // alignItems: "center",
-                                    gap: scale(10),
-                                    borderRadius: scale(12),
-                                    paddingHorizontal: scale(15),
-                                    backgroundColor: colors.cardColor,
-                                    borderColor: colors.queueBorder,
-                                    borderWidth: scale(1)
-                                }}
-                            >
-                                <Image
-                                    style={{ height: scale(45), width: scale(45), borderRadius: scale(40) }}
-                                    source={{ uri: item?.salonLogo?.[0]?.url }}
-                                    contentFit="cover"
-                                    transition={300}
-                                />
-
-                                <View style={{ gap: verticalScale(5), flex: 1 }}>
-                                    <CustomText
-                                        style={{
-                                            fontSize: scale(14),
-                                            fontFamily: "AirbnbCereal_W_Bd"
-                                        }}
-                                    >{item?.title}</CustomText>
-
-                                    <CustomText
-                                        style={{
-                                            fontSize: scale(12),
-                                            color: colors.secondaryText
-                                        }}
-                                    >{item?.body}</CustomText>
-                                </View>
-                            </View>
-                        ))
-                    ) : (
-                        <View style={{
-                            flex: 1,
-
-                            paddingTop: verticalScale(20),
-                        }}>
-                            <View style={[styles.noQueueContainer, {
-                                borderColor: colors.queueBorder,
-                                backgroundColor: colors.cardColor,
-                            }]}>
-                                <View style={[styles.iconContainer, { backgroundColor: "rgba(13, 148, 136, 0.1)" }]}>
-                                    <NotificationOffIcon size={moderateScale(32)} color={"#14b8a6"} />
-                                </View>
-
-                                <CustomText style={{
-                                    fontFamily: "AirbnbCereal_W_XBd",
-                                    fontSize: scale(20),
-                                    textAlign: "center",
-                                }}>No Notification</CustomText>
-
-                                <CustomText style={{
-                                    fontFamily: "AirbnbCereal_W_Bd",
-                                    fontSize: scale(16),
-                                    textAlign: "center",
-                                    color: colors.secondaryText,
-                                }}>
-                                    You don't have notification
-                                </CustomText>
-
-                            </View>
-                        </View>
-                    )
-
-                }
-            </ScrollView> */}
 
             <ScrollView
                 contentContainerStyle={{
@@ -339,12 +252,12 @@ const notification = () => {
                         </>
                     ) : notificationListData?.notificationData?.length > 0 ? (
                         notificationListData?.notificationData?.map((item, index) => (
-                            <View
+                            <TouchableOpacity
+                                onPress={() => cancelNotificationPressed(item)}
                                 key={index}
                                 style={{
                                     paddingVertical: verticalScale(15),
                                     flexDirection: "row",
-                                    // alignItems: "center",
                                     gap: scale(10),
                                     borderRadius: scale(12),
                                     paddingHorizontal: scale(15),
@@ -375,7 +288,7 @@ const notification = () => {
                                         }}
                                     >{item?.body}</CustomText>
                                 </View>
-                            </View>
+                            </TouchableOpacity>
                         ))
                     ) : (
                         <View style={[styles.noQueueContainer, {

@@ -468,8 +468,6 @@ const Dashboard = () => {
         return `${mins}m`;
     }
 
-    console.log(customerLivetData?.liveQueueData)
-
     return (
         <CustomTabView
             style={{
