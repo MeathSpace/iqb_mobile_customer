@@ -82,6 +82,8 @@ const signup = () => {
                 email
             })
 
+            // console.log("Data ", data)
+
             setCheckEmailLoading(false)
 
             router.push({
@@ -93,6 +95,7 @@ const signup = () => {
             });
 
         } catch (error) {
+            console.log("Error ", error)
             setCheckEmailLoading(false)
 
             Toast.error(error?.response?.data?.message)

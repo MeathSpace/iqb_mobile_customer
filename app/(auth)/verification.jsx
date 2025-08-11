@@ -80,7 +80,7 @@ const verification = () => {
                 email,
                 name: fullName,
                 gender,
-                dateOfBirth: selectedDate,
+                dateOfBirth: selectedDate ? selectedDate : "",
                 mobileCountryCode: callingCode,
                 mobileNumber: phoneNumber,
                 password
@@ -90,37 +90,19 @@ const verification = () => {
                 email,
                 name: fullName,
                 gender,
-                dateOfBirth: selectedDate,
+                dateOfBirth: selectedDate ? selectedDate : "",
                 mobileCountryCode: callingCode,
                 mobileNumber: phoneNumber,
             }
 
+
+            console.log("Sign up data ", signUpData)
+
             setSignupLoading(true)
-
-            // if (authType === "google") {
-            //     const { data } = await axios.post(`${BASE_URL}/customer/googleCustomerSignup`, googleSignUpData)
-
-            //     setSignupLoading(false)
-
-            //     Toast.success(data?.message)
-
-            // } else {
-            //     const { data } = await axios.post(`${BASE_URL}/customer/signUp`, signUpData)
-
-            //     setSignupLoading(false)
-
-            //     Toast.success(data?.message)
-            // }
-
-            // router.replace("/signin")
-
 
 
             if (authType === "google") {
                 const { data } = await axios.post(`${BASE_URL}/customer/googleCustomerSignup`, googleSignUpData)
-
-                // console.log("Sign up data ", data)
-
                 setSignInData((prev) => ({ ...prev, loading: false, user: data?.response, success: true, error: null }))
 
                 await AsyncStorage.setItem("isAuthenticated", JSON.stringify(true))

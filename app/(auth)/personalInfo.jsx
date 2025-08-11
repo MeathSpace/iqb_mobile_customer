@@ -189,10 +189,10 @@ const personalInfo = () => {
             return;
         }
 
-        if (!selectedDate) {
-            setDateOfBirthError("Date of birth is required");
-            return;
-        }
+        // if (!selectedDate) {
+        //     setDateOfBirthError("Date of birth is required");
+        //     return;
+        // }
 
         // const mobileNumber = phoneNumber.replace("+", "")
         // const updatedNumber = mobileNumber.startsWith(selectedCountry?.callingCode[0]) ? mobileNumber.slice(selectedCountry?.callingCode[0].length) : mobileNumber
@@ -208,20 +208,6 @@ const personalInfo = () => {
 
 
         if (authType === "google") {
-            // router.push({
-            //     pathname: "/verification",
-            //     params: {
-            //         email,
-            //         firstName,
-            //         lastName,
-            //         gender,
-            //         phoneNumber: updatedNumber,
-            //         callingCode: selectedCountry?.callingCode[0],
-            //         selectedDate,
-            //         authType
-            //     }
-            // });
-
             router.push({
                 pathname: "/verification",
                 params: {
@@ -230,7 +216,7 @@ const personalInfo = () => {
                     gender,
                     phoneNumber: updatedNumber,
                     callingCode: selectedCountry?.callingCode[0],
-                    selectedDate,
+                    selectedDate: selectedDate ? selectedDate : "",
                     authType
                 }
             });
@@ -243,7 +229,7 @@ const personalInfo = () => {
                     gender,
                     phoneNumber: updatedNumber,
                     callingCode: selectedCountry?.callingCode[0],
-                    selectedDate,
+                    selectedDate: selectedDate ? selectedDate : "",
                     password
                 }
             });
@@ -501,7 +487,7 @@ const personalInfo = () => {
 
 
                         <View style={[styles.inputWrapper, { position: "relative" }]}>
-                            <CustomText>Date of Birth</CustomText>
+                            <CustomText>Date of Birth (Optional)</CustomText>
 
                             <Pressable
                                 style={[
