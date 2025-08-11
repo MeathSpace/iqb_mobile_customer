@@ -220,11 +220,11 @@ const Dashboard = () => {
         useCallback(() => {
 
             socket.emit("joinSalon", authenticatedUser.salonId);
-            console.log("Connect")
+            // console.log("Connect")
 
             socket.on("liveSalonData", (salonDashboardData) => {
                 // console.log(salonDashboardData)
-                console.log("Socket ", salonDashboardData)
+                // console.log("Socket ", salonDashboardData)
                 setHomeDashboardData((prev) => ({ ...prev, loading: false, dashboardData: salonDashboardData?.response, success: true, error: null }))
             })
 
@@ -468,6 +468,8 @@ const Dashboard = () => {
         return `${mins}m`;
     }
 
+    console.log(customerLivetData?.liveQueueData)
+
     return (
         <CustomTabView
             style={{
@@ -517,19 +519,19 @@ const Dashboard = () => {
                                                                 style={[styles.title, {}]}
                                                                 numberOfLines={1}
                                                                 ellipsizeMode="tail"
-                                                            >{homeDashboardData?.dashboardData?.isJoinedData?.[0]?.name}</CustomText>
+                                                            >{customerLivetData?.liveQueueData?.isJoinedData?.[0]?.name}</CustomText>
                                                             {/* <View style={styles.moreWrapper}>
                                                                 <CustomText style={styles.moreText}>+4 more</CustomText>
                                                             </View> */}
                                                         </View>
 
-                                                        <CustomText style={styles.subtitle}>{homeDashboardData?.dashboardData?.isJoinedData?.[0]?.barberName}</CustomText>
+                                                        <CustomText style={styles.subtitle}>{customerLivetData?.liveQueueData?.isJoinedData?.[0]?.barberName}</CustomText>
                                                     </View>
                                                     <View>
                                                         <CustomText style={[styles.title, {
                                                             marginLeft: "auto"
-                                                        }]}>{homeDashboardData?.dashboardData?.isJoinedData?.[0]?.qPosition === 1 ? "Next" : `#${homeDashboardData?.dashboardData?.isJoinedData?.[0]?.qPosition}`}</CustomText>
-                                                        <CustomText style={styles.subtitle}>~{formatMinutesToHrMin(homeDashboardData?.dashboardData?.isJoinedData?.[0]?.customerEWT)}</CustomText>
+                                                        }]}>{customerLivetData?.liveQueueData?.isJoinedData?.[0]?.qPosition === 1 ? "Next" : `#${customerLivetData?.liveQueueData?.isJoinedData?.[0]?.qPosition}`}</CustomText>
+                                                        <CustomText style={styles.subtitle}>~{formatMinutesToHrMin(customerLivetData?.liveQueueData?.isJoinedData?.[0]?.customerEWT)}</CustomText>
                                                     </View>
                                                 </View>
 

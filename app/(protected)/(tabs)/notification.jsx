@@ -297,7 +297,7 @@ const notification = () => {
                 contentContainerStyle={{
                     gap: verticalScale(10),
                     paddingBottom: verticalScale(20),
-                    flexGrow: 1,
+                    flexGrow: notificationListData?.loading || notificationListData?.notificationData?.length > 0 ? 0 : 1,
                     justifyContent: "center",
                     alignItems: "center",
                 }}
