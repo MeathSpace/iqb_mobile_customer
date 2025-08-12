@@ -29,7 +29,7 @@ const index = () => {
       name: "iqBook Website",
       icon: <GlobalIcon color="#3b82f6" />, // blue-500
       bgColor: "rgba(147, 197, 253, 0.2)", // bg-blue-100
-      url: "#",
+      url: "https://iqbook.io/", // Link 
     },
     {
       id: 2,

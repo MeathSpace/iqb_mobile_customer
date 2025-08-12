@@ -8,6 +8,7 @@ import { Toast } from 'toastify-react-native'
 import axios from 'axios';
 import { BASE_URL } from '@/utils/api';
 import { useAuth } from '../../context/AuthContext'
+import { useGlobal } from '../../context/GlobalContext'
 
 const appointmentPop = () => {
 
@@ -20,6 +21,11 @@ const appointmentPop = () => {
 
     // console.log("selectedAppointmentParse ", selectedAppointmentParse)
     const [deleteAppointmentLoader, setDeleteAppointmentLoader] = useState(false)
+
+    const {
+        appointmentListData,
+        setAppointmentListData
+    } = useGlobal()
 
     const confirmDeleteHandler = () => {
         Alert.alert(
@@ -59,7 +65,10 @@ const appointmentPop = () => {
                 [
                     {
                         text: "OK",
-                        onPress: () => router.back()
+                        onPress: () => {
+
+                            router.back()
+                        }
                     }
                 ],
                 { cancelable: false }

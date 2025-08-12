@@ -29,6 +29,7 @@ import { io } from "socket.io-client";
 import { LinearGradient } from 'expo-linear-gradient';
 import { Feather } from '@expo/vector-icons';
 import Header from './Header'
+import { Toast } from 'toastify-react-native'
 
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
@@ -89,7 +90,6 @@ async function registerForPushNotificationsAsync() {
     }
 }
 
-
 const Dashboard = () => {
 
     const { homeDashboardData, setHomeDashboardData } = useGlobal()
@@ -120,7 +120,7 @@ const Dashboard = () => {
         success: false
     })
 
-    // console.log("homeDashboardData ", homeDashboardData)
+    console.log("authenticatedUser ", authenticatedUser)
 
     useFocusEffect(
         useCallback(() => {
@@ -553,7 +553,12 @@ const Dashboard = () => {
 
                                                 <View style={styles.btnContainer}>
                                                     <TouchableOpacity
-                                                        onPress={() => router.push("/joinpopup")}
+                                                        onPress={() => {
+                                                            if (!authenticatedUser?.isQueuing) {
+                                                                return Toast.error("Queueing feature is not available at this salon")
+                                                            }
+                                                            router.push("/joinpopup")
+                                                        }}
                                                         style={[styles.joinQueue, {
                                                             borderWidth: scale(1),
                                                             borderColor: colors.queueBorder
@@ -563,6 +568,10 @@ const Dashboard = () => {
 
                                                     <TouchableOpacity
                                                         onPress={() => {
+                                                            if (!authenticatedUser?.isAppointments) {
+                                                                return Toast.error("Appointment feature is not available at this salon")
+                                                            }
+
                                                             setJoinModes((prev) => ({ ...prev, appointment: true, appointmentType: "Book" }));
                                                             router.push("/appointmentCalendar");
                                                         }}

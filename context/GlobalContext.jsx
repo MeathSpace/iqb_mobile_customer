@@ -89,6 +89,14 @@ export const GlobalProvider = ({ children }) => {
     const [selectedMemberServices, setSelectedMemberServices] = useState([])
     const [selectedMemberBarber, setSelectedMemberBarber] = useState(null)
 
+
+    const [appointmentListData, setAppointmentListData] = useState({
+        data: null,
+        loading: false,
+        error: null,
+        success: false
+    })
+
     const value = {
         selectedBarber,
         setSelectedBarber,
@@ -128,6 +136,9 @@ export const GlobalProvider = ({ children }) => {
         selectedMemberBarber,
         setSelectedMemberBarber,
         // hasRun
+
+        appointmentListData,
+        setAppointmentListData
     };
 
     return (

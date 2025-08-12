@@ -18,6 +18,7 @@ import { io } from "socket.io-client";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Feather } from '@expo/vector-icons';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { Toast } from 'toastify-react-native';
 
 const QueueList = () => {
 
@@ -205,7 +206,12 @@ const QueueList = () => {
                             }}
                         >
                             <TouchableOpacity
-                                onPress={() => router.push("/joinpopup")}
+                                onPress={() => {
+                                    if (!authenticatedUser?.isQueuing) {
+                                        return Toast.error("Queueing feature is not available at this salon")
+                                    }
+                                    router.push("/joinpopup")
+                                }}
                                 style={styles.queueButton} activeOpacity={0.85}>
                                 <CustomText style={styles.queueButtonText}>Join Queue</CustomText>
                             </TouchableOpacity>
@@ -235,7 +241,7 @@ const QueueList = () => {
                             </View>
                             <FlatList
                                 data={[0, 1, 2, 3, 4, 5, 6, 7, 8]}
-                                contentContainerStyle={{ padding: scale(5)}}
+                                contentContainerStyle={{ padding: scale(5) }}
                                 renderItem={({ item, index }) => <Skeleton width='100%' height={verticalScale(60)} style={{
                                     marginBottom: verticalScale(5)
                                 }} />}
@@ -313,7 +319,14 @@ const QueueList = () => {
                                     </CustomText>
 
                                     <TouchableOpacity
-                                        onPress={() => router.push("/joinpopup")}
+                                        onPress={() => {
+                                            
+                                            if (!authenticatedUser?.isQueuing) {
+                                                return Toast.error("Queueing feature is not available at this salon")
+                                            }
+
+                                            router.push("/joinpopup")
+                                        }}
                                         style={styles.queueButton} activeOpacity={0.85}>
                                         <CustomText style={styles.queueButtonText}>Join Queue</CustomText>
                                     </TouchableOpacity>
@@ -371,7 +384,7 @@ const styles = StyleSheet.create({
 
 
     queueListContainer: {
-        flex: Platform.OS === "ios" ? 0.90 : 0.95,
+        flex: Platform.OS === "ios" ? 0.93 : 0.98,
         borderWidth: scale(1),
         borderRadius: scale(12),
     },

@@ -188,6 +188,7 @@ const QlistItem = ({ item, index, qlistLength, setQlistData, setShowHideQueBtn }
 
     return (
         <TouchableOpacity
+            disabled={authenticatedUser?.email !== item?.customerEmail}
             onPress={() => {
                 if (authenticatedUser?.email === item?.customerEmail) {
                     cancelQueuePressed(item)

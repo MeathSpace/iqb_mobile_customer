@@ -718,7 +718,7 @@ const editAppointmentCalender = () => {
                                         paddingTop: verticalScale(20)
                                     }}
                                 >
-                                    <CustomText>No barbers available</CustomText>
+                                    <CustomText>No stylists available</CustomText>
                                 </View>
                             )
 
@@ -1148,7 +1148,7 @@ const editAppointmentCalender = () => {
                         )}
                         {renderSection(
                             'barber',
-                            'Choose Barber ?',
+                            'Choose Stylist ?',
                             [
                                 { id: 1 },
                                 { id: 2 },

@@ -515,6 +515,7 @@ import CustomSecondaryText from '../../../components/CustomSecondaryText';
 import { io } from "socket.io-client";
 import { Feather } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Toast } from 'toastify-react-native';
 
 const appointment = () => {
 
@@ -532,16 +533,25 @@ const appointment = () => {
   ])
 
   const router = useRouter()
-  const { setJoinModes, joinModes, applyAppointmentFilter, setApplyAppointmentFilter, newNotification, setNewNotification } = useGlobal();
+  const {
+    setJoinModes,
+    joinModes,
+    applyAppointmentFilter,
+    setApplyAppointmentFilter,
+    newNotification,
+    setNewNotification,
+    appointmentListData,
+    setAppointmentListData
+  } = useGlobal();
 
   const { authenticatedUser } = useAuth()
 
-  const [appointmentListData, setAppointmentListData] = useState({
-    data: null,
-    loading: false,
-    error: null,
-    success: false
-  })
+  // const [appointmentListData, setAppointmentListData] = useState({
+  //   data: null,
+  //   loading: false,
+  //   error: null,
+  //   success: false
+  // })
 
   const socket = io("https://iqb-final.onrender.com", {
     transports: ['websocket'],
@@ -745,6 +755,9 @@ const appointment = () => {
               </CustomText>
               <TouchableOpacity
                 onPress={() => {
+                  if (!authenticatedUser?.isAppointments) {
+                    return Toast.error("Appointment feature is not available at this salon")
+                  }
                   setJoinModes((prev) => ({ ...prev, appointment: true, appointmentType: "Book" }));
                   router.push("/appointmentCalendar");
                 }}
@@ -768,6 +781,9 @@ const appointment = () => {
                 </CustomText>
                 <TouchableOpacity
                   onPress={() => {
+                    if (!authenticatedUser?.isAppointments) {
+                      return Toast.error("Appointment feature is not available at this salon")
+                    }
                     setJoinModes((prev) => ({ ...prev, appointment: true, appointmentType: "Book" }));
                     router.push("/appointmentCalendar");
                   }}
@@ -881,6 +897,9 @@ const appointment = () => {
                       {section.title !== "Upcoming" && (
                         <TouchableOpacity
                           onPress={() => {
+                            if (!authenticatedUser?.isAppointments) {
+                              return Toast.error("Appointment feature is not available at this salon")
+                            }
                             setJoinModes((prev) => ({
                               ...prev,
                               appointment: true,
