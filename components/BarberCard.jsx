@@ -57,8 +57,8 @@ const BarberCard = ({ item }) => {
                     gap: scale(2),
                     flex: 1
                 }}>
-                    <ClockIcon size={scale(14)} color={colors.secondaryText} />
-                    <CustomText style={{ fontSize: scale(14), flex: 1, color: colors.secondaryText }}>{formatMinutesToHrMin(item?.barberEWT)}</CustomText>
+                    {/* <ClockIcon size={scale(14)} color={colors.secondaryText} /> */}
+                    <CustomText style={{ fontSize: scale(14), flex: 1, color: colors.secondaryText }}>~ {formatMinutesToHrMin(item?.barberEWT)}</CustomText>
                 </View>
             </View>
 

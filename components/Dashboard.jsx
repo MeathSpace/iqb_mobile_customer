@@ -1,4 +1,4 @@
-import { FlatList, Platform, Pressable, Image as ReactNativeImage, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Alert, FlatList, Platform, Pressable, Image as ReactNativeImage, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useCallback, useState } from 'react'
 import CustomTabView from './CustomTabView'
 import CustomText from './CustomText'
@@ -120,7 +120,12 @@ const Dashboard = () => {
         success: false
     })
 
-    console.log("authenticatedUser ", authenticatedUser)
+    const [getSalonFeature, setGetSalonFeature] = useState({
+        salonFeature: null,
+        loading: false,
+        error: null,
+        success: false
+    })
 
     useFocusEffect(
         useCallback(() => {
@@ -196,11 +201,31 @@ const Dashboard = () => {
                     }
                 }
 
+
+                const fetSalonFeatureData = async () => {
+                    try {
+
+                        setGetSalonFeature((prev) => ({ ...prev, loading: true }))
+
+                        const { data } = await axios.post(`${BASE_URL}/mobileRoutes/getSalonFeatures`, {
+                            salonId: authenticatedUser?.salonId,
+                        })
+
+                        setGetSalonFeature((prev) => ({ ...prev, loading: false, salonFeature: data?.response, success: true, error: null }))
+
+
+                    } catch (error) {
+                        setGetSalonFeature((prev) => ({ ...prev, loading: false, salonFeature: null, success: false, error: error }))
+                        console.error("Error fetching salon feature data: ", error)
+                    }
+                }
+
+
                 fetchCustomerLiveQueueData()
                 fetchDashboardData()
                 fetchAdvertisementData()
                 fetchServiceCategoryData()
-
+                fetSalonFeatureData()
             }
 
             return () => {
@@ -209,7 +234,6 @@ const Dashboard = () => {
             };
         }, [authenticatedUser])
     );
-
 
     const socket = io("https://iqb-final.onrender.com", {
         transports: ['websocket'],
@@ -468,6 +492,10 @@ const Dashboard = () => {
         return `${mins}m`;
     }
 
+    // console.log(customerLivetData?.liveQueueData?.isJoinedData?.[0])
+
+    const [cancelQueueLoading, setCancelQueueLoading] = useState(false)
+
     return (
         <CustomTabView
             style={{
@@ -533,6 +561,113 @@ const Dashboard = () => {
                                                     </View>
                                                 </View>
 
+                                                <View style={styles.btnContainer}>
+                                                    <TouchableOpacity
+                                                        disabled={cancelQueueLoading}
+                                                        // onPress={async () => {
+                                                        //     try {
+                                                        //         const cancelQueueData = {
+                                                        //             salonId: authenticatedUser?.salonId,
+                                                        //             barberId: customerLivetData?.liveQueueData?.isJoinedData?.[0]?.barberId,
+                                                        //             customerEmail: customerLivetData?.liveQueueData?.isJoinedData?.[0]?.customerEmail,
+                                                        //             _id: customerLivetData?.liveQueueData?.isJoinedData?.[0]?._id
+                                                        //         };
+
+                                                        //         setCancelQueueLoading(true)
+
+                                                        //         const { data } = await axios.post(`${BASE_URL}/mobileRoutes/cancelQueueByCustomer`, cancelQueueData);
+
+                                                        //         setCustomerLiveData((prev) => ({ ...prev, loading: true }))
+
+                                                        //         const { data: livedata } = await axios.post(`${BASE_URL}/customer/customerLiveQueue`, {
+                                                        //             salonId: authenticatedUser?.salonId,
+                                                        //             customerEmail: authenticatedUser?.email
+                                                        //         })
+
+                                                        //         setCustomerLiveData((prev) => ({ ...prev, loading: false, liveQueueData: livedata?.response, success: true, error: null }))
+
+                                                        //     } catch (error) {
+                                                        //         console.log("Error from live queue data")
+                                                        //     } finally {
+                                                        //         setCancelQueueLoading(false)
+                                                        //     }
+                                                        // }}
+
+                                                        onPress={async () => {
+                                                            Alert.alert(
+                                                                "Cancel Queue",
+                                                                "Are you sure you want to cancel this queue?",
+                                                                [
+                                                                    {
+                                                                        text: "No",
+                                                                        style: "cancel"
+                                                                    },
+                                                                    {
+                                                                        text: "Yes",
+                                                                        onPress: async () => {
+                                                                            try {
+                                                                                const cancelQueueData = {
+                                                                                    salonId: authenticatedUser?.salonId,
+                                                                                    barberId: customerLivetData?.liveQueueData?.isJoinedData?.[0]?.barberId,
+                                                                                    customerEmail: customerLivetData?.liveQueueData?.isJoinedData?.[0]?.customerEmail,
+                                                                                    _id: customerLivetData?.liveQueueData?.isJoinedData?.[0]?._id
+                                                                                };
+
+                                                                                setCancelQueueLoading(true)
+
+                                                                                const { data } = await axios.post(`${BASE_URL}/mobileRoutes/cancelQueueByCustomer`, cancelQueueData);
+
+                                                                                setCustomerLiveData((prev) => ({ ...prev, loading: true }))
+
+                                                                                const { data: livedata } = await axios.post(`${BASE_URL}/customer/customerLiveQueue`, {
+                                                                                    salonId: authenticatedUser?.salonId,
+                                                                                    customerEmail: authenticatedUser?.email
+                                                                                })
+
+                                                                                setCustomerLiveData((prev) => ({ ...prev, loading: false, liveQueueData: livedata?.response, success: true, error: null }))
+
+                                                                            } catch (error) {
+                                                                                console.log("Error from live queue data")
+                                                                            } finally {
+                                                                                setCancelQueueLoading(false)
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                ]
+                                                            );
+                                                        }}
+                                                        style={[styles.joinQueue, {
+                                                            borderWidth: scale(1),
+                                                            borderColor: colors.queueBorder
+                                                        }]} activeOpacity={0.85}>
+
+                                                        {
+                                                            cancelQueueLoading ? (
+                                                                <ActivityIndicator size="small" color="#000" />
+                                                            ) : (
+                                                                <CustomText style={styles.joinQueueText}>Cancel</CustomText>
+                                                            )
+                                                        }
+
+                                                    </TouchableOpacity>
+
+                                                    <TouchableOpacity
+                                                        onPress={() => {
+                                                            if (!authenticatedUser?.isAppointments) {
+                                                                return Toast.error("Appointment feature is not available at this salon")
+                                                            }
+
+                                                            setJoinModes((prev) => ({ ...prev, appointment: true, appointmentType: "Book" }));
+                                                            router.push("/appointmentCalendar");
+                                                        }}
+                                                        style={[styles.bookAhead, {
+                                                            borderWidth: scale(1),
+                                                            borderColor: colors.queueBorder
+                                                        }]} activeOpacity={0.85}>
+                                                        <CustomText style={styles.bookAheadText}>Book</CustomText>
+                                                    </TouchableOpacity>
+                                                </View>
+
                                                 {/* +4 more text inside the card */}
 
                                             </LinearGradient>
@@ -554,7 +689,7 @@ const Dashboard = () => {
                                                 <View style={styles.btnContainer}>
                                                     <TouchableOpacity
                                                         onPress={() => {
-                                                            if (!authenticatedUser?.isQueuing) {
+                                                            if (!getSalonFeature?.salonFeature?.isQueuing) {
                                                                 return Toast.error("Queueing feature is not available at this salon")
                                                             }
                                                             router.push("/joinpopup")
@@ -568,7 +703,7 @@ const Dashboard = () => {
 
                                                     <TouchableOpacity
                                                         onPress={() => {
-                                                            if (!authenticatedUser?.isAppointments) {
+                                                            if (!getSalonFeature?.salonFeature?.isAppointments) {
                                                                 return Toast.error("Appointment feature is not available at this salon")
                                                             }
 

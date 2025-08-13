@@ -147,11 +147,11 @@ const QlistItem = ({ item, index, qlistLength, setQlistData, setShowHideQueBtn }
                                 _id: item?._id
                             };
 
+                            setQlistData((prev) => ({ ...prev, loading: true }))
+
                             const { data } = await axios.post(`${BASE_URL}/mobileRoutes/cancelQueueByCustomer`, cancelQueueData);
 
                             Toast.success(data?.message || "Customer cancelled successfully");
-
-                            setQlistData((prev) => ({ ...prev, loading: true }))
 
                             const { data: queuelistData } = await axios.get(`${BASE_URL}/mobileRoutes/getQlistBySalonId`, {
                                 params: {

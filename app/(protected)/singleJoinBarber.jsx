@@ -228,7 +228,7 @@ const SingleJoinBarber = () => {
                     <TouchableOpacity
                         onPress={() => {
                             if (!selectBarber) {
-                                Toast.error("Please select a barber")
+                                Toast.error("Please select a stylist")
                                 return
                             }
                             if (parsedSelectedServices.length === 0) {

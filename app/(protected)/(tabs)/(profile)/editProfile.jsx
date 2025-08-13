@@ -1422,7 +1422,7 @@ const editProfile = () => {
                         <View style={{
                             flexDirection: "row",
                             alignItems: "center",
-                            gap: scale(3)
+                            gap: scale(10)
                         }}>
                             <Pressable onPress={() => {
                                 setFullNameError("")

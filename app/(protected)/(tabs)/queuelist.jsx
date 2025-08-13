@@ -82,10 +82,37 @@ const QueueList = () => {
         transports: ['websocket'],
     });
 
+
+    const [getSalonFeature, setGetSalonFeature] = useState({
+        salonFeature: null,
+        loading: false,
+        error: null,
+        success: false
+    })
+
+    const fetSalonFeatureData = async () => {
+        try {
+
+            setGetSalonFeature((prev) => ({ ...prev, loading: true }))
+
+            const { data } = await axios.post(`${BASE_URL}/mobileRoutes/getSalonFeatures`, {
+                salonId: authenticatedUser?.salonId,
+            })
+
+            setGetSalonFeature((prev) => ({ ...prev, loading: false, salonFeature: data?.response, success: true, error: null }))
+
+
+        } catch (error) {
+            setGetSalonFeature((prev) => ({ ...prev, loading: false, salonFeature: null, success: false, error: error }))
+            console.error("Error fetching salon feature data: ", error)
+        }
+    }
+
     useFocusEffect(
         useCallback(() => {
 
             fetchQlist()
+            fetSalonFeatureData()
 
             fetchShowHideQueueButton()
 
@@ -207,7 +234,7 @@ const QueueList = () => {
                         >
                             <TouchableOpacity
                                 onPress={() => {
-                                    if (!authenticatedUser?.isQueuing) {
+                                    if (!getSalonFeature?.salonFeature?.isQueuing) {
                                         return Toast.error("Queueing feature is not available at this salon")
                                     }
                                     router.push("/joinpopup")
@@ -320,8 +347,8 @@ const QueueList = () => {
 
                                     <TouchableOpacity
                                         onPress={() => {
-                                            
-                                            if (!authenticatedUser?.isQueuing) {
+
+                                            if (!getSalonFeature?.salonFeature?.isQueuing) {
                                                 return Toast.error("Queueing feature is not available at this salon")
                                             }
 

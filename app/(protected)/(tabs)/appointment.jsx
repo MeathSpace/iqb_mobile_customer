@@ -557,8 +557,35 @@ const appointment = () => {
     transports: ['websocket'],
   });
 
+  const [getSalonFeature, setGetSalonFeature] = useState({
+    salonFeature: null,
+    loading: false,
+    error: null,
+    success: false
+  })
+
+  const fetSalonFeatureData = async () => {
+    try {
+
+      setGetSalonFeature((prev) => ({ ...prev, loading: true }))
+
+      const { data } = await axios.post(`${BASE_URL}/mobileRoutes/getSalonFeatures`, {
+        salonId: authenticatedUser?.salonId,
+      })
+
+      setGetSalonFeature((prev) => ({ ...prev, loading: false, salonFeature: data?.response, success: true, error: null }))
+
+
+    } catch (error) {
+      setGetSalonFeature((prev) => ({ ...prev, loading: false, salonFeature: null, success: false, error: error }))
+      console.error("Error fetching salon feature data: ", error)
+    }
+  }
+
   useFocusEffect(
     useCallback(() => {
+
+      fetSalonFeatureData()
 
       if (applyAppointmentFilter.open) {
 
@@ -755,7 +782,7 @@ const appointment = () => {
               </CustomText>
               <TouchableOpacity
                 onPress={() => {
-                  if (!authenticatedUser?.isAppointments) {
+                  if (!getSalonFeature?.salonFeature?.isAppointments) {
                     return Toast.error("Appointment feature is not available at this salon")
                   }
                   setJoinModes((prev) => ({ ...prev, appointment: true, appointmentType: "Book" }));
@@ -781,7 +808,7 @@ const appointment = () => {
                 </CustomText>
                 <TouchableOpacity
                   onPress={() => {
-                    if (!authenticatedUser?.isAppointments) {
+                    if (!getSalonFeature?.salonFeature?.isAppointments) {
                       return Toast.error("Appointment feature is not available at this salon")
                     }
                     setJoinModes((prev) => ({ ...prev, appointment: true, appointmentType: "Book" }));
@@ -897,7 +924,7 @@ const appointment = () => {
                       {section.title !== "Upcoming" && (
                         <TouchableOpacity
                           onPress={() => {
-                            if (!authenticatedUser?.isAppointments) {
+                            if (!getSalonFeature?.salonFeature?.isAppointments) {
                               return Toast.error("Appointment feature is not available at this salon")
                             }
                             setJoinModes((prev) => ({

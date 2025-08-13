@@ -65,7 +65,7 @@ const index = () => {
       <View style={{
         flexDirection: "row",
         alignItems: "center",
-        gap: scale(3),
+        gap: scale(10),
         height: verticalScale(40),
       }}>
         <Pressable onPress={() => router.back()}><ArrowLeftIcon color={colors.text} /></Pressable>

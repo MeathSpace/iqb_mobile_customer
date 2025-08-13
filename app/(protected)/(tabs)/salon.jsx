@@ -1178,129 +1178,134 @@ const salon = () => {
                                                     </View>
                                                 </View>
 
-
-                                                <View
-                                                    style={{
-                                                        backgroundColor: colors.cardColor,
-                                                        borderColor: colors.queueBorder,
-                                                        borderWidth: scale(1),
-                                                        borderRadius: scale(12),
-                                                        padding: scale(10),
-                                                        gap: verticalScale(5),
-                                                        flexDirection: "row",
-                                                        alignItems: "center",
-                                                        justifyContent: "space-between"
-                                                    }}
-                                                >
-
-                                                    <View>
-                                                        <CustomText
+                                                {
+                                                    salonInfoData?.data?.salonInfo?.instraLink || salonInfoData?.data?.salonInfo?.fbLink || salonInfoData?.data?.salonInfo?.twitterLink || salonInfoData?.data?.salonInfo?.tiktokLink || salonInfoData?.data?.salonInfo?.webLink ? (
+                                                        <View
                                                             style={{
-                                                                fontFamily: "AirbnbCereal_W_Bd",
-                                                            }}
-                                                        >Follow us on</CustomText>
-
-                                                        <CustomSecondaryText
-                                                            style={{
-                                                                fontSize: scale(14),
+                                                                backgroundColor: colors.cardColor,
+                                                                borderColor: colors.queueBorder,
+                                                                borderWidth: scale(1),
+                                                                borderRadius: scale(12),
+                                                                padding: scale(10),
+                                                                gap: verticalScale(5),
+                                                                flexDirection: "row",
+                                                                alignItems: "center",
+                                                                justifyContent: "space-between"
                                                             }}
                                                         >
-                                                            Social links
-                                                        </CustomSecondaryText>
-                                                    </View>
+
+                                                            <View>
+                                                                <CustomText
+                                                                    style={{
+                                                                        fontFamily: "AirbnbCereal_W_Bd",
+                                                                    }}
+                                                                >Follow us on</CustomText>
+
+                                                                <CustomSecondaryText
+                                                                    style={{
+                                                                        fontSize: scale(14),
+                                                                    }}
+                                                                >
+                                                                    Social links
+                                                                </CustomSecondaryText>
+                                                            </View>
 
 
 
-                                                    <View
-                                                        style={{
-                                                            flexDirection: "row",
-                                                            alignItems: "center",
-                                                            gap: scale(10),
-                                                        }}
-                                                    >
-                                                        {salonInfoData?.data?.salonInfo?.instraLink && (
-                                                            <Pressable
+                                                            <View
                                                                 style={{
-                                                                    width: scale(30),
-                                                                    height: scale(30),
-                                                                    backgroundColor: colors.background,
-                                                                    justifyContent: "center",
+                                                                    flexDirection: "row",
                                                                     alignItems: "center",
-                                                                    borderRadius: scale(4),
+                                                                    gap: scale(10),
                                                                 }}
-                                                                onPress={() => openLink(salonInfoData.data.salonInfo.instraLink)}
                                                             >
-                                                                <InstagramIcon size={scale(18)} color={"#E1306C"} />
-                                                            </Pressable>
-                                                        )}
+                                                                {salonInfoData?.data?.salonInfo?.instraLink && (
+                                                                    <Pressable
+                                                                        style={{
+                                                                            width: scale(30),
+                                                                            height: scale(30),
+                                                                            backgroundColor: colors.background,
+                                                                            justifyContent: "center",
+                                                                            alignItems: "center",
+                                                                            borderRadius: scale(4),
+                                                                        }}
+                                                                        onPress={() => openLink(salonInfoData.data.salonInfo.instraLink)}
+                                                                    >
+                                                                        <InstagramIcon size={scale(18)} color={"#E1306C"} />
+                                                                    </Pressable>
+                                                                )}
 
-                                                        {salonInfoData?.data?.salonInfo?.fbLink && (
-                                                            <Pressable
-                                                                style={{
-                                                                    width: scale(30),
-                                                                    height: scale(30),
-                                                                    backgroundColor: colors.background,
-                                                                    justifyContent: "center",
-                                                                    alignItems: "center",
-                                                                    borderRadius: scale(4),
-                                                                }}
-                                                                onPress={() => openLink(salonInfoData.data.salonInfo.fbLink)}
-                                                            >
-                                                                <FacebookIcon size={scale(18)} color={"#1877F2"} />
-                                                            </Pressable>
-                                                        )}
+                                                                {salonInfoData?.data?.salonInfo?.fbLink && (
+                                                                    <Pressable
+                                                                        style={{
+                                                                            width: scale(30),
+                                                                            height: scale(30),
+                                                                            backgroundColor: colors.background,
+                                                                            justifyContent: "center",
+                                                                            alignItems: "center",
+                                                                            borderRadius: scale(4),
+                                                                        }}
+                                                                        onPress={() => openLink(salonInfoData.data.salonInfo.fbLink)}
+                                                                    >
+                                                                        <FacebookIcon size={scale(18)} color={"#1877F2"} />
+                                                                    </Pressable>
+                                                                )}
 
-                                                        {salonInfoData?.data?.salonInfo?.twitterLink && (
-                                                            <Pressable
-                                                                style={{
-                                                                    width: scale(30),
-                                                                    height: scale(30),
-                                                                    backgroundColor: colors.background,
-                                                                    justifyContent: "center",
-                                                                    alignItems: "center",
-                                                                    borderRadius: scale(4),
-                                                                }}
-                                                                onPress={() => openLink(salonInfoData.data.salonInfo.twitterLink)}
-                                                            >
-                                                                <XIcon size={scale(18)} color={colors.text} />
-                                                            </Pressable>
-                                                        )}
+                                                                {salonInfoData?.data?.salonInfo?.twitterLink && (
+                                                                    <Pressable
+                                                                        style={{
+                                                                            width: scale(30),
+                                                                            height: scale(30),
+                                                                            backgroundColor: colors.background,
+                                                                            justifyContent: "center",
+                                                                            alignItems: "center",
+                                                                            borderRadius: scale(4),
+                                                                        }}
+                                                                        onPress={() => openLink(salonInfoData.data.salonInfo.twitterLink)}
+                                                                    >
+                                                                        <XIcon size={scale(18)} color={colors.text} />
+                                                                    </Pressable>
+                                                                )}
 
-                                                        {salonInfoData?.data?.salonInfo?.tiktokLink && (
-                                                            <Pressable
-                                                                style={{
-                                                                    width: scale(30),
-                                                                    height: scale(30),
-                                                                    backgroundColor: colors.background,
-                                                                    justifyContent: "center",
-                                                                    alignItems: "center",
-                                                                    borderRadius: scale(4),
-                                                                }}
-                                                                onPress={() => openLink(salonInfoData.data.salonInfo.tiktokLink)}
-                                                            >
-                                                                <TiktokIcon size={scale(18)} color={colors.text} />
-                                                            </Pressable>
-                                                        )}
+                                                                {salonInfoData?.data?.salonInfo?.tiktokLink && (
+                                                                    <Pressable
+                                                                        style={{
+                                                                            width: scale(30),
+                                                                            height: scale(30),
+                                                                            backgroundColor: colors.background,
+                                                                            justifyContent: "center",
+                                                                            alignItems: "center",
+                                                                            borderRadius: scale(4),
+                                                                        }}
+                                                                        onPress={() => openLink(salonInfoData.data.salonInfo.tiktokLink)}
+                                                                    >
+                                                                        <TiktokIcon size={scale(18)} color={colors.text} />
+                                                                    </Pressable>
+                                                                )}
 
-                                                        {salonInfoData?.data?.salonInfo?.webLink && (
-                                                            <Pressable
-                                                                style={{
-                                                                    width: scale(30),
-                                                                    height: scale(30),
-                                                                    backgroundColor: colors.background,
-                                                                    justifyContent: "center",
-                                                                    alignItems: "center",
-                                                                    borderRadius: scale(4),
-                                                                }}
-                                                                onPress={() => openLink(salonInfoData.data.salonInfo.webLink)}
-                                                            >
-                                                                <WebIcon size={scale(18)} color={colors.text} />
-                                                            </Pressable>
-                                                        )}
-                                                    </View>
+                                                                {salonInfoData?.data?.salonInfo?.webLink && (
+                                                                    <Pressable
+                                                                        style={{
+                                                                            width: scale(30),
+                                                                            height: scale(30),
+                                                                            backgroundColor: colors.background,
+                                                                            justifyContent: "center",
+                                                                            alignItems: "center",
+                                                                            borderRadius: scale(4),
+                                                                        }}
+                                                                        onPress={() => openLink(salonInfoData.data.salonInfo.webLink)}
+                                                                    >
+                                                                        <WebIcon size={scale(18)} color={colors.text} />
+                                                                    </Pressable>
+                                                                )}
+                                                            </View>
 
 
-                                                </View>
+                                                        </View>
+                                                    ) : (null)
+                                                }
+
+
                                             </>
                                         )
                                     }

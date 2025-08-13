@@ -28,7 +28,7 @@ const privacyPolicy = () => {
         <View style={{
           flexDirection: "row",
           alignItems: "center",
-          gap: scale(3),
+          gap: scale(10),
           height: verticalScale(40),
         }}>
           <Pressable onPress={() => router.back()}><ArrowLeftIcon color={colors.text} /></Pressable>
@@ -151,13 +151,13 @@ const styles = StyleSheet.create({
     marginBottom: verticalScale(10),
   },
   heading: {
-    fontSize: scale(22),
+    fontSize: scale(20),
     fontFamily: "AirbnbCereal_W_XBd",
     marginBottom: verticalScale(10),
     textAlign: "center"
   },
   subHeading: {
-    fontSize: scale(18),
+    fontSize: scale(16),
     fontFamily: "AirbnbCereal_W_XBd",
     marginTop: verticalScale(15),
     marginBottom: verticalScale(5),

@@ -30,7 +30,7 @@ const licenses = () => {
         <View style={{
           flexDirection: "row",
           alignItems: "center",
-          gap: scale(3)
+          gap: scale(10)
         }}>
           <Pressable onPress={() => router.back()}><ArrowLeftIcon color={colors.text} /></Pressable>
           <CustomText style={{
@@ -38,7 +38,7 @@ const licenses = () => {
             fontSize: scale(18),
             // textAlign: "center",
             fontFamily: "AirbnbCereal_W_XBd",
-          }}>End User License Agreement (EULA)</CustomText>
+          }}>End User License Agreement</CustomText>
         </View>
 
         <View style={{
@@ -131,13 +131,13 @@ const styles = StyleSheet.create({
     marginBottom: verticalScale(10),
   },
   heading: {
-    fontSize: scale(22),
+    fontSize: scale(20),
     fontFamily: "AirbnbCereal_W_XBd",
     marginBottom: verticalScale(10),
     textAlign: 'center',
   },
   subHeading: {
-    ffontSize: scale(18),
+    fontSize: scale(16),
     fontFamily: "AirbnbCereal_W_XBd",
     marginTop: verticalScale(15),
     marginBottom: verticalScale(5),

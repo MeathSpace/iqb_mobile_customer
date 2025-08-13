@@ -214,7 +214,7 @@ const GroupJoinBarber = () => {
                     <TouchableOpacity
                         onPress={() => {
                             if (!selectedMemberBarber) {
-                                Toast.error("Please select a barber")
+                                Toast.error("Please select a stylist")
                                 return
                             }
                             if (selectedMemberServices.length === 0) {

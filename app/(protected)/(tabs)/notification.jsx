@@ -196,7 +196,7 @@ const notification = () => {
             <View style={{
                 flexDirection: "row",
                 alignItems: "center",
-                gap: scale(3)
+                gap: scale(10)
             }}>
                 <Pressable onPress={() => router.replace("/home")}><ArrowLeftIcon color={colors.text} /></Pressable>
                 <CustomText style={{

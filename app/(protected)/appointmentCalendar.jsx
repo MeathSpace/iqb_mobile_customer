@@ -44,6 +44,15 @@ const appointmentCalendar = () => {
         success: false
     })
 
+    const [maxAppointmentDays, setMaxAppointmentDays] = useState({
+        data: null,
+        loading: false,
+        error: null,
+        success: false
+    })
+
+
+    // console.log("maxAppointmentDays ", maxAppointmentDays?.data?.appointmentAdvanceDays)
 
     useEffect(() => {
         const fetchSalonServices = async () => {
@@ -191,6 +200,24 @@ const appointmentCalendar = () => {
     useEffect(() => {
         if (selectedCustomerBarber) {
 
+            const fetchMaxAppointmentDays = async () => {
+                try {
+
+                    setMaxAppointmentDays((prev) => ({ ...prev, loading: true }))
+
+                    const { data } = await axios.post(`${BASE_URL}/mobileRoutes/getMaxAppointmentDays`, {
+                        salonId: selectedCustomerBarber?.salonId,
+                    })
+
+                    setMaxAppointmentDays((prev) => ({ ...prev, loading: false, data: data?.response, success: true, error: null }))
+
+                    // console.log("Get fully booked dates ", data)
+
+                } catch (error) {
+                    console.log("Error fetching maximum appointment dates ", error?.response)
+                }
+            }
+
             const fetchFullyBookedDates = async () => {
                 try {
 
@@ -233,6 +260,7 @@ const appointmentCalendar = () => {
 
             fetchFullyBookedDates()
             fetchBarberDisableAppointmentDates()
+            fetchMaxAppointmentDays()
         }
     }, [selectedCustomerBarber])
 
@@ -263,31 +291,60 @@ const appointmentCalendar = () => {
     const [dates, setDates] = useState([]);
 
     useEffect(() => {
-        generateDatesForMonth(currentMonth);
-    }, [currentMonth]);
+        generateDatesForMonth(currentMonth, maxAppointmentDays?.data?.appointmentAdvanceDays);
+    }, [currentMonth, maxAppointmentDays?.data?.appointmentAdvanceDays]);
 
 
-    const generateDatesForMonth = (monthMoment) => {
-        const startOfMonth = monthMoment.clone().startOf('month');
-        const endOfMonth = monthMoment.clone().endOf('month');
-        const daysInMonth = monthMoment.daysInMonth();
+    // const generateDatesForMonth = (monthMoment) => {
+    //     const startOfMonth = monthMoment.clone().startOf('month');
+    //     const endOfMonth = monthMoment.clone().endOf('month');
+    //     const daysInMonth = monthMoment.daysInMonth();
 
-        const today = moment().startOf('day'); // current date at 00:00
+    //     const today = moment().startOf('day'); // current date at 00:00
+
+    //     let tempDates = [];
+
+    //     for (let i = 0; i < daysInMonth; i++) {
+    //         const dayMoment = startOfMonth.clone().add(i, 'days');
+
+    //         // 🔥 Skip today and past dates
+    //         if (dayMoment.isSameOrBefore(today)) continue;
+
+    //         tempDates.push({
+    //             dayName: dayMoment.format('ddd'),
+    //             date: dayMoment.format('DD'),
+    //             month: dayMoment.format('MMM'),
+    //             year: dayMoment.format('YYYY'),
+    //             fullDate: dayMoment.format('YYYY-MM-DD'),
+    //             slots: Math.floor(Math.random() * 10),
+    //             bgcolor: getRandomColor()
+    //         });
+    //     }
+
+    //     setDates(tempDates);
+    // };
+
+    const generateDatesForMonth = (monthMoment, rangeDays) => {
+        const today = moment().startOf('day');
+        const maxAllowedDate = today.clone().add(rangeDays, 'days');
 
         let tempDates = [];
 
-        for (let i = 0; i < daysInMonth; i++) {
-            const dayMoment = startOfMonth.clone().add(i, 'days');
+        // Loop from start of currentMonth to end of currentMonth
+        const startOfMonth = monthMoment.clone().startOf('month');
+        const endOfMonth = monthMoment.clone().endOf('month');
 
-            // 🔥 Skip today and past dates
-            if (dayMoment.isSameOrBefore(today)) continue;
+        // But cap it at maxAllowedDate
+        const loopStart = moment.max(today.clone().add(1, 'day'), startOfMonth);
+        const loopEnd = moment.min(endOfMonth, maxAllowedDate);
 
+        for (let day = loopStart.clone(); day.isSameOrBefore(loopEnd); day.add(1, 'day')) {
             tempDates.push({
-                dayName: dayMoment.format('ddd'),
-                date: dayMoment.format('DD'),
-                month: dayMoment.format('MMM'),
-                year: dayMoment.format('YYYY'),
-                fullDate: dayMoment.format('YYYY-MM-DD'),
+                dayName: day.format('ddd'),
+                date: day.format('DD'),
+                month: day.format('MMM'),
+                year: day.format('YYYY'),
+                fullDate: day.format('YYYY-MM-DD'),
                 slots: Math.floor(Math.random() * 10),
                 bgcolor: getRandomColor()
             });
@@ -310,8 +367,26 @@ const appointmentCalendar = () => {
         setCurrentMonth((prev) => prev.clone().subtract(1, 'month'));
     };
 
+    // const goToNextMonth = () => {
+    //     setCurrentMonth((prev) => prev.clone().add(1, 'month'));
+    // };
+
+    const RANGE_DAYS = maxAppointmentDays?.data?.appointmentAdvanceDays;
+    const maxAllowedDate = moment().startOf('day').add(RANGE_DAYS, 'days');
+
+    const isNextDisabled = currentMonth.clone().add(1, 'month').startOf('month').isAfter(maxAllowedDate);
+
     const goToNextMonth = () => {
-        setCurrentMonth((prev) => prev.clone().add(1, 'month'));
+        setCurrentMonth((prev) => {
+            const nextMonth = prev.clone().add(1, 'month');
+
+            // If first day of next month is after maxAllowedDate, block it
+            if (nextMonth.startOf('month').isAfter(maxAllowedDate)) {
+                return prev; // no change
+            }
+
+            return nextMonth;
+        });
     };
 
     const paddingAnim = useRef(new Animated.Value(scale(15))).current;
@@ -338,7 +413,7 @@ const appointmentCalendar = () => {
             Toast.error("Please select a service")
             return
         } else if (!selectedCustomerBarber) {
-            Toast.error("Please select a barber")
+            Toast.error("Please select a stylist")
             return
         } else if (!selectedEngageTimeSlot) {
             Toast.error("Please select a timeslot")
@@ -359,11 +434,6 @@ const appointmentCalendar = () => {
             },
         });
     }
-
-    // setContinueService(true)
-    // setScrolling(false)
-    // setActiveSection("barber")
-    // setAddIconPressCount(0)
 
     function formatMinutesToHrMin(totalMinutes) {
         const hours = Math.floor(totalMinutes / 60);
@@ -715,7 +785,12 @@ const appointmentCalendar = () => {
                                                 size={scale(16)}
                                             />
                                         </Pressable>
-                                        <Pressable onPress={goToNextMonth} style={styles.navButton}>
+                                        <Pressable
+                                            disabled={isNextDisabled}
+                                            onPress={goToNextMonth} style={[
+                                                styles.navButton,
+                                                isNextDisabled && { opacity: 0.3 }
+                                            ]}>
                                             <RightIcon color={'#14b8a6'} size={scale(16)} />
                                         </Pressable>
                                     </View>
@@ -983,7 +1058,7 @@ const appointmentCalendar = () => {
                             // position: "absolute",
                         }}>
 
-                            
+
                             <Pressable
                                 onPress={() => {
                                     setContinueService(true)
