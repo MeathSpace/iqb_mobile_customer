@@ -833,26 +833,50 @@ const appointment = () => {
               sections={sections}
               keyExtractor={(item) => item._id}
               renderSectionHeader={({ section: { title } }) => (
-                <View style={{ flexDirection: 'row', alignItems: 'center' }}>
-                  <CustomText style={styles.Listheader}>{title}</CustomText>
-                  {title === 'Past' && (
-                    <View
-                      style={{
-                        marginLeft: scale(8),
-                        width: scale(24),
-                        height: scale(24),
-                        borderRadius: scale(12),
-                        backgroundColor: colors.cardColor,
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                      }}
-                    >
-                      <CustomText style={{ fontSize: scale(12) }}>
-                        {pastAppointments.length}
-                      </CustomText>
-                    </View>
-                  )}
-                </View>
+                <>
+                  {
+                    title === "Upcoming" ? (
+                      <TouchableOpacity
+                        onPress={() => {
+                          if (!getSalonFeature?.salonFeature?.isAppointments) {
+                            return Toast.error("Appointment feature is not available at this salon")
+                          }
+                          setJoinModes((prev) => ({ ...prev, appointment: true, appointmentType: "Book" }));
+                          router.push("/appointmentCalendar");
+                        }}
+                        style={[
+                          styles.bookButton, {
+                            marginBottom: verticalScale(15)
+                          }
+                        ]}
+                        activeOpacity={0.85}
+                      >
+                        <CustomText style={styles.bookButtonText}>Book Appointment</CustomText>
+                      </TouchableOpacity>
+                    ) : null
+                  }
+
+                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                    <CustomText style={styles.Listheader}>{title}</CustomText>
+                    {title === 'Past' && (
+                      <View
+                        style={{
+                          marginLeft: scale(8),
+                          width: scale(24),
+                          height: scale(24),
+                          borderRadius: scale(12),
+                          backgroundColor: colors.cardColor,
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                      >
+                        <CustomText style={{ fontSize: scale(12) }}>
+                          {pastAppointments.length}
+                        </CustomText>
+                      </View>
+                    )}
+                  </View>
+                </>
               )}
               renderItem={({ item, section }) => (
                 <Pressable
@@ -1039,6 +1063,7 @@ const styles = StyleSheet.create({
     color: '#fff', // text-white
     fontFamily: "AirbnbCereal_W_XBd",
     fontSize: scale(16),
+    textAlign: "center"
   },
 
 

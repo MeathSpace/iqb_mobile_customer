@@ -1,5 +1,5 @@
 import { ActivityIndicator, Alert, FlatList, Platform, Pressable, Image as ReactNativeImage, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useRef, useState } from 'react'
 import CustomTabView from './CustomTabView'
 import CustomText from './CustomText'
 import { useAuth } from '../context/AuthContext'
@@ -496,6 +496,26 @@ const Dashboard = () => {
 
     const [cancelQueueLoading, setCancelQueueLoading] = useState(false)
 
+
+    const flatlistRef = useRef(null);
+    const [currentIndex, setCurrentIndex] = useState(0);
+    const autoScrollInterval = 4000; 
+
+    // Auto-scroll effect
+    useEffect(() => {
+        if (!homeAdvertisementData?.advertisementData?.length) return;
+
+        const interval = setInterval(() => {
+            setCurrentIndex((prevIndex) => {
+                const nextIndex = (prevIndex + 1) % homeAdvertisementData.advertisementData.length;
+                flatlistRef.current?.scrollToIndex({ animated: true, index: nextIndex });
+                return nextIndex;
+            });
+        }, autoScrollInterval);
+
+        return () => clearInterval(interval); 
+    }, [homeAdvertisementData?.advertisementData?.length]);
+
     return (
         <CustomTabView
             style={{
@@ -864,19 +884,35 @@ const Dashboard = () => {
                                             keyExtractor={item => item}
                                             horizontal
                                             showsHorizontalScrollIndicator={false}
-                                        />) : homeAdvertisementData?.advertisementData?.length > 0 ? (<FlatList
-                                            style={{
-                                                overflow: "visible",
-                                            }}
-                                            contentContainerStyle={{
-                                                gap: scale(10),
-                                            }}
-                                            data={homeAdvertisementData?.advertisementData}
-                                            renderItem={({ item }) => <AdvertiseCard item={item} />}
-                                            keyExtractor={item => item._id}
-                                            horizontal
-                                            showsHorizontalScrollIndicator={false}
-                                        />) : (
+                                        />) : homeAdvertisementData?.advertisementData?.length > 0 ? (
+                                            <>
+                                                <FlatList
+                                                    style={{
+                                                        overflow: "visible",
+                                                    }}
+                                                    contentContainerStyle={{
+                                                        gap: scale(10),
+                                                    }}
+                                                    data={homeAdvertisementData?.advertisementData}
+                                                    renderItem={({ item }) => <AdvertiseCard item={item} />}
+                                                    keyExtractor={item => item._id}
+                                                    horizontal
+                                                    showsHorizontalScrollIndicator={false}
+
+                                                    decelerationRate="fast"
+                                                    snapToInterval={scale(400)}
+                                                    pagingEnabled={true}
+                                                    onMomentumScrollEnd={(event) => {
+                                                        const offsetX = event.nativeEvent.contentOffset.x;
+                                                        const index = Math.round(offsetX / scale(400));
+                                                        setCurrentIndex(index);
+                                                    }}
+                                                    initialNumToRender={3}
+                                                    maxToRenderPerBatch={3}
+                                                    ref={flatlistRef}
+                                                />
+                                            </>
+                                        ) : (
                                             <View
                                                 style={{
                                                     width: "100%",
@@ -893,7 +929,7 @@ const Dashboard = () => {
                                                         borderColor: "#d3d3d3"
                                                     }}
                                                     source={require('@/assets/images/dummygallery.jpg')}
-                                                    contentFit="cover"
+                                                    contentFit="contain"
                                                     transition={300}
                                                 />
                                             </View>
@@ -1040,148 +1076,154 @@ const Dashboard = () => {
 
                         case "barber": {
                             return (
-                                <>
-                                    <View style={{
-                                        flexDirection: "row",
-                                        alignItems: "center",
-                                        // marginBottom: verticalScale(10)
-                                    }}>
-                                        <CustomText style={styles.heading}>Our Stylists
-                                            {/* <CustomText style={[styles.heading, { color: Colors.modeColor.colorCode }]}>{homeDashboardData?.dashboardData?.barberOnDuty}</CustomText> */}
-                                        </CustomText>
 
-                                        <View
-                                            style={{
-                                                marginLeft: scale(8),
-                                                width: scale(24),
-                                                height: scale(24),
-                                                borderRadius: scale(12),
-                                                backgroundColor: colors.cardColor,
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                marginBottom: verticalScale(10)
-                                            }}
-                                        >
-                                            <CustomText style={{ fontSize: scale(14), fontFamily: "AirbnbCereal_W_Bd" }}>
-                                                {homeDashboardData?.dashboardData?.barberOnDuty}
+                                homeDashboardData?.dashboardData?.barberOnDuty ? (
+                                    <>
+                                        <View style={{
+                                            flexDirection: "row",
+                                            alignItems: "center",
+                                            // marginBottom: verticalScale(10)
+                                        }}>
+                                            <CustomText style={styles.heading}>Stylists On Duty
+                                                {/* <CustomText style={[styles.heading, { color: Colors.modeColor.colorCode }]}>{homeDashboardData?.dashboardData?.barberOnDuty}</CustomText> */}
                                             </CustomText>
-                                        </View>
-                                    </View>
 
-                                    {
-                                        homeDashboardData?.loading ? (
-                                            <FlatList
-                                                key={2}
-                                                style={{
-                                                    overflow: "visible",
-                                                }}
-                                                columnWrapperStyle={{
-                                                    columnGap: scale(10),
-                                                }}
-                                                data={[0, 1, 2, 3]}
-                                                renderItem={({ item }) => <Skeleton
-                                                    height={verticalScale(160)}
-                                                    width={scale(160)}
-                                                    borderRadius={scale(10)}
-
-                                                    style={{
-                                                        marginBottom: verticalScale(15)
-                                                    }}
-                                                />}
-                                                keyExtractor={item => item}
-                                                bounces={false}
-                                                numColumns={2}
-                                            />
-                                        ) : homeDashboardData?.dashboardData?.barbers?.length ? (
-                                            <FlatList
-                                                key={2}
-                                                style={{
-
-                                                    overflow: "visible",
-                                                }}
-                                                columnWrapperStyle={{
-                                                    columnGap: scale(10),
-                                                }}
-                                                ItemSeparatorComponent={() => <View style={{ height: scale(10) }} />}
-                                                data={homeDashboardData?.dashboardData?.barbers.slice(0, sliceBarber)}
-                                                renderItem={({ item }) => <BarberCard item={item} />}
-                                                keyExtractor={item => item.barberId}
-                                                bounces={false}
-                                                numColumns={2}
-                                            />
-                                        ) : (
                                             <View
                                                 style={{
-                                                    height: verticalScale(100),
-                                                    justifyContent: "center",
-                                                    alignItems: "center",
-                                                    marginBottom: verticalScale(40)
-                                                }}
-                                            ><CustomText>No barbers available</CustomText></View>
-                                        )
-                                    }
-
-                                    {
-                                        sliceBarber < homeDashboardData?.dashboardData?.barbers?.length && (
-                                            <Pressable
-                                                onPress={() => {
-                                                    setSliceBarber(homeDashboardData?.dashboardData?.barbers?.length)
-                                                }}
-                                                style={{
-                                                    height: verticalScale(35),
-                                                    // backgroundColor: "#00B0901A",
-                                                    backgroundColor: "#14b8a6",
-                                                    borderRadius: scale(4),
-                                                    justifyContent: "center",
-                                                    alignItems: "center",
-                                                    marginTop: verticalScale(15)
-                                                    // marginBottom: verticalScale(20)
+                                                    marginLeft: scale(8),
+                                                    width: scale(24),
+                                                    height: scale(24),
+                                                    borderRadius: scale(12),
+                                                    backgroundColor: colors.cardColor,
+                                                    alignItems: 'center',
+                                                    justifyContent: 'center',
+                                                    marginBottom: verticalScale(10)
                                                 }}
                                             >
-                                                <View style={{ flexDirection: "row", alignItems: "center", gap: scale(10) }}>
-                                                    <View style={{ flexDirection: "row", alignItems: "center" }}>
-                                                        {
-                                                            homeDashboardData?.dashboardData?.barbers?.slice(0, 3).map((item, index) => {
-                                                                return (
-                                                                    <View
-                                                                        key={index}
-                                                                        style={{
-                                                                            height: scale(25),
-                                                                            width: scale(25),
-                                                                            borderRadius: scale(20),
-                                                                            marginLeft: -scale(1 * 5)
-                                                                        }}>
-                                                                        <Image
-                                                                            style={{
-                                                                                height: "100%",
-                                                                                width: "100%",
-                                                                                borderRadius: scale(20)
-                                                                            }}
-                                                                            source={{ uri: item?.profile?.[0]?.url }}
-                                                                            contentFit="cover"
-                                                                            transition={300}
-                                                                        />
-                                                                    </View>
-                                                                )
-                                                            })
-                                                        }
-                                                    </View>
-                                                    <View
-                                                        style={{
-                                                            flexDirection: "row",
-                                                            alignItems: "center",
-                                                            gap: scale(5)
-                                                        }}
-                                                    >
-                                                        <CustomText style={{ color: "#fff" }}>See all barbers</CustomText>
-                                                        <RightIcon size={scale(14)} color={"#fff"} />
-                                                    </View>
-                                                </View>
-                                            </Pressable>
-                                        )
-                                    }
+                                                <CustomText style={{ fontSize: scale(14), fontFamily: "AirbnbCereal_W_Bd" }}>
+                                                    {homeDashboardData?.dashboardData?.barberOnDuty}
+                                                </CustomText>
+                                            </View>
+                                        </View>
 
-                                </>
+                                        {
+                                            homeDashboardData?.loading ? (
+                                                <FlatList
+                                                    key={2}
+                                                    style={{
+                                                        overflow: "visible",
+                                                    }}
+                                                    columnWrapperStyle={{
+                                                        columnGap: scale(10),
+                                                    }}
+                                                    data={[0, 1, 2, 3]}
+                                                    renderItem={({ item }) => <Skeleton
+                                                        height={verticalScale(160)}
+                                                        width={scale(160)}
+                                                        borderRadius={scale(10)}
+
+                                                        style={{
+                                                            marginBottom: verticalScale(15)
+                                                        }}
+                                                    />}
+                                                    keyExtractor={item => item}
+                                                    bounces={false}
+                                                    numColumns={2}
+                                                />
+                                            ) : homeDashboardData?.dashboardData?.barbers?.length ? (
+                                                <FlatList
+                                                    key={2}
+                                                    style={{
+
+                                                        overflow: "visible",
+                                                    }}
+                                                    columnWrapperStyle={{
+                                                        columnGap: scale(10),
+                                                    }}
+                                                    ItemSeparatorComponent={() => <View style={{ height: scale(10) }} />}
+                                                    data={homeDashboardData?.dashboardData?.barbers.slice(0, sliceBarber)}
+                                                    renderItem={({ item }) => <BarberCard item={item} />}
+                                                    keyExtractor={item => item.barberId}
+                                                    bounces={false}
+                                                    numColumns={2}
+                                                />
+                                            ) : (
+                                                <View
+                                                    style={{
+                                                        height: verticalScale(100),
+                                                        justifyContent: "center",
+                                                        alignItems: "center",
+                                                        marginBottom: verticalScale(40)
+                                                    }}
+                                                ><CustomText>No barbers available</CustomText></View>
+                                            )
+                                        }
+
+                                        {
+                                            sliceBarber < homeDashboardData?.dashboardData?.barbers?.length && (
+                                                <Pressable
+                                                    onPress={() => {
+                                                        setSliceBarber(homeDashboardData?.dashboardData?.barbers?.length)
+                                                    }}
+                                                    style={{
+                                                        height: verticalScale(35),
+                                                        // backgroundColor: "#00B0901A",
+                                                        backgroundColor: "#14b8a6",
+                                                        borderRadius: scale(4),
+                                                        justifyContent: "center",
+                                                        alignItems: "center",
+                                                        marginTop: verticalScale(15)
+                                                        // marginBottom: verticalScale(20)
+                                                    }}
+                                                >
+                                                    <View style={{ flexDirection: "row", alignItems: "center", gap: scale(10) }}>
+                                                        <View style={{ flexDirection: "row", alignItems: "center" }}>
+                                                            {
+                                                                homeDashboardData?.dashboardData?.barbers?.slice(0, 3).map((item, index) => {
+                                                                    return (
+                                                                        <View
+                                                                            key={index}
+                                                                            style={{
+                                                                                height: scale(25),
+                                                                                width: scale(25),
+                                                                                borderRadius: scale(20),
+                                                                                marginLeft: -scale(1 * 5)
+                                                                            }}>
+                                                                            <Image
+                                                                                style={{
+                                                                                    height: "100%",
+                                                                                    width: "100%",
+                                                                                    borderRadius: scale(20)
+                                                                                }}
+                                                                                source={{ uri: item?.profile?.[0]?.url }}
+                                                                                contentFit="cover"
+                                                                                transition={300}
+                                                                            />
+                                                                        </View>
+                                                                    )
+                                                                })
+                                                            }
+                                                        </View>
+                                                        <View
+                                                            style={{
+                                                                flexDirection: "row",
+                                                                alignItems: "center",
+                                                                gap: scale(5)
+                                                            }}
+                                                        >
+                                                            <CustomText style={{ color: "#fff" }}>See all barbers</CustomText>
+                                                            <RightIcon size={scale(14)} color={"#fff"} />
+                                                        </View>
+                                                    </View>
+                                                </Pressable>
+                                            )
+                                        }
+
+                                    </>
+                                ) : (
+                                    null
+                                )
+
                             )
                         }
 

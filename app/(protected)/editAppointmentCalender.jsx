@@ -55,8 +55,6 @@ const editAppointmentCalender = () => {
         success: false
     })
 
-    console.log("Edit maxAppointmentDays ", maxAppointmentDays?.data?.appointmentAdvanceDays)
-
     const [selectCustomerServices, setSelectedCustomerServices] = useState([])
     const [selectedCustomerBarber, setSelectedCustomerBarber] = useState(null)
     const [continueService, setContinueService] = useState(false)
