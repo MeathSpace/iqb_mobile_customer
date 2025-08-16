@@ -1433,7 +1433,12 @@ const GroupJoin = () => {
                         renderItem={({ item }) => {
                             const isSelected = selectedMemberServices.find(s => s.serviceId === item.serviceId);
                             return (
-                                <View
+                                <Pressable
+                                    onPress={() =>
+                                        isSelected
+                                            ? removeServiceHandler(item)
+                                            : addServiceHandler(item)
+                                    }
                                     style={[
                                         styles.serviceCard,
                                         {
@@ -1454,11 +1459,7 @@ const GroupJoin = () => {
                                             transition={300}
                                         />
                                         <Pressable
-                                            onPress={() =>
-                                                isSelected
-                                                    ? removeServiceHandler(item)
-                                                    : addServiceHandler(item)
-                                            }
+
                                             style={[
                                                 styles.selectIcon,
                                                 {
@@ -1495,7 +1496,7 @@ const GroupJoin = () => {
                                     >
                                         {authenticatedUser?.currency} {item?.servicePrice}
                                     </CustomText>
-                                </View>
+                                </Pressable>
                             );
                         }}
                         keyExtractor={(item) => item?.serviceId}
