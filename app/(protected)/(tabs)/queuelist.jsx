@@ -117,10 +117,17 @@ const QueueList = () => {
             fetchShowHideQueueButton()
 
             socket.emit("joinSalon", authenticatedUser?.salonId); // this is for queue list
-            // socket.emit("customerJoinQueueButton", {
-            //     salonId: authenticatedUser?.salonId,
-            //     customerEmail: authenticatedUser?.email
-            // }); // this is for show/hide joinqueue button
+
+            socket.emit("customerJoinQueueButton", {
+                salonId: authenticatedUser?.salonId,
+                customerEmail: authenticatedUser?.email
+            }); // this is for show/hide joinqueue button
+
+
+            socket.on("queueButtonToggle", (showhideQueueBtnDta) => {
+                console.log("showhideBtn ", showhideQueueBtnDta)
+                setShowHideQueBtn((prev) => ({ ...prev, loading: false, data: showhideQueueBtnDta?.response, success: true, error: null }))
+            })
 
             socket.on("queueUpdated", (queueData) => {
                 setQlistData((prev) => ({ ...prev, loading: false, data: queueData, success: true, error: null }))

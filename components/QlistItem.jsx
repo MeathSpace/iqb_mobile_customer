@@ -163,15 +163,13 @@ const QlistItem = ({ item, index, qlistLength, setQlistData, setShowHideQueBtn }
                             setQlistData((prev) => ({ ...prev, loading: false, data: queuelistData?.response, success: true, error: null, isJoinedQueue: queuelistData?.isJoinedQueue }))
 
 
-                            setShowHideQueBtn((prev) => ({ ...prev, loading: true }))
+                            // setShowHideQueBtn((prev) => ({ ...prev, loading: true }))
 
-                            const { data: showhideQueueBtnDta } = await axios.post(`${BASE_URL}/customer/showHideJoinQueueButton`, {
-                                customerEmail: authenticatedUser?.email
-                            })
+                            // const { data: showhideQueueBtnDta } = await axios.post(`${BASE_URL}/customer/showHideJoinQueueButton`, {
+                            //     customerEmail: authenticatedUser?.email
+                            // })
 
-                            // console.log(data)
-
-                            setShowHideQueBtn((prev) => ({ ...prev, loading: false, data: showhideQueueBtnDta?.response, success: true, error: null }))
+                            // setShowHideQueBtn((prev) => ({ ...prev, loading: false, data: showhideQueueBtnDta?.response, success: true, error: null }))
 
 
                         } catch (error) {

@@ -1459,7 +1459,11 @@ const GroupJoin = () => {
                                             transition={300}
                                         />
                                         <Pressable
-
+                                            onPress={() =>
+                                                isSelected
+                                                    ? removeServiceHandler(item)
+                                                    : addServiceHandler(item)
+                                            }
                                             style={[
                                                 styles.selectIcon,
                                                 {
