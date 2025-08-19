@@ -1159,7 +1159,10 @@ const GroupJoin = () => {
             }
         }
 
-        fetchSalonServicesByCategory()
+        if (selectedCategory) {
+            fetchSalonServicesByCategory()
+        }
+
     }, [selectedCategory])
 
 

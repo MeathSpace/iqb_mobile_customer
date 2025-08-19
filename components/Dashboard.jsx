@@ -244,12 +244,19 @@ const Dashboard = () => {
         useCallback(() => {
 
             socket.emit("joinSalon", authenticatedUser.salonId);
-            // console.log("Connect")
 
             socket.on("liveSalonData", (salonDashboardData) => {
-                // console.log(salonDashboardData)
-                // console.log("Socket ", salonDashboardData)
                 setHomeDashboardData((prev) => ({ ...prev, loading: false, dashboardData: salonDashboardData?.response, success: true, error: null }))
+            })
+
+            socket.emit("customerforLiveData", {
+                salonId: authenticatedUser?.salonId,
+                customerEmail: authenticatedUser?.email
+            });
+
+            socket.on("customerLiveQueueUpdate", (customerLiveData) => {
+                // console.log("Customer Live Queue Socket Data ", customerLiveData?.response)
+                setCustomerLiveData((prev) => ({ ...prev, loading: false, liveQueueData: customerLiveData?.response, success: true, error: null }))
             })
 
         }, [authenticatedUser])
@@ -499,7 +506,7 @@ const Dashboard = () => {
 
     const flatlistRef = useRef(null);
     const [currentIndex, setCurrentIndex] = useState(0);
-    const autoScrollInterval = 4000; 
+    const autoScrollInterval = 4000;
 
     // Auto-scroll effect
     useEffect(() => {
@@ -513,7 +520,7 @@ const Dashboard = () => {
             });
         }, autoScrollInterval);
 
-        return () => clearInterval(interval); 
+        return () => clearInterval(interval);
     }, [homeAdvertisementData?.advertisementData?.length]);
 
     return (
