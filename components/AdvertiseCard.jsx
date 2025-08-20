@@ -1,22 +1,27 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import React from 'react'
 import { useTheme } from '@react-navigation/native';
 import { Image } from 'expo-image';
+import { useRouter } from 'expo-router';
 
 const AdvertiseCard = ({ item }) => {
 
     const { colors } = useTheme()
+    const router = useRouter()
+
 
     return (
-        <View style={[styles.cardWrapper, {}]}>
+        <Pressable
+            onPress={() => router.push(item?.link)}
+            style={[styles.cardWrapper, {}]}>
             <Image
-                style={[styles.cardImage, { borderColor: colors.queueBorder}]}
+                style={[styles.cardImage, { borderColor: colors.queueBorder }]}
                 source={{ uri: item.url }}
                 contentFit="cover"
                 transition={300}
             />
-        </View>
+        </Pressable>
     )
 }
 
