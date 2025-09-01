@@ -12,6 +12,7 @@ import { BASE_URL } from '@/utils/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Toast } from 'toastify-react-native'
 import { useGlobal } from '../../context/GlobalContext'
+import { ddmmformatDate } from '../../utils/ddmmformatDate'
 
 const appointmentCalenderModal = () => {
 
@@ -177,7 +178,7 @@ const appointmentCalenderModal = () => {
                                 Date
                             </CustomText>
                             <CustomSecondaryText>
-                                {selectedBookCalenderDateParse}
+                                {ddmmformatDate(selectedBookCalenderDateParse)}
                             </CustomSecondaryText>
                         </View>
 

@@ -12,6 +12,7 @@ import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 import CustomSecondaryText from '../../components/CustomSecondaryText'
 import CustomText from '../../components/CustomText'
 import { CheckIcon } from '../../constants/icons'
+import { ddmmformatDate } from '../../utils/ddmmformatDate';
 
 const editAppointmentCalenderModal = () => {
 
@@ -173,7 +174,7 @@ const editAppointmentCalenderModal = () => {
                                 Date
                             </CustomText>
                             <CustomSecondaryText>
-                                {selectedBookCalenderDateParse}
+                                {ddmmformatDate(selectedBookCalenderDateParse)}
                             </CustomSecondaryText>
                         </View>
 

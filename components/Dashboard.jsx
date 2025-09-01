@@ -1312,14 +1312,18 @@ const styles = StyleSheet.create({
         padding: scale(16),
         // marginBottom: verticalScale(24),
         flexDirection: 'row',
-        alignItems: 'center',
+        // alignItems: 'center',
         gap: scale(12),
     },
 
     hintIconWrapper: {
         // backgroundColor: '#f3f4f6',  // bg-gray-100
-        padding: scale(12),
+        // padding: scale(12),
         borderRadius: scale(12),
+        width: scale(40),
+        height: scale(40),
+        justifyContent: "center",
+        alignItems: "center"
     },
 
     hintTextWrapper: {

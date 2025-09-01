@@ -516,6 +516,7 @@ import { io } from "socket.io-client";
 import { Feather } from '@expo/vector-icons';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Toast } from 'toastify-react-native';
+import { ddmmformatDate } from '../../../utils/ddmmformatDate';
 
 const appointment = () => {
 
@@ -707,6 +708,16 @@ const appointment = () => {
 
     }
   );
+
+
+  function formatMinutesToHrMin(totalMinutes) {
+    const hours = Math.floor(totalMinutes / 60);
+    const mins = totalMinutes % 60;
+
+    if (hours > 0 && mins > 0) return `${hours}hr ${mins}m`;
+    if (hours > 0) return `${hours}hr`;
+    return `${mins}m`;
+  }
 
   return (
     <CustomTabView
@@ -921,7 +932,7 @@ const appointment = () => {
                       {item.barbername}
                     </CustomText>
                     <CustomText style={[styles.datetime, { color: colors.secondaryText }]}>
-                      {item?.appointmentDate?.split("T")[0]} ({item?.timeSlots})
+                      {ddmmformatDate(item?.appointmentDate?.split("T")[0])} ({item?.timeSlots})
                     </CustomText>
 
                     <CustomText style={[styles.meta, { color: colors.secondaryText }]}>
