@@ -279,9 +279,9 @@ const Dashboard = () => {
         {
             title: "status",
         },
-        {
-            title: "advertise",
-        },
+        // {
+        //     title: "advertise",
+        // },
 
         {
             title: "barber",
@@ -527,7 +527,7 @@ const Dashboard = () => {
         <CustomTabView
             style={{
                 paddingTop: verticalScale(0),
-                paddingBottom: Platform.OS === "ios" ? verticalScale(0) : verticalScale(0)
+                paddingBottom: Platform.OS === "ios" ? verticalScale(70) : verticalScale(50)
             }}
         >
             <FlatList
@@ -757,43 +757,6 @@ const Dashboard = () => {
                         case "status": {
                             return (
 
-                                // homeDashboardData?.loading ? (<FlatList
-                                //     style={{
-                                //         overflow: "visible",
-                                //     }}
-                                //     contentContainerStyle={{
-                                //         flex: 1,
-                                //         flexDirection: "row",
-                                //         gap: scale(10),
-                                //         paddingVertical: verticalScale(10),
-                                //         justifyContent: "space-evenly"
-                                //     }}
-                                //     data={salonStatus}
-                                //     renderItem={({ item }) => <Skeleton width={scale(60)} height={scale(80)} />}
-                                //     keyExtractor={item => item.id}
-                                //     horizontal
-                                //     showsHorizontalScrollIndicator={false}
-                                //     bounces={false}
-                                // />) : (<FlatList
-                                //     style={{
-                                //         overflow: "visible",
-                                //     }}
-                                //     contentContainerStyle={{
-                                //         flex: 1,
-                                //         flexDirection: "row",
-                                //         gap: scale(10),
-                                //         paddingVertical: verticalScale(10),
-                                //         justifyContent: "space-evenly"
-                                //     }}
-                                //     data={salonStatus}
-                                //     renderItem={({ item }) => <StatusCard item={item} />}
-                                //     keyExtractor={item => item.id}
-                                //     horizontal
-                                //     showsHorizontalScrollIndicator={false}
-                                //     bounces={false}
-                                // />)
-
-
                                 homeDashboardData?.loading ? (
                                     <View>
                                         <CustomText style={styles.heading}>Live Queue Status</CustomText>
@@ -863,7 +826,7 @@ const Dashboard = () => {
                                     <View style={styles.hintTextWrapper}>
                                         <CustomText style={[styles.hintTitle, { color: colors.secondaryText }]}>Salon Info</CustomText>
                                         <CustomText style={[styles.hintDescription]}>
-                                            {homeDashboardData?.dashboardData?.salonInfo?.salonDesc}
+                                            {homeDashboardData?.dashboardData?.salonInfo?.salonInfo}
                                         </CustomText>
                                     </View>
                                 </View>
@@ -871,213 +834,79 @@ const Dashboard = () => {
                         }
 
 
-                        case "advertise": {
-                            return (
-                                <>
-                                    {
-                                        homeAdvertisementData?.loading ? (<FlatList
-                                            style={{
-                                                overflow: "visible",
-                                            }}
-                                            contentContainerStyle={{
-                                                gap: scale(10),
-                                            }}
-                                            data={[0, 1, 2, 3]}
-                                            renderItem={({ item }) => <View style={{
-                                                // paddingVertical: verticalScale(20),
-                                            }}>
-                                                <Skeleton width={scale(300.56)} height={verticalScale(145 / 1.2)} borderRadius={scale(12)} />
-                                            </View>}
-                                            keyExtractor={item => item}
-                                            horizontal
-                                            showsHorizontalScrollIndicator={false}
-                                        />) : homeAdvertisementData?.advertisementData?.length > 0 ? (
-                                            <>
-                                                <FlatList
-                                                    style={{
-                                                        overflow: "visible",
-                                                    }}
-                                                    contentContainerStyle={{
-                                                        gap: scale(10),
-                                                    }}
-                                                    data={homeAdvertisementData?.advertisementData}
-                                                    renderItem={({ item }) => <AdvertiseCard item={item} />}
-                                                    keyExtractor={item => item._id}
-                                                    horizontal
-                                                    showsHorizontalScrollIndicator={false}
-
-                                                    decelerationRate="fast"
-                                                    snapToInterval={scale(400)}
-                                                    pagingEnabled={true}
-                                                    onMomentumScrollEnd={(event) => {
-                                                        const offsetX = event.nativeEvent.contentOffset.x;
-                                                        const index = Math.round(offsetX / scale(400));
-                                                        setCurrentIndex(index);
-                                                    }}
-                                                    initialNumToRender={3}
-                                                    maxToRenderPerBatch={3}
-                                                    ref={flatlistRef}
-                                                />
-                                            </>
-                                        ) : (
-                                            <View
-                                                style={{
-                                                    width: "100%",
-                                                    height: verticalScale(180),
-                                                    paddingVertical: verticalScale(20),
-                                                }}
-                                            >
-                                                <Image
-                                                    style={{
-                                                        width: "100%",
-                                                        height: "100%",
-                                                        borderRadius: scale(12),
-                                                        borderWidth: scale(1),
-                                                        borderColor: "#d3d3d3"
-                                                    }}
-                                                    source={require('@/assets/images/dummygallery.jpg')}
-                                                    contentFit="contain"
-                                                    transition={300}
-                                                />
-                                            </View>
-                                        )
-                                    }
-
-                                </>
-                            )
-                        }
-
-                        // case "serviceCategory": {
+                        // case "advertise": {
                         //     return (
-                        //         <View View style={styles.container} >
-                        //             <CustomText style={styles.heading}>Our Services</CustomText>
-                        //             <View
-                        //                 style={{
-                        //                     // height: verticalScale(97),
-                        //                     flexDirection: "row",
-                        //                     alignItems: "center",
-                        //                     flexDirection: "row",
-                        //                     flexWrap: "wrap",
-                        //                     // paddingVertical: verticalScale(20),
-                        //                     gap: scale(20),
-                        //                     // justifyContent: "space-between"
-                        //                 }}
-                        //             >
-                        //                 {
-                        //                     serviceCategoryData?.loading ? (
-                        //                         [0, 1, 2, 3, 4].map((item, index) => {
-                        //                             return (
-                        //                                 <View
-                        //                                     key={index}
-                        //                                     style={{
-                        //                                         gap: verticalScale(10),
-                        //                                         width: scale(65),
-                        //                                         // marginBottom: verticalScale(10)
-                        //                                     }}
-                        //                                 >
+                        //         <>
+                        //             {
+                        //                 homeAdvertisementData?.loading ? (<FlatList
+                        //                     style={{
+                        //                         overflow: "visible",
+                        //                     }}
+                        //                     contentContainerStyle={{
+                        //                         gap: scale(10),
+                        //                     }}
+                        //                     data={[0, 1, 2, 3]}
+                        //                     renderItem={({ item }) => <View style={{
+                        //                         // paddingVertical: verticalScale(20),
+                        //                     }}>
+                        //                         <Skeleton width={scale(300.56)} height={verticalScale(145 / 1.2)} borderRadius={scale(12)} />
+                        //                     </View>}
+                        //                     keyExtractor={item => item}
+                        //                     horizontal
+                        //                     showsHorizontalScrollIndicator={false}
+                        //                 />) : homeAdvertisementData?.advertisementData?.length > 0 ? (
+                        //                     <>
+                        //                         <FlatList
+                        //                             style={{
+                        //                                 overflow: "visible",
+                        //                             }}
+                        //                             contentContainerStyle={{
+                        //                                 gap: scale(10),
+                        //                             }}
+                        //                             data={homeAdvertisementData?.advertisementData}
+                        //                             renderItem={({ item }) => <AdvertiseCard item={item} />}
+                        //                             keyExtractor={item => item._id}
+                        //                             horizontal
+                        //                             showsHorizontalScrollIndicator={false}
 
-                        //                                     <Skeleton
-                        //                                         width={scale(70)}
-                        //                                         height={scale(70)}
-                        //                                         borderRadius={scale(50)}
-                        //                                     >
+                        //                             decelerationRate="fast"
+                        //                             snapToInterval={scale(400)}
+                        //                             pagingEnabled={true}
+                        //                             onMomentumScrollEnd={(event) => {
+                        //                                 const offsetX = event.nativeEvent.contentOffset.x;
+                        //                                 const index = Math.round(offsetX / scale(400));
+                        //                                 setCurrentIndex(index);
+                        //                             }}
+                        //                             initialNumToRender={3}
+                        //                             maxToRenderPerBatch={3}
+                        //                             ref={flatlistRef}
+                        //                         />
+                        //                     </>
+                        //                 ) : (
+                        //                     <View
+                        //                         style={{
+                        //                             width: "100%",
+                        //                             height: verticalScale(180),
+                        //                             paddingVertical: verticalScale(20),
+                        //                         }}
+                        //                     >
+                        //                         <Image
+                        //                             style={{
+                        //                                 width: "100%",
+                        //                                 height: "100%",
+                        //                                 borderRadius: scale(12),
+                        //                                 borderWidth: scale(1),
+                        //                                 borderColor: "#d3d3d3"
+                        //                             }}
+                        //                             source={require('@/assets/images/dummygallery.jpg')}
+                        //                             contentFit="contain"
+                        //                             transition={300}
+                        //                         />
+                        //                     </View>
+                        //                 )
+                        //             }
 
-                        //                                     </Skeleton>
-
-                        //                                 </View>
-                        //                             )
-                        //                         })
-                        //                     ) : (
-                        //                         serviceCategoryData?.data?.map((item, index) => {
-                        //                             return (
-                        //                                 <View
-                        //                                     key={item?._id}
-                        //                                     style={{
-                        //                                         gap: verticalScale(10),
-                        //                                         width: scale(65),
-                        //                                     }}
-                        //                                 >
-
-                        //                                     <View
-                        //                                         style={{
-                        //                                             width: scale(70),
-                        //                                             height: scale(70),
-                        //                                             borderRadius: scale(50),
-                        //                                             // backgroundColor: "red",
-                        //                                             borderWidth: scale(3),
-                        //                                             borderColor: colors.cardColor,
-                        //                                             marginHorizontal: "auto",
-
-                        //                                             // ✅ iOS shadow
-                        //                                             shadowColor: '#000',
-                        //                                             shadowOffset: { width: 0, height: 2 },
-                        //                                             shadowOpacity: 0.2,
-                        //                                             shadowRadius: 3,
-
-                        //                                             // ✅ Android elevation
-                        //                                             elevation: 2,
-                        //                                         }}
-                        //                                     >
-                        //                                         <Image
-                        //                                             style={{ width: "100%", height: "100%", borderRadius: scale(50) }}
-                        //                                             source={{ uri: item?.serviceCategoryImage?.url.replace("http", "https") }}
-                        //                                             contentFit="cover"
-                        //                                             transition={1000}
-                        //                                         />
-                        //                                     </View>
-                        //                                     <CustomText
-                        //                                         style={{
-                        //                                             fontFamily: "AirbnbCereal_W_Md",
-                        //                                             fontSize: scale(14),
-                        //                                             textAlign: "center",
-                        //                                             // color: "gray",
-                        //                                         }}
-                        //                                     >{item.serviceCategoryName}</CustomText>
-                        //                                 </View>
-                        //                             )
-                        //                         })
-                        //                     )
-                        //                 }
-                        //             </View>
-                        //         </View>
-
-
-                        //         // serviceCategoryData?.loading ? (
-                        //         //     <View View style={styles.container} >
-                        //         //         <CustomText style={styles.sectionTitle}>Our Services</CustomText>
-                        //         //         <FlatList
-                        //         //             data={[0, 1, 2, 3, 4, 5, 6, 7]}
-                        //         //             horizontal
-                        //         //             showsHorizontalScrollIndicator={false}
-                        //         //             // keyExtractor={(item) => item._id}
-                        //         //             contentContainerStyle={styles.scrollContainer}
-                        //         //             renderItem={({ item }) => (
-                        //         //                 <Skeleton
-                        //         //                     width={scale(160)}
-                        //         //                     height={verticalScale(192)}
-                        //         //                 />
-                        //         //             )}
-                        //         //         />
-                        //         //     </View>
-                        //         // ) : (
-                        //         //     <View View style={styles.container} >
-                        //         //         <CustomText style={styles.sectionTitle}>Our Services</CustomText>
-                        //         //         <FlatList
-                        //         //             data={serviceCategoryData?.data}
-                        //         //             horizontal
-                        //         //             showsHorizontalScrollIndicator={false}
-                        //         //             keyExtractor={(item) => item._id}
-                        //         //             contentContainerStyle={styles.scrollContainer}
-                        //         //             renderItem={({ item }) => (
-                        //         //                 <ServiceCard
-                        //         //                     title={item.serviceCategoryName}
-                        //         //                     image={item?.serviceCategoryImage?.url.replace("http", "https")}
-                        //         //                     fallback={item.fallback}
-                        //         //                 />
-                        //         //             )}
-                        //         //         />
-                        //         //     </View>
-                        //         // )
+                        //         </>
                         //     )
                         // }
 
@@ -1239,6 +1068,93 @@ const Dashboard = () => {
                 keyExtractor={item => item.title}
                 ListFooterComponent={< View style={{ height: Platform.OS === "ios" ? verticalScale(60) : 0 }} />}
             />
+
+            <View
+                style={{
+                    position: "absolute",
+                    bottom: Platform.OS === "ios" ? verticalScale(80) : verticalScale(0),
+                    left: 0,
+                    right: 0,
+                    height: verticalScale(70),
+                }}
+            >
+                {
+                    homeAdvertisementData?.loading ? (
+                        // Loader Skeletons
+                        <FlatList
+                            style={{
+                                overflow: "visible",
+                            }}
+                            contentContainerStyle={{
+                                gap: scale(10),
+                            }}
+                            data={[0, 1, 2, 3]}
+                            renderItem={({ item }) => (
+                                <View>
+                                    <Skeleton
+                                        width={scale(350)}
+                                        height={verticalScale(70)}
+                                        borderRadius={scale(0)}
+                                    />
+                                </View>
+                            )}
+                            keyExtractor={(item) => item.toString()}
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                        />
+                    ) : homeAdvertisementData?.advertisementData?.length > 0 ? (
+                        // Advertisement FlatList
+                        <FlatList
+                            style={{
+                                overflow: "visible",
+                            }}
+                            contentContainerStyle={{
+                                gap: scale(10),
+                            }}
+                            data={homeAdvertisementData?.advertisementData}
+                            renderItem={({ item }) => <AdvertiseCard item={item} />}
+                            keyExtractor={(item) => item._id}
+                            horizontal
+                            showsHorizontalScrollIndicator={false}
+                            decelerationRate="fast"
+                            snapToInterval={scale(400)}
+                            pagingEnabled={true}
+                            onMomentumScrollEnd={(event) => {
+                                const offsetX = event.nativeEvent.contentOffset.x;
+                                const index = Math.round(offsetX / scale(400));
+                                setCurrentIndex(index);
+                            }}
+                            initialNumToRender={3}
+                            maxToRenderPerBatch={3}
+                            ref={flatlistRef}
+                        />
+                    ) : (
+                        // Fallback Dummy Image
+                        <View
+                            style={{
+                                width: "100%",
+                                height: verticalScale(70),
+                                backgroundColor: "#d3d3d3"
+                                // paddingVertical: verticalScale(20),
+                            }}
+                        >
+                            <Image
+                                style={{
+                                    width: "100%",
+                                    height: "100%",
+                                    borderRadius: scale(0),
+                                    borderWidth: scale(1),
+                                    borderColor: "#d3d3d3",
+                                }}
+                                source={require("@/assets/images/dummygallery.jpg")}
+                                contentFit="cover"
+                                transition={300}
+                            />
+                        </View>
+                    )
+                }
+            </View>
+
 
         </CustomTabView >
     )

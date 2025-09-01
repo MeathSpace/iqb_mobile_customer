@@ -16,7 +16,9 @@ const AdvertiseCard = ({ item }) => {
             onPress={() => router.push(item?.link)}
             style={[styles.cardWrapper, {}]}>
             <Image
-                style={[styles.cardImage, { borderColor: colors.queueBorder }]}
+                style={[styles.cardImage, { 
+                    borderColor: colors.queueBorder 
+                }]}
                 source={{ uri: item.url }}
                 contentFit="cover"
                 transition={300}
@@ -32,13 +34,15 @@ const styles = StyleSheet.create({
         // height: verticalScale(200),
         // paddingVertical: verticalScale(20),
         // marginBottom: verticalScale(10),
-        width: scale(330.56),
+        width: scale(350),
+        paddingHorizontal: scale(15),
+        backgroundColor: "rgba(0,0,0,0.1)"
     },
     cardImage: {
         // height: "100%",
-        height: verticalScale(145 / 1.2),
+        height: verticalScale(70),
         width: "100%",
-        borderRadius: scale(12),
-        borderWidth: scale(1)
+        borderRadius: scale(0),
+        borderWidth: scale(0)
     }
 })
