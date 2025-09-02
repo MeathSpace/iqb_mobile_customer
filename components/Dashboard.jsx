@@ -523,6 +523,11 @@ const Dashboard = () => {
         return () => clearInterval(interval);
     }, [homeAdvertisementData?.advertisementData?.length]);
 
+
+    const [showMore, setShowMore] = useState(false);
+
+    const salonInfo = homeDashboardData?.dashboardData?.salonInfo?.salonInfo || "";
+
     return (
         <CustomTabView
             style={{
@@ -811,26 +816,87 @@ const Dashboard = () => {
                         }
 
                         case "hint": {
+
+                            // return (
+                            //     <View style={[styles.hintCard, {
+                            //         backgroundColor: colors.cardColor,
+                            //         borderColor: colors.queueBorder
+                            //     }]}>
+                            //         <View style={[styles.hintIconWrapper, {
+                            //             backgroundColor: colors.background,
+                            //             borderColor: colors.cardBorder,
+                            //             borderWidth: scale(1)
+                            //         }]}>
+                            //             <SalonIcon color={colors.text} />
+                            //         </View>
+                            //         <View style={styles.hintTextWrapper}>
+                            //             <CustomText style={[styles.hintTitle, { color: colors.secondaryText }]}>Salon Info</CustomText>
+                            //             <CustomText style={[styles.hintDescription]}>
+                            //                 {homeDashboardData?.dashboardData?.salonInfo?.salonInfo}
+                            //             </CustomText>
+                            //         </View>
+                            //     </View>
+                            // )
+
+
                             return (
-                                <View style={[styles.hintCard, {
-                                    backgroundColor: colors.cardColor,
-                                    borderColor: colors.queueBorder
-                                }]}>
-                                    <View style={[styles.hintIconWrapper, {
-                                        backgroundColor: colors.background,
-                                        borderColor: colors.cardBorder,
-                                        borderWidth: scale(1)
-                                    }]}>
+                                <View
+                                    style={[
+                                        styles.hintCard,
+                                        {
+                                            backgroundColor: colors.cardColor,
+                                            borderColor: colors.queueBorder,
+                                        },
+                                    ]}
+                                >
+                                    <View
+                                        style={[
+                                            styles.hintIconWrapper,
+                                            {
+                                                backgroundColor: colors.background,
+                                                borderColor: colors.cardBorder,
+                                                borderWidth: scale(1),
+                                            },
+                                        ]}
+                                    >
                                         <SalonIcon color={colors.text} />
                                     </View>
+
                                     <View style={styles.hintTextWrapper}>
-                                        <CustomText style={[styles.hintTitle, { color: colors.secondaryText }]}>Salon Info</CustomText>
-                                        <CustomText style={[styles.hintDescription]}>
-                                            {homeDashboardData?.dashboardData?.salonInfo?.salonInfo}
+                                        <CustomText
+                                            style={[styles.hintTitle, { color: colors.secondaryText }]}
+                                        >
+                                            Salon Info
                                         </CustomText>
+
+                                        {/* Salon Info Description */}
+                                        <CustomText
+                                            style={[styles.hintDescription]}
+                                            numberOfLines={showMore ? undefined : 5} // ⬅️ Limits to 5 lines
+                                            ellipsizeMode="tail" // ⬅️ Shows "..." when truncated
+                                        >
+                                            {salonInfo}
+                                        </CustomText>
+
+                                        {/* Read More / Read Less Button */}
+                                        {salonInfo.length > 0 && (
+                                            <TouchableOpacity onPress={() => setShowMore(!showMore)}>
+                                                <CustomText
+                                                    style={{
+                                                        color: colors.primary,
+                                                        marginTop: scale(4),
+                                                        fontWeight: "bold",
+                                                        fontSize: scale(14),
+                                                    }}
+                                                >
+                                                    {showMore ? "Read Less" : "Read More"}
+                                                </CustomText>
+                                            </TouchableOpacity>
+                                        )}
                                     </View>
                                 </View>
-                            )
+                            );
+
                         }
 
 
