@@ -11,7 +11,7 @@
     "ios": {
       "supportsTablet": true,
       "bundleIdentifier": "com.iqbook.iqb",
-      "buildNumber": "32",
+      "buildNumber": "33",
       "config": {
         "googleMapsApiKey": "AIzaSyCFTy8N-ZV2Oji8QbpQjuzXHwuC-kNSdmU"
       },
@@ -59,6 +59,18 @@
           "icon": "./assets/images/iqbook.png",
           "color": "#ffffff",
           "defaultChannel": "default"
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#f1f5f9",
+          "image": "./assets/images/splash-icon.png",
+          "dark": {
+            "image": "./assets/images/splash-icon.png",
+            "backgroundColor": "#f1f5f9"
+          },
+          "imageWidth": 200
         }
       ]
     ],

@@ -96,7 +96,7 @@ const verification = () => {
             }
 
 
-            console.log("Sign up data ", signUpData)
+            // console.log("Sign up data ", signUpData)
 
             setSignupLoading(true)
 
