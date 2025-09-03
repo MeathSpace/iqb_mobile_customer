@@ -169,7 +169,6 @@ const appointmentCalendar = () => {
     const [disableDates, setDisbaleDates] = useState([])
     const [disableLoader, setDisableLoader] = useState(false)
 
-    // console.log("selectedEngageTimeSlot ", selectedEngageTimeSlot)
 
     useEffect(() => {
         if (selectedCalenderDate && selectedCustomerBarber) {
@@ -197,8 +196,11 @@ const appointmentCalendar = () => {
         }
     }, [selectedCalenderDate, selectedCustomerBarber])
 
+
+
     useEffect(() => {
         if (selectedCustomerBarber) {
+            console.log("Api called ")
 
             const fetchMaxAppointmentDays = async () => {
                 try {
@@ -264,14 +266,7 @@ const appointmentCalendar = () => {
         }
     }, [selectedCustomerBarber])
 
-    //=================
 
-    // console.log("selectCustomerServices ", selectCustomerServices)
-    // console.log("selectedCustomerBarber ", selectedCustomerBarber)v
-
-    // console.log("engageTimeslotsData ", engageTimeslotsData)
-
-    // console.log("disableDates sdvwwb ", disableDates)
 
     const [activeSection, setActiveSection] = useState('services')
     const [scrolling, setScrolling] = useState(false)
@@ -291,8 +286,11 @@ const appointmentCalendar = () => {
     const [dates, setDates] = useState([]);
 
     useEffect(() => {
-        generateDatesForMonth(currentMonth, maxAppointmentDays?.data?.appointmentAdvanceDays);
-    }, [currentMonth, maxAppointmentDays?.data?.appointmentAdvanceDays]);
+        if (selectedCustomerBarber) {
+            generateDatesForMonth(currentMonth, maxAppointmentDays?.data?.appointmentAdvanceDays);
+        }
+
+    }, [currentMonth, maxAppointmentDays?.data?.appointmentAdvanceDays, selectedCustomerBarber]);
 
 
     // const generateDatesForMonth = (monthMoment) => {
@@ -475,6 +473,32 @@ const appointmentCalendar = () => {
                     }}>
                         <Pressable
                             onPress={() => {
+                                setSelectedCustomerServices([])
+                                const updatedSalonServices = salonServices?.data?.map((item) => {
+                                    return { ...item, selected: false }
+                                })
+                                setSalonServices({
+                                    data: updatedSalonServices,
+                                    loading: false,
+                                    error: null,
+                                    success: false
+                                })
+                                setSalonBarber({
+                                    data: null,
+                                    loading: false,
+                                    error: null,
+                                    success: false
+                                })
+                                setDisbaleDates([])
+                                setDates([])
+                                setEngageTimeslotsData({
+                                    data: null,
+                                    loading: false,
+                                    error: null,
+                                    success: false
+                                })
+                                setSelectedCustomerBarber(null)
+                                setSelectedCalenderDate("")
                                 setScrolling(false)
                                 setActiveSection("")
                                 setAddIconPressCount(0)
@@ -769,7 +793,7 @@ const appointmentCalendar = () => {
                                             fontSize: scale(17),
                                         }}
                                     >
-                                            {currentMonth.format('MMMM YYYY')}
+                                            {currentMonth.format('MMMM YYYY')}g
                                         </CustomText></View>
 
                                     <View style={styles.navButtons}>

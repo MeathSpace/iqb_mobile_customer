@@ -318,8 +318,10 @@ const editAppointmentCalender = () => {
     const [dates, setDates] = useState([]);
 
     useEffect(() => {
-        generateDatesForMonth(currentMonth, maxAppointmentDays?.data?.appointmentAdvanceDays);
-    }, [currentMonth, maxAppointmentDays?.data?.appointmentAdvanceDays]);
+        if (selectedCustomerBarber) {
+            generateDatesForMonth(currentMonth, maxAppointmentDays?.data?.appointmentAdvanceDays);
+        }
+    }, [currentMonth, maxAppointmentDays?.data?.appointmentAdvanceDays, selectedCustomerBarber]);
 
 
     // const generateDatesForMonth = (monthMoment) => {
@@ -516,6 +518,32 @@ const editAppointmentCalender = () => {
                     }}>
                         <Pressable
                             onPress={() => {
+                                setSelectedCustomerServices([])
+                                const updatedSalonServices = salonServices?.data?.map((item) => {
+                                    return { ...item, selected: false }
+                                })
+                                setSalonServices({
+                                    data: updatedSalonServices,
+                                    loading: false,
+                                    error: null,
+                                    success: false
+                                })
+                                setSalonBarber({
+                                    data: null,
+                                    loading: false,
+                                    error: null,
+                                    success: false
+                                })
+                                setDisbaleDates([])
+                                setDates([])
+                                setEngageTimeslotsData({
+                                    data: null,
+                                    loading: false,
+                                    error: null,
+                                    success: false
+                                })
+                                setSelectedCustomerBarber(null)
+                                setSelectedCalenderDate("")
                                 setScrolling(false)
                                 setActiveSection("")
                                 setAddIconPressCount(0)
