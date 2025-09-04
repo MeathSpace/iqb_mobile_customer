@@ -525,7 +525,6 @@ const Map = () => {
                                                             longitude: salon.location.coordinates.longitude,
                                                         }}
                                                         onPress={() => {
-                                                            console.log("Salon map pressed")
                                                             setSelectedDemo(salon)
                                                         }}
                                                         tracksViewChanges={tracksViewChanges}
