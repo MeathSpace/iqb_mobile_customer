@@ -1,6 +1,6 @@
 import { ActivityIndicator, Alert, FlatList, Keyboard, Linking, Modal, Platform, Pressable, StyleSheet, Text, TouchableOpacity, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
 import React, { useCallback, useEffect, useRef, useState } from 'react'
-import MapView, { PROVIDER_GOOGLE, Marker, Region } from 'react-native-maps';
+import MapView, { PROVIDER_GOOGLE, Marker, Region, Callout } from 'react-native-maps';
 import * as Location from 'expo-location';
 import { useAuth } from '../context/AuthContext';
 import { useGlobal } from '../context/GlobalContext'
@@ -270,12 +270,6 @@ const Map = () => {
                 email: authenticatedUser?.email
             })
 
-            // console.log(data)
-
-            //This response should be same as signin response then everything will work perfectly
-
-            // console.log("Salon connect api ", data?.response?.salonInfo?.salonLogo?.[0]?.url)
-            // console.log("Salon connect api ", data?.response?.salonInfo?.salonName)
 
             setAuthenticatedUser(data?.response)
             await AsyncStorage.setItem("LoggedInUser", JSON.stringify(data?.response))
@@ -487,6 +481,7 @@ const Map = () => {
     );
 
     const [selectedMarker, setSelectedMarker] = useState("")
+    const [selectedDemo, setSelectedDemo] = useState(null)
 
     return (
         <>
@@ -520,39 +515,154 @@ const Map = () => {
                                         getAllSalons?.data?.length > 0 && getAllSalons?.data?.map((salon, index) => {
                                             if (salon?.location?.coordinates?.latitude && salon?.location?.coordinates?.longitude) {
                                                 return (
+                                                    // <Marker
+                                                    //     key={salon._id}
+                                                    //     coordinate={{
+                                                    //         latitude: salon?.location?.coordinates?.latitude,
+                                                    //         longitude: salon?.location?.coordinates?.longitude,
+                                                    //     }}
+                                                    //     title={salon.salonName}
+                                                    //     description={salon.address}
+                                                    //     tracksViewChanges={false}
+                                                    // // onPress={async () => {
+                                                    // //     console.log("Salon map ", salon)
+                                                    // //     setSelectedMarker(salon.salonId)
+                                                    // // }}
+
+                                                    // >
+
+
+                                                    //     <Callout
+                                                    //         tooltip={true}
+                                                    //         onPress={async () => {
+                                                    //             try {
+                                                    //                 setConnectSalonLoader(true);
+
+                                                    //                 const { data } = await axios.post(
+                                                    //                     `${BASE_URL}/customer/customerConnectSalon`,
+                                                    //                     {
+                                                    //                         salonId: salon?.salonId,
+                                                    //                         email: authenticatedUser?.email,
+                                                    //                     }
+                                                    //                 );
+
+                                                    //                 setAuthenticatedUser(data?.response);
+                                                    //                 await AsyncStorage.setItem(
+                                                    //                     "LoggedInUser",
+                                                    //                     JSON.stringify(data?.response)
+                                                    //                 );
+
+                                                    //                 setSearchCitySalons({
+                                                    //                     data: null,
+                                                    //                     loading: false,
+                                                    //                     error: null,
+                                                    //                     success: false,
+                                                    //                 });
+
+                                                    //                 setConnectSalonLoader(false);
+                                                    //             } catch (error) {
+                                                    //                 console.log("Error connecting salon ", error);
+                                                    //                 setConnectSalonLoader(false);
+                                                    //             }
+                                                    //         }}
+                                                    //     >
+                                                    //         <View
+                                                    //             style={{
+                                                    //                 backgroundColor: "#fff",
+                                                    //                 padding: scale(10),
+                                                    //                 borderRadius: scale(10),
+                                                    //                 borderWidth: 1,
+                                                    //                 borderColor: "#ccc",
+                                                    //                 width: 180,
+                                                    //                 alignItems: "center",
+                                                    //             }}
+                                                    //         >
+                                                    //             <CustomText
+                                                    //                 style={{
+                                                    //                     fontWeight: "600",
+                                                    //                     fontSize: scale(14),
+                                                    //                     marginBottom: scale(4),
+                                                    //                 }}
+                                                    //             >
+                                                    //                 {salon.salonName}
+                                                    //             </CustomText>
+
+                                                    //             <CustomText
+                                                    //                 style={{
+                                                    //                     fontSize: scale(12),
+                                                    //                     color: "#555",
+                                                    //                     marginBottom: scale(8),
+                                                    //                     textAlign: "center",
+                                                    //                 }}
+                                                    //             >
+                                                    //                 {salon.address}
+
+                                                    //             </CustomText>
+
+                                                    //             <View
+                                                    //                 style={{
+                                                    //                     backgroundColor: "#0BA3AD",
+                                                    //                     paddingVertical: scale(6),
+                                                    //                     paddingHorizontal: scale(15),
+                                                    //                     borderRadius: scale(6),
+                                                    //                 }}
+                                                    //             >
+                                                    //                 {
+                                                    //                     connectSalonLoader ? (
+                                                    //                         <ActivityIndicator size="small" color="#fff" />
+                                                    //                     ) : (
+                                                    //                         <View style={{
+                                                    //                             flexDirection: "row",
+                                                    //                             alignItems: "center",
+                                                    //                             gap: scale(2)
+                                                    //                         }}>
+                                                    //                             <CustomText style={styles.signinButtonText}>Connect</CustomText>
+                                                    //                             <AddIcon size={scale(14)} color='#fff' />
+                                                    //                         </View>
+                                                    //                     )
+                                                    //                 }
+                                                    //             </View>
+                                                    //         </View>
+                                                    //     </Callout>
+
+
+
+
+                                                    // </Marker>
+
                                                     <Marker
                                                         key={salon._id}
                                                         coordinate={{
-                                                            latitude: salon?.location?.coordinates?.latitude,
-                                                            longitude: salon?.location?.coordinates?.longitude,
+                                                            latitude: salon.location.coordinates.latitude,
+                                                            longitude: salon.location.coordinates.longitude,
                                                         }}
-                                                        title={salon.salonName}
-                                                        description={salon.address}
-                                                        tracksViewChanges={false}
-                                                        onPress={() => {
-                                                            setSelectedMarker(salon.salonId)
-                                                        }}
+                                                        onPress={() => setSelectedDemo(salon)}
                                                     >
-                                                        <View
-                                                            style={{
-                                                                backgroundColor: colors.background,
-                                                                padding: scale(2),
-                                                                borderRadius: scale(8),
-                                                                borderWidth: scale(1),
-                                                                borderColor: colors.border,
-                                                            }}
-                                                        >
-                                                            <View
-                                                                style={{
-                                                                    padding: scale(8),
-                                                                    borderRadius: scale(6),
-                                                                    backgroundColor: selectedMarker === salon.salonId ? "#0BA3AD" : "#efefef"
-                                                                }}
-                                                            >
-                                                                <MapScissorIcon color={selectedMarker === salon.salonId ? "#fff" : "#000"} />
-                                                            </View>
-                                                        </View>
+                                                        {/* <View style={styles.marker2}>
+                                                            <AddIcon size={scale(18)} color="#fff" />
+                                                        </View> */}
 
+                                                        <View style={{
+                                                            width: scale(35),
+                                                            height: scale(35),
+                                                            backgroundColor: "#fff",
+                                                            padding: scale(5),
+                                                            justifyContent: "center",
+                                                            alignItems: "center",
+                                                            borderRadius: scale(5),
+                                                            borderWidth: scale(1),
+                                                            borderColor: "#000",
+                                                        }}>
+                                                            <Image
+                                                                source={require("../assets/images/marker.png")}
+                                                                style={{
+                                                                    width: scale(20),
+                                                                    height: scale(20),
+                                                                    resizeMode: "contain",
+                                                                    backgroundColor: "#fff"
+                                                                }}
+                                                            />
+                                                        </View>
                                                     </Marker>
                                                 );
                                             }
@@ -564,6 +674,85 @@ const Map = () => {
                             )
                         )
                     }
+
+
+                    <Modal visible={!!selectedDemo} transparent animationType="slide">
+                        <View style={styles.overlay2}>
+                            <View style={[styles.popup2, {
+                                backgroundColor: colors.background,
+                                borderColor: colors.border,
+                                borderWidth: scale(1)
+                            }]}>
+                                <CustomText style={styles.title2}>{selectedDemo?.salonName}</CustomText>
+                                <CustomSecondaryText style={styles.address2}>{selectedDemo?.address}</CustomSecondaryText>
+
+                                <TouchableOpacity
+                                    style={styles.button2}
+                                    onPress={async () => {
+                                        try {
+                                            setConnectSalonLoader(true);
+
+                                            const { data } = await axios.post(
+                                                `${BASE_URL}/customer/customerConnectSalon`,
+                                                {
+                                                    salonId: selectedDemo?.salonId,
+                                                    email: authenticatedUser?.email,
+                                                }
+                                            );
+
+                                            setAuthenticatedUser(data?.response);
+                                            await AsyncStorage.setItem(
+                                                "LoggedInUser",
+                                                JSON.stringify(data?.response)
+                                            );
+
+                                            setSearchCitySalons({
+                                                data: null,
+                                                loading: false,
+                                                error: null,
+                                                success: false,
+                                            });
+
+                                            setConnectSalonLoader(false);
+                                        } catch (error) {
+                                            console.log("Error connecting salon ", error);
+                                            setConnectSalonLoader(false);
+                                        }
+                                    }}
+                                >
+
+                                    {
+                                        connectSalonLoader ? (
+                                            <ActivityIndicator size="small" color="#fff" />
+                                        ) : (
+                                            <View style={{
+                                                flexDirection: "row",
+                                                alignItems: "center",
+                                                gap: scale(2)
+                                            }}>
+                                                <CustomText style={styles.buttonText2}>Connect</CustomText>
+                                                <AddIcon size={scale(14)} color='#fff' />
+                                            </View>
+                                        )
+                                    }
+                                </TouchableOpacity>
+
+                                <TouchableOpacity style={styles.closeButton2} onPress={() => setSelectedDemo(null)}>
+                                    <Text style={styles.closeButtonText2}>Close</Text>
+                                </TouchableOpacity>
+                            </View>
+                        </View>
+                    </Modal>
+
+
+                    {/* <Marker
+                                        coordinate={{
+                                            latitude: 28.6139,
+                                            longitude: 77.2090,
+                                        }}
+                                        title="Dummy Location"
+                                        description="This is a sample marker"
+                                    /> */}
 
 
                     <FlatList
@@ -1574,6 +1763,104 @@ const styles = StyleSheet.create({
     serviceEWT: {
         fontSize: scale(12),
     },
+
+
+
+
+
+
+
+
+
+
+
+
+
+    /** Marker Design */
+    marker2: {
+        backgroundColor: "#0BA3AD",
+        padding: scale(8),
+        borderRadius: scale(20),
+        borderWidth: 2,
+        borderColor: "#fff",
+        justifyContent: "center",
+        alignItems: "center",
+        elevation: 5, // Android shadow
+        shadowColor: "#000", // iOS shadow
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.3,
+        shadowRadius: 3,
+    },
+
+    /** Overlay Background */
+    overlay2: {
+        flex: 1,
+        backgroundColor: "rgba(0,0,0,0.3)",
+        justifyContent: "flex-end",
+    },
+
+    /** Popup Card */
+    popup2: {
+        backgroundColor: "#fff",
+        padding: scale(15),
+        borderTopLeftRadius: scale(20),
+        borderTopRightRadius: scale(20),
+        elevation: 10, // Android shadow
+        shadowColor: "#000", // iOS shadow
+        shadowOffset: { width: 0, height: -3 },
+        shadowOpacity: 0.2,
+        shadowRadius: 6,
+    },
+
+    /** Title Text */
+    title2: {
+        fontWeight: "700",
+        fontSize: scale(16),
+        marginBottom: scale(5),
+        textAlign: "center",
+    },
+
+    /** Address Text */
+    address2: {
+        fontSize: scale(13),
+        textAlign: "center",
+        marginBottom: scale(15),
+    },
+
+    /** Connect Button */
+    button2: {
+        backgroundColor: "#0BA3AD",
+        paddingVertical: scale(10),
+        paddingHorizontal: scale(20),
+        borderRadius: scale(8),
+        alignItems: "center",
+        justifyContent: "center",
+        elevation: 3,
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 2 },
+        shadowOpacity: 0.2,
+        shadowRadius: 3,
+    },
+
+    buttonText2: {
+        color: "#fff",
+        fontWeight: "600",
+        fontSize: scale(14),
+    },
+
+    /** Close Button */
+    closeButton2: {
+        marginTop: scale(12),
+        alignItems: "center",
+        height: verticalScale(35),
+    },
+
+    closeButtonText2: {
+        color: "#0BA3AD",
+        fontWeight: "600",
+        fontSize: scale(13),
+    },
+
 })
 
 const MemoizedMarker = React.memo(({ salon, selectedMarker, onPress }) => (
@@ -1622,3 +1909,142 @@ const MemoizedMarker = React.memo(({ salon, selectedMarker, onPress }) => (
                                 />
                             )
                         } */}
+
+
+
+
+
+
+
+
+// <Marker
+//     key={salon._id}
+//     coordinate={{
+//         latitude: salon?.location?.coordinates?.latitude,
+//         longitude: salon?.location?.coordinates?.longitude,
+//     }}
+//     title={salon.salonName}
+//     description={salon.address}
+//     tracksViewChanges={true}
+// // onPress={async () => {
+// //     console.log("Salon map ", salon)
+// //     setSelectedMarker(salon.salonId)
+// // }}
+
+// >
+//     <View
+//         style={{
+//             backgroundColor: colors.background,
+//             padding: scale(2),
+//             borderRadius: scale(8),
+//             borderWidth: scale(1),
+//             borderColor: colors.border,
+//         }}
+//     >
+//         <View
+//             style={{
+//                 padding: scale(8),
+//                 borderRadius: scale(6),
+//                 // backgroundColor:
+//                 //     selectedMarker === salon.salonId ? "#0BA3AD" : "#efefef",
+//             }}
+//         >
+//             <MapScissorIcon
+//             // color={selectedMarker === salon.salonId ? "#fff" : "#000"}
+//             />
+//         </View>
+//     </View>
+
+//     <Callout
+//         tooltip
+//         onPress={async () => {
+//             try {
+//                 setConnectSalonLoader(true);
+
+//                 const { data } = await axios.post(
+//                     `${BASE_URL}/customer/customerConnectSalon`,
+//                     {
+//                         salonId: salon?.salonId,
+//                         email: authenticatedUser?.email,
+//                     }
+//                 );
+
+//                 setAuthenticatedUser(data?.response);
+//                 await AsyncStorage.setItem(
+//                     "LoggedInUser",
+//                     JSON.stringify(data?.response)
+//                 );
+
+//                 setSearchCitySalons({
+//                     data: null,
+//                     loading: false,
+//                     error: null,
+//                     success: false,
+//                 });
+
+//                 setConnectSalonLoader(false);
+//             } catch (error) {
+//                 console.log("Error connecting salon ", error);
+//                 setConnectSalonLoader(false);
+//             }
+//         }}
+//     >
+//         <View
+//             style={{
+//                 backgroundColor: "#fff",
+//                 padding: scale(10),
+//                 borderRadius: scale(10),
+//                 borderWidth: 1,
+//                 borderColor: "#ccc",
+//                 width: 180,
+//                 alignItems: "center",
+//             }}
+//         >
+//             <CustomText
+//                 style={{
+//                     fontWeight: "600",
+//                     fontSize: scale(14),
+//                     marginBottom: scale(4),
+//                 }}
+//             >
+//                 {salon.salonName}
+//             </CustomText>
+
+//             <CustomText
+//                 style={{
+//                     fontSize: scale(12),
+//                     color: "#555",
+//                     marginBottom: scale(8),
+//                     textAlign: "center",
+//                 }}
+//             >
+//                 {salon.address}
+//             </CustomText>
+
+//             <View
+//                 style={{
+//                     backgroundColor: "#0BA3AD",
+//                     paddingVertical: scale(6),
+//                     paddingHorizontal: scale(15),
+//                     borderRadius: scale(6),
+//                 }}
+//             >
+//                 {
+//                     connectSalonLoader ? (
+//                         <ActivityIndicator size="small" color="#fff" />
+//                     ) : (
+//                         <View style={{
+//                             flexDirection: "row",
+//                             alignItems: "center",
+//                             gap: scale(2)
+//                         }}>
+//                             <CustomText style={styles.signinButtonText}>Connect</CustomText>
+//                             <AddIcon size={scale(14)} color='#fff' />
+//                         </View>
+//                     )
+//                 }
+//             </View>
+//         </View>
+//     </Callout>
+
+// </Marker>

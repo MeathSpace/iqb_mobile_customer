@@ -20,7 +20,7 @@
       }
     },
     "android": {
-      "versionCode": 4, 
+      "versionCode": 4,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/iqbookAdaptive.png",
         "backgroundColor": "#ffffff"
@@ -73,7 +73,9 @@
           },
           "imageWidth": 200
         }
-      ]
+      ],
+      "expo-secure-store",
+      "expo-web-browser"
     ],
     "experiments": {
       "typedRoutes": true
