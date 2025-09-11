@@ -342,8 +342,25 @@ const Map = () => {
     const [tabData, setTabData] = useState([
         "Details",
         "Services",
-        "Stylists"
+        ""
     ])
+
+    useFocusEffect(
+        useCallback(() => {
+            if (salonInfoData?.data?.salonInfo?.salonType === "Barber Shop") {
+                setTabData((prev) => {
+                    const modifiedArr = ["Details", "Services", "Barbers"]
+                    return modifiedArr
+                })
+            } else {
+                setTabData((prev) => {
+                    const modifiedArr = ["Details", "Services", "Stylists"]
+                    return modifiedArr
+                })
+            }
+        }, [salonInfoData?.data?.salonInfo?.salonType])
+    )
+
 
     const [selectedTab, setSelectedTab] = useState("Details")
 
@@ -529,7 +546,7 @@ const Map = () => {
                                                         }}
                                                         tracksViewChanges={tracksViewChanges}
                                                     >
-                            
+
                                                         <Image
                                                             source={require("../assets/images/mapPointer.png")}
                                                             style={{
@@ -1414,7 +1431,7 @@ const Map = () => {
                                                                     style={{
                                                                         fontFamily: "AirbnbCereal_W_Blk"
                                                                     }}
-                                                                >Explore all stylists</CustomText>
+                                                                >Explore all {selectedTab}</CustomText>
 
                                                                 {
                                                                     salonInfoData?.data?.barbers?.length > 0 ? (
@@ -1439,7 +1456,48 @@ const Map = () => {
                                                                             justifyContent: "center",
                                                                             alignItems: "center",
                                                                         }}>
-                                                                            <CustomText>No barbers available</CustomText>
+                                                                            <CustomText>No {selectedTab} available</CustomText>
+                                                                        </View>
+                                                                    )
+                                                                }
+
+                                                            </>
+                                                        )
+                                                    }
+
+                                                    {
+                                                        selectedTab === "Barbers" && (
+                                                            <>
+                                                                <CustomText
+                                                                    style={{
+                                                                        fontFamily: "AirbnbCereal_W_Blk"
+                                                                    }}
+                                                                >Explore all {selectedTab}</CustomText>
+
+                                                                {
+                                                                    salonInfoData?.data?.barbers?.length > 0 ? (
+                                                                        <View
+                                                                            style={{
+                                                                                flexDirection: "row",
+                                                                                flexWrap: "wrap",
+                                                                                gap: scale(10)
+                                                                            }}
+                                                                        >
+
+                                                                            {
+                                                                                salonInfoData?.data?.barbers?.map((item, index) => {
+                                                                                    return (<BarberCard key={item?.barberId} item={item} />)
+                                                                                })
+                                                                            }
+
+                                                                        </View>
+                                                                    ) : (
+                                                                        <View style={{
+                                                                            height: verticalScale(180),
+                                                                            justifyContent: "center",
+                                                                            alignItems: "center",
+                                                                        }}>
+                                                                            <CustomText>No {selectedTab} available</CustomText>
                                                                         </View>
                                                                     )
                                                                 }

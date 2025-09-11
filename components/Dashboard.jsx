@@ -201,7 +201,6 @@ const Dashboard = () => {
                     }
                 }
 
-
                 const fetSalonFeatureData = async () => {
                     try {
 
@@ -219,7 +218,6 @@ const Dashboard = () => {
                         console.error("Error fetching salon feature data: ", error)
                     }
                 }
-
 
                 fetchCustomerLiveQueueData()
                 fetchDashboardData()
@@ -986,7 +984,7 @@ const Dashboard = () => {
                                             alignItems: "center",
                                             // marginBottom: verticalScale(10)
                                         }}>
-                                            <CustomText style={styles.heading}>Stylists On Duty
+                                            <CustomText style={styles.heading}>{authenticatedUser?.salonType === "Barber Shop" ? "Barbers" : "Stylists"} On Duty
                                                 {/* <CustomText style={[styles.heading, { color: Colors.modeColor.colorCode }]}>{homeDashboardData?.dashboardData?.barberOnDuty}</CustomText> */}
                                             </CustomText>
 
@@ -1057,7 +1055,7 @@ const Dashboard = () => {
                                                         alignItems: "center",
                                                         marginBottom: verticalScale(40)
                                                     }}
-                                                ><CustomText>No barbers available</CustomText></View>
+                                                ><CustomText>No {authenticatedUser?.salonType === "Barber Shop" ? "barbers" : "stylists"} available</CustomText></View>
                                             )
                                         }
 
@@ -1113,7 +1111,7 @@ const Dashboard = () => {
                                                                 gap: scale(5)
                                                             }}
                                                         >
-                                                            <CustomText style={{ color: "#fff" }}>See all barbers</CustomText>
+                                                            <CustomText style={{ color: "#fff" }}>See all {authenticatedUser?.salonType === "Barber Shop" ? "barbers" : "stylists"}</CustomText>
                                                             <RightIcon size={scale(14)} color={"#fff"} />
                                                         </View>
                                                     </View>

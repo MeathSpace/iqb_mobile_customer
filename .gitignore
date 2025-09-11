@@ -39,3 +39,7 @@ yarn-error.*
 app-example
 
 # google-service.json should be here because it contains credentials
+
+# Local environment files (✅ Added .env)
+.env
+.env*.local

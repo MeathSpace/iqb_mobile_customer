@@ -173,6 +173,8 @@ const QueueList = () => {
 
     // console.log(qlistData)
 
+    console.log("Queue List ", authenticatedUser?.salonType)
+
     return (
         <CustomTabView
             style={{
@@ -263,7 +265,7 @@ const QueueList = () => {
                             }]}
                         >
                             <View style={[styles.queueListheader, { borderBottomColor: colors.queueBorder }]}>
-                                <CustomText style={[styles.queueListheaderText, { color: colors.secondaryText, width: "37%" }]}>BARBER</CustomText>
+                                <CustomText style={[styles.queueListheaderText, { color: colors.secondaryText, width: "37%" }]}>{authenticatedUser?.salonType === "Barber Shop" ? "BARBER" : "STYLIST"}</CustomText>
                                 <CustomText style={[styles.queueListheaderText, { color: colors.secondaryText, width: "33%", textAlign: "center" }]}>CUSTOMER</CustomText>
                                 <CustomText
                                     style={[styles.queueListheaderText,
@@ -293,7 +295,7 @@ const QueueList = () => {
                                 <View style={[styles.queueListheader, {
                                     borderBottomColor: colors.queueBorder
                                 }]}>
-                                    <CustomText style={[styles.queueListheaderText, { color: colors.secondaryText, width: "37%" }]}>BARBER</CustomText>
+                                    <CustomText style={[styles.queueListheaderText, { color: colors.secondaryText, width: "37%" }]}>{authenticatedUser?.salonType === "Barber Shop" ? "BARBER" : "STYLIST"}</CustomText>
                                     <CustomText style={[styles.queueListheaderText, { color: colors.secondaryText, width: "33%", textAlign: "center" }]}>CUSTOMER</CustomText>
                                     <CustomText
                                         style={[styles.queueListheaderText,

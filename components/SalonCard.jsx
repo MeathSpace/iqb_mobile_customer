@@ -30,7 +30,7 @@ const SalonCard = ({ item, setSelectedCustomerSalon, setSelectedConnectSalonId, 
                 email: authenticatedUser?.email
             })
 
-            console.log(data)
+            // console.log(JSON.stringify(data, null, 2));
 
             setAuthenticatedUser(data?.response)
             await AsyncStorage.setItem("LoggedInUser", JSON.stringify(data?.response))

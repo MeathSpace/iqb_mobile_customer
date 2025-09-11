@@ -763,7 +763,7 @@ const appointmentCalendar = () => {
                                         paddingTop: verticalScale(20)
                                     }}
                                 >
-                                    <CustomText>No stylists available</CustomText>
+                                    <CustomText>No {authenticatedUser?.salonType === "Barber Shop" ? "barbers" : "stylists"} available</CustomText>
                                 </View>
                             )
 
@@ -793,7 +793,7 @@ const appointmentCalendar = () => {
                                             fontSize: scale(17),
                                         }}
                                     >
-                                            {currentMonth.format('MMMM YYYY')}g
+                                            {currentMonth.format('MMMM YYYY')}
                                         </CustomText></View>
 
                                     <View style={styles.navButtons}>
@@ -1183,7 +1183,7 @@ const appointmentCalendar = () => {
                         )}
                         {renderSection(
                             'barber',
-                            'Choose Stylist',
+                            `Choose ${authenticatedUser?.salonType === "Barber Shop" ? "Barber" : "Stylist"}`,
                             [
                                 { id: 1 },
                                 { id: 2 },
@@ -1192,7 +1192,7 @@ const appointmentCalendar = () => {
                                 { id: 5 },
                                 { id: 6 },
                                 { id: 7 },
-                                { id: 8 },
+                                { id: 8 }, 
                                 { id: 9 },
                             ]
                         )}

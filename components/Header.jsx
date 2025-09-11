@@ -66,6 +66,7 @@ const Header = () => {
 
     const { newNotification, setNewNotification } = useGlobal()
 
+    console.log("authenticatedUser ", authenticatedUser?.salonType)
 
     return (
         // <View style={[styles.headerWrapper, {

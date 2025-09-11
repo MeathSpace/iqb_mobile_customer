@@ -111,12 +111,12 @@ const RootLayout = () => {
   //   green600: '#16A34A', // “Online” text
   // };
 
+
   return (
     <AuthProvider>
       <GlobalProvider>
         <ClerkProvider
-          // publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY}
-          publishableKey='pk_test_bGVnYWwtamF2ZWxpbi00LmNsZXJrLmFjY291bnRzLmRldiQ'
+          publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY}
           tokenCache={tokenCache}>
           {/* <AppInitializer> */}
           <ThemeProvider value={colorScheme === 'dark' ? MyDarkTheme : MyLightTheme}>

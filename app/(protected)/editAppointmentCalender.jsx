@@ -803,7 +803,7 @@ const editAppointmentCalender = () => {
                                         paddingTop: verticalScale(20)
                                     }}
                                 >
-                                    <CustomText>No stylists available</CustomText>
+                                    <CustomText>No {authenticatedUser?.salonType === "Barber Shop" ? "barbers" : "stylists"} available</CustomText>
                                 </View>
                             )
 
@@ -1239,7 +1239,7 @@ const editAppointmentCalender = () => {
                         )}
                         {renderSection(
                             'barber',
-                            'Choose Stylist ?',
+                            `Choose ${authenticatedUser?.salonType === "Barber Shop" ? "Barber" : "Stylist"}?`,
                             [
                                 { id: 1 },
                                 { id: 2 },
