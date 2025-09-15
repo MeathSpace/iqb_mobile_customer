@@ -1,120 +1,85 @@
-import { Alert, FlatList, Keyboard, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'; // Removed unused TouchableOpacity
-import React, { useEffect, useState } from 'react';
-import CustomText from '../../components/CustomText';
-import { useRouter } from 'expo-router';
-import { SafeAreaInsetsContext, SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
-import { usePreventRemove, useTheme } from '@react-navigation/native';
-import { AddIcon, ArrowLeftIcon, CheckIcon, SearchIcon } from '../../constants/icons';
-import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
-import { Image } from 'expo-image';
-import CustomSecondaryText from '../../components/CustomSecondaryText';
+import { FlatList, Keyboard, Platform, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
+import React, { useEffect, useState } from 'react'
+import { useLocalSearchParams, useRouter } from 'expo-router';
+import { useTheme } from '@react-navigation/native';
 import { useAuth } from '../../context/AuthContext';
 import axios from 'axios';
 import { BASE_URL } from '@/utils/api';
-import { Toast } from 'toastify-react-native'
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
+import { AddIcon, ArrowLeftIcon, CheckIcon, SearchIcon } from '../../constants/icons';
+import CustomText from '../../components/CustomText';
 import Skeleton from '../../components/Skeleton';
-import { useGlobal } from '../../context/GlobalContext';
+import { Image } from 'expo-image';
+import CustomSecondaryText from '../../components/CustomSecondaryText';
 
-const SingleJoin = () => {
+const singleJoinBarberServices = () => {
+
+    const { selectBarber } = useLocalSearchParams();
+
+    const parsedSelectBarber = JSON.parse(selectBarber)
+
+    // console.log("Parsed Selected Barber ", parsedSelectBarber)
 
     const router = useRouter();
     const { colors } = useTheme();
     const colorScheme = useColorScheme();
     const { authenticatedUser } = useAuth()
 
-    const [servicesCategoryList, setServicesCategoryList] = useState({
+    const [servicesList, setServicesList] = useState({
         data: null,
+        filteredData: [],
+        serviceCategories: [],
         loading: false,
         error: null,
         success: false
     })
 
-    useEffect(() => {
-        const fetchCategoryList = async () => {
-            try {
-                setServicesCategoryList((prev) => ({ ...prev, loading: true }))
 
-                const { data } = await axios.post(`${BASE_URL}/mobileRoutes/getAllSalonCategories`, {
-                    salonId: authenticatedUser?.salonId
+    useEffect(() => {
+        const fetchServicesByBarber = async () => {
+            try {
+                setServicesList((prev) => ({ ...prev, loading: true }))
+
+                const { data } = await axios.post(`${BASE_URL}/mobileRoutes/getServicesByBarberId`, {
+                    salonId: 1,
+                    barberId: 1
                 })
 
-                setServicesCategoryList((prev) => ({ ...prev, loading: false, data: data?.response, success: true, error: null }))
-                setSelectedCategory(data?.response?.[0]?.serviceCategoryName)
+                setServicesList((prev) => ({ ...prev, loading: false, data: data?.response, filteredData: data?.response, serviceCategories: data?.serviceCategories, success: true, error: null }))
+                // setSelectedCategory(data?.response?.[0]?.serviceCategoryName)
             } catch (error) {
-                setServicesCategoryList((prev) => ({ ...prev, loading: false, data: null, success: false, error: error }))
+                setServicesList((prev) => ({ ...prev, loading: false, data: null, filteredData: null, serviceCategories: null, success: false, error: error }))
                 console.log("Error ", error?.response)
             }
         }
 
-        fetchCategoryList()
-    }, [authenticatedUser])
+        fetchServicesByBarber()
 
+    }, [])
 
-    const categoryList = [
-        "Hair Cut",
-        "Beard",
-        "Trim",
-        "Spa",
-        "Hair"
-    ];
-
+    const [selectedServices, setSelectedServices] = useState([]);
     const [selectedCategory, setSelectedCategory] = useState("");
-
-    const [salonServicesByCategory, setSalonServicesByCategory] = useState({
-        data: [],
-        filteredData: [],
-        loading: false,
-        error: null,
-        success: false
-    });
-
-
-    useEffect(() => {
-        const fetchSalonServicesByCategory = async () => {
-            try {
-                setSalonServicesByCategory((prev) => ({ ...prev, loading: true }))
-
-                const { data } = await axios.get(`${BASE_URL}/mobileRoutes/getSalonServicesByCategory`, {
-                    params: {
-                        salonId: authenticatedUser?.salonId,
-                        serviceCategoryName: selectedCategory
-                    }
-                })
-
-                setSalonServicesByCategory((prev) => ({ ...prev, loading: false, data: data?.response, filteredData: data?.response, success: true, error: null }))
-
-            } catch (error) {
-                setSalonServicesByCategory((prev) => ({ ...prev, loading: false, data: null, filteredData: null, success: false, error: error }))
-                console.log("Error ", error)
-            }
-        }
-
-        if (selectedCategory) {
-            fetchSalonServicesByCategory()
-        }
-
-    }, [selectedCategory])
-
 
     const [searchServiceQuery, setSearchServiceQuery] = useState("")
 
     const handleChange = (text) => {
+        setSelectedCategory("")
         setSearchServiceQuery(text)
     }
 
-
     useEffect(() => {
         if (searchServiceQuery) {
-            const filtered = salonServicesByCategory?.data?.filter((item) =>
+            const filtered = servicesList?.data?.filter((item) =>
                 item?.serviceName?.toLowerCase().includes(searchServiceQuery.toLowerCase())
             );
 
-            setSalonServicesByCategory((prev) => ({
+            setServicesList((prev) => ({
                 ...prev,
                 filteredData: filtered
             }));
         } else {
-            setSalonServicesByCategory((prev) => ({
+            setServicesList((prev) => ({
                 ...prev,
                 filteredData: prev.data
             }));
@@ -129,8 +94,6 @@ const SingleJoin = () => {
         if (hours > 0) return `${hours}hr`;
         return `${mins}m`;
     }
-
-    const [selectedServices, setSelectedServices] = useState([]);
 
     const addServiceHandler = (service) => {
         setSelectedServices((prev) => {
@@ -147,53 +110,34 @@ const SingleJoin = () => {
 
     const insets = useSafeAreaInsets()
 
+    useEffect(() => {
+        if (selectedCategory) {
+            // Filter based on category
+            const filteredServicesData = servicesList?.data?.filter(
+                (service) => service.serviceCategoryName === selectedCategory
+            );
+
+            setServicesList((prev) => ({
+                ...prev,
+                filteredData: filteredServicesData,
+            }));
+        } else {
+            // If no category selected, reset to all data
+            setServicesList((prev) => ({
+                ...prev,
+                filteredData: prev.data,
+            }));
+        }
+    }, [selectedCategory, servicesList?.data]);
+
     const totalPrice = selectedServices.reduce((acc, service) => acc + service.servicePrice, 0);
-    const totalTime = selectedServices.reduce((acc, service) => acc + service.serviceEWT, 0);
+    const totalTime = selectedServices.reduce((acc, service) => acc + service.barberServiceEWT, 0);
     const totalServices = selectedServices.length;
 
 
-    const {
-        setQueueJoinType,
-        queueJoinType,
-        joinPopupType,
-        setJoinPopupType
-    } = useGlobal()
-
-    let hasUnsavedChanges = true
-
-    usePreventRemove(
-        hasUnsavedChanges, // This boolean determines if removal should be prevented
-        ({ data }) => {
-            Alert.alert(
-                'Confirm',
-                'If you go back now, your queue will be reset',
-                [
-                    {
-                        text: 'Cancel',
-                        style: 'cancel',
-                        onPress: () => null, // Do nothing, stay on screen
-                    },
-                    {
-                        text: 'OK', onPress: () => {
-                            setQueueJoinType({
-                                barberSelect: false,
-                                serviceSelect: false
-                            })
-                            setJoinPopupType({
-                                single: false,
-                                group: false
-                            })
-                            router.push("/(tabs)/home")
-                        }
-                    },
-                ] // Only an 'OK' button
-            );
-
-        }
-    );
+    // console.log("servicesList ", servicesList?.data)
 
     return (
-
         <SafeAreaView
             style={{
                 flex: 1,
@@ -210,7 +154,7 @@ const SingleJoin = () => {
                     marginBottom: verticalScale(20),
                 }}
             >
-                <Pressable onPress={() => router.replace("/queuelist")}>
+                <Pressable onPress={() => router.back()}>
                     <ArrowLeftIcon color={colors.text} />
                 </Pressable>
                 <CustomText
@@ -249,7 +193,7 @@ const SingleJoin = () => {
             </TouchableWithoutFeedback>
 
             {/* Categories */}
-            {servicesCategoryList?.loading ? (
+            {servicesList?.loading ? (
                 <FlatList
                     data={[0, 1, 2, 3, 4, 5, 6]}
                     renderItem={({ item }) => (
@@ -274,7 +218,7 @@ const SingleJoin = () => {
                 />
             ) : (
                 <FlatList
-                    data={servicesCategoryList?.data}
+                    data={servicesList?.serviceCategories}
                     renderItem={({ item }) => (
                         <TouchableOpacity
                             onPress={() => setSelectedCategory(item.serviceCategoryName)}
@@ -341,7 +285,7 @@ const SingleJoin = () => {
                 marginBottom: selectedServices?.length ? (Platform.OS === "ios" ? insets.bottom + verticalScale(20) : verticalScale(80)) : 0
             }}
             >
-                {salonServicesByCategory?.loading ? (
+                {servicesList?.loading ? (
                     <FlatList
                         data={[1, 2, 3, 4, 5, 6, 7, 8]}
                         renderItem={() => (
@@ -354,9 +298,9 @@ const SingleJoin = () => {
                         contentContainerStyle={{ paddingBottom: scale(20), paddingTop: scale(10) }}
                         showsVerticalScrollIndicator={false}
                     />
-                ) : salonServicesByCategory?.data?.length > 0 ? (
+                ) : servicesList?.data?.length > 0 ? (
                     <FlatList
-                        data={salonServicesByCategory?.filteredData}
+                        data={servicesList?.filteredData}
                         renderItem={({ item }) => {
                             const isSelected = selectedServices.find(s => s.serviceId === item.serviceId);
                             return (
@@ -418,7 +362,7 @@ const SingleJoin = () => {
                                         {item?.serviceName}
                                     </CustomText>
                                     <CustomSecondaryText>
-                                        ~{formatMinutesToHrMin(item?.serviceEWT)}
+                                        ~{formatMinutesToHrMin(item?.barberServiceEWT)}
                                     </CustomSecondaryText>
                                     <CustomText
                                         style={{
@@ -475,10 +419,18 @@ const SingleJoin = () => {
 
                     <TouchableOpacity
                         onPress={() => {
+                            // router.push({
+                            //     pathname: "/singleJoinBarber",
+                            //     params: {
+                            //         data: JSON.stringify(selectedServices),
+                            //     },
+                            // });
+
                             router.push({
-                                pathname: "/singleJoinBarber",
+                                pathname: "/singleJoinModal",
                                 params: {
-                                    data: JSON.stringify(selectedServices),
+                                    selectedServices: JSON.stringify(selectedServices),
+                                    selectBarber: JSON.stringify(parsedSelectBarber)
                                 },
                             });
                         }}
@@ -490,10 +442,10 @@ const SingleJoin = () => {
                 </View>
             ) : null}
         </SafeAreaView>
-    );
-};
+    )
+}
 
-export default SingleJoin;
+export default singleJoinBarberServices
 
 const styles = StyleSheet.create({
     categoryButton: {
@@ -594,4 +546,3 @@ const styles = StyleSheet.create({
         fontSize: 32,
     },
 });
-

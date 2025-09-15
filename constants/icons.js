@@ -7,7 +7,7 @@ export const CalendarIcon = ({ size = moderateScale(24), color = 'black', style 
 );
 
 export const SearchIcon = ({ size = moderateScale(24), color = 'black', style }) => (
-    <AntDesign name="search1" size={size} color={color} style={style} />
+    <Feather name="search" size={size} color={color} style={style} />
 );
 
 export const UserIcon = ({ size = moderateScale(24), color = 'black', style }) => (

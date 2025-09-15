@@ -1,29 +1,66 @@
-import { FlatList, Platform, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { Alert, FlatList, Platform, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useEffect, useState } from 'react'
-import CustomText from '../../components/CustomText'
-import { useLocalSearchParams, useRouter } from 'expo-router'
-import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
-import { useTheme } from '@react-navigation/native'
-import { ArrowLeftIcon, NoUserIcon, ProfileIcon } from '../../constants/icons'
-import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
-import { Image } from 'expo-image'
-import { useAuth } from '../../context/AuthContext'
-import CustomSecondaryText from '../../components/CustomSecondaryText'
+import { usePreventRemove, useTheme } from '@react-navigation/native';
+import { useGlobal } from '../../context/GlobalContext';
+import { useRouter } from 'expo-router';
 import axios from 'axios';
 import { BASE_URL } from '@/utils/api';
-import { Toast } from 'toastify-react-native'
-import Skeleton from '../../components/Skeleton'
+import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useAuth } from '../../context/AuthContext';
+import { ArrowLeftIcon, ProfileIcon } from '../../constants/icons';
+import CustomText from '../../components/CustomText';
+import Skeleton from '../../components/Skeleton';
+import { Image } from 'expo-image';
+import CustomSecondaryText from '../../components/CustomSecondaryText';
+import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
+import { Toast } from 'toastify-react-native';
 
-const SingleJoinBarber = () => {
-
-    const { data } = useLocalSearchParams();
-
-    const parsedSelectedServices = JSON.parse(data)
+const singleJoinServicesBarber = () => {
 
     const router = useRouter()
     const { colors } = useTheme();
     const insets = useSafeAreaInsets()
     const { authenticatedUser } = useAuth()
+
+    const {
+        setQueueJoinType,
+        queueJoinType,
+        joinPopupType,
+        setJoinPopupType
+    } = useGlobal()
+
+    let hasUnsavedChanges = true
+
+    usePreventRemove(
+        hasUnsavedChanges, // This boolean determines if removal should be prevented
+        ({ data }) => {
+            Alert.alert(
+                'Confirm',
+                'If you go back now, your queue will be reset',
+                [
+                    {
+                        text: 'Cancel',
+                        style: 'cancel',
+                        onPress: () => null, // Do nothing, stay on screen
+                    },
+                    {
+                        text: 'OK', onPress: () => {
+                            setQueueJoinType({
+                                barberSelect: false,
+                                serviceSelect: false
+                            })
+                            setJoinPopupType({
+                                single: false,
+                                group: false
+                            })
+                            router.push("/(tabs)/home")
+                        }
+                    },
+                ] // Only an 'OK' button
+            );
+
+        }
+    );
 
     function formatMinutesToHrMin(totalMinutes) {
         const hours = Math.floor(totalMinutes / 60);
@@ -34,7 +71,6 @@ const SingleJoinBarber = () => {
         return `${mins}m`;
     }
 
-
     const [barberList, setBarberList] = useState({
         data: null,
         loading: false,
@@ -43,41 +79,35 @@ const SingleJoinBarber = () => {
     })
 
     useEffect(() => {
-        if (parsedSelectedServices.length > 0) {
 
-            const fetchBarbersByMultipleServiceId = async () => {
-                try {
+        const getAvailableBarbersForQ = async () => {
+            try {
 
-                    setBarberList((prev) => ({ ...prev, loading: true }))
+                setBarberList((prev) => ({ ...prev, loading: true }))
 
-                    const { data } = await axios.post(`${BASE_URL}/mobileRoutes/getBarberByMultipleServiceId`, {
-                        salonId: authenticatedUser.salonId,
-                        serviceIds: parsedSelectedServices.map((item) => item.serviceId)
-                    })
+                const { data } = await axios.get(`${BASE_URL}/mobileRoutes/getAvailableBarbersForQ?salonId=${authenticatedUser.salonId}`)
 
-                    setBarberList((prev) => ({ ...prev, loading: false, data: data?.response, success: true, error: null }))
+                setBarberList((prev) => ({ ...prev, loading: false, data: data?.response, success: true, error: null }))
 
-                } catch (error) {
+            } catch (error) {
 
-                    setBarberList((prev) => ({ ...prev, loading: false, data: null, success: false, error: error }))
-                    console.log("Error fetching barbers by multiple service Id", error)
-                }
+                setBarberList((prev) => ({ ...prev, loading: false, data: null, success: false, error: error }))
+                console.log("Error fetching barbers", error)
             }
-
-            fetchBarbersByMultipleServiceId()
         }
+
+        getAvailableBarbersForQ()
 
     }, [])
 
     const [selectBarber, setSelectedBarber] = useState("")
-    const totalPrice = parsedSelectedServices?.reduce((acc, service) => acc + service.servicePrice, 0);
-    const totalTime = parsedSelectedServices?.reduce((acc, service) => acc + service.serviceEWT, 0);
-    const totalServices = parsedSelectedServices?.length;
 
-    // console.log("barberList ", barberList?.data)
+    const totalPrice = barberList?.data?.reduce((acc, barber) => acc + barber.servicePrice, 0);
+    const totalTime = barberList?.data?.reduce((acc, barber) => acc + barber.barberEWT, 0);
+    const totalServices = barberList?.data?.length;
+
 
     return (
-
         <SafeAreaView
             style={{
                 flex: 1,
@@ -184,7 +214,7 @@ const SingleJoinBarber = () => {
             }
 
 
-            {parsedSelectedServices?.length ? (
+            {selectBarber ? (
                 <View
                     style={{
                         backgroundColor: colors.cardColor,
@@ -201,14 +231,15 @@ const SingleJoinBarber = () => {
                         justifyContent: 'space-between',
                     }}
                 >
-                    <View style={{ marginBottom: verticalScale(15) }}>
+                    {/* <View style={{ marginBottom: verticalScale(15) }}>
                         <CustomText style={{ fontFamily: "AirbnbCereal_W_XBd", fontSize: scale(18) }}>
                             {authenticatedUser?.currency} {totalPrice.toFixed(2)}
                         </CustomText>
                         <CustomSecondaryText>
                             {totalServices} {totalServices === 1 ? "service" : "services"} | {formatMinutesToHrMin(totalTime)}
                         </CustomSecondaryText>
-                    </View>
+                    </View> */}
+                    <View />
 
                     <TouchableOpacity
                         onPress={() => {
@@ -216,15 +247,10 @@ const SingleJoinBarber = () => {
                                 Toast.error("Please select a stylist")
                                 return
                             }
-                            if (parsedSelectedServices.length === 0) {
-                                Toast.error("Please select a service")
-                                return
-                            }
 
                             router.push({
-                                pathname: "/singleJoinModal",
+                                pathname: "/singleJoinBarberServices",
                                 params: {
-                                    selectedServices: JSON.stringify(parsedSelectedServices),
                                     selectBarber: JSON.stringify(selectBarber)
                                 },
                             });
@@ -241,7 +267,7 @@ const SingleJoinBarber = () => {
     )
 }
 
-export default SingleJoinBarber
+export default singleJoinServicesBarber
 
 const styles = StyleSheet.create({
 

@@ -52,6 +52,13 @@ const ProtectedLayout = () => {
                 }} />
 
             <Stack.Screen
+                name="joinQueueTypeModal"
+                options={{
+                    presentation: 'transparentModal',
+                    animation: 'fade',
+                }} />
+
+            <Stack.Screen
                 name="appointmentFilter"
                 options={{
                     presentation: 'transparentModal',

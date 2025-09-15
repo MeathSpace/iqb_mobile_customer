@@ -38,10 +38,10 @@ const singleJoinModal = () => {
 
 
     const totalPrice = parsedSelectedServices?.reduce((acc, service) => acc + service.servicePrice, 0);
-    const totalTime = parsedSelectedServices?.reduce((acc, service) => acc + service.serviceEWT, 0);
+    const totalTime = parsedSelectedServices?.reduce((acc, service) => acc + (service.serviceEWT) || (service.barberServiceEWT), 0);
     const totalServices = parsedSelectedServices?.length;
 
-    const { newNotification, setNewNotification } = useGlobal()
+    const { newNotification, setNewNotification, setQueueJoinType, setJoinPopupType } = useGlobal()
     const [singleJoinLoader, setSingleJoinLoader] = useState(false)
 
     // console.log(router)
@@ -95,6 +95,16 @@ const singleJoinModal = () => {
             setNewNotification({
                 email: authenticatedUser?.email,
                 value: true
+            })
+
+            setQueueJoinType({
+                single: false,
+                group: false
+            })
+
+            setJoinPopupType({
+                barberSelect: false,
+                serviceSelect: false
             })
 
             router.replace("/singleJoinSuccessPage")

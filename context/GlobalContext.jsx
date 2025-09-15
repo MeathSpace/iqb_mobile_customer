@@ -55,6 +55,16 @@ export const GlobalProvider = ({ children }) => {
         success: false
     }))
 
+    const [queueJoinType, setQueueJoinType] = useState({
+        barberSelect: false,
+        serviceSelect: false
+    })
+
+    const [joinPopupType, setJoinPopupType] = useState({
+        single: false,
+        group: false
+    })
+
     useEffect(() => {
         const saveNotificationToStorage = async () => {
             if (authenticatedUser?.email) {
@@ -138,7 +148,11 @@ export const GlobalProvider = ({ children }) => {
         // hasRun
 
         appointmentListData,
-        setAppointmentListData
+        setAppointmentListData,
+        queueJoinType,
+        setQueueJoinType,
+        joinPopupType,
+        setJoinPopupType
     };
 
     return (

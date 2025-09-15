@@ -16,6 +16,8 @@ const joinpopup = () => {
 
     const {
         setMemberName,
+        joinPopupType,
+        setJoinPopupType
     } = useGlobal()
 
     return (
@@ -69,7 +71,14 @@ const joinpopup = () => {
                     >Join the queue as a single customer. This option is for individuals waiting alone for salon services.</CustomText>
 
                     <TouchableOpacity
-                        onPress={() => router.replace("/singleJoin")}
+                        onPress={() => {
+                            // router.replace("/singleJoin")
+                            setJoinPopupType({
+                                single: true,
+                                group: false
+                            })
+                            router.replace("/joinQueueTypeModal")
+                        }}
                         style={styles.queueButton} activeOpacity={0.85}>
                         <CustomText style={styles.queueButtonText}>Single Join</CustomText>
                     </TouchableOpacity>
