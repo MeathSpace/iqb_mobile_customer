@@ -42,7 +42,7 @@ const connectSalon = () => {
 
             setConnectSalonLoader(false)
             Alert.alert(
-                "Error",
+                "Warning",
                 error?.response?.data?.message,
                 [
                     { text: "OK", onPress: () => { } }
