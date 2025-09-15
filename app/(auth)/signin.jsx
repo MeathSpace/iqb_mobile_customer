@@ -171,67 +171,6 @@ const signin = () => {
 
     const [googleSigninLoader, setGoogleSigninLoader] = useState(false)
 
-    // useEffect(() => {
-
-    //     if (isSignedIn) {
-    //         const handleAuth = async () => {
-    //             try {
-    //                 // setSignInData((prev) => ({ ...prev, loading: true }))
-
-    //                 setGoogleSigninLoader(true)
-
-    //                 const { data } = await axios.post(`${BASE_URL}/customer/googleCustomerSignIn`, {
-    //                     email: user?.primaryEmailAddress?.emailAddress,
-    //                 })
-
-    //                 setSignInData((prev) => ({
-    //                     ...prev, loading: false, user: {
-    //                         ...data?.response,
-    //                         // profile: [
-    //                         //     { url: user?.imageUrl }
-    //                         // ]
-    //                     }, success: true, error: null
-    //                 }))
-
-    //                 setGoogleSigninLoader(false)
-
-
-    //                 if (rememberMe) {
-    //                     await AsyncStorage.setItem("isAuthenticated", JSON.stringify(true))
-    //                 } else {
-    //                     await signOut()
-    //                 }
-
-    //                 await AsyncStorage.setItem("LoggedInUser", JSON.stringify({
-    //                     ...data?.response,
-    //                     // profile: [
-    //                     //     { url: user?.imageUrl }
-    //                     // ]
-    //                 }))
-    //                 setAuthenticatedUser({
-    //                     ...data?.response,
-    //                     // profile: [
-    //                     //     { url: user?.imageUrl }
-    //                     // ]
-    //                 })
-    //                 setIsAuthenticated(true)
-    //                 router.push("/home")
-
-    //             } catch (error) {
-    //                 await signOut()
-    //                 setGoogleSigninLoader(false)
-    //                 setSignInData((prev) => ({ ...prev, loading: false, user: null, success: false, error: error }))
-    //                 Toast.error(error?.response?.data?.message)
-    //                 console.log("Error ", error)
-    //             }
-    //         };
-
-    //         handleAuth();
-    //     }
-
-
-    // }, [isSignedIn, router, rememberMe, user]);
-
     useFocusEffect(
         useCallback(() => {
             if (isSignedIn) {
@@ -294,12 +233,12 @@ const signin = () => {
             return () => {
                 // console.log('Screen is unfocused');
             };
-        }, [isSignedIn, router, rememberMe, user]) // You can pass dependencies here
+        }, [isSignedIn, router, rememberMe, user]) 
     );
 
 
     usePreventRemove(
-        true, // This boolean determines if removal should be prevented
+        true, 
         ({ data }) => {
 
         }
@@ -586,67 +525,3 @@ const styles = StyleSheet.create({
         fontSize: scale(16),
     },
 })
-
-// import { Pressable, StyleSheet, Text, TextInput, View } from 'react-native'
-// import React, { useState } from 'react'
-// import { useTheme } from '@react-navigation/native';
-// import { ErrorIcon, EyeIcon, EyeOffIcon } from '../../constants/icons';
-// import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
-
-// const signin = () => {
-
-//     const [password, setPassword] = useState("")
-//     const [showPassword, setShowPassword] = useState(false);
-//     const [passwordError, setPasswordError] = useState(false);
-
-//     const { colors } = useTheme()
-
-//     return (
-//         <View>
-//             <Text>signin</Text>
-
-//             <View style={styles.passwordInputContainer}>
-//                 <TextInput
-//                     editable
-//                     placeholder="Enter your password"
-//                     placeholderTextColor={colors.secondaryText}
-//                     style={[
-//                         styles.inputField,
-//                         {
-//                             fontFamily: "AirbnbCereal_W_Md",
-//                             color: colors.text,
-//                             flex: 1,
-//                         }
-//                     ]}
-//                     onChangeText={(text) => {
-//                         setPasswordError("")
-//                         setPassword(text);
-//                     }}
-//                     value={password}
-//                     secureTextEntry={!showPassword}
-//                 />
-//                 <Pressable
-//                     onPress={() => setShowPassword(!showPassword)}
-//                     style={styles.eyeIcon}
-//                 >
-//                     {showPassword ? (<EyeOffIcon />) : (<EyeIcon />)}
-//                 </Pressable>
-//             </View>
-//         </View >
-//     )
-// }
-
-// export default signin
-
-// const styles = StyleSheet.create({
-//     passwordInputContainer: {
-//         marginTop: verticalScale(100),
-//         flexDirection: 'row',
-//         alignItems: 'center',
-//         borderRadius: scale(4),
-//         backgroundColor: "#0BA3AD1A",
-//         height: verticalScale(60),
-//         gap: scale(10),
-//         paddingRight: scale(10),
-//     },
-// })

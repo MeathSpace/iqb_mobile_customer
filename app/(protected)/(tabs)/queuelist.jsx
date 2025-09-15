@@ -169,11 +169,6 @@ const QueueList = () => {
         }
     );
 
-    // console.log("showHideQueBtn ", showHideQueBtn?.data)
-
-    // console.log(qlistData)
-
-    console.log("Queue List ", authenticatedUser?.salonType)
 
     return (
         <CustomTabView

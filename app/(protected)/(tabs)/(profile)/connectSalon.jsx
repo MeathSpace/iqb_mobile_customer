@@ -1,4 +1,4 @@
-import { ActivityIndicator, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
+import { ActivityIndicator, Alert, Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
 import React, { useState } from 'react'
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import { CloseIcon, ErrorIcon } from '../../../../constants/icons';
@@ -41,8 +41,15 @@ const connectSalon = () => {
         } catch (error) {
 
             setConnectSalonLoader(false)
-            Toast.error(error?.response?.data?.message)
-            console.log("Error connecting to salon ", error)
+            Alert.alert(
+                "Error",
+                error?.response?.data?.message,
+                [
+                    { text: "OK", onPress: () => { } }
+                ],
+                { cancelable: true }
+            );
+            console.log("Error connecting to salon ", error?.response?.data?.message)
         }
     }
 
