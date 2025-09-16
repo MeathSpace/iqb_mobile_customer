@@ -488,8 +488,8 @@ const signin = () => {
                             ) : (
                                 Platform.OS === "ios" ? (
                                     <>
-                                        <AppleIcon />
-                                        <CustomText>Sign in with Apple</CustomText>
+                                        <AppleIcon color={colors.text} />
+                                            <CustomText>Sign in with Apple</CustomText>
                                     </>
                                 ) : (
                                     <>

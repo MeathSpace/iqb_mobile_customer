@@ -451,7 +451,7 @@ const signup = () => {
                             ) : (
                                 Platform.OS === "ios" ? (
                                     <>
-                                        <AppleIcon />
+                                        <AppleIcon color={colors.text} />
                                         <CustomText>Sign in with Apple</CustomText>
                                     </>
                                 ) : (
