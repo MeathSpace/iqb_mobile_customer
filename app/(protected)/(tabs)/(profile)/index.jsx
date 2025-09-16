@@ -17,6 +17,9 @@ import { useGlobal } from '../../../../context/GlobalContext'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import { LinearGradient } from 'expo-linear-gradient'
 import { Feather } from '@expo/vector-icons'
+import axios from 'axios'
+import { BASE_URL } from '@/utils/api';
+import { Toast } from 'toastify-react-native'
 
 const index = () => {
 
@@ -103,6 +106,45 @@ const index = () => {
     },
   ];
 
+  const { user } = useUser()
+
+
+  const deleteHandler = () => {
+    Alert.alert(
+      "Delete Account",
+      "Are you sure you want to permanently delete your account?",
+      [
+        { text: "Cancel", style: "cancel" },
+        { text: "Delete", style: "destructive", onPress: handleDeleteConfirmed }
+      ]
+    );
+  };
+
+  const handleDeleteConfirmed = async () => {
+    try {
+      // Delete from your backend first
+      await axios.post(`${BASE_URL}/customer/deleteCustomer`, {
+        email: authenticatedUser?.email,
+      });
+
+      if (!user) {
+        console.warn("No Clerk user found, skipping delete");
+        return;
+      }
+
+      await user.delete();
+      await signOut();
+
+      setSelectedBarber({});
+      setSelectedBarberServices([]);
+      setCustomerName("");
+      await AsyncStorage.multiRemove(["LoggedInUser", "isAuthenticated"]);
+      setIsAuthenticated(false);
+      setAuthenticatedUser(null);
+    } catch (err) {
+      console.error("Error deleting user:", err);
+    }
+  };
 
   return (
     <View
@@ -150,7 +192,7 @@ const index = () => {
       </View>
 
       <ScrollView
-        contentContainerStyle={{ paddingBottom: 100 }}
+        contentContainerStyle={{ paddingBottom: 130 }}
         showsVerticalScrollIndicator={false}
       >
         {/* User Info Card */}
@@ -168,7 +210,7 @@ const index = () => {
           />
           <View>
             <CustomText style={styles.cardTitle}>{authenticatedUser?.name}</CustomText>
-            <CustomText style={styles.cardSubtitle}>{authenticatedUser?.email}</CustomText>
+            <CustomText style={[styles.cardSubtitle, { width: "80%"}]} numberOfLines={2}>{authenticatedUser?.email}</CustomText>
           </View>
           <TouchableOpacity style={styles.editButton} onPress={() => router.push("/editProfile")}>
             <Feather name="edit-2" size={moderateScale(16)} color="#fff" />
@@ -189,12 +231,45 @@ const index = () => {
                   <CustomText style={[styles.optionLabel]}>{opt.label}</CustomText>
                   <RightIcon size={moderateScale(16)} color={colors.text} style={{ marginLeft: 'auto' }} />
                 </TouchableOpacity>
-                {idx !== profileOptions.length - 1 && (
+                {/* {idx !== profileOptions.length - 1 && (
                   <View style={[styles.separator, { backgroundColor: colors.queueBorder }]} />
-                )}
+                )} */}
+                <View style={[styles.separator, { backgroundColor: colors.queueBorder }]} />
               </View>
             );
           })}
+
+          <View>
+            <TouchableOpacity
+              style={styles.optionRow}
+              onPress={() => {
+                deleteHandler()
+              }}
+            >
+              <View
+                style={[
+                  styles.optionIconWrapper,
+                  { backgroundColor: '#fee2e2' } // light red bg for delete
+                ]}
+              >
+                <Feather name="trash-2" size={moderateScale(24)} color="#ef4444" />
+                {/* trash icon + red color */}
+              </View>
+              <CustomText style={[styles.optionLabel]}>Delete Account</CustomText>
+              <RightIcon
+                size={moderateScale(16)}
+                color={colors.text}
+                style={{ marginLeft: 'auto' }}
+              />
+            </TouchableOpacity>
+
+            {/* <View
+              style={[
+                styles.separator,
+                { backgroundColor: colors.queueBorder }]}
+            /> */}
+          </View>
+
         </View>
 
 

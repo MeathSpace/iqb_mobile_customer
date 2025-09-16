@@ -240,3 +240,7 @@ export const SparkleIcon = ({ size = moderateScale(24), color = 'black', style }
 export const NoUserIcon = ({ size = moderateScale(24), color = 'black', style }) => (
     <FontAwesome5 name="user-alt-slash" size={size} color={color} style={style} />
 );
+
+export const AppleIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <AntDesign name="apple" size={size} color={color} style={style} />
+);

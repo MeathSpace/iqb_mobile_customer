@@ -116,6 +116,7 @@ const RootLayout = () => {
     <AuthProvider>
       <GlobalProvider>
         <ClerkProvider
+          telemetry={false}
           publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY}
           tokenCache={tokenCache}>
           {/* <AppInitializer> */}

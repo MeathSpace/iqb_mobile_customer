@@ -1,4 +1,4 @@
-import { ActivityIndicator, Image, Keyboard, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
+import { ActivityIndicator, Image, Keyboard, Platform, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
 import React, { useState, useCallback, useEffect } from 'react'
 import CustomView from "../../components/CustomView"
 import CustomText from "../../components/CustomText"
@@ -15,7 +15,7 @@ import * as AuthSession from 'expo-auth-session'
 import { useClerk, useSSO, useUser } from '@clerk/clerk-expo'
 import { usePreventRemove, useTheme } from '@react-navigation/native';
 import { Colors } from '@/constants/Colors';
-import { ErrorIcon, EyeIcon, EyeOffIcon } from '../../constants/icons';
+import { AppleIcon, ErrorIcon, EyeIcon, EyeOffIcon } from '../../constants/icons';
 import axios from 'axios';
 import { BASE_URL } from '@/utils/api';
 import { Toast } from 'toastify-react-native'
@@ -168,6 +168,52 @@ const signin = () => {
         }
     }, []);
 
+    const appleSigninPressed = useCallback(async () => {
+        try {
+            setEmail("")
+            setPassword("")
+            setEmailError("")
+            setPasswordError("")
+            setGoogleClicked(true)
+
+            // Start the authentication process by calling `startSSOFlow()`
+            const { createdSessionId, setActive, signIn, signUp } = await startSSOFlow({
+                strategy: 'oauth_apple',
+                // For web, defaults to current path
+                // For native, you must pass a scheme, like AuthSession.makeRedirectUri({ scheme, path })
+                // For more info, see https://docs.expo.dev/versions/latest/sdk/auth-session/#authsessionmakeredirecturioptions
+                // redirectUrl: AuthSession.makeRedirectUri(),
+                redirectUrl: AuthSession.makeRedirectUri({ scheme: 'iqbmobilecustomer', path: '/signin' })
+            })
+
+            // This code generates the URL that your app tells 
+            // the authentication provider (like Google) to use when sending 
+            // the user back to your app. It includes the scheme (iqbmobilecustomer) 
+            // and the path (/callback).
+
+
+            // If sign in was successful, set the active session
+            if (createdSessionId && setActive) {
+                await setActive({ session: createdSessionId });
+            } else {
+                // If there is no `createdSessionId`,
+                // there are missing requirements, such as MFA
+                // Use the `signIn` or `signUp` returned from `startSSOFlow`
+                // to handle next steps
+            }
+
+            setGoogleClicked(false)
+        } catch (err) {
+            setGoogleClicked(false)
+            // See https://clerk.com/docs/custom-flows/error-handling
+            // for more info on error handling
+            // console.error(JSON.stringify(err, null, 2))
+            console.log("Signin error ", err)
+
+
+        }
+    }, []);
+
 
     const [googleSigninLoader, setGoogleSigninLoader] = useState(false)
 
@@ -233,12 +279,12 @@ const signin = () => {
             return () => {
                 // console.log('Screen is unfocused');
             };
-        }, [isSignedIn, router, rememberMe, user]) 
+        }, [isSignedIn, router, rememberMe, user])
     );
 
 
     usePreventRemove(
-        true, 
+        true,
         ({ data }) => {
 
         }
@@ -423,7 +469,7 @@ const signin = () => {
 
                     <Pressable
                         disabled={googleClicked || googleSigninLoader}
-                        onPress={googleSigninPressed}
+                        onPress={Platform.OS === "ios" ? appleSigninPressed : googleSigninPressed}
                         style={
                             [styles.auth_btn,
                             {
@@ -440,14 +486,22 @@ const signin = () => {
                             googleSigninLoader ? (
                                 <ActivityIndicator size="small" color={colors.text} />
                             ) : (
-                                <>
-                                    <Image
-                                        source={require("../../assets/images/google.png")}
-                                        height={30}
-                                        width={30}
-                                    />
-                                    <CustomText>Sign in with Google</CustomText>
-                                </>
+                                Platform.OS === "ios" ? (
+                                    <>
+                                        <AppleIcon />
+                                        <CustomText>Sign in with Apple</CustomText>
+                                    </>
+                                ) : (
+                                    <>
+                                        <Image
+                                            source={require("../../assets/images/google.png")}
+                                            height={30}
+                                            width={30}
+                                        />
+                                        <CustomText>Sign in with Google</CustomText>
+                                    </>
+                                )
+
                             )
                         }
 
@@ -458,7 +512,7 @@ const signin = () => {
                     </Pressable>
                 </View>
             </CustomView>
-        </TouchableWithoutFeedback>
+        </TouchableWithoutFeedback >
     )
 }
 
@@ -525,3 +579,4 @@ const styles = StyleSheet.create({
         fontSize: scale(16),
     },
 })
+

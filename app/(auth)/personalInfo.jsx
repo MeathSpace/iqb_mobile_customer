@@ -16,6 +16,7 @@ import PhoneInput
 import CountryPicker, { DARK_THEME }
     from 'react-native-country-picker-modal';
 import { useNavigation, usePreventRemove, useTheme } from '@react-navigation/native';
+import { useClerk, useUser } from '@clerk/clerk-expo';
 
 const personalInfo = () => {
 
@@ -238,6 +239,8 @@ const personalInfo = () => {
     }
 
     const [openGenderDrop, setOpenGenderDrop] = useState(false)
+    const { isSignedIn } = useUser()
+    const { signOut } = useClerk()
 
     const hasUnsavedChanges = true;
 
@@ -256,7 +259,10 @@ const personalInfo = () => {
                         onPress: () => null, // Do nothing, stay on screen
                     },
                     {
-                        text: 'OK', onPress: () => {
+                        text: 'OK', onPress: async () => {
+                            if (isSignedIn) {
+                                await signOut()
+                            }
                             router.push("/signup")
                         }
                     },
