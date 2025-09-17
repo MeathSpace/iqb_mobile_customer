@@ -139,7 +139,51 @@ const GroupJoinMembers = () => {
                 padding: scale(10)
             }}
         >
-            <CustomText style={{ fontFamily: "AirbnbCereal_W_XBd", fontSize: scale(22), marginBottom: verticalScale(10) }}>Group Members</CustomText>
+            {/* Header */}
+            <View
+                style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: scale(10),
+                    marginBottom: verticalScale(20),
+                }}
+            >
+                <Pressable onPress={() => {
+                    Alert.alert(
+                        'Discard group join data?',
+                        'All selected members will be cleared, and the group join information will be reset.',
+                        [
+                            {
+                                text: 'Cancel',
+                                style: 'destructive',
+                                // style: 'cancel',
+                                onPress: () => {
+                                    // Do nothing: block remains
+                                },
+                            },
+                            {
+                                text: 'OK',
+                                // style: 'destructive',
+                                onPress: () => {
+                                    // editNavigationAllowRef.current = true; // temporarily allow
+                                    // router.push('/groupJoin'); // now push
+                                    setMemberName(authenticatedUser?.name)
+                                    setSelectedMemberBarber(null)
+                                    setSelectedMemberServices([])
+                                    setGroupJoinMembers([])
+                                    router.push("/queuelist")
+                                },
+                            },
+                        ],
+                        { cancelable: true }
+                    );
+                }}>
+                    <ArrowLeftIcon color={colors.text} />
+                </Pressable>
+                <CustomText style={{ fontFamily: "AirbnbCereal_W_XBd", fontSize: scale(22) }}>Group Members</CustomText>
+            </View>
+
+
 
             <FlatList
                 data={groupJoinMembers}
@@ -262,70 +306,72 @@ const GroupJoinMembers = () => {
                 }
             />
 
-            {groupJoinMembers?.length > 0 ? (
-                <View
-                    style={{
-                        backgroundColor: colors.cardColor,
-                        borderTopColor: colors.queueBorder,
-                        borderTopWidth: scale(1),
-                        height:
-                            Platform.OS === "ios"
-                                ? insets.bottom + verticalScale(60)
-                                : verticalScale(80),
-                        padding: scale(10),
-                        position: "absolute",
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        flexDirection: "row",
-                        alignItems: "center",
-                        justifyContent: "space-between",
-                    }}
-                >
-                    <View style={{ marginBottom: verticalScale(15) }}>
-                        <CustomText
-                            style={{ fontFamily: "AirbnbCereal_W_XBd", fontSize: scale(18) }}
-                        >
-                            {authenticatedUser?.currency} {totalServicePrice}
-                        </CustomText>
-                        <CustomSecondaryText>
-                            {groupJoinMembers?.length} {groupJoinMembers?.length === 1 ? 'member' : 'members'} |{" "}
-                            {formatMinutesToHrMin(totalServiceEwt)}
-                        </CustomSecondaryText>
-                    </View>
-
-                    <TouchableOpacity
-                        onPress={() => {
-
-                            if (!groupJoinMembers || groupJoinMembers.length < 2) {
-                                Toast.error("At least two members are needed");
-                                return;
-                            }
-
-                            if (groupJoinMembers.length > 5) {
-                                Toast.error("You can only add up to 5 members in a group");
-                                return;
-                            }
-
-                            router.push({
-                                pathname: "/groupJoinModal",
-                                params: {
-                                    groupJoinMembers: JSON.stringify(groupJoinMembers),
-                                    totalServicePrice,
-                                    totalServiceEwt,
-                                    totalServicesLength
-                                }
-                            });
+            {
+                groupJoinMembers?.length > 0 ? (
+                    <View
+                        style={{
+                            backgroundColor: colors.cardColor,
+                            borderTopColor: colors.queueBorder,
+                            borderTopWidth: scale(1),
+                            height:
+                                Platform.OS === "ios"
+                                    ? insets.bottom + verticalScale(60)
+                                    : verticalScale(80),
+                            padding: scale(10),
+                            position: "absolute",
+                            bottom: 0,
+                            left: 0,
+                            right: 0,
+                            flexDirection: "row",
+                            alignItems: "center",
+                            justifyContent: "space-between",
                         }}
-                        style={styles.queueButton}
-                        activeOpacity={0.85}
                     >
-                        <CustomText style={styles.queueButtonText}>Join Queue</CustomText>
-                    </TouchableOpacity>
-                </View>
-            ) : null}
+                        <View style={{ marginBottom: verticalScale(15) }}>
+                            <CustomText
+                                style={{ fontFamily: "AirbnbCereal_W_XBd", fontSize: scale(18) }}
+                            >
+                                {authenticatedUser?.currency} {totalServicePrice}
+                            </CustomText>
+                            <CustomSecondaryText>
+                                {groupJoinMembers?.length} {groupJoinMembers?.length === 1 ? 'member' : 'members'} |{" "}
+                                {formatMinutesToHrMin(totalServiceEwt)}
+                            </CustomSecondaryText>
+                        </View>
 
-        </SafeAreaView>
+                        <TouchableOpacity
+                            onPress={() => {
+
+                                if (!groupJoinMembers || groupJoinMembers.length < 2) {
+                                    Toast.error("At least two members are needed");
+                                    return;
+                                }
+
+                                if (groupJoinMembers.length > 5) {
+                                    Toast.error("You can only add up to 5 members in a group");
+                                    return;
+                                }
+
+                                router.push({
+                                    pathname: "/groupJoinModal",
+                                    params: {
+                                        groupJoinMembers: JSON.stringify(groupJoinMembers),
+                                        totalServicePrice,
+                                        totalServiceEwt,
+                                        totalServicesLength
+                                    }
+                                });
+                            }}
+                            style={styles.queueButton}
+                            activeOpacity={0.85}
+                        >
+                            <CustomText style={styles.queueButtonText}>Join Queue</CustomText>
+                        </TouchableOpacity>
+                    </View>
+                ) : null
+            }
+
+        </SafeAreaView >
     )
 }
 

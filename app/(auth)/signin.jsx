@@ -426,19 +426,6 @@ const signin = () => {
                         </Pressable>
                     </View>
 
-                    {/* <Pressable
-                        onPress={() => signinPressed()}
-                        disabled={signInData?.loading}
-                        style={[styles.auth_btn, { backgroundColor: Colors.modeColor.colorCode, marginBottom: verticalScale(10) }]}>
-                        {
-                            signInData?.loading ? (
-                                <ActivityIndicator size="small" color="#fff" />
-                            ) : (
-                                <CustomText style={{ color: "#fff" }}>Sign in</CustomText>
-                            )
-                        }
-
-                    </Pressable> */}
 
                     <TouchableOpacity
                         onPress={() => signinPressed()}
@@ -453,9 +440,6 @@ const signin = () => {
                         }
                     </TouchableOpacity>
 
-                    {/* <Pressable onPress={() => router.replace("/signup")}>
-                        <CustomText style={[styles.subHeading, { color: colors.secondaryText }]}>Don't have an account ?<CustomText style={{ fontFamily: "AirbnbCereal_W_Md" }}> Sign up</CustomText></CustomText>
-                    </Pressable> */}
 
                     <View style={styles.divider}>
                         <View style={{ flex: 1, height: verticalScale(0.5), backgroundColor: colors.secondaryText }} />
@@ -555,14 +539,12 @@ const styles = StyleSheet.create({
         justifyContent: "center",
     },
     subHeading: {
-        // marginBlock: verticalScale(10),
         textAlign: "center",
     },
     divider: {
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        // marginBottom: verticalScale(20)
     },
 
     signinButton: {

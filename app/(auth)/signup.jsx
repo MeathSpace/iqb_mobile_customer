@@ -82,8 +82,6 @@ const signup = () => {
                 email
             })
 
-            // console.log("Data ", data)
-
             setCheckEmailLoading(false)
 
             router.push({
@@ -190,45 +188,6 @@ const signup = () => {
 
     const [googleSigninLoader, setGoogleSigninLoader] = useState(false)
 
-    // useEffect(() => {
-    //     if (isSignedIn) {
-
-    //         const checkEmail = async () => {
-    //             try {
-
-    //                 setGoogleSigninLoader(true)
-
-    //                 const { data } = await axios.post(`${BASE_URL}/customer/checkEmail`, {
-    //                     email: user?.primaryEmailAddress?.emailAddress
-    //                 })
-
-    //                 setGoogleSigninLoader(false)
-
-    //                 router.push({
-    //                     pathname: "/personalInfo",
-    //                     params: {
-    //                         email: user?.primaryEmailAddress?.emailAddress,
-    //                         authType: "google"
-    //                     }
-    //                 });
-
-    //                 // await signOut()
-
-    //                 // Delay signOut slightly so it doesn't interrupt navigation
-    //                 InteractionManager.runAfterInteractions(() => {
-    //                     signOut(); // Donot give await
-    //                 });
-
-    //             } catch (error) {
-    //                 await signOut()
-    //                 setGoogleSigninLoader(false)
-    //                 Toast.error(error?.response?.data?.message)
-    //             }
-    //         }
-
-    //         checkEmail()
-    //     }
-    // }, [isSignedIn, router, user])
 
     useFocusEffect(
         useCallback(() => {
@@ -375,19 +334,6 @@ const signup = () => {
                         }
                     </View>
 
-                    {/* <Pressable
-                        onPress={signupPressed}
-                        disabled={checkEmailLoading}
-                        style={[styles.auth_btn, { backgroundColor: Colors.modeColor.colorCode }]}>
-                        {
-                            checkEmailLoading ? (
-                                <ActivityIndicator size="small" color="#fff" />
-                            ) : (
-                                <CustomText style={{ color: "#fff" }}>Sign up</CustomText>
-                            )
-                        }
-                    </Pressable> */}
-
                     <TouchableOpacity
                         onPress={signupPressed}
                         disabled={checkEmailLoading}
@@ -436,7 +382,6 @@ const signup = () => {
                             [styles.auth_btn,
                             {
                                 borderWidth: scale(1),
-                                // borderColor: "gray",
                                 backgroundColor: colors.cardColor,
                                 borderColor: colors.queueBorder,
                                 flexDirection: "row",
@@ -452,7 +397,7 @@ const signup = () => {
                                 Platform.OS === "ios" ? (
                                     <>
                                         <AppleIcon color={colors.text} />
-                                        <CustomText>Sign in with Apple</CustomText>
+                                        <CustomText>Sign up with Apple</CustomText>
                                     </>
                                 ) : (
                                     <>
@@ -524,7 +469,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: "center",
         justifyContent: "space-between",
-        // height: verticalScale(40),
     },
 
     signupButton: {

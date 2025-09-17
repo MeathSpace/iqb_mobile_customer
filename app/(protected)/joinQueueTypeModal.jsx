@@ -65,7 +65,7 @@ const joinQueueTypeModal = () => {
                         fontFamily: "AirbnbCereal_W_Blk",
                         fontSize: scale(22),
                     }}
-                >Queue Joined With</CustomText>
+                >Select Option</CustomText>
 
                 <Pressable
                     onPress={() => {
