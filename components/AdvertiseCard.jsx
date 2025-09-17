@@ -13,11 +13,16 @@ const AdvertiseCard = ({ item }) => {
 
     return (
         <Pressable
-            onPress={() => router.push(item?.link)}
+            onPress={() => {
+                if (item?.link) {
+                    router.push(item?.link)
+                }
+
+            }}
             style={[styles.cardWrapper, {}]}>
             <Image
-                style={[styles.cardImage, { 
-                    borderColor: colors.queueBorder 
+                style={[styles.cardImage, {
+                    borderColor: colors.queueBorder
                 }]}
                 source={{ uri: item.url }}
                 contentFit="cover"
