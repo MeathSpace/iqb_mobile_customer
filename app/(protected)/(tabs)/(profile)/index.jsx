@@ -210,7 +210,7 @@ const index = () => {
           />
           <View>
             <CustomText style={styles.cardTitle}>{authenticatedUser?.name}</CustomText>
-            <CustomText style={[styles.cardSubtitle, { width: "80%"}]} numberOfLines={2}>{authenticatedUser?.email}</CustomText>
+            <CustomText style={[styles.cardSubtitle, { width: "100%"}]} numberOfLines={2}>{authenticatedUser?.email}</CustomText>
           </View>
           <TouchableOpacity style={styles.editButton} onPress={() => router.push("/editProfile")}>
             <Feather name="edit-2" size={moderateScale(16)} color="#fff" />
