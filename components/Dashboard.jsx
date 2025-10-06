@@ -345,61 +345,6 @@ const Dashboard = () => {
         }, [expoPushToken, authenticatedUser])
     )
 
-    // "android": {
-    //     "allowBackup": false
-    // }
-
-    // useFocusEffect(
-    //     useCallback(() => {
-    //         const initPush = async () => {
-    //             try {
-    //                 const newToken = await registerForPushNotificationsAsync();
-
-    //                 if (newToken) {
-    //                     const storedToken = await AsyncStorage.getItem("expoPushToken");
-
-    //                     if (!storedToken || storedToken !== newToken) {
-    //                         // Update saved token
-    //                         await AsyncStorage.setItem("expoPushToken", newToken);
-    //                         setExpoPushToken(newToken); // Save in state
-
-    //                         // ✅ Save to your backend
-    //                         await axios.post(`${BASE_URL}/mobileRoutes/pushDevices`, {
-    //                             salonId: authenticatedUser?.salonId,
-    //                             name: authenticatedUser?.name,
-    //                             email: authenticatedUser?.email,
-    //                             deviceToken: newToken,
-    //                             deviceType: "android",
-    //                         });
-    //                     } else {
-    //                         // Already up-to-date
-    //                         setExpoPushToken(storedToken);
-    //                     }
-    //                 }
-    //             } catch (err) {
-    //                 console.log("Push token error:", err);
-    //             }
-    //         };
-
-    //         initPush();
-
-    //         const notificationListener = Notifications.addNotificationReceivedListener(notification => {
-    //             setNotification(notification);
-    //         });
-
-    //         const responseListener = Notifications.addNotificationResponseReceivedListener(response => {
-    //             // Handle notification tap
-    //         });
-
-    //         return () => {
-    //             notificationListener.remove();
-    //             responseListener.remove();
-    //         };
-    //     }, [authenticatedUser])
-    // );
-
-
-
     const { setJoinModes, joinModes } = useGlobal();
 
     const hasUnsavedChanges = true
@@ -526,6 +471,18 @@ const Dashboard = () => {
 
     const salonInfo = homeDashboardData?.dashboardData?.salonInfo?.salonInfo || "";
 
+
+    const [textShown, setTextShown] = useState(false); //To show ur remaining Text
+    const [lengthMore, setLengthMore] = useState(false); //to show the "Read more & Less Line"
+    const toggleNumberOfLines = () => { //To toggle the show text or hide it
+        setTextShown(!textShown);
+    }
+
+    const onTextLayout = useCallback(e => {
+        setLengthMore(e.nativeEvent.lines.length >= 5); //to check the text is more than 4 lines or not
+        // console.log(e.nativeEvent);
+    }, []);
+
     return (
         <CustomTabView
             style={{
@@ -533,6 +490,20 @@ const Dashboard = () => {
                 paddingBottom: Platform.OS === "ios" ? verticalScale(70) : verticalScale(50)
             }}
         >
+            <View style={styles.mainContainer}>
+                <Text
+                    onTextLayout={onTextLayout}
+                    numberOfLines={textShown ? undefined : 4}
+                    style={{ lineHeight: 21 }}>lorem100</Text>
+
+                {
+                    lengthMore ? <Text
+                        onPress={toggleNumberOfLines}
+                        style={{ lineHeight: 21, marginTop: 10 }}>{textShown ? 'Read less...' : 'Read more...'}</Text>
+                        : null
+                }
+            </View>
+
             <FlatList
                 data={pageData}
                 showsVerticalScrollIndicator={false}
@@ -576,9 +547,6 @@ const Dashboard = () => {
                                                                 numberOfLines={1}
                                                                 ellipsizeMode="tail"
                                                             >{customerLivetData?.liveQueueData?.isJoinedData?.[0]?.name}</CustomText>
-                                                            {/* <View style={styles.moreWrapper}>
-                                                                <CustomText style={styles.moreText}>+4 more</CustomText>
-                                                            </View> */}
                                                         </View>
 
                                                         <CustomText style={styles.subtitle}>{customerLivetData?.liveQueueData?.isJoinedData?.[0]?.barberName}</CustomText>
@@ -594,35 +562,6 @@ const Dashboard = () => {
                                                 <View style={styles.btnContainer}>
                                                     <TouchableOpacity
                                                         disabled={cancelQueueLoading}
-                                                        // onPress={async () => {
-                                                        //     try {
-                                                        //         const cancelQueueData = {
-                                                        //             salonId: authenticatedUser?.salonId,
-                                                        //             barberId: customerLivetData?.liveQueueData?.isJoinedData?.[0]?.barberId,
-                                                        //             customerEmail: customerLivetData?.liveQueueData?.isJoinedData?.[0]?.customerEmail,
-                                                        //             _id: customerLivetData?.liveQueueData?.isJoinedData?.[0]?._id
-                                                        //         };
-
-                                                        //         setCancelQueueLoading(true)
-
-                                                        //         const { data } = await axios.post(`${BASE_URL}/mobileRoutes/cancelQueueByCustomer`, cancelQueueData);
-
-                                                        //         setCustomerLiveData((prev) => ({ ...prev, loading: true }))
-
-                                                        //         const { data: livedata } = await axios.post(`${BASE_URL}/customer/customerLiveQueue`, {
-                                                        //             salonId: authenticatedUser?.salonId,
-                                                        //             customerEmail: authenticatedUser?.email
-                                                        //         })
-
-                                                        //         setCustomerLiveData((prev) => ({ ...prev, loading: false, liveQueueData: livedata?.response, success: true, error: null }))
-
-                                                        //     } catch (error) {
-                                                        //         console.log("Error from live queue data")
-                                                        //     } finally {
-                                                        //         setCancelQueueLoading(false)
-                                                        //     }
-                                                        // }}
-
                                                         onPress={async () => {
                                                             Alert.alert(
                                                                 "Cancel Queue",
@@ -814,29 +753,6 @@ const Dashboard = () => {
                         }
 
                         case "hint": {
-
-                            // return (
-                            //     <View style={[styles.hintCard, {
-                            //         backgroundColor: colors.cardColor,
-                            //         borderColor: colors.queueBorder
-                            //     }]}>
-                            //         <View style={[styles.hintIconWrapper, {
-                            //             backgroundColor: colors.background,
-                            //             borderColor: colors.cardBorder,
-                            //             borderWidth: scale(1)
-                            //         }]}>
-                            //             <SalonIcon color={colors.text} />
-                            //         </View>
-                            //         <View style={styles.hintTextWrapper}>
-                            //             <CustomText style={[styles.hintTitle, { color: colors.secondaryText }]}>Salon Info</CustomText>
-                            //             <CustomText style={[styles.hintDescription]}>
-                            //                 {homeDashboardData?.dashboardData?.salonInfo?.salonInfo}
-                            //             </CustomText>
-                            //         </View>
-                            //     </View>
-                            // )
-
-
                             return (
                                 <View
                                     style={[
@@ -867,112 +783,24 @@ const Dashboard = () => {
                                             Salon Info
                                         </CustomText>
 
-                                        {/* Salon Info Description */}
                                         <CustomText
-                                            style={[styles.hintDescription]}
-                                            numberOfLines={showMore ? undefined : 5} // ⬅️ Limits to 5 lines
-                                            ellipsizeMode="tail" // ⬅️ Shows "..." when truncated
-                                        >
-                                            {salonInfo}
+                                            onTextLayout={onTextLayout}
+                                            numberOfLines={textShown ? undefined : 5}
+                                            style={{ lineHeight: 21 }}>{salonInfo}
                                         </CustomText>
 
-                                        {/* Read More / Read Less Button */}
-                                        {salonInfo.length > 0 && (
-                                            <TouchableOpacity onPress={() => setShowMore(!showMore)}>
-                                                <CustomText
-                                                    style={{
-                                                        color: colors.primary,
-                                                        marginTop: scale(4),
-                                                        fontWeight: "bold",
-                                                        fontSize: scale(14),
-                                                    }}
-                                                >
-                                                    {showMore ? "Read Less" : "Read More"}
-                                                </CustomText>
-                                            </TouchableOpacity>
-                                        )}
+                                        {
+                                            lengthMore ? <CustomText
+                                                onPress={toggleNumberOfLines}
+                                                style={{ lineHeight: verticalScale(21), marginTop: verticalScale(5), color: colors.primary, }}>{textShown ? 'Read less...' : 'Read more...'}</CustomText>
+                                                : null
+                                        }
+
                                     </View>
                                 </View>
                             );
 
                         }
-
-
-                        // case "advertise": {
-                        //     return (
-                        //         <>
-                        //             {
-                        //                 homeAdvertisementData?.loading ? (<FlatList
-                        //                     style={{
-                        //                         overflow: "visible",
-                        //                     }}
-                        //                     contentContainerStyle={{
-                        //                         gap: scale(10),
-                        //                     }}
-                        //                     data={[0, 1, 2, 3]}
-                        //                     renderItem={({ item }) => <View style={{
-                        //                         // paddingVertical: verticalScale(20),
-                        //                     }}>
-                        //                         <Skeleton width={scale(300.56)} height={verticalScale(145 / 1.2)} borderRadius={scale(12)} />
-                        //                     </View>}
-                        //                     keyExtractor={item => item}
-                        //                     horizontal
-                        //                     showsHorizontalScrollIndicator={false}
-                        //                 />) : homeAdvertisementData?.advertisementData?.length > 0 ? (
-                        //                     <>
-                        //                         <FlatList
-                        //                             style={{
-                        //                                 overflow: "visible",
-                        //                             }}
-                        //                             contentContainerStyle={{
-                        //                                 gap: scale(10),
-                        //                             }}
-                        //                             data={homeAdvertisementData?.advertisementData}
-                        //                             renderItem={({ item }) => <AdvertiseCard item={item} />}
-                        //                             keyExtractor={item => item._id}
-                        //                             horizontal
-                        //                             showsHorizontalScrollIndicator={false}
-
-                        //                             decelerationRate="fast"
-                        //                             snapToInterval={scale(400)}
-                        //                             pagingEnabled={true}
-                        //                             onMomentumScrollEnd={(event) => {
-                        //                                 const offsetX = event.nativeEvent.contentOffset.x;
-                        //                                 const index = Math.round(offsetX / scale(400));
-                        //                                 setCurrentIndex(index);
-                        //                             }}
-                        //                             initialNumToRender={3}
-                        //                             maxToRenderPerBatch={3}
-                        //                             ref={flatlistRef}
-                        //                         />
-                        //                     </>
-                        //                 ) : (
-                        //                     <View
-                        //                         style={{
-                        //                             width: "100%",
-                        //                             height: verticalScale(180),
-                        //                             paddingVertical: verticalScale(20),
-                        //                         }}
-                        //                     >
-                        //                         <Image
-                        //                             style={{
-                        //                                 width: "100%",
-                        //                                 height: "100%",
-                        //                                 borderRadius: scale(12),
-                        //                                 borderWidth: scale(1),
-                        //                                 borderColor: "#d3d3d3"
-                        //                             }}
-                        //                             source={require('@/assets/images/dummygallery.jpg')}
-                        //                             contentFit="contain"
-                        //                             transition={300}
-                        //                         />
-                        //                     </View>
-                        //                 )
-                        //             }
-
-                        //         </>
-                        //     )
-                        // }
 
                         case "barber": {
                             return (
@@ -1133,7 +961,7 @@ const Dashboard = () => {
                 ListFooterComponent={< View style={{ height: Platform.OS === "ios" ? verticalScale(60) : 0 }} />}
             />
 
-            <View
+            < View
                 style={{
                     position: "absolute",
                     bottom: Platform.OS === "ios" ? verticalScale(80) : verticalScale(0),
@@ -1217,7 +1045,7 @@ const Dashboard = () => {
                         </View>
                     )
                 }
-            </View>
+            </ View>
 
 
         </CustomTabView >
