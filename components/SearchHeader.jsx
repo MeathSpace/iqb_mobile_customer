@@ -46,6 +46,7 @@ const SearchHeader = () => {
                             }
                         })
 
+    
                         setSearchCitySalons((prev) => ({ ...prev, loading: false, data: data?.response, success: true, error: null }))
                         Keyboard.dismiss()
 

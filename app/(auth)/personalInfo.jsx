@@ -208,7 +208,7 @@ const personalInfo = () => {
             : mobileNumber;
 
 
-        if (authType === "google") {
+        if ((authType === "google") || (authType === "apple")) {
             router.push({
                 pathname: "/verification",
                 params: {

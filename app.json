@@ -2,7 +2,7 @@
   "expo": {
     "name": "IQBook",
     "slug": "iqb_mobile_customer",
-    "version": "1.0.2",
+    "version": "1.0.3",
     "orientation": "portrait",
     "icon": "./assets/images/iqbookAdaptive.png",
     "scheme": "iqbmobilecustomer",
@@ -11,16 +11,18 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.iqbook.iqb",
-      "buildNumber": "38",
+      "buildNumber": "42",
       "config": {
-        "googleMapsApiKey": "AIzaSyCFTy8N-ZV2Oji8QbpQjuzXHwuC-kNSdmU"
+        "googleMapsApiKey": "AIzaSyCFTy8N-ZV2Oji8QbpQjuzXHwuC-kNSdmU",
+        "usesNonExemptEncryption": false
       },
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
-      }
+      },
+      "usesAppleSignIn": true
     },
-    "android": {
-      "versionCode": 6,
+    "android": { 
+      "versionCode": 8,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/iqbookAdaptive.png",
         "backgroundColor": "#ffffff"
@@ -73,6 +75,9 @@
           },
           "imageWidth": 200
         }
+      ],
+      [
+        "expo-apple-authentication"
       ],
       "expo-secure-store",
       "expo-web-browser"

@@ -86,7 +86,7 @@ const verification = () => {
                 password
             }
 
-            const googleSignUpData = {
+            const oauthSignUpData = {
                 email,
                 name: fullName,
                 gender,
@@ -102,7 +102,7 @@ const verification = () => {
 
 
             if (authType === "google") {
-                const { data } = await axios.post(`${BASE_URL}/customer/googleCustomerSignup`, googleSignUpData)
+                const { data } = await axios.post(`${BASE_URL}/customer/googleCustomerSignup`, oauthSignUpData)
                 setSignInData((prev) => ({ ...prev, loading: false, user: data?.response, success: true, error: null }))
 
                 await AsyncStorage.setItem("isAuthenticated", JSON.stringify(true))
@@ -111,6 +111,15 @@ const verification = () => {
                 setIsAuthenticated(true)
                 router.push("/home")
 
+            } else if (authType === "apple") {
+                const { data } = await axios.post(`${BASE_URL}/customer/appleCustomerSignup`, oauthSignUpData)
+                setSignInData((prev) => ({ ...prev, loading: false, user: data?.response, success: true, error: null }))
+
+                await AsyncStorage.setItem("isAuthenticated", JSON.stringify(true))
+                await AsyncStorage.setItem("LoggedInUser", JSON.stringify(data?.response))
+                setAuthenticatedUser(data?.response)
+                setIsAuthenticated(true)
+                router.push("/home")
             } else {
 
                 const { data } = await axios.post(`${BASE_URL}/customer/signUp`, signUpData)

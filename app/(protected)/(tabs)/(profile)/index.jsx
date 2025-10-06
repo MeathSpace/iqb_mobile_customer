@@ -51,7 +51,8 @@ const index = () => {
     if (rememberMe) {
       await AsyncStorage.setItem("LoggedInUser", JSON.stringify({
         email: authenticatedUser?.email,
-        userPassword: authenticatedUser?.userPassword
+        userPassword: authenticatedUser?.userPassword,
+        authType: authenticatedUser?.AuthType
       }))
     } else {
       await AsyncStorage.removeItem("LoggedInUser")
