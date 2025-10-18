@@ -25,6 +25,7 @@ import axios from 'axios';
 import { BASE_URL } from '@/utils/api';
 import Skeleton from '../../components/Skeleton'
 import { Toast } from 'toastify-react-native'
+import { Checkbox } from 'expo-checkbox';
 
 const editAppointmentCalender = () => {
 
@@ -193,6 +194,7 @@ const editAppointmentCalender = () => {
     })
 
     const [selectedCalenderDate, setSelectedCalenderDate] = useState("")
+    const [selectedCalenderDay, setSelectedCalenderDay] = useState("")
     const [appointmentNote, setAppointmentNote] = useState("")
     const [selectedEngageTimeSlot, setSelectedEngageTimeSlot] = useState("")
     const [disableDates, setDisbaleDates] = useState([])
@@ -490,6 +492,106 @@ const editAppointmentCalender = () => {
         return `${mins}min`;
     }
 
+    const [hasLoadedInitially, setHasLoadedInitially] = useState(false);
+    const [userToggled, setUserToggled] = useState(false);
+
+    useEffect(() => {
+
+        if (selectedCustomerBarber?.barberId && selectedCalenderDay?.fullDate) {
+
+            const fetchGetCustomerToNotifyAppointmentAvailability = async () => {
+                try {
+                    const payload = {
+                        customerEmail: authenticatedUser?.email,
+                        barberId: selectedCustomerBarber?.barberId,
+                        appointmentDate: selectedCalenderDay?.fullDate
+                    }
+
+                    const { data } = await axios.post(`${BASE_URL}/customer/getCustomerToNotifyAppointmentAvailability`, payload)
+
+                    console.log(data?.response?.timeSlotsUpdate)
+
+                    if (data?.response?.timeSlotsUpdate?.length > 0) {
+                        setIsNotifyCheck(data?.response?.timeSlotsUpdate[0]?.checkValue)
+                    } else {
+                        setIsNotifyCheck(false)
+                    }
+
+                } catch (error) {
+                    console.log("Error in forget password ", error?.data?.message)
+                } finally {
+                    setHasLoadedInitially(true)
+                }
+            }
+
+            fetchGetCustomerToNotifyAppointmentAvailability()
+        }
+
+    }, [selectedCustomerBarber?.barberId, selectedCalenderDay?.fullDate])
+
+
+    const [isNotifyCheck, setIsNotifyCheck] = useState(false)
+
+    const saveCustomerToNotifyAppointmentAvailability = async () => {
+        try {
+            const payload = {
+                salonId: authenticatedUser.salonId,
+                customerEmail: authenticatedUser.email,
+                appointmentDate: selectedCalenderDate,
+                barberId: selectedCustomerBarber.barberId,
+                checkValue: isNotifyCheck
+            }
+
+            const { data } = await axios.post(`${BASE_URL}/customer/saveCustomerToNotifyAppointmentAvailability`, payload)
+
+            Toast.success(data?.message)
+        } catch (error) {
+            Toast.error(error?.response?.data?.message)
+            console.log("Error in forget password ", error)
+        } finally {
+            setUserToggled(false)
+        }
+    }
+
+
+    const deleteCustomerToNotifyAppointmentAvailability = async () => {
+        try {
+            const payload = {
+                customerEmail: authenticatedUser.email,
+                appointmentDate: selectedCalenderDate,
+                barberId: selectedCustomerBarber.barberId,
+            }
+
+            const { data } = await axios.post(`${BASE_URL}/customer/deleteCustomerToNotifyAppointmentAvailability`, payload)
+
+            Toast.success(data?.message)
+        } catch (error) {
+            Toast.error(error?.response?.data?.message)
+            console.log("Error in forget password ", error)
+        } finally {
+            setUserToggled(false)
+        }
+    }
+
+
+    useEffect(() => {
+        const updateNotifyCustomer = async () => {
+            if (
+                userToggled &&
+                hasLoadedInitially &&
+                disableDates?.includes(selectedCalenderDay?.fullDate)
+            ) {
+                if (isNotifyCheck) {
+                    await saveCustomerToNotifyAppointmentAvailability();
+                } else {
+                    await deleteCustomerToNotifyAppointmentAvailability();
+                }
+            }
+        };
+
+        updateNotifyCustomer();
+    }, [isNotifyCheck, userToggled]);
+
     const renderSection = (key, title, content) => {
         const isActive = activeSection === key
 
@@ -635,11 +737,12 @@ const editAppointmentCalender = () => {
                                                         <Pressable
                                                             style={{
                                                                 height: verticalScale(15),
-                                                                width: scale(50),
+                                                                paddingHorizontal: scale(8),
                                                                 backgroundColor: "#00B0901A",
                                                                 borderRadius: scale(4),
                                                                 justifyContent: "center",
-                                                                alignItems: "center"
+                                                                alignItems: "center",
+                                                                alignSelf: "flex-start",
                                                             }}
                                                         ><CustomText style={{ fontSize: scale(10), color: "#00B090" }}>{item?.serviceCategoryName}</CustomText></Pressable>
                                                     </View>
@@ -870,9 +973,11 @@ const editAppointmentCalender = () => {
                                 >
                                     {dates.map((day, index) => (
                                         <Pressable
-                                            disabled={disableLoader || disableDates?.includes(day?.fullDate)}
+                                            // disabled={disableLoader || disableDates?.includes(day?.fullDate)}
+                                            disabled={disableLoader}
                                             onPress={() => {
                                                 setSelectedCalenderDate(day?.fullDate)
+                                                setSelectedCalenderDay(day)
                                             }}
                                             key={day.fullDate}
                                             style={[styles.dayBox, {
@@ -1048,9 +1153,10 @@ const editAppointmentCalender = () => {
                                                             setSelectedEngageTimeSlot(item?.timeInterval)
                                                         }
                                                     }}
+                                                    disabled={(item?.disabled || disableDates?.includes(selectedCalenderDay?.fullDate))}
                                                     key={index}
                                                     style={{
-                                                        backgroundColor: item?.disabled ? "#e5e5e5" : "#00B0901A",
+                                                        backgroundColor: (item?.disabled || disableDates?.includes(selectedCalenderDay?.fullDate)) ? "#e5e5e5" : "#00B0901A",
                                                         alignSelf: "flex-start",
                                                         width: scrolling ? "31%" : "48%",
                                                         height: verticalScale(40),
@@ -1061,12 +1167,43 @@ const editAppointmentCalender = () => {
                                                         borderRadius: scale(8)
                                                     }}>
                                                     <CustomText style={{
-                                                        color: '#14b8a6',
+                                                        color: (item?.disabled || disableDates?.includes(selectedCalenderDay?.fullDate)) ? "gray" : '#14b8a6',
                                                         fontSize: moderateScale(12)
                                                     }}>{item?.timeInterval}</CustomText>
                                                 </Pressable>
                                             )
                                         })
+                                    }
+
+                                    {
+                                        disableDates?.includes(selectedCalenderDay?.fullDate) && (
+                                            <View
+                                                style={{
+                                                    height: verticalScale(40),
+                                                    flexDirection: "row",
+                                                    alignItems: "center",
+                                                    gap: scale(10)
+                                                }}
+                                            >
+                                                <Checkbox
+                                                    value={isNotifyCheck}
+                                                    // onValueChange={setIsNotifyCheck}
+                                                    onValueChange={(val) => {
+                                                        setIsNotifyCheck(val);
+                                                        setUserToggled(true); // ✅ Mark as manual user action
+                                                    }}
+                                                    color={isNotifyCheck ? "#00B090" : undefined}
+                                                    style={{
+                                                        height: scale(16),
+                                                        width: scale(16),
+                                                        borderRadius: scale(3),
+                                                    }}
+                                                />
+                                                <CustomText style={{ fontSize: scale(14) }}>
+                                                    Notify me when a timeslot is available
+                                                </CustomText>
+                                            </View>
+                                        )
                                     }
 
                                 </View>

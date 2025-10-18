@@ -1126,6 +1126,7 @@ const styles = StyleSheet.create({
         flex: 1,
         justifyContent: 'center',
     },
+    
     serviceName: {
         fontSize: scale(16),
         fontFamily: "AirbnbCereal_W_Bd"
