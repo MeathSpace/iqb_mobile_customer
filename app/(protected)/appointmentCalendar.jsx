@@ -253,8 +253,6 @@ const appointmentCalendar = () => {
                         barberId: selectedCustomerBarber?.barberId,
                     })
 
-                    console.log("Disable dates ", data)
-
                     setDisbaleDates(prev => [...prev, ...data.response])
                     setDisableSalonDates(data?.salonOffDaysResponse)
                     setDisableAppointmentDates(data?.barberOffDaysResponse)
@@ -1153,9 +1151,9 @@ const appointmentCalendar = () => {
 
                                     {
                                         disableSalonDates?.includes(selectedCalenderDay?.fullDate) ? (
-                                            <CustomText>Today is salon off day</CustomText>
+                                            <CustomText>The salon is closed on this day.</CustomText>
                                         ) : disableAppointmentDates?.includes(selectedCalenderDay?.fullDate) ? (
-                                            <CustomText>Selected stylist/barber is off today</CustomText>
+                                            <CustomText>The selected stylist is unavailable on this day.</CustomText>
                                         ) : (
                                             !disableSalonDates?.includes(selectedCalenderDay?.fullDate) && !disableAppointmentDates?.includes(selectedCalenderDay?.fullDate) && disableDates?.includes(selectedCalenderDay?.fullDate) && (
                                                 <View
@@ -1186,7 +1184,6 @@ const appointmentCalendar = () => {
                                                 </View>
                                             )
                                         )
-
                                     }
 
                                 </View>
