@@ -170,6 +170,8 @@ const appointmentCalendar = () => {
     const [appointmentNote, setAppointmentNote] = useState("")
     const [selectedEngageTimeSlot, setSelectedEngageTimeSlot] = useState("")
     const [disableDates, setDisbaleDates] = useState([])
+    const [disableSalonDates, setDisableSalonDates] = useState([])
+    const [disableAppointmentDates, setDisableAppointmentDates] = useState([])
     const [disableLoader, setDisableLoader] = useState(false)
 
 
@@ -251,7 +253,11 @@ const appointmentCalendar = () => {
                         barberId: selectedCustomerBarber?.barberId,
                     })
 
+                    console.log("Disable dates ", data)
+
                     setDisbaleDates(prev => [...prev, ...data.response])
+                    setDisableSalonDates(data?.salonOffDaysResponse)
+                    setDisableAppointmentDates(data?.barberOffDaysResponse)
                     setDisableLoader(false)
 
                     // console.log("Get barber disable appointment dates ", data)
@@ -269,6 +275,7 @@ const appointmentCalendar = () => {
     }, [selectedCustomerBarber])
 
 
+    // console.log("disableSalonDates ", disableSalonDates)
 
     const [activeSection, setActiveSection] = useState('services')
     const [scrolling, setScrolling] = useState(false)
@@ -461,11 +468,11 @@ const appointmentCalendar = () => {
 
                     const { data } = await axios.post(`${BASE_URL}/customer/getCustomerToNotifyAppointmentAvailability`, payload)
 
-                    console.log(data?.response?.timeSlotsUpdate)
+                    // console.log(data?.response?.timeSlotsUpdate)
 
                     if (data?.response?.timeSlotsUpdate?.length > 0) {
                         setIsNotifyCheck(data?.response?.timeSlotsUpdate[0]?.checkValue)
-                    } else{
+                    } else {
                         setIsNotifyCheck(false)
                     }
 
@@ -939,7 +946,16 @@ const appointmentCalendar = () => {
                                             }}
                                             key={day.fullDate}
                                             style={[styles.dayBox, {
-                                                backgroundColor: disableDates?.includes(day?.fullDate) && "#e5e5e5",
+                                                // backgroundColor: disableDates?.includes(day?.fullDate) && "#e5e5e5",
+                                                backgroundColor:
+                                                    disableSalonDates?.includes(day?.fullDate)
+                                                        ? "rgba(221,221, 221,.20)"
+                                                        : disableAppointmentDates?.includes(day?.fullDate)
+                                                            ? "rgba(255,0, 0,.15)"
+                                                            : disableDates?.includes(day?.fullDate)
+                                                            && "rgba(137,148, 153,.20)"
+
+                                                ,
                                                 borderColor: selectedCalenderDate === day?.fullDate ? "#0BA3AD" : null,
                                                 borderWidth: selectedCalenderDate === day?.fullDate ? scale(1) : null
                                             }]}>
@@ -952,7 +968,13 @@ const appointmentCalendar = () => {
                                             <CustomText
                                                 style={{
                                                     fontSize: scale(16),
-                                                    color: disableDates?.includes(day?.fullDate) ? "#000" : '#14b8a6',
+                                                    color:
+                                                        disableSalonDates?.includes(day?.fullDate)
+                                                            ? "#d3d3d3"
+                                                            : disableAppointmentDates?.includes(day?.fullDate)
+                                                                ? "#ff0000"
+                                                                : disableDates?.includes(day?.fullDate)
+                                                                    ? "#899499" : '#14b8a6'
                                                 }}
                                             >{day.date}</CustomText>
                                             {/* {
@@ -1109,7 +1131,7 @@ const appointmentCalendar = () => {
                                                             setSelectedEngageTimeSlot(item?.timeInterval)
                                                         }
                                                     }}
-                                                    disabled={(item?.disabled || disableDates?.includes(selectedCalenderDay?.fullDate)) }
+                                                    disabled={(item?.disabled || disableDates?.includes(selectedCalenderDay?.fullDate))}
                                                     key={index}
                                                     style={{
                                                         backgroundColor: (item?.disabled || disableDates?.includes(selectedCalenderDay?.fullDate)) ? "#e5e5e5" : "#00B0901A",
@@ -1130,34 +1152,41 @@ const appointmentCalendar = () => {
                                     }
 
                                     {
-                                        disableDates?.includes(selectedCalenderDay?.fullDate) && (
-                                            <View
-                                                style={{
-                                                    height: verticalScale(40),
-                                                    flexDirection: "row",
-                                                    alignItems: "center",
-                                                    gap: scale(10)
-                                                }}
-                                            >
-                                                <Checkbox
-                                                    value={isNotifyCheck}
-                                                    // onValueChange={setIsNotifyCheck}
-                                                    onValueChange={(val) => {
-                                                        setIsNotifyCheck(val);
-                                                        setUserToggled(true); // ✅ Mark as manual user action
-                                                    }}
-                                                    color={isNotifyCheck ? "#00B090" : undefined}
+                                        disableSalonDates?.includes(selectedCalenderDay?.fullDate) ? (
+                                            <CustomText>Today is salon off day</CustomText>
+                                        ) : disableAppointmentDates?.includes(selectedCalenderDay?.fullDate) ? (
+                                            <CustomText>Selected stylist/barber is off today</CustomText>
+                                        ) : (
+                                            !disableSalonDates?.includes(selectedCalenderDay?.fullDate) && !disableAppointmentDates?.includes(selectedCalenderDay?.fullDate) && disableDates?.includes(selectedCalenderDay?.fullDate) && (
+                                                <View
                                                     style={{
-                                                        height: scale(16),
-                                                        width: scale(16),
-                                                        borderRadius: scale(3),
+                                                        height: verticalScale(40),
+                                                        flexDirection: "row",
+                                                        alignItems: "center",
+                                                        gap: scale(10)
                                                     }}
-                                                />
-                                                <CustomText style={{ fontSize: scale(14) }}>
-                                                    Notify me when a timeslot is available
-                                                </CustomText>
-                                            </View>
+                                                >
+                                                    <Checkbox
+                                                        value={isNotifyCheck}
+                                                        // onValueChange={setIsNotifyCheck}
+                                                        onValueChange={(val) => {
+                                                            setIsNotifyCheck(val);
+                                                            setUserToggled(true); // ✅ Mark as manual user action
+                                                        }}
+                                                        color={isNotifyCheck ? "#00B090" : undefined}
+                                                        style={{
+                                                            height: scale(16),
+                                                            width: scale(16),
+                                                            borderRadius: scale(3),
+                                                        }}
+                                                    />
+                                                    <CustomText style={{ fontSize: scale(14) }}>
+                                                        Notify me when a timeslot is available
+                                                    </CustomText>
+                                                </View>
+                                            )
                                         )
+
                                     }
 
                                 </View>
