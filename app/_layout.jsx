@@ -77,7 +77,8 @@ const RootLayout = () => {
       cardColor: "#fff",
       cardBorder: "#e5e7eb",
       queueBorder: "#e5e7eb",
-      selected: "#f0fdfa"
+      selected: "#f0fdfa",
+      appointmentDisableBg: "#d4d4d4"
     },
   };
 
@@ -96,7 +97,8 @@ const RootLayout = () => {
       cardColor: "#1F2937",
       cardBorder: "#1F2937",
       queueBorder: "#374151",
-      selected: "#14b8a619"
+      selected: "#14b8a619",
+      appointmentDisableBg: "#a1a1a1"
     },
   };
 

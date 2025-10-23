@@ -640,52 +640,6 @@ const appointment = () => {
     }, 2000);
   };
 
-  const dummyAppointments = [
-    {
-      id: '1',
-      salonName: 'Style H Gents Salon',
-      dateTime: 'Wed, Jun 18, 2025 at 12:30 PM',
-      price: 'AED 235',
-      items: 2,
-      image: 'https://placehold.co/80x80/E5E7EB/1F2937?text=S',
-    },
-    {
-      id: '2',
-      salonName: 'Elite Barber Lounge',
-      dateTime: 'Fri, Jun 20, 2025 at 3:00 PM',
-      price: 'AED 180',
-      items: 1,
-      image: 'https://placehold.co/80x80/E5E7EB/1F2937?text=E',
-    },
-    {
-      id: '3',
-      salonName: 'Elite Barber Lounge',
-      dateTime: 'Fri, Jun 20, 2025 at 3:00 PM',
-      price: 'AED 180',
-      items: 1,
-      image: 'https://placehold.co/80x80/E5E7EB/1F2937?text=E',
-    },
-    {
-      id: '4',
-      salonName: 'Elite Barber Lounge',
-      dateTime: 'Fri, Jun 20, 2025 at 3:00 PM',
-      price: 'AED 180',
-      items: 1,
-      image: 'https://placehold.co/80x80/E5E7EB/1F2937?text=E',
-    },
-    {
-      id: '5',
-      salonName: 'Elite Barber Lounge',
-      dateTime: 'Fri, Jun 20, 2025 at 3:00 PM',
-      price: 'AED 180',
-      items: 1,
-      image: 'https://placehold.co/80x80/E5E7EB/1F2937?text=E',
-    },
-  ];
-
-  // console.log("appointmentListData ", JSON.stringify(appointmentListData?.data?.filter((item) => item.status !== "upcoming"), null, 2))
-
-
   const upcomingAppointments = appointmentListData?.data?.filter((item) => item.status === "upcoming") || [];
   const pastAppointments = appointmentListData?.data?.filter((item) => item.status !== "upcoming") || [];
 

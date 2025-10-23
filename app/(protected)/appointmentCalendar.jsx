@@ -947,11 +947,11 @@ const appointmentCalendar = () => {
                                                 // backgroundColor: disableDates?.includes(day?.fullDate) && "#e5e5e5",
                                                 backgroundColor:
                                                     disableSalonDates?.includes(day?.fullDate)
-                                                        ? "rgba(221,221, 221,.20)"
+                                                        ? colors.appointmentDisableBg
                                                         : disableAppointmentDates?.includes(day?.fullDate)
-                                                            ? "rgba(255,0, 0,.15)"
+                                                            ? colors.appointmentDisableBg
                                                             : disableDates?.includes(day?.fullDate)
-                                                            && "rgba(137,148, 153,.20)"
+                                                                ? "rgba(137,148, 153,.20)" : "#00B0901A"
 
                                                 ,
                                                 borderColor: selectedCalenderDate === day?.fullDate ? "#0BA3AD" : null,
@@ -960,7 +960,7 @@ const appointmentCalendar = () => {
                                             <CustomText
                                                 style={{
                                                     fontSize: scale(15),
-                                                    color: disableDates?.includes(day?.fullDate) && "#000"
+                                                    color: disableDates?.includes(day?.fullDate) && colors.text
                                                 }}
                                             >{day.dayName}</CustomText>
                                             <CustomText
@@ -968,13 +968,14 @@ const appointmentCalendar = () => {
                                                     fontSize: scale(16),
                                                     color:
                                                         disableSalonDates?.includes(day?.fullDate)
-                                                            ? "#d3d3d3"
+                                                            ? colors.text
                                                             : disableAppointmentDates?.includes(day?.fullDate)
-                                                                ? "#ff0000"
+                                                                ? colors.text
                                                                 : disableDates?.includes(day?.fullDate)
                                                                     ? "#899499" : '#14b8a6'
                                                 }}
                                             >{day.date}</CustomText>
+
                                             {/* {
                                                 disableDates?.includes(day?.fullDate) ? (
                                                     <CustomText
@@ -1038,7 +1039,7 @@ const appointmentCalendar = () => {
                                                     alignItems: "center",
                                                 }}
                                             >
-                                                <CustomText>Please select barber</CustomText>
+                                                <CustomText>Please select barber/stylist</CustomText>
                                             </View>
                                         ) : !selectedCalenderDate ? (
                                             <View
@@ -1118,6 +1119,26 @@ const appointmentCalendar = () => {
                                                 />
 
                                             </>
+                                        ) : disableSalonDates?.includes(selectedCalenderDay?.fullDate) ? (
+                                            <View
+                                                style={{
+                                                    width: "100%",
+                                                    minHeight: verticalScale(300),
+                                                    justifyContent: "center",
+                                                    alignItems: "center",
+                                                }}
+                                            ><CustomText>The salon is closed on this day.</CustomText></View>
+                                        ) : disableAppointmentDates?.includes(selectedCalenderDay?.fullDate) ? (
+                                            <View
+                                                style={{
+                                                    width: "100%",
+                                                    minHeight: verticalScale(300),
+                                                    justifyContent: "center",
+                                                    alignItems: "center",
+                                                }}
+                                            >
+                                                <CustomText style={{ textAlign: 'center' }}>The selected stylist/barber is unavailable on this day.</CustomText>
+                                            </View>
                                         ) : engageTimeslotsData?.data?.map((item, index) => {
                                             return (
                                                 <Pressable
@@ -1150,6 +1171,36 @@ const appointmentCalendar = () => {
                                     }
 
                                     {
+                                        !disableSalonDates?.includes(selectedCalenderDay?.fullDate) && !disableAppointmentDates?.includes(selectedCalenderDay?.fullDate) && disableDates?.includes(selectedCalenderDay?.fullDate) && (
+                                            <View
+                                                style={{
+                                                    height: verticalScale(40),
+                                                    flexDirection: "row",
+                                                    alignItems: "center",
+                                                    gap: scale(10)
+                                                }}
+                                            >
+                                                <Checkbox
+                                                    value={isNotifyCheck}
+                                                    // onValueChange={setIsNotifyCheck}
+                                                    onValueChange={(val) => {
+                                                        setIsNotifyCheck(val);
+                                                        setUserToggled(true); // ✅ Mark as manual user action
+                                                    }}
+                                                    color={isNotifyCheck ? "#00B090" : undefined}
+                                                    style={{
+                                                        height: scale(16),
+                                                        width: scale(16),
+                                                        borderRadius: scale(3),
+                                                    }}
+                                                />
+                                                <CustomText style={{ fontSize: scale(14) }}>
+                                                    Notify me when a timeslot is available
+                                                </CustomText>
+                                            </View>
+                                        )}
+
+                                    {/* {
                                         disableSalonDates?.includes(selectedCalenderDay?.fullDate) ? (
                                             <CustomText>The salon is closed on this day.</CustomText>
                                         ) : disableAppointmentDates?.includes(selectedCalenderDay?.fullDate) ? (
@@ -1184,7 +1235,7 @@ const appointmentCalendar = () => {
                                                 </View>
                                             )
                                         )
-                                    }
+                                    } */}
 
                                 </View>
 

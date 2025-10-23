@@ -1,5 +1,5 @@
 import { FlatList, Platform, Pressable, RefreshControl, StyleSheet, TouchableOpacity, useColorScheme, View } from 'react-native';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import CustomTabView from '../../../components/CustomTabView';
 import CustomText from '../../../components/CustomText';
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
@@ -43,7 +43,16 @@ const QueueList = () => {
                 }
             })
 
-            setQlistData((prev) => ({ ...prev, loading: false, data: data?.response, success: true, error: null, isJoinedQueue: data?.isJoinedQueue }))
+            const customerBarberId = data?.response.find(qlistItem => qlistItem.customerEmail === authenticatedUser?.email)?.barberId || null;
+
+            const filteredQlistData = data?.response?.filter(qlistItem => {
+                if (qlistItem.barberId === customerBarberId) {
+                    return qlistItem;
+                }
+            });
+
+            // setQlistData((prev) => ({ ...prev, loading: false, data: data?.response, success: true, error: null, isJoinedQueue: data?.isJoinedQueue }))
+            setQlistData((prev) => ({ ...prev, loading: false, data: filteredQlistData, success: true, error: null, isJoinedQueue: data?.isJoinedQueue }))
 
         } catch (error) {
 
@@ -67,7 +76,6 @@ const QueueList = () => {
             const { data } = await axios.post(`${BASE_URL}/customer/showHideJoinQueueButton`, {
                 customerEmail: authenticatedUser?.email
             })
-
             // console.log(data)
 
             setShowHideQueBtn((prev) => ({ ...prev, loading: false, data: data?.response, success: true, error: null }))
@@ -130,15 +138,18 @@ const QueueList = () => {
             })
 
             socket.on("queueUpdated", (queueData) => {
-                setQlistData((prev) => ({ ...prev, loading: false, data: queueData, success: true, error: null }))
+
+                const customerBarberId = queueData?.find(qlistItem => qlistItem.customerEmail === authenticatedUser?.email)?.barberId || null;
+
+                const filteredQlistData = queueData?.filter(qlistItem => {
+                    if (qlistItem.barberId === customerBarberId) {
+                        return qlistItem;
+                    }
+                });
+
+                setQlistData((prev) => ({ ...prev, loading: false, data: filteredQlistData, success: true, error: null }))
             })
 
-            // socket.on("queueButtonToggle", (toggleData) => {
-            //     console.log("toggleData ", toggleData)
-            //     setShowHideQueBtn((prev) => ({ ...prev, loading: false, data: toggleData, success: true, error: null }))
-            //     // console.log("toggleData ", toggleData)
-            //     // setQlistData((prev) => ({ ...prev, loading: false, data: queueData, success: true, error: null }))
-            // })
 
         }, [authenticatedUser])
     )
