@@ -165,6 +165,8 @@ const appointmentCalendar = () => {
         success: false
     })
 
+    // console.log("engageTimeslotsData ", engageTimeslotsData?.data?.some((item) => item.disabled === true))
+
     const [selectedCalenderDate, setSelectedCalenderDate] = useState("")
     const [selectedCalenderDay, setSelectedCalenderDay] = useState("")
     const [appointmentNote, setAppointmentNote] = useState("")
@@ -536,7 +538,7 @@ const appointmentCalendar = () => {
             if (
                 userToggled &&
                 hasLoadedInitially &&
-                disableDates?.includes(selectedCalenderDay?.fullDate)
+                engageTimeslotsData?.data?.some((item) => item.disabled === true)
             ) {
                 if (isNotifyCheck) {
                     await saveCustomerToNotifyAppointmentAvailability();
@@ -951,7 +953,7 @@ const appointmentCalendar = () => {
                                                         : disableAppointmentDates?.includes(day?.fullDate)
                                                             ? colors.appointmentDisableBg
                                                             : disableDates?.includes(day?.fullDate)
-                                                                ? "rgba(137,148, 153,.20)" : "#00B0901A"
+                                                                ? colors.appointmentDisableBg : "#00B0901A"
 
                                                 ,
                                                 borderColor: selectedCalenderDate === day?.fullDate ? "#0BA3AD" : null,
@@ -972,7 +974,7 @@ const appointmentCalendar = () => {
                                                             : disableAppointmentDates?.includes(day?.fullDate)
                                                                 ? colors.text
                                                                 : disableDates?.includes(day?.fullDate)
-                                                                    ? "#899499" : '#14b8a6'
+                                                                    ? colors.text : '#14b8a6'
                                                 }}
                                             >{day.date}</CustomText>
 
@@ -1171,7 +1173,7 @@ const appointmentCalendar = () => {
                                     }
 
                                     {
-                                        !disableSalonDates?.includes(selectedCalenderDay?.fullDate) && !disableAppointmentDates?.includes(selectedCalenderDay?.fullDate) && disableDates?.includes(selectedCalenderDay?.fullDate) && (
+                                        !disableSalonDates?.includes(selectedCalenderDay?.fullDate) && !disableAppointmentDates?.includes(selectedCalenderDay?.fullDate) && engageTimeslotsData?.data?.some((item) => item.disabled === true) && (
                                             <View
                                                 style={{
                                                     height: verticalScale(40),

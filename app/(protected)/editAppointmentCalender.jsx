@@ -31,7 +31,6 @@ const editAppointmentCalender = () => {
 
     const params = useLocalSearchParams();
     const selectedEditAppointmentData = params?.selectedAppointment ? JSON.parse(params?.selectedAppointment) : {}
-    // console.log("Selected Edit Appointment ", selectedEditAppointmentData)
 
     const { authenticatedUser } = useAuth()
 
@@ -515,8 +514,6 @@ const editAppointmentCalender = () => {
 
                     const { data } = await axios.post(`${BASE_URL}/customer/getCustomerToNotifyAppointmentAvailability`, payload)
 
-                    console.log(data?.response?.timeSlotsUpdate)
-
                     if (data?.response?.timeSlotsUpdate?.length > 0) {
                         setIsNotifyCheck(data?.response?.timeSlotsUpdate[0]?.checkValue)
                     } else {
@@ -585,7 +582,7 @@ const editAppointmentCalender = () => {
             if (
                 userToggled &&
                 hasLoadedInitially &&
-                disableDates?.includes(selectedCalenderDay?.fullDate)
+                engageTimeslotsData?.data?.some((item) => item.disabled === true)
             ) {
                 if (isNotifyCheck) {
                     await saveCustomerToNotifyAppointmentAvailability();
@@ -996,7 +993,7 @@ const editAppointmentCalender = () => {
                                                         : disableAppointmentDates?.includes(day?.fullDate)
                                                             ? colors.appointmentDisableBg
                                                             : disableDates?.includes(day?.fullDate)
-                                                                ? "rgba(137,148, 153,.20)" : "#00B0901A"
+                                                                ? colors.appointmentDisableBg : "#00B0901A"
 
                                                 ,
 
@@ -1018,7 +1015,7 @@ const editAppointmentCalender = () => {
                                                             : disableAppointmentDates?.includes(day?.fullDate)
                                                                 ? colors.text
                                                                 : disableDates?.includes(day?.fullDate)
-                                                                    ? "#899499" : '#14b8a6'
+                                                                    ? colors.text : '#14b8a6'
                                                     // color: disableDates?.includes(day?.fullDate) ? "#000" : '#14b8a6',
                                                 }}
                                             >{day.date}</CustomText>
@@ -1217,6 +1214,37 @@ const editAppointmentCalender = () => {
                                                 </Pressable>
                                             )
                                         })
+                                    }
+
+                                    {
+                                        !disableSalonDates?.includes(selectedCalenderDay?.fullDate) && !disableAppointmentDates?.includes(selectedCalenderDay?.fullDate) && engageTimeslotsData?.data?.some((item) => item.disabled === true) && (
+                                            <View
+                                                style={{
+                                                    height: verticalScale(40),
+                                                    flexDirection: "row",
+                                                    alignItems: "center",
+                                                    gap: scale(10)
+                                                }}
+                                            >
+                                                <Checkbox
+                                                    value={isNotifyCheck}
+                                                    // onValueChange={setIsNotifyCheck}
+                                                    onValueChange={(val) => {
+                                                        setIsNotifyCheck(val);
+                                                        setUserToggled(true); // ✅ Mark as manual user action
+                                                    }}
+                                                    color={isNotifyCheck ? "#00B090" : undefined}
+                                                    style={{
+                                                        height: scale(16),
+                                                        width: scale(16),
+                                                        borderRadius: scale(3),
+                                                    }}
+                                                />
+                                                <CustomText style={{ fontSize: scale(14) }}>
+                                                    Notify me when a timeslot is available
+                                                </CustomText>
+                                            </View>
+                                        )
                                     }
 
                                     {/* {
