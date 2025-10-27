@@ -552,6 +552,9 @@ const appointmentCalendar = () => {
     }, [isNotifyCheck, userToggled]);
 
 
+    // console.log("selectedCustomerBarber ", selectedCustomerBarber)
+
+
     const renderSection = (key, title, content) => {
         const isActive = activeSection === key
 

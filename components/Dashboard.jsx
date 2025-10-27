@@ -490,20 +490,6 @@ const Dashboard = () => {
                 paddingBottom: Platform.OS === "ios" ? verticalScale(70) : verticalScale(50)
             }}
         >
-            <View style={styles.mainContainer}>
-                <Text
-                    onTextLayout={onTextLayout}
-                    numberOfLines={textShown ? undefined : 4}
-                    style={{ lineHeight: 21 }}>lorem100</Text>
-
-                {
-                    lengthMore ? <Text
-                        onPress={toggleNumberOfLines}
-                        style={{ lineHeight: 21, marginTop: 10 }}>{textShown ? 'Read less...' : 'Read more...'}</Text>
-                        : null
-                }
-            </View>
-
             <FlatList
                 data={pageData}
                 showsVerticalScrollIndicator={false}

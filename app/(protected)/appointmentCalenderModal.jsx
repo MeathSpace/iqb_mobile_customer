@@ -28,6 +28,8 @@ const appointmentCalenderModal = () => {
     const selectedBookCalenderDateParse = params?.selectedBookCalenderDate ? JSON.parse(params?.selectedBookCalenderDate) : ""
     const selectedBookAppointmentNoteParse = params?.selectedBookAppointmentNote ? JSON.parse(params?.selectedBookAppointmentNote) : ""
 
+    // console.log("selectedCustomerBookAppointmentBarberParse ", selectedCustomerBookAppointmentBarberParse)
+
     const [bookAppointmentLoader, setBookAppointmentLoader] = useState(false)
     const { newNotification, setNewNotification } = useGlobal()
 
@@ -100,7 +102,8 @@ const appointmentCalenderModal = () => {
     }
 
     const totalPrice = selectedCustomerBookAppointmentServicesParse?.reduce((acc, service) => acc + service.servicePrice, 0);
-    const totalTime = selectedCustomerBookAppointmentServicesParse?.reduce((acc, service) => acc + service.serviceEWT, 0);
+    // const totalTime = selectedCustomerBookAppointmentServicesParse?.reduce((acc, service) => acc + service.serviceEWT, 0);
+    const totalTime = selectedCustomerBookAppointmentBarberParse?.totalBarberServiceEWT
     const totalServices = selectedCustomerBookAppointmentServicesParse?.length;
 
     return (
