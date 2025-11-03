@@ -371,7 +371,7 @@ const editAppointmentCalender = () => {
         const endOfMonth = monthMoment.clone().endOf('month');
 
         // But cap it at maxAllowedDate
-        const loopStart = moment.max(today.clone().add(1, 'day'), startOfMonth);
+        const loopStart = moment.max(today.clone().add('day'), startOfMonth);
         const loopEnd = moment.min(endOfMonth, maxAllowedDate);
 
         for (let day = loopStart.clone(); day.isSameOrBefore(loopEnd); day.add(1, 'day')) {

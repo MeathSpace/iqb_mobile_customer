@@ -21,8 +21,8 @@
       },
       "usesAppleSignIn": true
     },
-    "android": { 
-      "versionCode": 12,
+    "android": {
+      "versionCode": 15,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/iqbookAdaptive.png",
         "backgroundColor": "#ffffff"
