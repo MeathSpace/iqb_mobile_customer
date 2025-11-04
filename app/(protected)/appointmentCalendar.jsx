@@ -1175,35 +1175,41 @@ const appointmentCalendar = () => {
                                             >
                                                 <CustomText style={{ textAlign: 'center' }}>The selected stylist/barber is unavailable on this day.</CustomText>
                                             </View>
-                                        ) : engageTimeslotsData?.data?.map((item, index) => {
-                                            return (
-                                                <Pressable
-                                                    onPress={() => {
-                                                        if (addIconPressCount === 1 && !item?.disabled) {
-                                                            setScrolling(false)
-                                                            setActiveSection("appointmentnote")
-                                                            setAddIconPressCount(0)
-                                                            setSelectedEngageTimeSlot(item?.timeInterval)
-                                                        }
-                                                    }}
-                                                    disabled={(item?.disabled || disableDates?.includes(selectedCalenderDay?.fullDate))}
-                                                    key={index}
-                                                    style={{
-                                                        backgroundColor: (item?.disabled || disableDates?.includes(selectedCalenderDay?.fullDate)) ? "#e5e5e5" : "#00B0901A",
-                                                        alignSelf: "flex-start",
-                                                        width: scrolling ? "31%" : "48%",
-                                                        height: verticalScale(40),
-                                                        justifyContent: "center",
-                                                        alignItems: "center",
-                                                        borderRadius: scale(8)
-                                                    }}>
-                                                    <CustomText style={{
-                                                        color: (item?.disabled || disableDates?.includes(selectedCalenderDay?.fullDate)) ? "gray" : '#14b8a6',
-                                                        fontSize: moderateScale(12)
-                                                    }}>{item?.timeInterval}</CustomText>
-                                                </Pressable>
-                                            )
-                                        })
+                                        ) : engageTimeslotsData?.data
+                                            ?.filter(item => !item?.disabled) // ✅ Only include items that are not disabled
+                                            ?.map((item, index) => {
+                                                return (
+                                                    <Pressable
+                                                        onPress={() => {
+                                                            if (addIconPressCount === 1) {
+                                                                setScrolling(false);
+                                                                setActiveSection("appointmentnote");
+                                                                setAddIconPressCount(0);
+                                                                setSelectedEngageTimeSlot(item?.timeInterval);
+                                                            }
+                                                        }}
+                                                        key={index}
+                                                        style={{
+                                                            backgroundColor: "#00B0901A",
+                                                            alignSelf: "flex-start",
+                                                            width: scrolling ? "31%" : "48%",
+                                                            height: verticalScale(40),
+                                                            justifyContent: "center",
+                                                            alignItems: "center",
+                                                            borderRadius: scale(6),
+                                                        }}
+                                                    >
+                                                        <CustomText
+                                                            style={{
+                                                                color: '#14b8a6',
+                                                                fontSize: scale(16),
+                                                            }}
+                                                        >
+                                                            {item?.timeInterval}
+                                                        </CustomText>
+                                                    </Pressable>
+                                                );
+                                            })
                                     }
 
 
