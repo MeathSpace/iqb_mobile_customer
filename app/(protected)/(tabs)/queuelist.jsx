@@ -43,19 +43,20 @@ const QueueList = () => {
                     customerEmail: authenticatedUser?.email
                 }
             })
-            const dddd = data?.response.find(qlistItem => qlistItem.customerEmail === authenticatedUser?.email)
 
-            console.log(dddd)
 
-            const customerBarberId = data?.response.find(qlistItem => qlistItem.customerEmail === authenticatedUser?.email)?.barberId || null;
+            const multipleBarbers = data?.response?.filter(
+                qlistItem => qlistItem.customerEmail === authenticatedUser?.email
+            );
+
+            const multipleBarberIds = multipleBarbers.map(item => item.barberId);
 
             const filteredQlistData = data?.response?.filter(qlistItem => {
-                if (qlistItem.barberId === customerBarberId) {
-                    return qlistItem;
+                if (multipleBarberIds.includes(qlistItem.barberId)) {
+                    return qlistItem
                 }
             });
 
-            // setQlistData((prev) => ({ ...prev, loading: false, data: data?.response, success: true, error: null, isJoinedQueue: data?.isJoinedQueue }))
             setQlistData((prev) => ({ ...prev, loading: false, data: filteredQlistData, success: true, error: null, isJoinedQueue: data?.isJoinedQueue }))
 
         } catch (error) {
@@ -143,11 +144,15 @@ const QueueList = () => {
 
             socket.on("queueUpdated", (queueData) => {
 
-                const customerBarberId = queueData?.find(qlistItem => qlistItem.customerEmail === authenticatedUser?.email)?.barberId || null;
+                const multipleBarbers = queueData?.filter(
+                    qlistItem => qlistItem.customerEmail === authenticatedUser?.email
+                );
+
+                const multipleBarberIds = multipleBarbers.map(item => item.barberId);
 
                 const filteredQlistData = queueData?.filter(qlistItem => {
-                    if (qlistItem.barberId === customerBarberId) {
-                        return qlistItem;
+                    if (multipleBarberIds.includes(qlistItem.barberId)) {
+                        return qlistItem
                     }
                 });
 

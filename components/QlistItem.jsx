@@ -160,22 +160,25 @@ const QlistItem = ({ item, index, qlistLength, setQlistData, setShowHideQueBtn }
                                 }
                             })
 
+                            const multipleBarbers = queuelistData?.response?.filter(
+                                qlistItem => qlistItem.customerEmail === authenticatedUser?.email
+                            );
 
-                            const customerBarberId = queuelistData?.response?.find(qlistItem => qlistItem.customerEmail === authenticatedUser?.email)?.barberId || null;
+                            const multipleBarberIds = multipleBarbers.map(item => item.barberId);
 
                             const filteredQlistData = queuelistData?.response?.filter(qlistItem => {
-                                if (qlistItem.barberId === customerBarberId) {
-                                    return qlistItem;
+                                if (multipleBarberIds.includes(qlistItem.barberId)) {
+                                    return qlistItem
                                 }
                             });
 
-                            setQlistData((prev) => ({ ...prev, loading: false, data: filteredQlistData, success: true, error: null , isJoinedQueue: queuelistData?.isJoinedQueue }))
+                            setQlistData((prev) => ({ ...prev, loading: false, data: filteredQlistData, success: true, error: null, isJoinedQueue: queuelistData?.isJoinedQueue }))
 
 
                             // setQlistData((prev) => ({ ...prev, loading: false, data: queuelistData?.response, success: true, error: null, isJoinedQueue: queuelistData?.isJoinedQueue }))
 
 
-                            
+
 
                         } catch (error) {
                             Toast.error(error?.response?.data?.message)
