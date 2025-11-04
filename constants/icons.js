@@ -46,6 +46,10 @@ export const HeartFilledIcon = ({ size = moderateScale(24), color = 'black', sty
     <AntDesign name="heart" size={size} color={color} style={style} />
 );
 
+export const HeartOutlineIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <FontAwesome name="heart-o" size={size} color={color} style={style} />
+);
+
 export const HelpIcon = ({ size = moderateScale(24), color = 'black', style }) => (
     <Feather name="help-circle" size={size} color={color} style={style} />
 );

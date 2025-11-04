@@ -1066,6 +1066,37 @@ const editAppointmentCalender = () => {
                                     ))}
                                 </ScrollView>
 
+                                {
+                                    !disableSalonDates?.includes(selectedCalenderDay?.fullDate) && !disableAppointmentDates?.includes(selectedCalenderDay?.fullDate) && engageTimeslotsData?.data?.some((item) => item.disabled === true) && (
+                                        <View
+                                            style={{
+                                                height: verticalScale(40),
+                                                flexDirection: "row",
+                                                alignItems: "center",
+                                                gap: scale(10)
+                                            }}
+                                        >
+                                            <Checkbox
+                                                value={isNotifyCheck}
+                                                // onValueChange={setIsNotifyCheck}
+                                                onValueChange={(val) => {
+                                                    setIsNotifyCheck(val);
+                                                    setUserToggled(true); // ✅ Mark as manual user action
+                                                }}
+                                                color={isNotifyCheck ? "#00B090" : undefined}
+                                                style={{
+                                                    height: scale(16),
+                                                    width: scale(16),
+                                                    borderRadius: scale(3),
+                                                }}
+                                            />
+                                            <CustomText style={{ fontSize: scale(14) }}>
+                                                Notify me when there is a cancellation
+                                            </CustomText>
+                                        </View>
+                                    )
+                                }
+
                                 <View style={{
                                     flex: 1,
                                     flexDirection: "row",
@@ -1216,36 +1247,7 @@ const editAppointmentCalender = () => {
                                         })
                                     }
 
-                                    {
-                                        !disableSalonDates?.includes(selectedCalenderDay?.fullDate) && !disableAppointmentDates?.includes(selectedCalenderDay?.fullDate) && engageTimeslotsData?.data?.some((item) => item.disabled === true) && (
-                                            <View
-                                                style={{
-                                                    height: verticalScale(40),
-                                                    flexDirection: "row",
-                                                    alignItems: "center",
-                                                    gap: scale(10)
-                                                }}
-                                            >
-                                                <Checkbox
-                                                    value={isNotifyCheck}
-                                                    // onValueChange={setIsNotifyCheck}
-                                                    onValueChange={(val) => {
-                                                        setIsNotifyCheck(val);
-                                                        setUserToggled(true); // ✅ Mark as manual user action
-                                                    }}
-                                                    color={isNotifyCheck ? "#00B090" : undefined}
-                                                    style={{
-                                                        height: scale(16),
-                                                        width: scale(16),
-                                                        borderRadius: scale(3),
-                                                    }}
-                                                />
-                                                <CustomText style={{ fontSize: scale(14) }}>
-                                                    Notify me when a timeslot is available
-                                                </CustomText>
-                                            </View>
-                                        )
-                                    }
+
 
                                     {/* {
                                         disableSalonDates?.includes(selectedCalenderDay?.fullDate) ? (

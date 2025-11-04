@@ -469,7 +469,12 @@ const Dashboard = () => {
 
     const [showMore, setShowMore] = useState(false);
 
-    const salonInfo = homeDashboardData?.dashboardData?.salonInfo?.salonInfo || "";
+    // const salonInfo = homeDashboardData?.dashboardData?.salonInfo?.salonInfo || "";
+    const salonInfoRaw = homeDashboardData?.dashboardData?.salonInfo?.salonInfo || "";
+    // ✨ Normalize multiple consecutive newlines (or spaces) into a single newline
+    // This regex replaces two or more consecutive whitespace characters (including \n) 
+    // with a single \n. Adjust based on exact data format needs.
+    const salonInfo = salonInfoRaw.replace(/\s{2,}/g, '\n').trim();
 
 
     const [textShown, setTextShown] = useState(false); //To show ur remaining Text
@@ -647,6 +652,11 @@ const Dashboard = () => {
                                                             if (!getSalonFeature?.salonFeature?.isQueuing) {
                                                                 return Toast.error("Queueing feature is not available at this salon")
                                                             }
+
+                                                            if (!homeDashboardData?.dashboardData?.salonInfo?.mobileBookingAvailability) {
+                                                                return Toast.error("Mobile queueing is off")
+                                                            }
+
                                                             router.push("/joinpopup")
                                                         }}
                                                         style={[styles.joinQueue, {

@@ -64,27 +64,18 @@ export default function TabLayout() {
                                 },
                                 default: {},
                             }),
-                            // height: Platform.OS === "ios" ? verticalScale(90) : verticalScale(70),
-                            // paddingBottom: insets.bottom, 
-                            // height: insets.bottom,
-                            // height: Platform.OS === "ios" ? verticalScale(65) : verticalScale(75),
-                            // paddingBottom:  Platform.OS === "ios" ? verticalScale(15) : verticalScale(20),
 
                             // Base height for content
-                            height: verticalScale(55) + insets.bottom,
+                            height: verticalScale(65) + insets.bottom,
 
-                            // Padding so icons/text don't sit too low
-                            paddingBottom: insets.bottom > 0
-                                ? insets.bottom / 2
-                                : verticalScale(10),
+                            // // Padding so icons/text don't sit too low
+                            // paddingBottom: insets.bottom > 0
+                            //     ? insets.bottom / 2
+                            //     : verticalScale(10),
 
                             backgroundColor: colors.cardColor,
                             borderTopWidth: scale(1),
                             borderTopColor: colors.queueBorder,
-                            shadowColor: '#000',
-                            shadowOffset: { width: 0, height: -3 },
-                            shadowOpacity: 0.1,
-                            shadowRadius: 6,
                         },
 
 

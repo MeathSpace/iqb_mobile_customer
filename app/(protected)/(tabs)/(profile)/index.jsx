@@ -11,7 +11,7 @@ import { SafeAreaView } from 'react-native-safe-area-context'
 import { useTheme } from '@react-navigation/native'
 import CustomSecondaryText from '../../../../components/CustomSecondaryText'
 import CustomView from '../../../../components/CustomView'
-import { AboutIcon, ArrowLeftIcon, HeartIcon, HelpIcon, LogoutIcon, NotificationIcon, PeopleIcon, ProfileIcon, RightIcon, SalonIcon, UserIcon } from '../../../../constants/icons'
+import { AboutIcon, ArrowLeftIcon, HeartIcon, HeartOutlineIcon, HelpIcon, LogoutIcon, NotificationIcon, PeopleIcon, ProfileIcon, RightIcon, SalonIcon, UserIcon } from '../../../../constants/icons'
 import { Colors } from '../../../../constants/Colors'
 import { useGlobal } from '../../../../context/GlobalContext'
 import AsyncStorage from '@react-native-async-storage/async-storage'
@@ -41,6 +41,50 @@ const index = () => {
   const { setIsAuthenticated, authenticatedUser, setAuthenticatedUser } = useAuth()
   const router = useRouter()
 
+
+  const profileOptions = [
+    {
+      label: 'Favorites',
+      icon: <HeartOutlineIcon color={'#dc2626'} />,
+      lightBg: '#fee2e2',
+      darkBg: '#7f1d1d33',
+      lightColor: '#dc2626',
+      darkColor: '#fca5a5',
+      route: "/myFavourites",
+      display: true
+    },
+    {
+      label: 'Change Salon',
+      icon: <SalonIcon color={'#7c3aed'} />,
+      lightBg: '#ede9fe',
+      darkBg: '#5b21b633',
+      lightColor: '#7c3aed',
+      darkColor: '#c4b5fd',
+      route: "/connectSalon",
+      display: authenticatedUser?.salonId ? true : false
+    },
+    {
+      label: 'Help & Support',
+      icon: <HelpIcon color={'#059669'} />,
+      lightBg: '#d1fae5',
+      darkBg: '#065f4633',
+      lightColor: '#059669',
+      darkColor: '#6ee7b7',
+      route: "/helpSupport",
+      display: true
+    },
+    {
+      label: 'About',
+      icon: <AboutIcon color={'#0284c7'} />,
+      lightBg: '#e0f2fe',
+      darkBg: '#1e3a8a33',
+      lightColor: '#0284c7',
+      darkColor: '#93c5fd',
+      route: "/(about)",
+      display: true
+    },
+  ];
+
   const logoutPressed = async () => {
     if (isSignedIn) {
       await signOut()
@@ -64,49 +108,6 @@ const index = () => {
   }
 
 
-  const profileOptions = [
-    {
-      label: 'Favorites',
-      icon: 'heart',
-      lightBg: '#fee2e2',
-      darkBg: '#7f1d1d33',
-      lightColor: '#dc2626',
-      darkColor: '#fca5a5',
-      route: "/myFavourites",
-      display: true
-    },
-    {
-      label: 'Change Salon',
-      icon: 'store',
-      lightBg: '#ede9fe',
-      darkBg: '#5b21b633',
-      lightColor: '#7c3aed',
-      darkColor: '#c4b5fd',
-      route: "/connectSalon",
-      display: authenticatedUser?.salonId ? true : false
-    },
-    {
-      label: 'Help & Support',
-      icon: 'life-buoy',
-      lightBg: '#d1fae5',
-      darkBg: '#065f4633',
-      lightColor: '#059669',
-      darkColor: '#6ee7b7',
-      route: "/helpSupport",
-      display: true
-    },
-    {
-      label: 'About',
-      icon: 'info',
-      lightBg: '#e0f2fe',
-      darkBg: '#1e3a8a33',
-      lightColor: '#0284c7',
-      darkColor: '#93c5fd',
-      route: "/(about)",
-      display: true
-    },
-  ];
-
   const { user } = useUser()
 
 
@@ -124,22 +125,22 @@ const index = () => {
   const handleDeleteConfirmed = async () => {
     try {
       // Delete from your backend first
+
       await axios.post(`${BASE_URL}/customer/deleteCustomer`, {
         email: authenticatedUser?.email,
       });
 
-      if (!user) {
-        console.warn("No Clerk user found, skipping delete");
-        return;
+      if (user) {
+        // Delete user from Clerk
+        await user.delete();
+        await signOut();
       }
-
-      await user.delete();
-      await signOut();
 
       setSelectedBarber({});
       setSelectedBarberServices([]);
       setCustomerName("");
-      await AsyncStorage.multiRemove(["LoggedInUser", "isAuthenticated"]);
+      await AsyncStorage.removeItem("LoggedInUser")
+      await AsyncStorage.removeItem("isAuthenticated")
       setIsAuthenticated(false);
       setAuthenticatedUser(null);
     } catch (err) {
@@ -211,7 +212,7 @@ const index = () => {
           />
           <View>
             <CustomText style={styles.cardTitle}>{authenticatedUser?.name}</CustomText>
-            <CustomText style={[styles.cardSubtitle, { width: "100%"}]} numberOfLines={2}>{authenticatedUser?.email}</CustomText>
+            <CustomText style={[styles.cardSubtitle, { width: "100%" }]} numberOfLines={2}>{authenticatedUser?.email}</CustomText>
           </View>
           <TouchableOpacity style={styles.editButton} onPress={() => router.push("/editProfile")}>
             <Feather name="edit-2" size={moderateScale(16)} color="#fff" />
@@ -227,7 +228,8 @@ const index = () => {
               <View key={idx}>
                 <TouchableOpacity style={styles.optionRow} onPress={() => router.push(opt.route)}>
                   <View style={[styles.optionIconWrapper, { backgroundColor: opt.lightBg }]}>
-                    <Feather name={opt?.icon} size={moderateScale(24)} color={opt.lightColor} />
+                    {/* <Feather name={opt?.icon} size={moderateScale(24)} color={opt.lightColor} /> */}
+                    {opt?.icon}
                   </View>
                   <CustomText style={[styles.optionLabel]}>{opt.label}</CustomText>
                   <RightIcon size={moderateScale(16)} color={colors.text} style={{ marginLeft: 'auto' }} />

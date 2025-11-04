@@ -23,6 +23,7 @@ import { Toast } from 'toastify-react-native';
 const QueueList = () => {
 
     const { authenticatedUser } = useAuth()
+    const { homeDashboardData } = useGlobal()
 
     const [qlistData, setQlistData] = useState({
         data: null,
@@ -42,6 +43,9 @@ const QueueList = () => {
                     customerEmail: authenticatedUser?.email
                 }
             })
+            const dddd = data?.response.find(qlistItem => qlistItem.customerEmail === authenticatedUser?.email)
+
+            console.log(dddd)
 
             const customerBarberId = data?.response.find(qlistItem => qlistItem.customerEmail === authenticatedUser?.email)?.barberId || null;
 
@@ -252,6 +256,10 @@ const QueueList = () => {
                                     if (!getSalonFeature?.salonFeature?.isQueuing) {
                                         return Toast.error("Queueing feature is not available at this salon")
                                     }
+
+                                    if (!homeDashboardData?.dashboardData?.salonInfo?.mobileBookingAvailability) {
+                                        return Toast.error("Mobile queueing is off")
+                                    }
                                     router.push("/joinpopup")
                                 }}
                                 style={styles.queueButton} activeOpacity={0.85}>
@@ -365,6 +373,10 @@ const QueueList = () => {
 
                                             if (!getSalonFeature?.salonFeature?.isQueuing) {
                                                 return Toast.error("Queueing feature is not available at this salon")
+                                            }
+
+                                            if (!homeDashboardData?.dashboardData?.salonInfo?.mobileBookingAvailability) {
+                                                return Toast.error("Mobile queueing is off")
                                             }
 
                                             router.push("/joinpopup")

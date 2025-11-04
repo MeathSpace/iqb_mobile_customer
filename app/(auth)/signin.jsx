@@ -251,8 +251,6 @@ const signin = () => {
                 ],
             });
 
-            // console.log("Credential ", credential.identityToken)
-
             const decodedUser = jwtDecode(credential.identityToken);
 
             if (!decodedUser?.email) {

@@ -160,17 +160,22 @@ const QlistItem = ({ item, index, qlistLength, setQlistData, setShowHideQueBtn }
                                 }
                             })
 
-                            setQlistData((prev) => ({ ...prev, loading: false, data: queuelistData?.response, success: true, error: null, isJoinedQueue: queuelistData?.isJoinedQueue }))
+
+                            const customerBarberId = queuelistData?.response?.find(qlistItem => qlistItem.customerEmail === authenticatedUser?.email)?.barberId || null;
+
+                            const filteredQlistData = queuelistData?.response?.filter(qlistItem => {
+                                if (qlistItem.barberId === customerBarberId) {
+                                    return qlistItem;
+                                }
+                            });
+
+                            setQlistData((prev) => ({ ...prev, loading: false, data: filteredQlistData, success: true, error: null , isJoinedQueue: queuelistData?.isJoinedQueue }))
 
 
-                            // setShowHideQueBtn((prev) => ({ ...prev, loading: true }))
+                            // setQlistData((prev) => ({ ...prev, loading: false, data: queuelistData?.response, success: true, error: null, isJoinedQueue: queuelistData?.isJoinedQueue }))
 
-                            // const { data: showhideQueueBtnDta } = await axios.post(`${BASE_URL}/customer/showHideJoinQueueButton`, {
-                            //     customerEmail: authenticatedUser?.email
-                            // })
 
-                            // setShowHideQueBtn((prev) => ({ ...prev, loading: false, data: showhideQueueBtnDta?.response, success: true, error: null }))
-
+                            
 
                         } catch (error) {
                             Toast.error(error?.response?.data?.message)
