@@ -652,6 +652,8 @@ const editAppointmentCalender = () => {
                                 setScrolling(false)
                                 setActiveSection("")
                                 setAddIconPressCount(0)
+                                setAppointmentNote("")
+                                setSelectedEngageTimeSlot("")
                             }}
                             style={{
                                 flexDirection: "row",
@@ -1019,49 +1021,6 @@ const editAppointmentCalender = () => {
                                                     // color: disableDates?.includes(day?.fullDate) ? "#000" : '#14b8a6',
                                                 }}
                                             >{day.date}</CustomText>
-
-                                            {/* {
-                                                disableDates?.includes(day?.fullDate) ? (
-                                                    <CustomText
-                                                        style={{
-                                                            fontSize: scale(13),
-                                                            fontFamily: "AirbnbCereal_W_Bk",
-                                                            lineHeight: scale(16),
-                                                            color: "#000"
-                                                        }}
-                                                    >
-                                                        -
-                                                    </CustomText>
-                                                ) : (
-                                                    <View
-                                                        style={{
-                                                            flexDirection: "row",
-                                                            alignItems: "center",
-                                                            gap: scale(5),
-                                                            paddingVertical: scale(2),
-                                                        }}
-                                                    >
-                                                        <View
-                                                            style={{
-                                                                width: scale(8),
-                                                                height: scale(8),
-                                                                borderRadius: scale(4),
-                                                                backgroundColor: day.bgcolor,
-                                                            }}
-                                                        />
-                                                        <CustomText
-                                                            style={{
-                                                                fontSize: scale(13),
-                                                                fontFamily: "AirbnbCereal_W_Bk",
-                                                                lineHeight: scale(16),
-                                                            }}
-                                                        >
-                                                            {day.slots} Slots
-                                                        </CustomText>
-                                                    </View>
-                                                )
-                                            } */}
-
                                         </Pressable>
                                     ))}
                                 </ScrollView>
@@ -1251,45 +1210,6 @@ const editAppointmentCalender = () => {
                                             })
                                     }
 
-
-
-                                    {/* {
-                                        disableSalonDates?.includes(selectedCalenderDay?.fullDate) ? (
-                                            <CustomText>The salon is closed on this day.</CustomText>
-                                        ) : disableAppointmentDates?.includes(selectedCalenderDay?.fullDate) ? (
-                                            <CustomText>The selected stylist is unavailable on this day.</CustomText>
-                                        ) : (
-                                            !disableSalonDates?.includes(selectedCalenderDay?.fullDate) && !disableAppointmentDates?.includes(selectedCalenderDay?.fullDate) && disableDates?.includes(selectedCalenderDay?.fullDate) && (
-                                                <View
-                                                    style={{
-                                                        height: verticalScale(40),
-                                                        flexDirection: "row",
-                                                        alignItems: "center",
-                                                        gap: scale(10)
-                                                    }}
-                                                >
-                                                    <Checkbox
-                                                        value={isNotifyCheck}
-                                                        // onValueChange={setIsNotifyCheck}
-                                                        onValueChange={(val) => {
-                                                            setIsNotifyCheck(val);
-                                                            setUserToggled(true); // ✅ Mark as manual user action
-                                                        }}
-                                                        color={isNotifyCheck ? "#00B090" : undefined}
-                                                        style={{
-                                                            height: scale(16),
-                                                            width: scale(16),
-                                                            borderRadius: scale(3),
-                                                        }}
-                                                    />
-                                                    <CustomText style={{ fontSize: scale(14) }}>
-                                                        Notify me when a timeslot is available
-                                                    </CustomText>
-                                                </View>
-                                            )
-                                        )
-                                    } */}
-
                                 </View>
                             </>
                         )
@@ -1390,16 +1310,79 @@ const editAppointmentCalender = () => {
 
             </Animated.View>
         ) : (
-            <Pressable
-                style={[styles.boxCloseWrapper, {
-                    backgroundColor: colors.cardColor,
-                    borderWidth: scale(1),
-                    borderColor: colors.queueBorder
-                }]}
-                onPress={() => setActiveSection(key)}
-            >
-                <CustomText>{title}</CustomText>
-            </Pressable>
+            <>
+                {title === "Choose Services" ? (
+                    <Pressable
+                        style={[styles.boxCloseWrapper, {
+                            backgroundColor: colors.cardColor,
+                            borderWidth: scale(1),
+                            borderColor: colors.queueBorder,
+                            flexDirection: "row",
+                            justifyContent: "flex-start"
+                        }]}
+                        onPress={() => setActiveSection(key)}
+                    >
+
+                        {
+                            selectCustomerServices?.length > 0 ? (
+                                <CustomText
+                                    numberOfLines={1}
+                                    ellipsizeMode="tail"
+                                    style={{ flexShrink: 1 }}
+                                >{selectCustomerServices?.[0]?.serviceName} + {selectCustomerServices.length - 1} more</CustomText>
+                            ) : <CustomText>{title}</CustomText>
+                        }
+
+                    </Pressable>
+                ) : title === `Choose ${authenticatedUser?.salonType === "Barber Shop" ? "Barber" : "Stylist"}` ? (
+                    <Pressable
+                        style={[styles.boxCloseWrapper, {
+                            backgroundColor: colors.cardColor,
+                            borderWidth: scale(1),
+                            borderColor: colors.queueBorder
+                        }]}
+                        onPress={() => setActiveSection(key)}
+                    >
+                        {
+                            selectedCustomerBarber?.name ? (
+                                <CustomText>{selectedCustomerBarber?.name}</CustomText>
+                            ) : (
+                                <CustomText>{title}</CustomText>
+                            )
+                        }
+
+                    </Pressable>
+                ) : title === "Choose Date" ? (
+                    <Pressable
+                        style={[styles.boxCloseWrapper, {
+                            backgroundColor: colors.cardColor,
+                            borderWidth: scale(1),
+                            borderColor: colors.queueBorder
+                        }]}
+                        onPress={() => setActiveSection(key)}
+                    >
+                        {
+                            selectedEngageTimeSlot ? (
+                                <CustomText>{selectedEngageTimeSlot}</CustomText>
+                            ) : (
+                                <CustomText>{title}</CustomText>
+                            )
+                        }
+                    </Pressable>
+                ) : (
+                    <Pressable
+                        style={[styles.boxCloseWrapper, {
+                            backgroundColor: colors.cardColor,
+                            borderWidth: scale(1),
+                            borderColor: colors.queueBorder
+                        }]}
+                        onPress={() => setActiveSection(key)}
+                    >
+                        <CustomText>{title} {"(Optional)"}</CustomText>
+                    </Pressable>
+                )}
+
+            </>
         )
     }
 
@@ -1444,7 +1427,7 @@ const editAppointmentCalender = () => {
                     <View style={{ flex: 1, gap: verticalScale(15) }}>
                         {renderSection(
                             'services',
-                            'Choose Services ?',
+                            'Choose Services',
                             [
                                 { id: 1 },
                                 { id: 2 },
@@ -1460,7 +1443,7 @@ const editAppointmentCalender = () => {
                         )}
                         {renderSection(
                             'barber',
-                            `Choose ${authenticatedUser?.salonType === "Barber Shop" ? "Barber" : "Stylist"}?`,
+                            `Choose ${authenticatedUser?.salonType === "Barber Shop" ? "Barber" : "Stylist"}`,
                             [
                                 { id: 1 },
                                 { id: 2 },
@@ -1475,7 +1458,7 @@ const editAppointmentCalender = () => {
                         )}
                         {renderSection(
                             'calendar',
-                            'Choose Date ?',
+                            'Choose Date',
                             ''
                         )}
                         {renderSection(
@@ -1507,24 +1490,16 @@ const editAppointmentCalender = () => {
                     {selectCustomerServices.length > 0 ? (
                         <View
                             style={{
-                                backgroundColor: colors.cardColor,
-                                borderTopColor: colors.queueBorder,
-                                borderTopWidth: scale(1),
-                                // height:
-                                //     Platform.OS === "ios"
-                                //         ? insets.bottom + verticalScale(60)
-                                //         : verticalScale(80),
-                                padding: scale(10),
-                                // position: "absolute",
-                                // bottom: 0,
-                                // left: 0,
-                                // right: 0,
+                                // borderTopColor: colors.queueBorder,
+                                // borderTopWidth: scale(1),
+                                // padding: scale(10),
                                 flexDirection: "row",
                                 alignItems: "center",
                                 justifyContent: "space-between",
+                                paddingHorizontal: scale(5)
                             }}
                         >
-                            <View style={{ marginBottom: verticalScale(15) }}>
+                            <View style={{}}>
                                 <CustomText
                                     style={{ fontFamily: "AirbnbCereal_W_XBd", fontSize: scale(18) }}
                                 >
@@ -1541,14 +1516,6 @@ const editAppointmentCalender = () => {
                             </View>
 
                             <TouchableOpacity
-                                // onPress={() => {
-                                //     // router.push({
-                                //     //     pathname: "/singleJoinBarber",
-                                //     //     params: {
-                                //     //         data: JSON.stringify(selectedServices),
-                                //     //     },
-                                //     // });
-                                // }}
                                 onPress={continueHandler}
                                 style={styles.queueButton}
                                 activeOpacity={0.85}
@@ -1570,41 +1537,19 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         // backgroundColor: '#00B0901A',
-        paddingHorizontal: scale(15),
+        // paddingHorizontal: scale(15),
     },
     boxOpenWrapper: {
         // backgroundColor: '#fff',
         borderRadius: scale(20),
         height: verticalScale(300),
         padding: scale(25),
-
-        // iOS shadow
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 1,
-        },
-        shadowOpacity: 0.3,
-        shadowRadius: 3,
-        padding: scale(25),
-
-        elevation: 3,
     },
     boxCloseWrapper: {
-        height: verticalScale(60),
-        // backgroundColor: '#fff',
+        minHeight: verticalScale(60),
         borderRadius: scale(15),
-        paddingHorizontal: scale(25),
+        padding: scale(25),
         justifyContent: 'center',
-
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 1,
-        },
-        shadowOpacity: 0.3,
-        shadowRadius: 3,
-        elevation: 3,
     },
     footer: {
         flexDirection: 'row',
@@ -1694,7 +1639,6 @@ const styles = StyleSheet.create({
         backgroundColor: '#14b8a6', // bg-teal-500
         paddingVertical: verticalScale(12), // py-4
         borderRadius: scale(8), // rounded-xl
-        marginBottom: verticalScale(15), // mb-6
         alignItems: 'center',
         justifyContent: 'center',
     },
