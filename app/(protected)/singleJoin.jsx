@@ -198,270 +198,268 @@ const SingleJoin = () => {
             style={{
                 flex: 1,
                 backgroundColor: colors.background,
-                padding: scale(10),
             }}
         >
-            {/* Header */}
             <View
-                style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: scale(10),
-                    marginBottom: verticalScale(20),
-                }}
-            >
-                <Pressable onPress={() => router.replace("/queuelist")}>
-                    <ArrowLeftIcon color={colors.text} />
-                </Pressable>
-                <CustomText
-                    style={{
-                        flex: 1,
-                        fontFamily: "AirbnbCereal_W_XBd",
-                        fontSize: scale(20),
-                    }}
-                >
-                    Single Join (Services)
-                </CustomText>
-            </View>
-
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-                {/* Search Input */}
-                <View style={styles.inputContainer}>
-                    <TextInput
-                        placeholder="Search services by category"
-                        placeholderTextColor={colors.secondaryText}
-                        value={searchServiceQuery}
-                        onChangeText={handleChange}
-                        style={[
-                            styles.input,
-                            {
-                                borderWidth: scale(1),
-                                borderColor: colors.queueBorder,
-                                backgroundColor: colors.cardColor,
-                                color: colors.text,
-                            },
-                        ]}
-                    />
-                    <Pressable style={styles.searchButton}>
-                        <SearchIcon size={scale(20)} color="white" />
-                    </Pressable>
-                </View>
-            </TouchableWithoutFeedback>
-
-            {/* Categories */}
-            {servicesCategoryList?.loading ? (
-                <FlatList
-                    data={[0, 1, 2, 3, 4, 5, 6]}
-                    renderItem={({ item }) => (
-                        <Skeleton
-                            height={verticalScale(40)}
-                            width={scale(100)}
-                            borderRadius={scale(12)}
-                        />
-                    )}
-                    keyExtractor={(item) => item.toString()}
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    style={{
-                        height: verticalScale(40),
-                        flexGrow: 0,
-                        marginBottom: verticalScale(15),
-                    }}
-                    contentContainerStyle={{
-                        alignItems: "center",
-                        gap: scale(8),
-                    }}
-                />
-            ) : (
-                <FlatList
-                    data={servicesCategoryList?.data}
-                    renderItem={({ item }) => (
-                        <TouchableOpacity
-                            onPress={() => setSelectedCategory(item.serviceCategoryName)}
-                            style={[
-                                styles.categoryButton,
-                                {
-                                    backgroundColor:
-                                        selectedCategory === item?.serviceCategoryName
-                                            ? "#14b8a6"
-                                            : colorScheme === "dark"
-                                                ? "#3f3f46"
-                                                : "#e4e4e7",
-                                    flexDirection: "row",
-                                    gap: scale(5),
-                                },
-                            ]}
-                        >
-                            <Image
-                                style={{
-                                    width: scale(20),
-                                    height: scale(20),
-                                    borderRadius: scale(20),
-                                    borderWidth: scale(1),
-                                    borderColor: colors.queueBorder,
-                                }}
-                                source={{ uri: item?.serviceCategoryImage?.url }}
-                                contentFit="cover"
-                                transition={300}
-                            />
-                            <CustomText
-                                style={{
-                                    lineHeight: verticalScale(35),
-                                    color:
-                                        selectedCategory === item?.serviceCategoryName
-                                            ? "#fff"
-                                            : colorScheme === "dark"
-                                                ? "#fff"
-                                                : "#000",
-                                    textAlign: "center",
-                                }}
-                            >
-                                {item?.serviceCategoryName}
-                            </CustomText>
-                        </TouchableOpacity>
-                    )}
-                    keyExtractor={(item) => item._id}
-                    horizontal
-                    showsHorizontalScrollIndicator={false}
-                    style={{
-                        height: verticalScale(35),
-                        flexGrow: 0,
-                        marginBottom: verticalScale(15),
-                    }}
-                    contentContainerStyle={{
-                        alignItems: "center",
-                        gap: scale(8),
-                    }}
-                />
-            )}
-
-            {/* Scrollable List Area */}
-            <View style={{
+            style={{
+                padding: scale(10),
                 flex: 1,
-                marginBottom: selectedServices?.length ? (Platform.OS === "ios" ? insets.bottom + verticalScale(20) : verticalScale(80)) : 0
             }}
             >
-                {salonServicesByCategory?.loading ? (
+                {/* Header */}
+                <View
+                    style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: scale(10),
+                        marginBottom: verticalScale(20),
+                    }}
+                >
+                    <Pressable onPress={() => router.replace("/queuelist")}>
+                        <ArrowLeftIcon color={colors.text} />
+                    </Pressable>
+                    <CustomText
+                        style={{
+                            flex: 1,
+                            fontFamily: "AirbnbCereal_W_XBd",
+                            fontSize: scale(20),
+                        }}
+                    >
+                        Single Join (Services)
+                    </CustomText>
+                </View>
+
+                <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+                    {/* Search Input */}
+                    <View style={styles.inputContainer}>
+                        <TextInput
+                            placeholder="Search services by category"
+                            placeholderTextColor={colors.secondaryText}
+                            value={searchServiceQuery}
+                            onChangeText={handleChange}
+                            style={[
+                                styles.input,
+                                {
+                                    borderWidth: scale(1),
+                                    borderColor: colors.queueBorder,
+                                    backgroundColor: colors.cardColor,
+                                    color: colors.text,
+                                },
+                            ]}
+                        />
+                        <Pressable style={styles.searchButton}>
+                            <SearchIcon size={scale(20)} color="white" />
+                        </Pressable>
+                    </View>
+                </TouchableWithoutFeedback>
+
+                {/* Categories */}
+                {servicesCategoryList?.loading ? (
                     <FlatList
-                        data={[1, 2, 3, 4, 5, 6, 7, 8]}
-                        renderItem={() => (
-                            <Skeleton width={scale(160)} height={235} borderRadius={scale(8)} />
+                        data={[0, 1, 2, 3, 4, 5, 6]}
+                        renderItem={({ item }) => (
+                            <Skeleton
+                                height={verticalScale(40)}
+                                width={scale(100)}
+                                borderRadius={scale(12)}
+                            />
                         )}
                         keyExtractor={(item) => item.toString()}
-                        numColumns={2}
-                        columnWrapperStyle={{ columnGap: scale(10) }}
-                        ItemSeparatorComponent={() => <View style={{ height: scale(10) }} />}
-                        contentContainerStyle={{ paddingBottom: scale(20), paddingTop: scale(10) }}
-                        showsVerticalScrollIndicator={false}
-                    />
-                ) : salonServicesByCategory?.data?.length > 0 ? (
-                    <FlatList
-                        data={salonServicesByCategory?.filteredData}
-                        renderItem={({ item }) => {
-                            const isSelected = selectedServices.find(s => s.serviceId === item.serviceId);
-                            return (
-                                <Pressable
-                                    onPress={() =>
-                                        isSelected
-                                            ? removeServiceHandler(item)
-                                            : addServiceHandler(item)
-                                    }
-                                    style={[
-                                        styles.serviceCard,
-                                        {
-                                            backgroundColor: colors.cardColor,
-                                            borderColor: isSelected ? "#14b8a6" : colors.queueBorder,
-                                            borderWidth: isSelected ? scale(2) : scale(1),
-                                        },
-                                    ]}
-                                >
-                                    <View style={styles.serviceCardImageContainer}>
-                                        <Image
-                                            style={[
-                                                styles.serviceCardImage,
-                                                { borderWidth: scale(1), borderColor: colors.queueBorder },
-                                            ]}
-                                            source={{ uri: item?.serviceIcon?.url }}
-                                            contentFit="cover"
-                                            transition={300}
-                                        />
-                                        <Pressable
-                                            onPress={() =>
-                                                isSelected
-                                                    ? removeServiceHandler(item)
-                                                    : addServiceHandler(item)
-                                            }
-                                            style={[
-                                                styles.selectIcon,
-                                                {
-                                                    backgroundColor: isSelected
-                                                        ? "#14b8a6"
-                                                        : colorScheme === "dark"
-                                                            ? "#3f3f46"
-                                                            : "#e4e4e7",
-                                                },
-                                            ]}
-                                        >
-                                            {isSelected ? (
-                                                <CheckIcon color="#fff" size={scale(18)} />
-                                            ) : (
-                                                <AddIcon color={colors.text} />
-                                            )}
-                                        </Pressable>
-                                    </View>
-                                    <CustomText
-                                        style={{
-                                            fontFamily: "AirbnbCereal_W_Bd",
-                                            textAlign: "center",
-                                        }}
-                                    >
-                                        {item?.serviceName}
-                                    </CustomText>
-                                    <CustomSecondaryText>
-                                        ~{formatMinutesToHrMin(item?.serviceEWT)}
-                                    </CustomSecondaryText>
-                                    <CustomText
-                                        style={{
-                                            fontFamily: "AirbnbCereal_W_XBd",
-                                        }}
-                                    >
-                                        {authenticatedUser?.currency} {item?.servicePrice}
-                                    </CustomText>
-                                </Pressable>
-                            );
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        style={{
+                            height: verticalScale(40),
+                            flexGrow: 0,
+                            marginBottom: verticalScale(15),
                         }}
-                        keyExtractor={(item) => item?.serviceId}
-                        numColumns={2}
-                        columnWrapperStyle={{ columnGap: scale(10) }}
-                        ItemSeparatorComponent={() => <View style={{ height: scale(10) }} />}
-                        contentContainerStyle={{ paddingBottom: scale(20), paddingTop: scale(10) }}
-                        showsVerticalScrollIndicator={false}
+                        contentContainerStyle={{
+                            alignItems: "center",
+                            gap: scale(8),
+                        }}
                     />
-                ) : null}
+                ) : (
+                    <FlatList
+                        data={servicesCategoryList?.data}
+                        renderItem={({ item }) => (
+                            <TouchableOpacity
+                                onPress={() => setSelectedCategory(item.serviceCategoryName)}
+                                style={[
+                                    styles.categoryButton,
+                                    {
+                                        backgroundColor:
+                                            selectedCategory === item?.serviceCategoryName
+                                                ? "#14b8a6"
+                                                : colorScheme === "dark"
+                                                    ? "#3f3f46"
+                                                    : "#e4e4e7",
+                                        flexDirection: "row",
+                                        gap: scale(5),
+                                    },
+                                ]}
+                            >
+                                <Image
+                                    style={{
+                                        width: scale(20),
+                                        height: scale(20),
+                                        borderRadius: scale(20),
+                                        borderWidth: scale(1),
+                                        borderColor: colors.queueBorder,
+                                    }}
+                                    source={{ uri: item?.serviceCategoryImage?.url }}
+                                    contentFit="cover"
+                                    transition={300}
+                                />
+                                <CustomText
+                                    style={{
+                                        lineHeight: verticalScale(35),
+                                        color:
+                                            selectedCategory === item?.serviceCategoryName
+                                                ? "#fff"
+                                                : colorScheme === "dark"
+                                                    ? "#fff"
+                                                    : "#000",
+                                        textAlign: "center",
+                                    }}
+                                >
+                                    {item?.serviceCategoryName}
+                                </CustomText>
+                            </TouchableOpacity>
+                        )}
+                        keyExtractor={(item) => item._id}
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        style={{
+                            height: verticalScale(35),
+                            flexGrow: 0,
+                            marginBottom: verticalScale(15),
+                        }}
+                        contentContainerStyle={{
+                            alignItems: "center",
+                            gap: scale(8),
+                        }}
+                    />
+                )}
+
+                {/* Scrollable List Area */}
+                <View style={{
+                    flex: 1,
+                }}
+                >
+                    {salonServicesByCategory?.loading ? (
+                        <FlatList
+                            data={[1, 2, 3, 4, 5, 6, 7, 8]}
+                            renderItem={() => (
+                                <Skeleton width={scale(160)} height={235} borderRadius={scale(8)} />
+                            )}
+                            keyExtractor={(item) => item.toString()}
+                            numColumns={2}
+                            columnWrapperStyle={{ columnGap: scale(10) }}
+                            ItemSeparatorComponent={() => <View style={{ height: scale(10) }} />}
+                            contentContainerStyle={{ paddingBottom: scale(20), paddingTop: scale(10) }}
+                            showsVerticalScrollIndicator={false}
+                        />
+                    ) : salonServicesByCategory?.data?.length > 0 ? (
+                        <FlatList
+                            data={salonServicesByCategory?.filteredData}
+                            renderItem={({ item }) => {
+                                const isSelected = selectedServices.find(s => s.serviceId === item.serviceId);
+                                return (
+                                    <Pressable
+                                        onPress={() =>
+                                            isSelected
+                                                ? removeServiceHandler(item)
+                                                : addServiceHandler(item)
+                                        }
+                                        style={[
+                                            styles.serviceCard,
+                                            {
+                                                backgroundColor: colors.cardColor,
+                                                borderColor: isSelected ? "#14b8a6" : colors.queueBorder,
+                                                borderWidth: isSelected ? scale(2) : scale(1),
+                                            },
+                                        ]}
+                                    >
+                                        <View style={styles.serviceCardImageContainer}>
+                                            <Image
+                                                style={[
+                                                    styles.serviceCardImage,
+                                                    { borderWidth: scale(1), borderColor: colors.queueBorder },
+                                                ]}
+                                                source={{ uri: item?.serviceIcon?.url }}
+                                                contentFit="cover"
+                                                transition={300}
+                                            />
+                                            <Pressable
+                                                onPress={() =>
+                                                    isSelected
+                                                        ? removeServiceHandler(item)
+                                                        : addServiceHandler(item)
+                                                }
+                                                style={[
+                                                    styles.selectIcon,
+                                                    {
+                                                        backgroundColor: isSelected
+                                                            ? "#14b8a6"
+                                                            : colorScheme === "dark"
+                                                                ? "#3f3f46"
+                                                                : "#e4e4e7",
+                                                    },
+                                                ]}
+                                            >
+                                                {isSelected ? (
+                                                    <CheckIcon color="#fff" size={scale(18)} />
+                                                ) : (
+                                                    <AddIcon color={colors.text} />
+                                                )}
+                                            </Pressable>
+                                        </View>
+                                        <CustomText
+                                            style={{
+                                                fontFamily: "AirbnbCereal_W_Bd",
+                                                textAlign: "center",
+                                            }}
+                                        >
+                                            {item?.serviceName}
+                                        </CustomText>
+                                        <CustomSecondaryText>
+                                            ~{formatMinutesToHrMin(item?.serviceEWT)}
+                                        </CustomSecondaryText>
+                                        <CustomText
+                                            style={{
+                                                fontFamily: "AirbnbCereal_W_XBd",
+                                            }}
+                                        >
+                                            {authenticatedUser?.currency} {item?.servicePrice}
+                                        </CustomText>
+                                    </Pressable>
+                                );
+                            }}
+                            keyExtractor={(item) => item?.serviceId}
+                            numColumns={2}
+                            columnWrapperStyle={{ columnGap: scale(10) }}
+                            ItemSeparatorComponent={() => <View style={{ height: scale(10) }} />}
+                            contentContainerStyle={{ paddingBottom: scale(20), paddingTop: scale(10) }}
+                            showsVerticalScrollIndicator={false}
+                        />
+                    ) : null}
+                </View>
+
             </View>
 
             {/* Footer */}
             {selectedServices?.length ? (
                 <View
                     style={{
-                        backgroundColor: colors.cardColor,
+                        // backgroundColor: colors.cardColor,
                         borderTopColor: colors.queueBorder,
                         borderTopWidth: scale(1),
-                        height:
-                            Platform.OS === "ios"
-                                ? insets.bottom + verticalScale(60)
-                                : verticalScale(80),
-                        padding: scale(10),
-                        position: "absolute",
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
                         flexDirection: "row",
                         alignItems: "center",
                         justifyContent: "space-between",
+                        padding: scale(10)
                     }}
                 >
-                    <View style={{ marginBottom: verticalScale(15) }}>
+                    <View style={{ }}>
                         <CustomText
                             style={{ fontFamily: "AirbnbCereal_W_XBd", fontSize: scale(18) }}
                         >
@@ -566,7 +564,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#14b8a6', // bg-teal-500
         paddingVertical: verticalScale(12), // py-4
         borderRadius: scale(8), // rounded-xl
-        marginBottom: verticalScale(15), // mb-6
+        // marginBottom: verticalScale(15), // mb-6
         alignItems: 'center',
         justifyContent: 'center',
     },

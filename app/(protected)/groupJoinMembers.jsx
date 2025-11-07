@@ -136,198 +136,191 @@ const GroupJoinMembers = () => {
             style={{
                 flex: 1,
                 backgroundColor: colors.background,
-                padding: scale(10)
             }}
         >
-            {/* Header */}
             <View
                 style={{
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: scale(10),
-                    marginBottom: verticalScale(20),
+                    flex: 1,
+                    padding: scale(10)
                 }}
             >
-                <Pressable onPress={() => {
-                    Alert.alert(
-                        'Discard group join data?',
-                        'All selected members will be cleared, and the group join information will be reset.',
-                        [
-                            {
-                                text: 'Cancel',
-                                style: 'destructive',
-                                // style: 'cancel',
-                                onPress: () => {
-                                    // Do nothing: block remains
+                {/* Header */}
+                <View
+                    style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: scale(10),
+                        marginBottom: verticalScale(20),
+                    }}
+                >
+                    <Pressable onPress={() => {
+                        Alert.alert(
+                            'Discard group join data?',
+                            'All selected members will be cleared, and the group join information will be reset.',
+                            [
+                                {
+                                    text: 'Cancel',
+                                    style: 'destructive',
+                                    // style: 'cancel',
+                                    onPress: () => {
+                                        // Do nothing: block remains
+                                    },
                                 },
-                            },
-                            {
-                                text: 'OK',
-                                // style: 'destructive',
-                                onPress: () => {
-                                    // editNavigationAllowRef.current = true; // temporarily allow
-                                    // router.push('/groupJoin'); // now push
-                                    setMemberName(authenticatedUser?.name)
-                                    setSelectedMemberBarber(null)
-                                    setSelectedMemberServices([])
-                                    setGroupJoinMembers([])
-                                    router.push("/queuelist")
+                                {
+                                    text: 'OK',
+                                    // style: 'destructive',
+                                    onPress: () => {
+                                        setMemberName(authenticatedUser?.name)
+                                        setSelectedMemberBarber(null)
+                                        setSelectedMemberServices([])
+                                        setGroupJoinMembers([])
+                                        router.push("/queuelist")
+                                    },
                                 },
-                            },
-                        ],
-                        { cancelable: true }
-                    );
-                }}>
-                    <ArrowLeftIcon color={colors.text} />
-                </Pressable>
-                <CustomText style={{ fontFamily: "AirbnbCereal_W_XBd", fontSize: scale(22) }}>Group Members</CustomText>
-            </View>
+                            ],
+                            { cancelable: true }
+                        );
+                    }}>
+                        <ArrowLeftIcon color={colors.text} />
+                    </Pressable>
+                    <CustomText style={{ fontFamily: "AirbnbCereal_W_XBd", fontSize: scale(22) }}>Group Members</CustomText>
+                </View>
 
+                <FlatList
+                    data={groupJoinMembers}
+                    contentContainerStyle={{
+                        gap: verticalScale(10),
+                    }}
+                    renderItem={({ item }) => {
+                        return (
+                            <View style={[styles.groupCard, {
+                                backgroundColor: colors.cardColor,
+                                borderColor: colors.queueBorder,
+                            }]}>
+                                <View style={{
+                                    backgroundColor: 'rgba(34, 197, 94, 0.1)',
+                                    width: scale(50),
+                                    height: scale(50),
+                                    borderRadius: scale(60),
+                                    justifyContent: "center",
+                                    alignItems: "center"
+                                }}>
+                                    <ProfileIcon color='#22c55e' />
+                                </View>
 
+                                <View style={{
+                                    gap: verticalScale(10),
+                                    width: "78%"
+                                }}>
+                                    <View>
+                                        <CustomText style={{
+                                            fontFamily: "AirbnbCereal_W_XBd",
+                                            fontSize: scale(18),
+                                            width: "70%"
+                                        }}>{item?.memberName === authenticatedUser?.name ? "You" : item?.memberName} <CustomText style={{
+                                            color: '#2dd4bf'
+                                        }}>{item?.memberName === authenticatedUser?.name ? "(Host)" : ""}</CustomText>
+                                        </CustomText>
 
-            <FlatList
-                data={groupJoinMembers}
-                contentContainerStyle={{
-                    gap: verticalScale(10),
-                    paddingBottom: Platform.OS === "ios" ? verticalScale(60) : verticalScale(100)
-                }}
-                renderItem={({ item }) => {
-                    return (
-                        <View style={[styles.groupCard, {
-                            backgroundColor: colors.cardColor,
-                            borderColor: colors.queueBorder,
-                        }]}>
-                            <View style={{
-                                backgroundColor: 'rgba(34, 197, 94, 0.1)',
-                                width: scale(50),
-                                height: scale(50),
-                                borderRadius: scale(60),
-                                justifyContent: "center",
-                                alignItems: "center"
-                            }}>
-                                <ProfileIcon color='#22c55e' />
-                            </View>
+                                        <View style={{
+                                            flexDirection: "row",
+                                            alignItems: "center",
+                                            gap: scale(5)
+                                        }}>
+                                            <View style={{
+                                                width: scale(7),
+                                                height: scale(7),
+                                                borderRadius: scale(10),
+                                                backgroundColor: '#2dd4bf'
+                                            }} />
+                                            <CustomText style={{
+                                                fontSize: scale(12),
+                                                fontFamily: "AirbnbCereal_W_Bd",
+                                                color: '#2dd4bf'
+                                            }}>Ready</CustomText>
+                                        </View>
+                                    </View>
 
-                            <View style={{
-                                gap: verticalScale(10),
-                                width: "78%"
-                            }}>
-                                <View>
-                                    <CustomText style={{
-                                        fontFamily: "AirbnbCereal_W_XBd",
-                                        fontSize: scale(18),
-                                        width: "70%"
-                                    }}>{item?.memberName === authenticatedUser?.name ? "You" : item?.memberName} <CustomText style={{
-                                        color: '#2dd4bf'
-                                    }}>{item?.memberName === authenticatedUser?.name ? "(Host)" : ""}</CustomText>
-                                    </CustomText>
+                                    <View
+                                        style={{
+                                            height: verticalScale(1),
+                                            backgroundColor: colors.queueBorder,
+                                            flex: 1
+                                        }}
+                                    />
 
                                     <View style={{
-                                        flexDirection: "row",
-                                        alignItems: "center",
-                                        gap: scale(5)
+                                        gap: verticalScale(5),
                                     }}>
-                                        <View style={{
-                                            width: scale(7),
-                                            height: scale(7),
-                                            borderRadius: scale(10),
-                                            backgroundColor: '#2dd4bf'
-                                        }} />
+                                        <CustomSecondaryText style={{ flexWrap: 'wrap' }}>
+                                            Services: {item.selectedServices?.map(ser => ser?.serviceName).join(" | ")}
+                                        </CustomSecondaryText>
+
+                                        <CustomSecondaryText>Stylist: {item?.selectedMemberBarber?.name}</CustomSecondaryText>
                                         <CustomText style={{
-                                            fontSize: scale(12),
                                             fontFamily: "AirbnbCereal_W_Bd",
-                                            color: '#2dd4bf'
-                                        }}>Ready</CustomText>
+                                        }}>Subtotal: {authenticatedUser?.currency} {item?.selectedServices?.reduce((acc, service) => acc + service.servicePrice, 0)} ({formatMinutesToHrMin(item?.selectedServices?.reduce((acc, service) => acc + service.serviceEWT, 0))})</CustomText>
                                     </View>
                                 </View>
 
-                                <View
-                                    style={{
-                                        height: verticalScale(1),
-                                        backgroundColor: colors.queueBorder,
-                                        flex: 1
-                                    }}
-                                />
+                                <TouchableOpacity
+                                    onPress={() => editMember(item)}
+                                    style={[styles.editButton, {
+                                        backgroundColor: "rgba(13, 148, 136, 0.1)",
+                                        right: !(item?.memberName === authenticatedUser?.name) ? scale(50) : scale(12),
+                                    }]}>
+                                    <Feather name="edit-2" size={moderateScale(16)} color='#14b8a6' />
+                                </TouchableOpacity>
 
-                                <View style={{
-                                    gap: verticalScale(5),
-                                }}>
-                                    <CustomSecondaryText style={{ flexWrap: 'wrap' }}>
-                                        Services: {item.selectedServices?.map(ser => ser?.serviceName).join(" | ")}
-                                    </CustomSecondaryText>
+                                {
+                                    !(item?.memberName === authenticatedUser?.name) ? (
+                                        <TouchableOpacity
+                                            onPress={() => removeGroupMember(item)}
+                                            style={[styles.deleteButton, {
+                                                backgroundColor: 'rgba(239, 68, 68, 0.1)'
+                                            }]}>
+                                            <AntDesign name="delete" size={moderateScale(16)} color='#ef4444' />
+                                        </TouchableOpacity>
+                                    ) : (null)
+                                }
 
-                                    <CustomSecondaryText>Stylist: {item?.selectedMemberBarber?.name}</CustomSecondaryText>
-                                    <CustomText style={{
-                                        fontFamily: "AirbnbCereal_W_Bd",
-                                    }}>Subtotal: {authenticatedUser?.currency} {item?.selectedServices?.reduce((acc, service) => acc + service.servicePrice, 0)} ({formatMinutesToHrMin(item?.selectedServices?.reduce((acc, service) => acc + service.serviceEWT, 0))})</CustomText>
-                                </View>
                             </View>
-
-                            <TouchableOpacity
-                                onPress={() => editMember(item)}
-                                style={[styles.editButton, {
-                                    backgroundColor: "rgba(13, 148, 136, 0.1)",
-                                    right: !(item?.memberName === authenticatedUser?.name) ? scale(50) : scale(12),
-                                }]}>
-                                <Feather name="edit-2" size={moderateScale(16)} color='#14b8a6' />
-                            </TouchableOpacity>
-
-                            {
-                                !(item?.memberName === authenticatedUser?.name) ? (
-                                    <TouchableOpacity
-                                        onPress={() => removeGroupMember(item)}
-                                        style={[styles.deleteButton, {
-                                            backgroundColor: 'rgba(239, 68, 68, 0.1)'
-                                        }]}>
-                                        <AntDesign name="delete" size={moderateScale(16)} color='#ef4444' />
-                                    </TouchableOpacity>
-                                ) : (null)
-                            }
-
-                        </View>
-                    )
-                }}
-                keyExtractor={(item, index) => item.id}
-                showsVerticalScrollIndicator={false}
-                ListFooterComponent={
-                    groupJoinMembers?.length === 5 ? (
-                        null
-                    ) : (<TouchableOpacity
-                        onPress={() => {
-                            setMemberName("")
-                            router.push("/groupAddMemberModal")
-                        }}
-                        style={[styles.addMemberButton, {
-                            borderColor: colors.text
-                        }]}>
-                        <AddIcon color={colors.text} />
-                        <CustomText>Add Member</CustomText>
-                    </TouchableOpacity>)
-                }
-            />
+                        )
+                    }}
+                    keyExtractor={(item, index) => item.id}
+                    showsVerticalScrollIndicator={false}
+                    ListFooterComponent={
+                        groupJoinMembers?.length === 5 ? (
+                            null
+                        ) : (<TouchableOpacity
+                            onPress={() => {
+                                setMemberName("")
+                                router.push("/groupAddMemberModal")
+                            }}
+                            style={[styles.addMemberButton, {
+                                borderColor: colors.text
+                            }]}>
+                            <AddIcon color={colors.text} />
+                            <CustomText>Add Member</CustomText>
+                        </TouchableOpacity>)
+                    }
+                />
+            </View>
 
             {
                 groupJoinMembers?.length > 0 ? (
                     <View
                         style={{
-                            backgroundColor: colors.cardColor,
+                            // backgroundColor: colors.cardColor,
                             borderTopColor: colors.queueBorder,
                             borderTopWidth: scale(1),
-                            height:
-                                Platform.OS === "ios"
-                                    ? insets.bottom + verticalScale(60)
-                                    : verticalScale(80),
-                            padding: scale(10),
-                            position: "absolute",
-                            bottom: 0,
-                            left: 0,
-                            right: 0,
                             flexDirection: "row",
                             alignItems: "center",
                             justifyContent: "space-between",
+                            padding: scale(10)
                         }}
                     >
-                        <View style={{ marginBottom: verticalScale(15) }}>
+                        <View style={{ }}>
                             <CustomText
                                 style={{ fontFamily: "AirbnbCereal_W_XBd", fontSize: scale(18) }}
                             >
@@ -422,7 +415,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#14b8a6', // bg-teal-500
         paddingVertical: verticalScale(12), // py-4
         borderRadius: scale(8), // rounded-xl
-        marginBottom: verticalScale(15), // mb-6
+        // marginBottom: verticalScale(15), // mb-6
         alignItems: 'center',
         justifyContent: 'center',
     },

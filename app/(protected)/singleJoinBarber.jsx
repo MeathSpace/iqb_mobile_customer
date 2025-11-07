@@ -82,126 +82,127 @@ const SingleJoinBarber = () => {
             style={{
                 flex: 1,
                 backgroundColor: colors.background,
-                padding: scale(10)
             }}
         >
-            <View style={{
-                flexDirection: "row",
-                alignItems: "center",
-                gap: scale(10),
-                marginBottom: verticalScale(20), // Added some space below header
-            }}>
-                <Pressable onPress={() => router.back()}>
-                    <ArrowLeftIcon color={colors.text} />
-                </Pressable>
-                <CustomText style={{
+            <View
+                style={{
+                    padding: scale(10),
                     flex: 1,
-                    fontFamily: "AirbnbCereal_W_XBd",
-                    fontSize: scale(20),
-                }}>Single Join ({authenticatedUser?.salonType === "Barber Shop" ? "Barbers" : "Stylists"} )</CustomText>
-            </View>
+                }}
+            >
+                <View style={{
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: scale(10),
+                    marginBottom: verticalScale(20), // Added some space below header
+                }}>
+                    <Pressable onPress={() => router.back()}>
+                        <ArrowLeftIcon color={colors.text} />
+                    </Pressable>
+                    <CustomText style={{
+                        flex: 1,
+                        fontFamily: "AirbnbCereal_W_XBd",
+                        fontSize: scale(20),
+                    }}>Single Join ({authenticatedUser?.salonType === "Barber Shop" ? "Barbers" : "Stylists"} )</CustomText>
+                </View>
 
-            {
-                barberList?.loading ? (
-                    <FlatList
-                        key={2}
-                        data={[1, 2, 3, 4, 5, 6, 7, 8]}
-                        columnWrapperStyle={{
-                            columnGap: scale(10),
-                        }}
-                        ItemSeparatorComponent={() => <View style={{ height: scale(10) }} />}
-                        renderItem={({ item }) => {
-                            return (
-                                <Skeleton width={scale(160)} height={scale(170)} borderRadius={scale(8)} />
-                            );
-                        }}
-                        keyExtractor={item => item}
-                        showsVerticalScrollIndicator={false}
-                        contentContainerStyle={{
-                            paddingBottom: verticalScale(60)
-                        }}
-                        numColumns={2}
-                    />
-                ) : barberList?.data?.length > 0 ? (
-                    <FlatList
-                        key={2}
-                        data={barberList?.data}
-                        columnWrapperStyle={{
-                            columnGap: scale(10),
-                        }}
-                        ItemSeparatorComponent={() => <View style={{ height: scale(10) }} />}
-                        renderItem={({ item }) => {
-                            return (
-                                <Pressable
-                                    onPress={() => setSelectedBarber(item)}
-                                    style={[styles.barberCard, {
-                                        backgroundColor: colors.cardColor,
-                                        borderColor: selectBarber?.barberId === item?.barberId ? '#14b8a6' : colors.queueBorder,
-                                        borderWidth: selectBarber?.barberId === item?.barberId ? scale(2) : scale(1),
-                                    }]}
-                                >
-                                    <Image
-                                        style={[styles.barberCardImage, {
-                                            borderWidth: scale(1),
-                                            borderColor: colors.queueBorder
+                {
+                    barberList?.loading ? (
+                        <FlatList
+                            key={2}
+                            data={[1, 2, 3, 4, 5, 6, 7, 8]}
+                            columnWrapperStyle={{
+                                columnGap: scale(10),
+                            }}
+                            ItemSeparatorComponent={() => <View style={{ height: scale(10) }} />}
+                            renderItem={({ item }) => {
+                                return (
+                                    <Skeleton width={scale(160)} height={scale(170)} borderRadius={scale(8)} />
+                                );
+                            }}
+                            keyExtractor={item => item}
+                            showsVerticalScrollIndicator={false}
+                            contentContainerStyle={{
+                                paddingBottom: verticalScale(60)
+                            }}
+                            numColumns={2}
+                        />
+                    ) : barberList?.data?.length > 0 ? (
+                        <FlatList
+                            key={2}
+                            data={barberList?.data}
+                            columnWrapperStyle={{
+                                columnGap: scale(10),
+                            }}
+                            ItemSeparatorComponent={() => <View style={{ height: scale(10) }} />}
+                            renderItem={({ item }) => {
+                                return (
+                                    <Pressable
+                                        onPress={() => setSelectedBarber(item)}
+                                        style={[styles.barberCard, {
+                                            backgroundColor: colors.cardColor,
+                                            borderColor: selectBarber?.barberId === item?.barberId ? '#14b8a6' : colors.queueBorder,
+                                            borderWidth: selectBarber?.barberId === item?.barberId ? scale(2) : scale(1),
                                         }]}
-                                        source={{ uri: item?.profile?.[0]?.url }}
-                                        contentFit="cover"
-                                        transition={300}
-                                    />
-                                    <CustomText style={{
-                                        fontFamily: "AirbnbCereal_W_XBd"
-                                    }}>{item?.name}</CustomText>
-                                    <CustomSecondaryText>~{formatMinutesToHrMin(item?.barberEWT)}</CustomSecondaryText>
-                                </Pressable>
-                            );
-                        }}
-                        keyExtractor={item => item?.barberId}
-                        showsVerticalScrollIndicator={false}
-                        contentContainerStyle={{
-                            paddingBottom: verticalScale(60)
-                        }}
-                        numColumns={2}
-                    />
-                ) : (
-                    <View style={[styles.upcomingCard, { backgroundColor: colors.cardColor, borderColor: colors.cardBorder }]}>
-                        <View style={[styles.iconContainer, { backgroundColor: "rgba(13, 148, 136, 0.1)" }]}>
-                            <ProfileIcon size={scale(32)} color={"#14b8a6"} />
+                                    >
+                                        <Image
+                                            style={[styles.barberCardImage, {
+                                                borderWidth: scale(1),
+                                                borderColor: colors.queueBorder
+                                            }]}
+                                            source={{ uri: item?.profile?.[0]?.url }}
+                                            contentFit="cover"
+                                            transition={300}
+                                        />
+                                        <CustomText style={{
+                                            fontFamily: "AirbnbCereal_W_XBd"
+                                        }}>{item?.name}</CustomText>
+                                        <CustomSecondaryText>~{formatMinutesToHrMin(item?.barberEWT)}</CustomSecondaryText>
+                                    </Pressable>
+                                );
+                            }}
+                            keyExtractor={item => item?.barberId}
+                            showsVerticalScrollIndicator={false}
+                            contentContainerStyle={{
+                                paddingBottom: verticalScale(60)
+                            }}
+                            numColumns={2}
+                        />
+                    ) : (
+                        <View style={[styles.upcomingCard, { backgroundColor: colors.cardColor, borderColor: colors.cardBorder }]}>
+                            <View style={[styles.iconContainer, { backgroundColor: "rgba(13, 148, 136, 0.1)" }]}>
+                                <ProfileIcon size={scale(32)} color={"#14b8a6"} />
+                            </View>
+                            <CustomText style={styles.cardTitle}>No {authenticatedUser?.salonType === "Barber Shop" ? "Barbers" : "Stylists"} </CustomText>
+                            <CustomText style={[styles.cardSubtitle, { color: colors.secondaryText }]}>
+                                Unfortunately, there are no available {authenticatedUser?.salonType === "Barber Shop" ? "barbers" : "stylists"}  for the selected services at the moment.
+                            </CustomText>
+                            <TouchableOpacity
+                                onPress={() => router.back()}
+                                style={styles.bookButton}
+                                activeOpacity={0.85}
+                            >
+                                <CustomText style={styles.bookButtonText}>Choose Services Again</CustomText>
+                            </TouchableOpacity>
                         </View>
-                        <CustomText style={styles.cardTitle}>No {authenticatedUser?.salonType === "Barber Shop" ? "Barbers" : "Stylists"} </CustomText>
-                        <CustomText style={[styles.cardSubtitle, { color: colors.secondaryText }]}>
-                            Unfortunately, there are no available {authenticatedUser?.salonType === "Barber Shop" ? "barbers" : "stylists"}  for the selected services at the moment.
-                        </CustomText>
-                        <TouchableOpacity
-                            onPress={() => router.back()}
-                            style={styles.bookButton}
-                            activeOpacity={0.85}
-                        >
-                            <CustomText style={styles.bookButtonText}>Choose Services Again</CustomText>
-                        </TouchableOpacity>
-                    </View>
-                )
-            }
+                    )
+                }
+            </View>
 
 
             {parsedSelectedServices?.length ? (
                 <View
                     style={{
-                        backgroundColor: colors.cardColor,
+                        // backgroundColor: colors.cardColor,
                         borderTopColor: colors.queueBorder,
                         borderTopWidth: scale(1),
-                        height: Platform.OS === "ios" ? insets.bottom + verticalScale(60) : verticalScale(80),
-                        padding: scale(10),
-                        position: "absolute",
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
                         flexDirection: "row",
                         alignItems: "center",
                         justifyContent: 'space-between',
+                        padding: scale(10)
                     }}
                 >
-                    <View style={{ marginBottom: verticalScale(15) }}>
+                    <View style={{ }}>
                         <CustomText style={{ fontFamily: "AirbnbCereal_W_XBd", fontSize: scale(18) }}>
                             {authenticatedUser?.currency} {totalPrice.toFixed(2)}
                         </CustomText>
@@ -314,7 +315,7 @@ const styles = StyleSheet.create({
         backgroundColor: '#14b8a6', // bg-teal-500
         paddingVertical: verticalScale(12), // py-4
         borderRadius: scale(8), // rounded-xl
-        marginBottom: verticalScale(15), // mb-6
+        // marginBottom: verticalScale(15), // mb-6
         alignItems: 'center',
         justifyContent: 'center',
     },

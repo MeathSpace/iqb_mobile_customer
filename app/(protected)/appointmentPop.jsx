@@ -75,9 +75,22 @@ const appointmentPop = () => {
             )
 
         } catch (error) {
-            setDeleteAppointmentLoader(false)
-            Toast.error(error?.response?.data?.message)
+            // Toast.error(error?.response?.data?.message)
+            Alert.alert(
+                "Warning !",
+                `${error?.response?.data?.message}`,
+                [
+                    {
+                        text: "OK",
+                        onPress: () => {
+                        }
+                    }
+                ],
+                { cancelable: false }
+            )
             console.log("Error deleting appointment ", error)
+        } finally {
+            setDeleteAppointmentLoader(false)
         }
     }
 
