@@ -202,7 +202,7 @@ const GroupJoin = () => {
             style={{
                 flex: 1,
                 backgroundColor: colors.background,
-                padding: scale(10),
+                // padding: scale(10),
             }}
         >
             <View

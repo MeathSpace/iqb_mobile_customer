@@ -182,7 +182,7 @@ const editAppointmentCalenderModal = () => {
 
                         {
                             selectedBookAppointmentNoteParse && (
-                                <View style={{ flexDirection: "row", alignItems: "center", gap: scale(6) }}>
+                                <View style={{ gap: scale(6) }}>
                                     <CustomText style={{ fontFamily: "AirbnbCereal_W_XBd" }}>
                                         Note
                                     </CustomText>
