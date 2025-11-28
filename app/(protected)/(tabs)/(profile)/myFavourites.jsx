@@ -310,15 +310,15 @@ const MyFavourites = () => {
 
                             <CustomText style={{
                                 fontFamily: "AirbnbCereal_W_XBd",
-                                fontSize: scale(20),
+                                fontSize: scale(18),
                                 textAlign: "center",
                             }}>No Favourite</CustomText>
 
                             <CustomText style={{
-                                fontFamily: "AirbnbCereal_W_Bd",
-                                fontSize: scale(16),
+                                // fontFamily: "AirbnbCereal_W_Bd",
+                                // fontSize: scale(16),
                                 textAlign: "center",
-                                color: colors.secondaryText,
+                                // color: colors.secondaryText,
                             }}>
                                 You don't have any favourite salon
                             </CustomText>
@@ -352,7 +352,7 @@ const styles = StyleSheet.create({
         borderRadius: scale(12),
         // flex: 0.90,
         padding: scale(30),
-        gap: verticalScale(20)
+        gap: verticalScale(15)
     },
 
     iconContainer: {

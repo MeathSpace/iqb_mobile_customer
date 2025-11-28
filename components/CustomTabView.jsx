@@ -37,7 +37,7 @@ const CustomTabView = ({ style, children, scrollable = false, ...props }) => {
                         <SalonIcon color={"#14b8a6"} size={scale(32)} />
                     </View>
                     <CustomText style={styles.cardTitle}>Browse Salons</CustomText>
-                    <CustomText style={[styles.cardSubtitle, { color: colors.secondaryText }]}>
+                    <CustomText style={[styles.cardSubtitle, {  }]}>
                         You're currently not connected to any salon
                     </CustomText>
                     <TouchableOpacity
@@ -79,7 +79,7 @@ const styles = StyleSheet.create({
         // alignItems: 'center',
         // borderColor: '#e5e7eb',
         borderWidth: scale(1),
-        gap: verticalScale(20),
+        gap: verticalScale(15),
         marginBottom: verticalScale(60)
         // marginTop: verticalScale(40)
     },
@@ -94,13 +94,11 @@ const styles = StyleSheet.create({
     },
     cardTitle: {
         fontFamily: "AirbnbCereal_W_XBd",
-        fontSize: scale(20),
+        fontSize: scale(18),
         textAlign: "center",
         // marginBottom: verticalScale(4),
     },
     cardSubtitle: {
-        fontFamily: "AirbnbCereal_W_Bd",
-        fontSize: scale(16),
         textAlign: "center",
         // marginBottom: verticalScale(20)
     },

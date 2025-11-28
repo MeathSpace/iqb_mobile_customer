@@ -263,10 +263,10 @@ const appointmentCalenderModal = () => {
                     fontSize: moderateScale(14),
                   }}
                 >
-                  Please note:{" "}
+                  Reminder:{" "}
                 </CustomText>
-                Edits or Cancellations Made Less Than 24 hours Before Your
-                Appointment Will Be Subject To A 50% Fee.
+                edits or cancellations made less than 24 hours before your
+            appointment will be subject to a 50% fee.
               </CustomText>
               <View
                 style={{
@@ -278,7 +278,7 @@ const appointmentCalenderModal = () => {
                   fontSize: moderateScale(14),
                 }}
               >
-                Kindly Reach 5 Minutes Early For A Seamless Service.
+                Kindly reach 5 minutes early for a seamless service.
               </CustomText>
             </View>
           </View>

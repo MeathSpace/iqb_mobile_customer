@@ -662,16 +662,6 @@ const Map = () => {
                     </Modal>
 
 
-                    {/* <Marker
-                                        coordinate={{
-                                            latitude: 28.6139,
-                                            longitude: 77.2090,
-                                        }}
-                                        title="Dummy Location"
-                                        description="This is a sample marker"
-                                    /> */}
-
-
                     <FlatList
                         style={{
                             position: "absolute",
@@ -1037,18 +1027,18 @@ const Map = () => {
                                                                         borderColor: colors.queueBorder,
                                                                         borderRadius: scale(12),
                                                                         padding: scale(10),
-                                                                        gap: verticalScale(5)
+                                                                        // gap: verticalScale(5)
                                                                     }}
                                                                 >
                                                                     <CustomText
                                                                         style={{
-                                                                            fontFamily: "AirbnbCereal_W_Bd",
+                                                                            fontFamily: "AirbnbCereal_W_XBd",
                                                                         }}
                                                                     >Description</CustomText>
 
                                                                     <CustomSecondaryText
                                                                         style={{
-                                                                            fontSize: scale(14),
+                                                                            // fontSize: scale(14),
                                                                         }}
                                                                     >{salonInfoData?.data?.salonInfo?.salonDesc}</CustomSecondaryText>
                                                                 </View>
@@ -1060,7 +1050,7 @@ const Map = () => {
                                                                         borderWidth: scale(1),
                                                                         borderColor: colors.queueBorder,
                                                                         padding: scale(10),
-                                                                        gap: verticalScale(5),
+                                                                        // gap: verticalScale(5),
                                                                         flexDirection: "row",
                                                                         alignItems: "center",
                                                                         justifyContent: "space-between"
@@ -1070,13 +1060,13 @@ const Map = () => {
                                                                     <View>
                                                                         <CustomText
                                                                             style={{
-                                                                                fontFamily: "AirbnbCereal_W_Bd",
+                                                                                fontFamily: "AirbnbCereal_W_XBd",
                                                                             }}
                                                                         >Contact Us</CustomText>
 
                                                                         <CustomSecondaryText
                                                                             style={{
-                                                                                fontSize: scale(14),
+                                                                                // fontSize: scale(14),
                                                                             }}
                                                                         >
                                                                             If you have any questions
@@ -1193,7 +1183,7 @@ const Map = () => {
                                                                             borderWidth: scale(1),
                                                                             borderColor: colors.queueBorder,
                                                                             padding: scale(10),
-                                                                            gap: verticalScale(5),
+                                                                            // gap: verticalScale(5),
                                                                             flexDirection: "row",
                                                                             alignItems: "center",
                                                                             justifyContent: "space-between"
@@ -1203,13 +1193,13 @@ const Map = () => {
                                                                         <View>
                                                                             <CustomText
                                                                                 style={{
-                                                                                    fontFamily: "AirbnbCereal_W_Bd",
+                                                                                    fontFamily: "AirbnbCereal_W_XBd",
                                                                                 }}
                                                                             >Location</CustomText>
 
                                                                             <CustomSecondaryText
                                                                                 style={{
-                                                                                    fontSize: scale(14),
+                                                                                    // fontSize: scale(14),
                                                                                     maxWidth: "90%"
                                                                                 }}
                                                                             >
@@ -1243,7 +1233,7 @@ const Map = () => {
                                                                                 borderWidth: scale(1),
                                                                                 borderRadius: scale(12),
                                                                                 padding: scale(10),
-                                                                                gap: verticalScale(5),
+                                                                                // gap: verticalScale(5),
                                                                                 flexDirection: "row",
                                                                                 alignItems: "center",
                                                                                 justifyContent: "space-between"
@@ -1253,13 +1243,13 @@ const Map = () => {
                                                                             <View>
                                                                                 <CustomText
                                                                                     style={{
-                                                                                        fontFamily: "AirbnbCereal_W_Bd",
+                                                                                        fontFamily: "AirbnbCereal_W_XBd",
                                                                                     }}
                                                                                 >Follow us on</CustomText>
 
                                                                                 <CustomSecondaryText
                                                                                     style={{
-                                                                                        fontSize: scale(14),
+                                                                                        // fontSize: scale(14),
                                                                                     }}
                                                                                 >
                                                                                     Social links
@@ -1397,9 +1387,9 @@ const Map = () => {
                                                                                 <Image source={{ uri: ser?.serviceIcon?.url }} style={styles.icon} />
                                                                                 <View style={styles.cardContent}>
                                                                                     <CustomText style={styles.serviceName}>{ser.serviceName}</CustomText>
-                                                                                    <CustomText style={[styles.serviceDesc, { color: colors.secondaryText }]}>
+                                                                                    <CustomSecondaryText style={[styles.serviceDesc, {  }]}>
                                                                                         {ser.serviceDesc}
-                                                                                    </CustomText>
+                                                                                    </CustomSecondaryText>
                                                                                     <View
                                                                                         style={{
                                                                                             flexDirection: "row",
@@ -1708,10 +1698,10 @@ const styles = StyleSheet.create({
     },
     serviceName: {
         fontSize: scale(16),
-        fontFamily: "AirbnbCereal_W_Bd"
+        fontFamily: "AirbnbCereal_W_XBd"
     },
     serviceDesc: {
-        fontSize: scale(14),
+        // fontSize: scale(14),
     },
     servicePrice: {
         fontSize: scale(14),

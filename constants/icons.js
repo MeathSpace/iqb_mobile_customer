@@ -248,3 +248,7 @@ export const NoUserIcon = ({ size = moderateScale(24), color = 'black', style })
 export const AppleIcon = ({ size = moderateScale(24), color = 'black', style }) => (
     <AntDesign name="apple" size={size} color={color} style={style} />
 );
+
+export const UploadIcon = ({ size = moderateScale(24), color = 'black', style }) => (
+    <MaterialCommunityIcons name="upload-circle-outline" size={size} color={color} style={style} />
+);

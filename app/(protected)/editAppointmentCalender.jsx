@@ -918,7 +918,7 @@ const editAppointmentCalender = () => {
                             justifyContent: "space-between",
                           }}
                         >
-                          <View
+                          {/* <View
                             style={{
                               flexDirection: "row",
                               alignItems: "center",
@@ -934,7 +934,8 @@ const editAppointmentCalender = () => {
                             >
                               {formatMinutesToHrMin(item?.serviceEWT)}
                             </CustomText>
-                          </View>
+                          </View> */}
+                          <View/>
 
                           <CustomText
                             style={{

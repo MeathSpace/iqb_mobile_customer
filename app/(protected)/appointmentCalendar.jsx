@@ -887,7 +887,7 @@ const appointmentCalendar = () => {
                             justifyContent: "space-between",
                           }}
                         >
-                          <View
+                          {/* <View
                             style={{
                               flexDirection: "row",
                               alignItems: "center",
@@ -903,10 +903,8 @@ const appointmentCalendar = () => {
                             >
                               {formatMinutesToHrMin(item?.serviceEWT)}
                             </CustomText>
-                          </View>
-
-                          {/* Currency should also be added in authenticated user response */}
-                          {/* Service Price doesnot have point value */}
+                          </View> */}
+                          <View/>
 
                           <CustomText
                             style={{

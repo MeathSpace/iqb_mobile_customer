@@ -60,40 +60,42 @@ const AppointmentSuccessPage = () => {
             : "You have successfully updated the appointment. You will be notified when it's your turn."}
         </CustomText>
         {/* {params.booked === "true" && ( */}
-          <View
-            style={{
-              width: "100%",
-              backgroundColor: colors.background,
-              borderWidth: scale(1),
-              borderColor: colors.cardBorder,
-              borderRadius: scale(5),
-              padding: scale(10),
-            }}
-          >
-            <CustomText style={{ fontSize: moderateScale(14) }}>
-              <CustomText
-                style={{
-                  fontFamily: "AirbnbCereal_W_Bd",
-                  color: "#e11d48",
-                  fontSize: moderateScale(14),
-                }}
-              >
-                Please note:{" "}
-              </CustomText>
-              Edits or Cancellations Made Less Than 24 hours Before Your
-              Appointment Will Be Subject To A 50% Fee.
-            </CustomText>
-            <View style={{
-              height: verticalScale(5)
-            }}/>
+        <View
+          style={{
+            width: "100%",
+            backgroundColor: colors.background,
+            borderWidth: scale(1),
+            borderColor: colors.cardBorder,
+            borderRadius: scale(5),
+            padding: scale(10),
+          }}
+        >
+          <CustomText style={{ fontSize: moderateScale(14) }}>
             <CustomText
               style={{
+                fontFamily: "AirbnbCereal_W_Bd",
+                color: "#e11d48",
                 fontSize: moderateScale(14),
               }}
             >
-              Kindly Reach 5 Minutes Early For A Seamless Service.
+              Reminder:{" "}
             </CustomText>
-          </View>
+            edits or cancellations made less than 24 hours before your
+            appointment will be subject to a 50% fee.
+          </CustomText>
+          <View
+            style={{
+              height: verticalScale(5),
+            }}
+          />
+          <CustomText
+            style={{
+              fontSize: moderateScale(14),
+            }}
+          >
+           Kindly reach 5 minutes early for a seamless service.
+          </CustomText>
+        </View>
         {/* )} */}
         <TouchableOpacity
           onPress={() => {
