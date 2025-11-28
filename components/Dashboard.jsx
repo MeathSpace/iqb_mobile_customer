@@ -596,10 +596,7 @@ const Dashboard = () => {
                                                                 ]
                                                             );
                                                         }}
-                                                        style={[styles.joinQueue, {
-                                                            borderWidth: scale(1),
-                                                            borderColor: colors.queueBorder
-                                                        }]} activeOpacity={0.85}>
+                                                        style={[styles.joinQueue]} activeOpacity={0.85}>
 
                                                         {
                                                             cancelQueueLoading ? (
@@ -622,7 +619,7 @@ const Dashboard = () => {
                                                         }}
                                                         style={[styles.bookAhead, {
                                                             borderWidth: scale(1),
-                                                            borderColor: colors.queueBorder
+                                                            borderColor: "#fff"
                                                         }]} activeOpacity={0.85}>
                                                         <CustomText style={styles.bookAheadText}>Book</CustomText>
                                                     </TouchableOpacity>
@@ -659,10 +656,7 @@ const Dashboard = () => {
 
                                                             router.push("/joinpopup")
                                                         }}
-                                                        style={[styles.joinQueue, {
-                                                            borderWidth: scale(1),
-                                                            borderColor: colors.queueBorder
-                                                        }]} activeOpacity={0.85}>
+                                                        style={[styles.joinQueue]} activeOpacity={0.85}>
                                                         <CustomText style={styles.joinQueueText}>Join Queue</CustomText>
                                                     </TouchableOpacity>
 
@@ -677,7 +671,7 @@ const Dashboard = () => {
                                                         }}
                                                         style={[styles.bookAhead, {
                                                             borderWidth: scale(1),
-                                                            borderColor: colors.queueBorder
+                                                            borderColor: "#fff"
                                                         }]} activeOpacity={0.85}>
                                                         <CustomText style={styles.bookAheadText}>Book</CustomText>
                                                     </TouchableOpacity>
@@ -727,7 +721,7 @@ const Dashboard = () => {
                                                     </View>
                                                     <View>
                                                         <CustomText style={[styles.label, {
-                                                            color: colors.secondaryText
+                                                            // color: colors.secondaryText
                                                         }]}>{item.label}</CustomText>
                                                         <CustomText
                                                             style={[
@@ -779,11 +773,11 @@ const Dashboard = () => {
                                             Salon Info
                                         </CustomText>
 
-                                        <CustomText
+                                        <CustomSecondaryText
                                             onTextLayout={onTextLayout}
                                             numberOfLines={textShown ? undefined : 5}
                                             style={{ lineHeight: 21 }}>{salonInfo}
-                                        </CustomText>
+                                        </CustomSecondaryText>
 
                                         {
                                             lengthMore ? <CustomText
@@ -1158,7 +1152,7 @@ const styles = StyleSheet.create({
     // Status Card
 
     heading: {
-        fontSize: scale(20),
+        fontSize: scale(18),
         fontFamily: "AirbnbCereal_W_XBd",
         marginBottom: verticalScale(10),
     },
@@ -1176,7 +1170,7 @@ const styles = StyleSheet.create({
         marginBottom: verticalScale(15),
         flexDirection: 'row',
         alignItems: 'center',
-        gap: scale(6),
+        gap: scale(0),
         borderWidth: scale(1),
         // borderColor: '#e5e7eb', // border-gray-200
     },
@@ -1186,7 +1180,7 @@ const styles = StyleSheet.create({
         marginRight: scale(12),
     },
     label: {
-        fontSize: scale(14),
+        // fontSize: scale(14),
         // color: '#6b7280', // text-gray-500
     },
     value: {
@@ -1221,12 +1215,12 @@ const styles = StyleSheet.create({
     hintTitle: {
         fontFamily: 'AirbnbCereal_W_XBd',
         // color: '#1f2937',            // text-gray-800
-        fontSize: scale(16),
+        // fontSize: scale(16),
         marginBottom: verticalScale(2),
     },
 
     hintDescription: {
-        fontSize: scale(13),
+        // fontSize: scale(13),
         // color: '#4b5563',            // text-gray-600
     },
 

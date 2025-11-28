@@ -1,38 +1,36 @@
+import { BASE_URL } from "@/utils/api";
+import { useTheme } from "@react-navigation/native";
+import axios from "axios";
+import { Checkbox } from "expo-checkbox";
+import { Image } from "expo-image";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import moment from "moment";
+import { useEffect, useRef, useState } from "react";
 import {
+  Animated,
+  KeyboardAvoidingView,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
-  View,
-  KeyboardAvoidingView,
-  Platform,
   TextInput,
-  Animated,
   TouchableOpacity,
+  View,
 } from "react-native";
-import React, { useEffect, useRef, useState } from "react";
-import { moderateScale, scale, verticalScale } from "react-native-size-matters";
-import CustomText from "../../components/CustomText";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { Colors } from "../../constants/Colors";
-import CustomSecondaryText from "../../components/CustomSecondaryText";
+import { moderateScale, scale, verticalScale } from "react-native-size-matters";
+import { Toast } from "toastify-react-native";
+import CustomText from "../../components/CustomText";
+import Skeleton from "../../components/Skeleton";
 import {
-  AddIcon,
   ArrowLeftIcon,
   CheckIcon,
   ClockIcon,
   LeftIcon,
   RightIcon,
 } from "../../constants/icons";
-import { Image } from "expo-image";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import moment from "moment";
-import { useTheme } from "@react-navigation/native";
 import { useAuth } from "../../context/AuthContext";
-import axios from "axios";
-import { BASE_URL } from "@/utils/api";
-import Skeleton from "../../components/Skeleton";
-import { Toast } from "toastify-react-native";
-import { Checkbox } from "expo-checkbox";
+import CustomSecondaryText from "../../components/CustomSecondaryText";
 
 const editAppointmentCalender = () => {
   const params = useLocalSearchParams();
@@ -779,6 +777,7 @@ const editAppointmentCalender = () => {
                             flexDirection: "row",
                             alignItems: "center",
                             gap: scale(10),
+                            width: "75%"
                           }}
                         >
                           {item?.selected ? (
@@ -824,10 +823,12 @@ const editAppointmentCalender = () => {
                             />
                           )}
 
-                          <View style={{ gap: verticalScale(5) }}>
+                          <View style={{ 
+                            width: "65%",
+                            gap: verticalScale(5) }}>
                             <CustomText
                               style={{
-                                fontSize: scale(12),
+                                fontSize: moderateScale(14),
                                 fontFamily: "AirbnbCereal_W_Bd",
                               }}
                             >
@@ -846,7 +847,7 @@ const editAppointmentCalender = () => {
                             >
                               <CustomText
                                 style={{
-                                  fontSize: scale(10),
+                                  fontSize: moderateScale(10),
                                   color: "#00B090",
                                 }}
                               >
@@ -901,14 +902,14 @@ const editAppointmentCalender = () => {
                           gap: verticalScale(5),
                         }}
                       >
-                        <CustomText
+                        <CustomSecondaryText
                           style={{
-                            color: "gray",
-                            fontSize: scale(12),
+                            // color: "gray",
+                            // fontSize: scale(12),
                           }}
                         >
                           {item?.serviceDesc}
-                        </CustomText>
+                        </CustomSecondaryText>
 
                         <View
                           style={{
@@ -1389,6 +1390,7 @@ const editAppointmentCalender = () => {
                   textAlignVertical: "top",
                   backgroundColor: "#00B0901A",
                   color: colors.text,
+                  fontSize: moderateScale(16),
                 }}
                 multiline
                 placeholderTextColor={"gray"}
@@ -1662,23 +1664,19 @@ const editAppointmentCalender = () => {
           {selectCustomerServices.length > 0 ? (
             <View
               style={{
-                // borderTopColor: colors.queueBorder,
-                // borderTopWidth: scale(1),
-                // padding: scale(10),
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "space-between",
                 paddingHorizontal: scale(5),
               }}
             >
-              <View style={{}}>
+              {/* <View style={{}}>
                 <CustomText
                   style={{
                     fontFamily: "AirbnbCereal_W_XBd",
                     fontSize: scale(18),
                   }}
                 >
-                  {/* {authenticatedUser?.currency} {totalPrice.toFixed(2)} */}
                   {authenticatedUser?.currency}{" "}
                   {selectCustomerServices.reduce(
                     (acc, item) => acc + item.servicePrice,
@@ -1696,7 +1694,9 @@ const editAppointmentCalender = () => {
                     )
                   )}
                 </CustomSecondaryText>
-              </View>
+              </View> */}
+
+              <View />
 
               <TouchableOpacity
                 onPress={continueHandler}

@@ -43,7 +43,7 @@ const appointmentConfirmation = () => {
                         />
                         <View>
                             <CustomText>{barber.CustomerName}</CustomText>
-                            <CustomSecondaryText >{barber.barberName}</CustomSecondaryText>
+                            <CustomSecondaryText>{barber.barberName}</CustomSecondaryText>
                         </View>
                     </View>
 

@@ -360,15 +360,13 @@ const QueueList = () => {
 
                                     <CustomText style={{
                                         fontFamily: "AirbnbCereal_W_XBd",
-                                        fontSize: scale(20),
+                                        fontSize: scale(18),
                                         textAlign: "center",
                                     }}>The queue is empty</CustomText>
 
                                     <CustomText style={{
-                                        fontFamily: "AirbnbCereal_W_Bd",
-                                        fontSize: scale(16),
                                         textAlign: "center",
-                                        color: colors.secondaryText,
+                                        marginBottom: verticalScale(10)
                                     }}>
                                         There's no one in the queue right now. Be the first to join!
                                     </CustomText>
@@ -468,7 +466,7 @@ const styles = StyleSheet.create({
         borderRadius: scale(12),
         // flex: 0.90,
         padding: scale(30),
-        gap: verticalScale(20)
+        gap: verticalScale(10)
     },
 
     iconContainer: {

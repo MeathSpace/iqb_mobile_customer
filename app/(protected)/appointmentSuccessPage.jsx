@@ -1,12 +1,11 @@
-import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
-import React, { useRef } from "react";
-import CustomText from "../../components/CustomText";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { SafeAreaView } from "react-native-safe-area-context";
 import { usePreventRemove, useTheme } from "@react-navigation/native";
-import { CheckIcon } from "../../constants/icons";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { useRef } from "react";
+import { StyleSheet, TouchableOpacity, View } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
-import CustomSecondaryText from "../../components/CustomSecondaryText";
+import CustomText from "../../components/CustomText";
+import { CheckIcon } from "../../constants/icons";
 
 const AppointmentSuccessPage = () => {
   const router = useRouter();
@@ -60,7 +59,7 @@ const AppointmentSuccessPage = () => {
             ? "You have successfully booked the appointment. You will be notified when it's your turn."
             : "You have successfully updated the appointment. You will be notified when it's your turn."}
         </CustomText>
-        {params.booked === "true" && (
+        {/* {params.booked === "true" && ( */}
           <View
             style={{
               width: "100%",
@@ -71,12 +70,31 @@ const AppointmentSuccessPage = () => {
               padding: scale(10),
             }}
           >
-            <CustomSecondaryText style={{ color: "#f9a825"}}><CustomSecondaryText style={{
-                fontFamily: "AirbnbCereal_W_Bd",
-                color: "#f9a825"
-            }}>Please note:</CustomSecondaryText> Appointments cannot be edited or cancelled within 24 hours of the scheduled appointment.</CustomSecondaryText>
+            <CustomText style={{ fontSize: moderateScale(14) }}>
+              <CustomText
+                style={{
+                  fontFamily: "AirbnbCereal_W_Bd",
+                  color: "#e11d48",
+                  fontSize: moderateScale(14),
+                }}
+              >
+                Please note:{" "}
+              </CustomText>
+              Edits or Cancellations Made Less Than 24 hours Before Your
+              Appointment Will Be Subject To A 50% Fee.
+            </CustomText>
+            <View style={{
+              height: verticalScale(5)
+            }}/>
+            <CustomText
+              style={{
+                fontSize: moderateScale(14),
+              }}
+            >
+              Kindly Reach 5 Minutes Early For A Seamless Service.
+            </CustomText>
           </View>
-        )}
+        {/* )} */}
         <TouchableOpacity
           onPress={() => {
             LiveQueueNavigationRef.current = true;
@@ -123,7 +141,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     // borderColor: '#e5e7eb',
     borderWidth: scale(1),
-    gap: verticalScale(20),
+    gap: verticalScale(15),
     marginTop: verticalScale(40),
   },
 
@@ -137,7 +155,7 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontFamily: "AirbnbCereal_W_XBd",
-    fontSize: scale(20),
+    fontSize: scale(18),
     textAlign: "center",
     // marginBottom: verticalScale(4),
   },

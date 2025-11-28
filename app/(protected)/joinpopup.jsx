@@ -2,6 +2,7 @@ import { Pressable, StyleSheet, Text, TouchableOpacity, View } from 'react-nativ
 import React from 'react'
 import { scale, verticalScale } from 'react-native-size-matters'
 import CustomText from '../../components/CustomText'
+import CustomSecondaryText from '../../components/CustomSecondaryText'
 import { Colors } from '../../constants/Colors'
 import { useRouter } from 'expo-router'
 import { useTheme } from '@react-navigation/native'
@@ -46,7 +47,7 @@ const joinpopup = () => {
                 <CustomText
                     style={{
                         textAlign: "center",
-                        fontFamily: "AirbnbCereal_W_Blk",
+                        fontFamily: "AirbnbCereal_W_XBd",
                         fontSize: scale(22),
                     }}
                 >Join Queue</CustomText>
@@ -62,13 +63,13 @@ const joinpopup = () => {
                             fontSize: scale(18)
                         }}
                     >Single Join</CustomText>
-                    <CustomText
+                    <CustomSecondaryText
                         style={{
-                            fontFamily: "AirbnbCereal_W_Md",
-                            color: colors.secondaryText,
+                            // fontFamily: "AirbnbCereal_W_Md",
+                            // color: colors.secondaryText,
                             fontSize: scale(14)
                         }}
-                    >Join the queue as a single customer. This option is for individuals waiting alone for salon services.</CustomText>
+                    >Join the queue as a single customer. This option is for individuals waiting alone for salon services.</CustomSecondaryText>
 
                     <TouchableOpacity
                         onPress={() => {
@@ -95,13 +96,13 @@ const joinpopup = () => {
                             fontSize: scale(18)
                         }}
                     >Group Join</CustomText>
-                    <CustomText
+                    <CustomSecondaryText
                         style={{
                             fontFamily: "AirbnbCereal_W_Md",
                             color: colors.secondaryText,
                             fontSize: scale(14)
                         }}
-                    >Join the queue with multiple people at once. Ideal for friends or family members visiting the salon together.</CustomText>
+                    >Join the queue with multiple people at once. Ideal for friends or family members visiting the salon together.</CustomSecondaryText>
 
                     <TouchableOpacity
                         // onPress={() => router.replace("/groupJoin")}

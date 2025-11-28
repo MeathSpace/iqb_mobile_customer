@@ -70,7 +70,8 @@ const RootLayout = () => {
       background: '#F9FAFB',
       tabBackground: '#efefef',
       text: "#1f2937",
-      secondaryText: "#6b7280", // text-gray-500
+      // secondaryText: "#6b7280", // text-gray-500
+      secondaryText: "rgba(0,0,0,1)",
       secondaryInputBackground: "#efefef",
       borderBottomColor: "#efefef",
       notificationBellColor: "#6b7280",
@@ -90,7 +91,8 @@ const RootLayout = () => {
       background: '#111827',
       tabBackground: '#151718',
       text: "#ffffff",
-      secondaryText: "#6b7280", // text-gray-500
+      // secondaryText: "#6b7280", // text-gray-500
+      secondaryText: "rgba(255, 255, 255, 1)",
       secondaryInputBackground: "#000000",
       borderBottomColor: "#101010",
       notificationBellColor: "#D1D5DB",

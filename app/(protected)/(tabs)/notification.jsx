@@ -273,20 +273,19 @@ const notification = () => {
                                     transition={300}
                                 />
 
-                                <View style={{ gap: verticalScale(5), flex: 1 }}>
+                                <View style={{ gap: verticalScale(3), flex: 1 }}>
                                     <CustomText
                                         style={{
-                                            fontSize: scale(14),
+                                            // fontSize: scale(14),
                                             fontFamily: "AirbnbCereal_W_Bd"
                                         }}
                                     >{item?.title}</CustomText>
 
-                                    <CustomText
+                                    <CustomSecondaryText
                                         style={{
-                                            fontSize: scale(12),
-                                            color: colors.secondaryText
+                                            // fontSize: scale(12),
                                         }}
-                                    >{item?.body}</CustomText>
+                                    >{item?.body}</CustomSecondaryText>
                                 </View>
                             </TouchableOpacity>
                         ))

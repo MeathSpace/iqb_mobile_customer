@@ -7,6 +7,7 @@ import { usePreventRemove, useTheme } from '@react-navigation/native'
 import { CheckIcon } from '../../constants/icons'
 import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
 import { useGlobal } from '../../context/GlobalContext'
+import CustomSecondaryText from '../../components/CustomSecondaryText'
 
 const GroupJoinSuccessPage = () => {
 
@@ -39,9 +40,9 @@ const GroupJoinSuccessPage = () => {
                     <CheckIcon size={scale(32)} color={"#14b8a6"} />
                 </View>
                 <CustomText style={styles.cardTitle}>Queue Joined!</CustomText>
-                <CustomText style={[styles.cardSubtitle, { color: colors.secondaryText }]}>
+                <CustomSecondaryText style={[styles.cardSubtitle, {  }]}>
                     Your group has successfully joined the queue.
-                </CustomText>
+                </CustomSecondaryText>
                 <TouchableOpacity
                     onPress={() => {
                         LiveQueueNavigationRef.current = true;
@@ -78,7 +79,7 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         // borderColor: '#e5e7eb',
         borderWidth: scale(1),
-        gap: verticalScale(20),
+        gap: verticalScale(15),
         marginTop: verticalScale(40)
     },
 

@@ -83,7 +83,6 @@
 //         fetchAppointmentList()
 //       }
 
-
 //     }, [authenticatedUser, applyAppointmentFilter])
 //   )
 
@@ -245,7 +244,6 @@
 //                       //             transition={300}
 //                       //           />
 //                       //         </View>
-
 
 //                       //         <View style={{ gap: verticalScale(8) }}>
 //                       //           <CustomText style={{ fontSize: scale(14) }}>{item?.barbername}</CustomText>
@@ -447,7 +445,6 @@
 //                     )
 //                   }
 
-
 //                 </View>
 //               );
 //             default:
@@ -494,46 +491,45 @@
 //   }
 // })
 
-
-
-import { Alert, FlatList, Platform, Pressable, RefreshControl, SectionList, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useCallback, useState } from 'react'
-import CustomText from '../../../components/CustomText';
-import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
-import { Colors } from '../../../constants/Colors';
-import { useFocusEffect, useRouter } from 'expo-router';
-import { useGlobal } from '../../../context/GlobalContext';
-import { Image } from 'expo-image';
-import { CalendarIcon, ClockIcon, FilterIcon, NotificationIcon, RefreshIcon } from '../../../constants/icons';
-import CustomTabView from '../../../components/CustomTabView';
-import { useAuth } from '../../../context/AuthContext';
-import axios from 'axios';
-import { BASE_URL } from '@/utils/api';
-import Skeleton from '../../../components/Skeleton';
-import { usePreventRemove, useTheme } from '@react-navigation/native';
-import CustomSecondaryText from '../../../components/CustomSecondaryText';
+import { BASE_URL } from "@/utils/api";
+import { Feather } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { usePreventRemove, useTheme } from "@react-navigation/native";
+import axios from "axios";
+import { Image } from "expo-image";
+import { useFocusEffect, useRouter } from "expo-router";
+import { useCallback, useState } from "react";
+import {
+  Alert,
+  Platform,
+  Pressable,
+  RefreshControl,
+  SectionList,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import { io } from "socket.io-client";
-import { Feather } from '@expo/vector-icons';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Toast } from 'toastify-react-native';
-import { ddmmformatDate } from '../../../utils/ddmmformatDate';
+import { Toast } from "toastify-react-native";
+import CustomTabView from "../../../components/CustomTabView";
+import CustomText from "../../../components/CustomText";
+import Skeleton from "../../../components/Skeleton";
+import { NotificationIcon } from "../../../constants/icons";
+import { useAuth } from "../../../context/AuthContext";
+import { useGlobal } from "../../../context/GlobalContext";
+import { ddmmformatDate } from "../../../utils/ddmmformatDate";
+import CustomSecondaryText from "../../../components/CustomSecondaryText";
 
 const appointment = () => {
+  const customPageData = ["header", "list"];
 
-  const customPageData = [
-    "header", "list"
-  ]
+  const [selectedTab, setSelectedTab] = useState("All");
 
-  const [selectedTab, setSelectedTab] = useState("All")
+  const [tabs, setTabs] = useState(["All", "Upcoming", "Served", "Cancelled"]);
 
-  const [tabs, setTabs] = useState([
-    "All",
-    "Upcoming",
-    "Served",
-    "Cancelled"
-  ])
-
-  const router = useRouter()
+  const router = useRouter();
   const {
     setJoinModes,
     joinModes,
@@ -542,10 +538,10 @@ const appointment = () => {
     newNotification,
     setNewNotification,
     appointmentListData,
-    setAppointmentListData
+    setAppointmentListData,
   } = useGlobal();
 
-  const { authenticatedUser } = useAuth()
+  const { authenticatedUser } = useAuth();
 
   // const [appointmentListData, setAppointmentListData] = useState({
   //   data: null,
@@ -555,77 +551,106 @@ const appointment = () => {
   // })
 
   const socket = io("https://iqb-final.onrender.com", {
-    transports: ['websocket'],
+    transports: ["websocket"],
   });
 
   const [getSalonFeature, setGetSalonFeature] = useState({
     salonFeature: null,
     loading: false,
     error: null,
-    success: false
-  })
+    success: false,
+  });
 
   const fetSalonFeatureData = async () => {
     try {
+      setGetSalonFeature((prev) => ({ ...prev, loading: true }));
 
-      setGetSalonFeature((prev) => ({ ...prev, loading: true }))
+      const { data } = await axios.post(
+        `${BASE_URL}/mobileRoutes/getSalonFeatures`,
+        {
+          salonId: authenticatedUser?.salonId,
+        }
+      );
 
-      const { data } = await axios.post(`${BASE_URL}/mobileRoutes/getSalonFeatures`, {
-        salonId: authenticatedUser?.salonId,
-      })
-
-      setGetSalonFeature((prev) => ({ ...prev, loading: false, salonFeature: data?.response, success: true, error: null }))
-
-
+      setGetSalonFeature((prev) => ({
+        ...prev,
+        loading: false,
+        salonFeature: data?.response,
+        success: true,
+        error: null,
+      }));
     } catch (error) {
-      setGetSalonFeature((prev) => ({ ...prev, loading: false, salonFeature: null, success: false, error: error }))
-      console.error("Error fetching salon feature data: ", error)
+      setGetSalonFeature((prev) => ({
+        ...prev,
+        loading: false,
+        salonFeature: null,
+        success: false,
+        error: error,
+      }));
+      console.error("Error fetching salon feature data: ", error);
     }
-  }
+  };
 
   useFocusEffect(
     useCallback(() => {
-
-      fetSalonFeatureData()
+      fetSalonFeatureData();
 
       if (applyAppointmentFilter.open) {
-
         // socket.emit("joinSalon", authenticatedUser?.salonId);
 
-        socket.emit("customerAppointmentList", { salonId: authenticatedUser?.salonId, customerEmail: authenticatedUser?.email })
+        socket.emit("customerAppointmentList", {
+          salonId: authenticatedUser?.salonId,
+          customerEmail: authenticatedUser?.email,
+        });
 
         socket.on("appointmentsUpdated", (appointmentData) => {
-          setAppointmentListData((prev) => ({ ...prev, loading: false, data: appointmentData, success: true, error: null }))
-        })
+          setAppointmentListData((prev) => ({
+            ...prev,
+            loading: false,
+            data: appointmentData,
+            success: true,
+            error: null,
+          }));
+        });
 
         const fetchAppointmentList = async () => {
           try {
+            setAppointmentListData((prev) => ({ ...prev, loading: true }));
 
-            setAppointmentListData((prev) => ({ ...prev, loading: true }))
+            const { data } = await axios.post(
+              `${BASE_URL}/mobileRoutes/getAllCustomerAppointments`,
+              {
+                salonId: authenticatedUser?.salonId,
+                customerEmail: authenticatedUser?.email,
+                status: applyAppointmentFilter.selectedTab,
+              }
+            );
 
-            const { data } = await axios.post(`${BASE_URL}/mobileRoutes/getAllCustomerAppointments`, {
-              salonId: authenticatedUser?.salonId,
-              customerEmail: authenticatedUser?.email,
-              status: applyAppointmentFilter.selectedTab
-            })
-
-            setAppointmentListData((prev) => ({ ...prev, loading: false, data: data?.response, success: true, error: null }))
-
+            setAppointmentListData((prev) => ({
+              ...prev,
+              loading: false,
+              data: data?.response,
+              success: true,
+              error: null,
+            }));
           } catch (error) {
-
-            setAppointmentListData((prev) => ({ ...prev, loading: false, data: null, success: false, error: error }))
-            console.log("Error fetching appointment list ", error)
+            setAppointmentListData((prev) => ({
+              ...prev,
+              loading: false,
+              data: null,
+              success: false,
+              error: error,
+            }));
+            console.log("Error fetching appointment list ", error);
           }
-        }
+        };
 
-        fetchAppointmentList()
+        fetchAppointmentList();
       }
-
-
     }, [authenticatedUser, applyAppointmentFilter])
-  )
+  );
 
-  const { colors } = useTheme()
+  const { colors } = useTheme();
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -634,35 +659,36 @@ const appointment = () => {
     setTimeout(() => {
       setApplyAppointmentFilter({
         selectedTab: "all",
-        open: true
-      })
+        open: true,
+      });
       setRefreshing(false);
     }, 2000);
   };
 
-  const upcomingAppointments = appointmentListData?.data?.filter((item) => item.status === "upcoming") || [];
-  const pastAppointments = appointmentListData?.data?.filter((item) => item.status !== "upcoming") || [];
+  const upcomingAppointments =
+    appointmentListData?.data?.filter((item) => item.status === "upcoming") ||
+    [];
+  const pastAppointments =
+    appointmentListData?.data?.filter((item) => item.status !== "upcoming") ||
+    [];
 
   const hasUpcoming = upcomingAppointments.length > 0;
   const hasPast = pastAppointments.length > 0;
 
   const sections = [];
   if (hasUpcoming) {
-    sections.push({ title: 'Upcoming', data: upcomingAppointments });
+    sections.push({ title: "Upcoming", data: upcomingAppointments });
   }
   if (hasPast) {
-    sections.push({ title: 'Past', data: pastAppointments });
+    sections.push({ title: "Past", data: pastAppointments });
   }
 
   // console.log(newNotification.value)
 
   usePreventRemove(
     true, // This boolean determines if removal should be prevented
-    ({ data }) => {
-
-    }
+    ({ data }) => {}
   );
-
 
   function formatMinutesToHrMin(totalMinutes) {
     const hours = Math.floor(totalMinutes / 60);
@@ -678,44 +704,47 @@ const appointment = () => {
       style={{
         paddingVertical: verticalScale(0),
         paddingTop: verticalScale(0),
-        backgroundColor: colors.background
+        backgroundColor: colors.background,
       }}
     >
-
       <View style={styles.header}>
-
-        <CustomText style={{ fontSize: scale(18), fontFamily: "AirbnbCereal_W_XBd" }}>Appointments</CustomText>
+        <CustomText
+          style={{ fontSize: scale(18), fontFamily: "AirbnbCereal_W_XBd" }}
+        >
+          Appointments
+        </CustomText>
 
         {/* Right section - Notification bell */}
         <Pressable
           style={styles.bellWrapper}
           activeOpacity={0.7}
           onPress={async () => {
-
             if (newNotification.value) {
               await AsyncStorage.setItem(
                 "newNotification",
                 JSON.stringify({
                   email: authenticatedUser?.email,
-                  value: false
+                  value: false,
                 })
               );
               setNewNotification({
                 email: "",
-                value: false
-              })
+                value: false,
+              });
             }
 
-            router.push("/notification")
+            router.push("/notification");
           }}
         >
-          <NotificationIcon size={moderateScale(24)} color={colors.notificationBellColor} />
+          <NotificationIcon
+            size={moderateScale(24)}
+            color={colors.notificationBellColor}
+          />
           {/* {
             newNotification.value && (
               <View style={styles.badge} />
             )
           } */}
-
         </Pressable>
       </View>
 
@@ -730,59 +759,122 @@ const appointment = () => {
             />
           ))
         ) : !hasUpcoming && !hasPast ? (
-          <View style={{
-            flex: 1,
-            justifyContent: "center",
-            alignItems: "center",
-            paddingBottom: Platform.OS === 'ios' ? verticalScale(60) : 0,
-          }}>
-
-            <View style={[styles.upcomingCard, { backgroundColor: colors.cardColor, borderColor: colors.cardBorder }]}>
-              <View style={[styles.iconContainer, { backgroundColor: "rgba(13, 148, 136, 0.1)" }]}>
-                <Feather name={"calendar"} size={moderateScale(32)} color={"#14b8a6"} />
+          <View
+            style={{
+              flex: 1,
+              justifyContent: "center",
+              alignItems: "center",
+              paddingBottom: Platform.OS === "ios" ? verticalScale(60) : 0,
+            }}
+          >
+            <View
+              style={[
+                styles.upcomingCard,
+                {
+                  backgroundColor: colors.cardColor,
+                  borderColor: colors.cardBorder,
+                },
+              ]}
+            >
+              <View
+                style={[
+                  styles.iconContainer,
+                  { backgroundColor: "rgba(13, 148, 136, 0.1)" },
+                ]}
+              >
+                <Feather
+                  name={"calendar"}
+                  size={moderateScale(32)}
+                  color={"#14b8a6"}
+                />
               </View>
               <CustomText style={styles.cardTitle}>No Appointments</CustomText>
-              <CustomText style={[styles.cardSubtitle, { color: colors.secondaryText }]}>
+              <CustomSecondaryText
+                style={[
+                  styles.cardSubtitle,
+                  { marginBottom: verticalScale(10) },
+                ]}
+              >
                 You have no appointments to show.
-              </CustomText>
+              </CustomSecondaryText>
               <TouchableOpacity
                 onPress={() => {
                   if (!getSalonFeature?.salonFeature?.isAppointments) {
-                    return Toast.error("Appointment feature is not available at this salon")
+                    return Toast.error(
+                      "Appointment feature is not available at this salon"
+                    );
                   }
-                  setJoinModes((prev) => ({ ...prev, appointment: true, appointmentType: "Book" }));
+                  setJoinModes((prev) => ({
+                    ...prev,
+                    appointment: true,
+                    appointmentType: "Book",
+                  }));
                   router.push("/appointmentCalendar");
                 }}
                 style={styles.bookButton}
                 activeOpacity={0.85}
               >
-                <CustomText style={styles.bookButtonText}>Book Appointment</CustomText>
+                <CustomText style={styles.bookButtonText}>
+                  Book Appointment
+                </CustomText>
               </TouchableOpacity>
             </View>
           </View>
         ) : (
           <>
             {!hasUpcoming && hasPast && (
-              <View style={[styles.upcomingCard, { backgroundColor: colors.cardColor, borderColor: colors.cardBorder }]}>
-                <View style={[styles.iconContainer, { backgroundColor: "rgba(13, 148, 136, 0.1)" }]}>
-                  <Feather name={"calendar"} size={moderateScale(32)} color={"#14b8a6"} />
+              <View
+                style={[
+                  styles.upcomingCard,
+                  {
+                    backgroundColor: colors.cardColor,
+                    borderColor: colors.cardBorder,
+                  },
+                ]}
+              >
+                <View
+                  style={[
+                    styles.iconContainer,
+                    { backgroundColor: "rgba(13, 148, 136, 0.1)" },
+                  ]}
+                >
+                  <Feather
+                    name={"calendar"}
+                    size={moderateScale(32)}
+                    color={"#14b8a6"}
+                  />
                 </View>
-                <CustomText style={styles.cardTitle}>No Appointments</CustomText>
-                <CustomText style={[styles.cardSubtitle, { color: colors.secondaryText }]}>
-                  You have no appointments to show.
+                <CustomText style={styles.cardTitle}>
+                  No Appointments
                 </CustomText>
+                <CustomSecondaryText
+                  style={[
+                    styles.cardSubtitle,
+                    { marginBottom: verticalScale(10) },
+                  ]}
+                >
+                  You have no appointments to show.
+                </CustomSecondaryText>
                 <TouchableOpacity
                   onPress={() => {
                     if (!getSalonFeature?.salonFeature?.isAppointments) {
-                      return Toast.error("Appointment feature is not available at this salon")
+                      return Toast.error(
+                        "Appointment feature is not available at this salon"
+                      );
                     }
-                    setJoinModes((prev) => ({ ...prev, appointment: true, appointmentType: "Book" }));
+                    setJoinModes((prev) => ({
+                      ...prev,
+                      appointment: true,
+                      appointmentType: "Book",
+                    }));
                     router.push("/appointmentCalendar");
                   }}
                   style={styles.bookButton}
                   activeOpacity={0.85}
                 >
-                  <CustomText style={styles.bookButtonText}>Book Appointment</CustomText>
+                  <CustomText style={styles.bookButtonText}>
+                    Book Appointment
+                  </CustomText>
                 </TouchableOpacity>
               </View>
             )}
@@ -791,39 +883,46 @@ const appointment = () => {
                 <RefreshControl
                   refreshing={refreshing}
                   onRefresh={onRefresh}
-                  colors={['black']}
-                  progressBackgroundColor={'#fff'}
+                  colors={["black"]}
+                  progressBackgroundColor={"#fff"}
                 />
               }
               sections={sections}
-              keyExtractor={(item) => item._id}
+              keyExtractor={(item, index) => `${item._id}_${index}`}
               renderSectionHeader={({ section: { title } }) => (
                 <>
-                  {
-                    title === "Upcoming" ? (
-                      <TouchableOpacity
-                        onPress={() => {
-                          if (!getSalonFeature?.salonFeature?.isAppointments) {
-                            return Toast.error("Appointment feature is not available at this salon")
-                          }
-                          setJoinModes((prev) => ({ ...prev, appointment: true, appointmentType: "Book" }));
-                          router.push("/appointmentCalendar");
-                        }}
-                        style={[
-                          styles.bookButton, {
-                            marginBottom: verticalScale(15)
-                          }
-                        ]}
-                        activeOpacity={0.85}
-                      >
-                        <CustomText style={styles.bookButtonText}>Book Appointment</CustomText>
-                      </TouchableOpacity>
-                    ) : null
-                  }
+                  {title === "Upcoming" ? (
+                    <TouchableOpacity
+                      onPress={() => {
+                        if (!getSalonFeature?.salonFeature?.isAppointments) {
+                          return Toast.error(
+                            "Appointment feature is not available at this salon"
+                          );
+                        }
+                        setJoinModes((prev) => ({
+                          ...prev,
+                          appointment: true,
+                          appointmentType: "Book",
+                        }));
+                        router.push("/appointmentCalendar");
+                      }}
+                      style={[
+                        styles.bookButton,
+                        {
+                          marginBottom: verticalScale(15),
+                        },
+                      ]}
+                      activeOpacity={0.85}
+                    >
+                      <CustomText style={styles.bookButtonText}>
+                        Book Appointment
+                      </CustomText>
+                    </TouchableOpacity>
+                  ) : null}
 
-                  <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+                  <View style={{ flexDirection: "row", alignItems: "center" }}>
                     <CustomText style={styles.Listheader}>{title}</CustomText>
-                    {title === 'Past' && (
+                    {title === "Past" && (
                       <View
                         style={{
                           marginLeft: scale(8),
@@ -831,11 +930,11 @@ const appointment = () => {
                           height: scale(24),
                           borderRadius: scale(12),
                           backgroundColor: colors.cardColor,
-                          alignItems: 'center',
-                          justifyContent: 'center',
+                          alignItems: "center",
+                          justifyContent: "center",
                         }}
                       >
-                        <CustomText style={{ fontSize: scale(12) }}>
+                        <CustomText style={{ fontSize: scale(14) }}>
                           {pastAppointments.length}
                         </CustomText>
                       </View>
@@ -855,7 +954,7 @@ const appointment = () => {
                       Alert.alert(
                         "Warning",
                         `This appointment is already ${item.status}`,
-                        [{ text: "OK", onPress: () => { } }],
+                        [{ text: "OK", onPress: () => {} }],
                         { cancelable: true }
                       );
                     }
@@ -880,32 +979,49 @@ const appointment = () => {
                   />
                   <View style={styles.info}>
                     <CustomText
-                      style={[styles.title, { fontFamily: "AirbnbCereal_W_XBd" }]}
+                      style={[
+                        styles.title,
+                        { fontFamily: "AirbnbCereal_W_XBd" },
+                      ]}
                       numberOfLines={1}
                     >
                       {item.barbername}
                     </CustomText>
-                    <CustomText style={[styles.datetime, { color: colors.secondaryText }]}>
-                      {ddmmformatDate(item?.appointmentDate?.split("T")[0])} ({item?.timeSlots})
-                    </CustomText>
+                    <CustomSecondaryText
+                      style={[styles.datetime, {  }]}
+                    >
+                      {ddmmformatDate(item?.appointmentDate?.split("T")[0])} (
+                      {item?.timeSlots})
+                    </CustomSecondaryText>
 
-                    <CustomText style={[styles.meta, { color: colors.secondaryText }]}>
+                    <CustomSecondaryText
+                      style={[styles.meta, {  }]}
+                    >
                       {authenticatedUser?.currency}{" "}
-                      {item?.services?.reduce((sum, service) => sum + (service?.servicePrice || 0), 0)} •{" "}
-                      {item?.services.length} service{item?.services.length > 1 ? "s" : ""}
-                    </CustomText>
+                      {item?.services?.reduce(
+                        (sum, service) => sum + (service?.servicePrice || 0),
+                        0
+                      )}{" "}
+                      • {item?.services.length} service
+                      {item?.services.length > 1 ? "s" : ""}
+                    </CustomSecondaryText>
 
                     <View style={styles.footer}>
-
                       {section.title !== "Upcoming" && (
-                        <CustomText style={{
-                          fontSize: scale(14),
-                          backgroundColor: item.status === "served" ? 'rgba(34, 197, 94, 0.1)' : 'rgba(239, 68, 68, 0.1)',
-                          color: item.status === "served" ? '#14b8a6' : '#ef4444',
-                          paddingHorizontal: scale(10),
-                          paddingVertical: verticalScale(3),
-                          borderRadius: scale(15)
-                        }}>
+                        <CustomText
+                          style={{
+                            fontSize: scale(14),
+                            backgroundColor:
+                              item.status === "served"
+                                ? "rgba(34, 197, 94, 0.1)"
+                                : "rgba(239, 68, 68, 0.1)",
+                            color:
+                              item.status === "served" ? "#14b8a6" : "#ef4444",
+                            paddingHorizontal: scale(10),
+                            paddingVertical: verticalScale(3),
+                            borderRadius: scale(15),
+                          }}
+                        >
                           {item.status}
                         </CustomText>
                       )}
@@ -913,8 +1029,12 @@ const appointment = () => {
                       {section.title !== "Upcoming" && (
                         <TouchableOpacity
                           onPress={() => {
-                            if (!getSalonFeature?.salonFeature?.isAppointments) {
-                              return Toast.error("Appointment feature is not available at this salon")
+                            if (
+                              !getSalonFeature?.salonFeature?.isAppointments
+                            ) {
+                              return Toast.error(
+                                "Appointment feature is not available at this salon"
+                              );
                             }
                             setJoinModes((prev) => ({
                               ...prev,
@@ -933,7 +1053,8 @@ const appointment = () => {
                 </Pressable>
               )}
               contentContainerStyle={{
-                paddingBottom: Platform.OS === "ios" ? verticalScale(70) : verticalScale(20),
+                paddingBottom:
+                  Platform.OS === "ios" ? verticalScale(70) : verticalScale(20),
                 gap: verticalScale(15),
               }}
               showsVerticalScrollIndicator={false}
@@ -942,20 +1063,17 @@ const appointment = () => {
           </>
         )}
       </>
+    </CustomTabView>
+  );
+};
 
-
-    </CustomTabView >
-  )
-}
-
-export default appointment
+export default appointment;
 
 const styles = StyleSheet.create({
-
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     height: verticalScale(40),
     // paddingTop: verticalScale(5),
     // paddingBottom: verticalScale(12),
@@ -964,21 +1082,21 @@ const styles = StyleSheet.create({
   bellWrapper: {
     padding: scale(8),
     borderRadius: scale(999),
-    position: 'relative',
+    position: "relative",
   },
   badge: {
-    position: 'absolute',
+    position: "absolute",
     top: scale(6),
     right: scale(6),
     width: scale(8),
     height: scale(8),
     borderRadius: scale(4),
-    backgroundColor: '#2dd4bf', // bg-teal-400
+    backgroundColor: "#2dd4bf", // bg-teal-400
   },
 
   Listheader: {
-    fontSize: scale(18),
-    fontFamily: "AirbnbCereal_W_Bd",
+    fontSize: moderateScale(18),
+    fontFamily: "AirbnbCereal_W_XBd",
     // marginBottom: verticalScale(10),
   },
 
@@ -986,11 +1104,11 @@ const styles = StyleSheet.create({
     // backgroundColor: '#ffffff',
     borderRadius: scale(12),
     padding: scale(20),
-    alignItems: 'center',
+    alignItems: "center",
     // borderColor: '#e5e7eb',
     borderWidth: scale(1),
-    gap: verticalScale(20),
-    marginBottom: verticalScale(10)
+    gap: verticalScale(10),
+    marginBottom: verticalScale(10),
   },
 
   iconContainer: {
@@ -1003,48 +1121,32 @@ const styles = StyleSheet.create({
   },
   cardTitle: {
     fontFamily: "AirbnbCereal_W_XBd",
-    fontSize: scale(20),
+    fontSize: scale(18),
     textAlign: "center",
     // marginBottom: verticalScale(4),
   },
   cardSubtitle: {
-    fontFamily: "AirbnbCereal_W_Bd",
     fontSize: scale(16),
     textAlign: "center",
-    // marginBottom: verticalScale(20)
   },
   bookButton: {
-    // flexDirection: "row",
-    // width: '100%',
-    backgroundColor: '#14b8a6', // bg-teal-500
+    backgroundColor: "#14b8a6", // bg-teal-500
     paddingVertical: verticalScale(16), // py-4
     borderRadius: scale(12), // rounded-xl
-    paddingHorizontal: scale(60)
-    // marginBottom: verticalScale(15), // mb-6
-    // alignItems: 'center',
-    // justifyContent: 'center'
+    paddingHorizontal: scale(60),
   },
   bookButtonText: {
-    color: '#fff', // text-white
+    color: "#fff", // text-white
     fontFamily: "AirbnbCereal_W_XBd",
     fontSize: scale(16),
-    textAlign: "center"
+    textAlign: "center",
   },
 
-
   card: {
-    flexDirection: 'row',
-    // backgroundColor: '#ffffff',
+    flexDirection: "row",
     borderRadius: scale(12),
     padding: scale(12),
     borderWidth: scale(1),
-    // shadowColor: '#000',
-    // shadowOpacity: 0.03,
-    // shadowRadius: 4,
-    // elevation: 2,
-  },
-  separator: {
-    // height: verticalScale(10),
   },
   image: {
     width: scale(60),
@@ -1054,279 +1156,34 @@ const styles = StyleSheet.create({
   },
   info: {
     flex: 1,
-    justifyContent: 'space-between',
+    justifyContent: "space-between",
   },
   title: {
-    fontSize: scale(16),
-    fontWeight: '600',
-    // color: '#1f2937',
+    // fontSize: scale(16),
+    // fontWeight: "600",
   },
   datetime: {
-    fontSize: scale(12),
-    // color: '#6b7280',
+    fontSize: moderateScale(12),
     marginTop: verticalScale(2),
   },
   footer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     marginTop: verticalScale(8),
   },
   meta: {
-    fontSize: scale(12),
-    // color: '#9ca3af',
+    fontSize: moderateScale(12),
   },
   rebookButton: {
-    backgroundColor: '#ccfbf1',
+    backgroundColor: "#ccfbf1",
     paddingHorizontal: scale(10),
     paddingVertical: verticalScale(5),
     borderRadius: scale(6),
   },
   rebookText: {
-    color: '#0f766e',
+    color: "#0f766e",
     fontSize: scale(12),
-    fontWeight: '500',
+    fontWeight: "500",
   },
-})
-
-
-
-// import React from 'react';
-// import { View, Text, StyleSheet, ScrollView, Image, TouchableOpacity } from 'react-native';
-// import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
-// import { Feather, Ionicons } from '@expo/vector-icons';
-// const appointment = () => {
-//   return (
-//     <View style={styles.container}>
-//       {/* Header */}
-//       <View style={styles.header}>
-//         <Text style={styles.headerTitle}>Appointments</Text>
-//         <TouchableOpacity>
-//           <Feather name="sun" size={24} color="#1f2937" />
-//         </TouchableOpacity>
-//       </View>
-
-//       <ScrollView contentContainerStyle={styles.contentContainer}>
-//         {/* Upcoming Appointments */}
-//         <Text style={styles.sectionTitle}>Upcoming</Text>
-//         <View style={styles.upcomingCard}>
-//           <View style={styles.calendarIconWrapper}>
-//             <Feather name="calendar" size={40} color="#14b8a6" />
-//           </View>
-//           <Text style={styles.cardTitle}>No upcoming appointments</Text>
-//           <Text style={styles.cardSubtitle}>Your upcoming appointments will appear here when you book.</Text>
-//           <TouchableOpacity style={styles.bookButton}>
-//             <Text style={styles.bookButtonText}>Book Appointment</Text>
-//           </TouchableOpacity>
-//         </View>
-
-//         {/* Past Appointments */}
-//         <View style={styles.pastHeader}>
-//           <Text style={styles.sectionTitle}>Past</Text>
-//           <View style={styles.badge}><Text style={styles.badgeText}>2</Text></View>
-//         </View>
-
-//         <View style={styles.pastCard}>
-//           <Image
-//             source={{ uri: 'https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?q=80&w=2670&auto=format&fit=crop' }}
-//             style={styles.salonImage}
-//           />
-//           <View style={styles.statusBadgeServed}><Text style={styles.statusBadgeText}>Served</Text></View>
-//           <View style={styles.cardContent}>
-//             <Text style={styles.salonName}>Style H Gents Salon</Text>
-//             <Text style={styles.dateTime}>Wed, Jun 18, 2025 at 12:30 PM</Text>
-//             <View style={styles.cardFooter}>
-//               <Text style={styles.amountText}>AED 235 • 2 items</Text>
-//               <TouchableOpacity style={styles.rebookButton}>
-//                 <Text style={styles.rebookButtonText}>Book again</Text>
-//               </TouchableOpacity>
-//             </View>
-//           </View>
-//         </View>
-
-//         <View style={styles.pastCard}>
-//           <Image
-//             source={{ uri: 'https://images.unsplash.com/photo-1521590832167-7bcbfaa6381f?q=80&w=2670&auto=format&fit=crop' }}
-//             style={styles.salonImage}
-//           />
-//           <View style={styles.statusBadgeCanceled}><Text style={styles.statusBadgeText}>Canceled</Text></View>
-//           <View style={styles.cardContent}>
-//             <Text style={styles.salonName}>Style H Gents Salon</Text>
-//             <Text style={styles.dateTime}>Tue, Jun 17, 2025 at 4:45 PM</Text>
-//             <View style={styles.cardFooter}>
-//               <Text style={styles.amountText}>AED 0 • 4 items</Text>
-//               <TouchableOpacity style={styles.rebookButton}>
-//                 <Text style={styles.rebookButtonText}>Book again</Text>
-//               </TouchableOpacity>
-//             </View>
-//           </View>
-//         </View>
-//       </ScrollView>
-//     </View>
-//   );
-// }
-
-// export default appointment
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: '#f3f4f6',
-//   },
-//   header: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     alignItems: 'center',
-//     padding: scale(16),
-//   },
-//   headerTitle: {
-//     fontSize: scale(20),
-//     fontWeight: 'bold',
-//     color: '#1f2937',
-//   },
-//   contentContainer: {
-//     padding: scale(16),
-//     paddingBottom: verticalScale(40)
-//   },
-//   sectionTitle: {
-//     fontSize: scale(18),
-//     fontWeight: '600',
-//     color: '#1f2937',
-//     marginBottom: verticalScale(10)
-//   },
-//   upcomingCard: {
-//     backgroundColor: '#ffffff',
-//     borderRadius: scale(16),
-//     padding: scale(20),
-//     alignItems: 'center',
-//     borderColor: '#e5e7eb',
-//     borderWidth: 1,
-//     marginBottom: verticalScale(24)
-//   },
-//   calendarIconWrapper: {
-//     backgroundColor: '#ccfbf1',
-//     width: scale(80),
-//     height: scale(80),
-//     borderRadius: scale(16),
-//     alignItems: 'center',
-//     justifyContent: 'center',
-//     marginBottom: verticalScale(20),
-//   },
-//   cardTitle: {
-//     fontSize: scale(16),
-//     fontWeight: 'bold',
-//     color: '#1f2937',
-//     marginBottom: verticalScale(4),
-//   },
-//   cardSubtitle: {
-//     color: '#6b7280',
-//     fontSize: scale(13),
-//     textAlign: 'center',
-//     marginBottom: verticalScale(20)
-//   },
-//   bookButton: {
-//     backgroundColor: '#14b8a6',
-//     paddingVertical: verticalScale(12),
-//     paddingHorizontal: scale(24),
-//     borderRadius: scale(12),
-//     shadowColor: '#14b8a6',
-//     shadowOpacity: 0.3,
-//     shadowRadius: 4,
-//     elevation: 3
-//   },
-//   bookButtonText: {
-//     color: '#ffffff',
-//     fontWeight: 'bold'
-//   },
-//   pastHeader: {
-//     flexDirection: 'row',
-//     alignItems: 'center',
-//     gap: scale(6),
-//     marginBottom: verticalScale(10)
-//   },
-//   badge: {
-//     backgroundColor: '#e5e7eb',
-//     borderRadius: scale(10),
-//     paddingHorizontal: scale(6),
-//     paddingVertical: verticalScale(2)
-//   },
-//   badgeText: {
-//     fontSize: scale(10),
-//     fontWeight: 'bold',
-//     color: '#374151'
-//   },
-//   pastCard: {
-//     backgroundColor: '#ffffff',
-//     borderRadius: scale(16),
-//     padding: scale(12),
-//     flexDirection: 'row',
-//     gap: scale(12),
-//     borderColor: '#e5e7eb',
-//     borderWidth: 1,
-//     position: 'relative',
-//   },
-//   salonImage: {
-//     width: scale(80),
-//     height: scale(80),
-//     borderRadius: scale(14)
-//   },
-//   statusBadgeServed: {
-//     position: 'absolute',
-//     top: scale(6),
-//     left: scale(70),
-//     backgroundColor: '#d1fae5',
-//     paddingHorizontal: scale(6),
-//     paddingVertical: verticalScale(2),
-//     borderRadius: scale(10),
-//     zIndex: 2
-//   },
-//   statusBadgeCanceled: {
-//     position: 'absolute',
-//     top: scale(6),
-//     left: scale(70),
-//     backgroundColor: '#fee2e2',
-//     paddingHorizontal: scale(6),
-//     paddingVertical: verticalScale(2),
-//     borderRadius: scale(10),
-//     zIndex: 2
-//   },
-//   statusBadgeText: {
-//     fontSize: scale(10),
-//     fontWeight: 'bold',
-//     color: '#1f2937'
-//   },
-//   cardContent: {
-//     flex: 1
-//   },
-//   salonName: {
-//     fontWeight: 'bold',
-//     fontSize: scale(14),
-//     color: '#1f2937'
-//   },
-//   dateTime: {
-//     color: '#6b7280',
-//     fontSize: scale(12),
-//     marginTop: verticalScale(2)
-//   },
-//   cardFooter: {
-//     flexDirection: 'row',
-//     justifyContent: 'space-between',
-//     alignItems: 'center',
-//     marginTop: verticalScale(10)
-//   },
-//   amountText: {
-//     fontSize: scale(11),
-//     color: '#9ca3af'
-//   },
-//   rebookButton: {
-//     backgroundColor: '#5eead4',
-//     paddingHorizontal: scale(12),
-//     paddingVertical: verticalScale(6),
-//     borderRadius: scale(8)
-//   },
-//   rebookButtonText: {
-//     color: '#0f766e',
-//     fontWeight: '600',
-//     fontSize: scale(12)
-//   }
-// })
+});

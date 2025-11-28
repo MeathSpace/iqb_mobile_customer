@@ -1,213 +1,240 @@
+import { BASE_URL } from "@/utils/api";
+import { useTheme } from "@react-navigation/native";
+import axios from "axios";
+import { useRouter } from "expo-router";
+import { useEffect, useRef, useState } from "react";
 import {
-    Pressable,
-    StyleSheet,
-    TextInput,
-    View,
-    Keyboard,
-    TouchableWithoutFeedback,
-    ActivityIndicator,
-    Alert,
-    TouchableOpacity
-} from 'react-native'
-import React, { useEffect, useRef, useState } from 'react'
-import { CloseIcon, ErrorIcon } from '../../../../constants/icons'
-import { scale, verticalScale } from 'react-native-size-matters';
-import { Colors } from '../../../../constants/Colors';
-import CustomText from '../../../../components/CustomText';
-import { useRouter } from 'expo-router';
-import { useTheme } from '@react-navigation/native';
-import { useAuth } from '../../../../context/AuthContext';
-import axios from 'axios';
-import { BASE_URL } from '@/utils/api';
-import { Toast } from 'toastify-react-native'
+  ActivityIndicator,
+  Alert,
+  Keyboard,
+  Linking,
+  Pressable,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
+import { scale, verticalScale } from "react-native-size-matters";
+import CustomText from "../../../../components/CustomText";
+import { Colors } from "../../../../constants/Colors";
+import { CloseIcon, ErrorIcon } from "../../../../constants/icons";
+import { useAuth } from "../../../../context/AuthContext";
 
 const helpSupport = () => {
-    const router = useRouter()
-    const { colors } = useTheme()
+  const router = useRouter();
+  const { colors } = useTheme();
 
-    const { authenticatedUser } = useAuth()
+  const { authenticatedUser } = useAuth();
 
-    const [subject, setSubject] = useState("")
-    const [body, setBody] = useState("")
+  const [subject, setSubject] = useState("");
+  const [body, setBody] = useState("");
 
-    const [subjectError, setSubjectError] = useState("")
-    const [bodyError, setBodyError] = useState("")
+  const [subjectError, setSubjectError] = useState("");
+  const [bodyError, setBodyError] = useState("");
 
-    const [sendMailLoading, setSendMailLoading] = useState(false)
+  const [sendMailLoading, setSendMailLoading] = useState(false);
 
-    const sendCustomerSupportMail = async () => {
-        try {
-            if (!subject) {
-                setSubjectError("Subject is required");
-                return;
-            }
+  const sendCustomerSupportMail = async () => {
+    try {
+      if (!subject) {
+        setSubjectError("Subject is required");
+        return;
+      }
 
-            if (!body) {
-                setBodyError("Body is required");
-                return;
-            }
+      if (!body) {
+        setBodyError("Body is required");
+        return;
+      }
 
-            setSendMailLoading(true);
+      setSendMailLoading(true);
 
-            const { data } = await axios.post(`${BASE_URL}/customer/sendSupportMailCustomer`, {
-                salonId: authenticatedUser?.salonId,
-                email: authenticatedUser?.email,
-                subject,
-                text: body
-            });
-
-            setSendMailLoading(false);
-
-            // Show success Alert
-            Alert.alert(
-                "Success",
-                "Email has been sent successfully to admin.",
-                [
-                    {
-                        text: "OK",
-                        onPress: () => router.back(), // navigate back after user acknowledges
-                    },
-                ],
-                { cancelable: false }
-            );
-
-        } catch (error) {
-            setSendMailLoading(false);
-            console.log("Error sending mail ", error);
-
-            // Show error Alert
-            Alert.alert(
-                "Error",
-                error?.response?.data?.message || "Something went wrong. Please try again later."
-            );
+      const { data } = await axios.post(
+        `${BASE_URL}/customer/sendSupportMailCustomer`,
+        {
+          salonId: authenticatedUser?.salonId,
+          email: authenticatedUser?.email,
+          subject,
+          text: body,
         }
+      );
+
+      setSendMailLoading(false);
+
+      // Show success Alert
+      Alert.alert(
+        "Success",
+        "Email has been sent successfully to admin.",
+        [
+          {
+            text: "OK",
+            onPress: () => router.back(), // navigate back after user acknowledges
+          },
+        ],
+        { cancelable: false }
+      );
+    } catch (error) {
+      setSendMailLoading(false);
+      console.log("Error sending mail ", error);
+
+      // Show error Alert
+      Alert.alert(
+        "Error",
+        error?.response?.data?.message ||
+          "Something went wrong. Please try again later."
+      );
+    }
+  };
+
+  const subjectTimeoutRef = useRef(null);
+  const bodyTimeoutRef = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      if (subjectTimeoutRef.current) clearTimeout(subjectTimeoutRef.current);
+      if (bodyTimeoutRef.current) clearTimeout(bodyTimeoutRef.current);
     };
+  }, []);
 
-    const subjectTimeoutRef = useRef(null);
-    const bodyTimeoutRef = useRef(null);
+  const openLink = async (url) => {
+    if (url) {
+      await Linking.openURL(url);
+    } else {
+      console.warn("Invalid URL || Cannot Open it");
+    }
+  };
 
-    useEffect(() => {
-        return () => {
-            if (subjectTimeoutRef.current) clearTimeout(subjectTimeoutRef.current);
-            if (bodyTimeoutRef.current) clearTimeout(bodyTimeoutRef.current);
-        };
-    }, []);
-    return (
-        <TouchableWithoutFeedback onPress={() => {
-            router.back()
-            Keyboard.dismiss
-        }}>
-            <View style={styles.overlay}>
-                <Pressable
-                    onPress={() => { }}
-                    style={[styles.container, { backgroundColor: colors.background, borderColor: colors.cardBorder }]}>
-                    <CustomText style={styles.title}>Help & Support</CustomText>
+  return (
+    <TouchableWithoutFeedback
+      onPress={() => {
+        router.back();
+        Keyboard.dismiss;
+      }}
+    >
+      <View style={styles.overlay}>
+        <Pressable
+          onPress={() => {}}
+          style={[
+            styles.container,
+            {
+              backgroundColor: colors.background,
+              borderColor: colors.cardBorder,
+            },
+          ]}
+        >
+          <CustomText style={styles.title}>Help & Support</CustomText>
 
-                    <CustomText style={[styles.description, { color: colors.secondaryText }]}>
-                        If you are experiencing any issues, please let us know. We will try to resolve them as soon as possible.
-                    </CustomText>
+          <CustomText
+            style={[styles.description, { color: colors.secondaryText }]}
+          >
+            If you are experiencing any issues, please let us know. We will try
+            to resolve them as soon as possible.
+          </CustomText>
 
-                    <TextInput
-                        editable
-                        placeholder="Title"
-                        placeholderTextColor="gray"
-                        style={[
-                            styles.inputField,
-                            {
-                                // borderColor: "#DDDDDD",
-                                // backgroundColor: "#00B0901A",
-                                backgroundColor: colors.cardColor,
-                                borderWidth: scale(1),
-                                borderColor: colors.queueBorder,
-                                fontFamily: "AirbnbCereal_W_Md",
-                                color: colors.text
-                            }
-                        ]}
-                        value={subject}
-                        // onChangeText={(text) => {
-                        //     setSubjectError("")
-                        //     setSubject(text)
-                        // }}
-                        onChangeText={(text) => {
-                            setSubjectError("");
-                            setSubject(text);
+          <TextInput
+            editable
+            placeholder="Title"
+            placeholderTextColor="gray"
+            style={[
+              styles.inputField,
+              {
+                // borderColor: "#DDDDDD",
+                // backgroundColor: "#00B0901A",
+                backgroundColor: colors.cardColor,
+                borderWidth: scale(1),
+                borderColor: colors.queueBorder,
+                fontFamily: "AirbnbCereal_W_Md",
+                color: colors.text,
+              },
+            ]}
+            value={subject}
+            // onChangeText={(text) => {
+            //     setSubjectError("")
+            //     setSubject(text)
+            // }}
+            onChangeText={(text) => {
+              setSubjectError("");
+              setSubject(text);
 
-                            if (subjectTimeoutRef.current) {
-                                clearTimeout(subjectTimeoutRef.current);
-                            }
+              if (subjectTimeoutRef.current) {
+                clearTimeout(subjectTimeoutRef.current);
+              }
 
-                            subjectTimeoutRef.current = setTimeout(() => {
-                                Keyboard.dismiss();
-                            }, 3000);
-                        }}
-                    />
+              subjectTimeoutRef.current = setTimeout(() => {
+                Keyboard.dismiss();
+              }, 3000);
+            }}
+          />
 
-                    {
-                        subjectError && (
-                            <View style={{
-                                flexDirection: "row",
-                                alignItems: "center",
-                                gap: scale(5),
-                            }}>
-                                <ErrorIcon color='red' size={scale(16)} />
-                                <CustomText style={{ fontSize: scale(12), color: "red", }}>{subjectError}</CustomText>
-                            </View>
-                        )
-                    }
+          {subjectError && (
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                gap: scale(5),
+              }}
+            >
+              <ErrorIcon color="red" size={scale(16)} />
+              <CustomText style={{ fontSize: scale(12), color: "red" }}>
+                {subjectError}
+              </CustomText>
+            </View>
+          )}
 
-                    <TextInput
-                        style={[
-                            styles.inputField,
-                            {
-                                minHeight: verticalScale(120),
-                                textAlignVertical: "top",
-                                // borderColor: "#DDDDDD",
-                                // backgroundColor: "#00B0901A",
-                                backgroundColor: colors.cardColor,
-                                borderWidth: scale(1),
-                                color: colors.text,
-                                borderColor: colors.queueBorder,
-                                fontFamily: "AirbnbCereal_W_Md"
-                            }
-                        ]}
-                        multiline
-                        placeholderTextColor="gray"
-                        placeholder="Explain the problem"
-                        value={body}
-                        // onChangeText={(text) => {
-                        //     setBodyError("")
-                        //     setBody(text)
-                        // }}
+          <TextInput
+            style={[
+              styles.inputField,
+              {
+                minHeight: verticalScale(120),
+                textAlignVertical: "top",
+                // borderColor: "#DDDDDD",
+                // backgroundColor: "#00B0901A",
+                backgroundColor: colors.cardColor,
+                borderWidth: scale(1),
+                color: colors.text,
+                borderColor: colors.queueBorder,
+                fontFamily: "AirbnbCereal_W_Md",
+              },
+            ]}
+            multiline
+            placeholderTextColor="gray"
+            placeholder="Explain the problem"
+            value={body}
+            // onChangeText={(text) => {
+            //     setBodyError("")
+            //     setBody(text)
+            // }}
 
-                        onChangeText={(text) => {
-                            setBodyError("");
-                            setBody(text);
+            onChangeText={(text) => {
+              setBodyError("");
+              setBody(text);
 
-                            if (bodyTimeoutRef.current) {
-                                clearTimeout(bodyTimeoutRef.current);
-                            }
+              if (bodyTimeoutRef.current) {
+                clearTimeout(bodyTimeoutRef.current);
+              }
 
-                            bodyTimeoutRef.current = setTimeout(() => {
-                                Keyboard.dismiss();
-                            }, 3000);
-                        }}
+              bodyTimeoutRef.current = setTimeout(() => {
+                Keyboard.dismiss();
+              }, 3000);
+            }}
+          />
 
-                    />
+          {bodyError && (
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                gap: scale(5),
+              }}
+            >
+              <ErrorIcon color="red" size={scale(16)} />
+              <CustomText style={{ fontSize: scale(12), color: "red" }}>
+                {bodyError}
+              </CustomText>
+            </View>
+          )}
 
-                    {
-                        bodyError && (
-                            <View style={{
-                                flexDirection: "row",
-                                alignItems: "center",
-                                gap: scale(5),
-                            }}>
-                                <ErrorIcon color='red' size={scale(16)} />
-                                <CustomText style={{ fontSize: scale(12), color: "red", }}>{bodyError}</CustomText>
-                            </View>
-                        )
-                    }
-
-                    {/* <Pressable
+          {/* <Pressable
                         onPress={sendCustomerSupportMail}
                         style={styles.submitButton}>
                         {
@@ -219,112 +246,111 @@ const helpSupport = () => {
                         }
                     </Pressable> */}
 
-                    <TouchableOpacity
-                        onPress={sendCustomerSupportMail}
-                        style={styles.queueButton} activeOpacity={0.85}>
+          <TouchableOpacity
+            onPress={sendCustomerSupportMail}
+            style={styles.queueButton}
+            activeOpacity={0.85}
+          >
+            {sendMailLoading ? (
+              <ActivityIndicator size="small" color="#fff" />
+            ) : (
+              <CustomText style={styles.queueButtonText}>Submit</CustomText>
+            )}
+          </TouchableOpacity>
 
-                        {
-                            sendMailLoading ? (
-                                <ActivityIndicator size="small" color="#fff" />
-                            ) : (
-                                <CustomText style={styles.queueButtonText}>Submit</CustomText>
-                            )
-                        }
+          <Pressable
+            onPress={() => {
+              openLink(`mailto:support@iqbook.io`);
+            }}
+          >
+            <CustomText style={styles.contactText}>
+              Email Us :{" "}
+              <CustomText style={styles.phoneNumber}>
+                support@iqbook.io
+              </CustomText>
+            </CustomText>
+          </Pressable>
 
-                    </TouchableOpacity>
+          <Pressable onPress={() => router.back()} style={styles.closeButton}>
+            <CloseIcon size={scale(16)} color="#E11D48" />
+          </Pressable>
+        </Pressable>
+      </View>
+    </TouchableWithoutFeedback>
+  );
+};
 
-                    <CustomText style={styles.contactText}>
-                        Contact us on{" "}{" "}
-                        <CustomText style={styles.phoneNumber}>+44 1234567892</CustomText>
-                    </CustomText>
-
-                    <Pressable
-                        onPress={() => router.back()}
-                        style={styles.closeButton}
-                    >
-                        <CloseIcon
-                            size={scale(16)}
-                            color="#E11D48"
-                        />
-                    </Pressable>
-                </Pressable>
-            </View>
-
-        </TouchableWithoutFeedback>
-    )
-}
-
-export default helpSupport
+export default helpSupport;
 
 const styles = StyleSheet.create({
-    overlay: {
-        flex: 1,
-        backgroundColor: "rgba(0,0,0,0.2)",
-        justifyContent: "center",
-        alignItems: "center"
-    },
-    container: {
-        width: "95%",
-        borderRadius: scale(12),
-        borderWidth: scale(1),
-        justifyContent: "space-between",
-        gap: verticalScale(10),
-        padding: scale(17),
-        position: 'relative'
-    },
-    title: {
-        fontFamily: "AirbnbCereal_W_XBd",
-        fontSize: scale(18),
-        textAlign: "center"
-    },
-    description: {
-        fontSize: scale(14),
-    },
-    inputField: {
-        borderRadius: scale(4),
-        // borderWidth: scale(1),
-        padding: scale(16),
-    },
-    submitButton: {
-        height: verticalScale(44),
-        width: "100%",
-        borderRadius: scale(8),
-        backgroundColor: Colors.modeColor.colorCode,
-        justifyContent: "center",
-        alignItems: "center",
-    },
-    contactText: {
-        fontSize: scale(14),
-        textAlign: "center"
-    },
-    phoneNumber: {
-        color: Colors.modeColor.colorCode,
-        fontSize: scale(14),
-    },
-    closeButton: {
-        position: "absolute",
-        top: verticalScale(10),
-        right: scale(10),
-        width: scale(30),
-        height: scale(30),
-        justifyContent: "center",
-        alignItems: "center",
-        backgroundColor: "#E11D481A",
-        borderRadius: scale(40),
-    },
+  overlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.2)",
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  container: {
+    width: "95%",
+    borderRadius: scale(12),
+    borderWidth: scale(1),
+    justifyContent: "space-between",
+    gap: verticalScale(10),
+    padding: scale(17),
+    position: "relative",
+  },
+  title: {
+    fontFamily: "AirbnbCereal_W_XBd",
+    fontSize: scale(18),
+    textAlign: "center",
+  },
+  description: {
+    fontSize: scale(14),
+  },
+  inputField: {
+    borderRadius: scale(4),
+    // borderWidth: scale(1),
+    padding: scale(16),
+  },
+  submitButton: {
+    height: verticalScale(44),
+    width: "100%",
+    borderRadius: scale(8),
+    backgroundColor: Colors.modeColor.colorCode,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  contactText: {
+    fontSize: scale(14),
+    textAlign: "center",
+  },
+  phoneNumber: {
+    color: Colors.modeColor.colorCode,
+    fontSize: scale(14),
+  },
+  closeButton: {
+    position: "absolute",
+    top: verticalScale(10),
+    right: scale(10),
+    width: scale(30),
+    height: scale(30),
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#E11D481A",
+    borderRadius: scale(40),
+  },
 
-    queueButton: {
-        width: '100%',
-        backgroundColor: '#14b8a6', // bg-teal-500
-        paddingVertical: verticalScale(16), // py-4
-        borderRadius: scale(12), // rounded-xl
-        marginBottom: verticalScale(15), // mb-6
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    queueButtonText: {
-        color: '#fff', // text-white
-        fontFamily: "AirbnbCereal_W_XBd",
-        fontSize: scale(16),
-    },
-})
+  queueButton: {
+    width: "100%",
+    backgroundColor: "#14b8a6", // bg-teal-500
+    paddingVertical: verticalScale(16), // py-4
+    borderRadius: scale(12), // rounded-xl
+    marginBottom: verticalScale(15), // mb-6
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  queueButtonText: {
+    color: "#fff", // text-white
+    fontFamily: "AirbnbCereal_W_XBd",
+    fontSize: scale(16),
+  },
+});

@@ -573,18 +573,18 @@ const salon = () => {
                                                         borderColor: colors.queueBorder,
                                                         borderRadius: scale(12),
                                                         padding: scale(10),
-                                                        gap: verticalScale(5)
+                                                        // gap: verticalScale(5)
                                                     }}
                                                 >
                                                     <CustomText
                                                         style={{
-                                                            fontFamily: "AirbnbCereal_W_Bd",
+                                                            fontFamily: "AirbnbCereal_W_XBd",
                                                         }}
                                                     >Description</CustomText>
 
                                                     <CustomSecondaryText
                                                         style={{
-                                                            fontSize: scale(14),
+                                                            // fontSize: scale(14),
                                                         }}
                                                     >{salonInfoData?.data?.salonInfo?.salonDesc}</CustomSecondaryText>
                                                 </View>
@@ -606,13 +606,13 @@ const salon = () => {
                                                     <View>
                                                         <CustomText
                                                             style={{
-                                                                fontFamily: "AirbnbCereal_W_Bd",
+                                                                fontFamily: "AirbnbCereal_W_XBd",
                                                             }}
                                                         >Contact Us</CustomText>
 
                                                         <CustomSecondaryText
                                                             style={{
-                                                                fontSize: scale(14),
+                                                                // fontSize: scale(14),
                                                             }}
                                                         >
                                                             If you have any questions
@@ -734,13 +734,13 @@ const salon = () => {
                                                         <View>
                                                             <CustomText
                                                                 style={{
-                                                                    fontFamily: "AirbnbCereal_W_Bd",
+                                                                    fontFamily: "AirbnbCereal_W_XBd",
                                                                 }}
                                                             >Location</CustomText>
 
                                                             <CustomSecondaryText
                                                                 style={{
-                                                                    fontSize: scale(14),
+                                                                    // fontSize: scale(14),
                                                                     maxWidth: "90%"
                                                                 }}
                                                             >
@@ -784,13 +784,13 @@ const salon = () => {
                                                             <View>
                                                                 <CustomText
                                                                     style={{
-                                                                        fontFamily: "AirbnbCereal_W_Bd",
+                                                                        fontFamily: "AirbnbCereal_W_XBd",
                                                                     }}
                                                                 >Follow us on</CustomText>
 
                                                                 <CustomSecondaryText
                                                                     style={{
-                                                                        fontSize: scale(14),
+                                                                        // fontSize: scale(14),
                                                                     }}
                                                                 >
                                                                     Social links
@@ -932,9 +932,9 @@ const salon = () => {
                                                                 <Image source={{ uri: ser?.serviceIcon?.url }} style={styles.icon} />
                                                                 <View style={styles.cardContent}>
                                                                     <CustomText style={styles.serviceName}>{ser.serviceName}</CustomText>
-                                                                    <CustomText style={[styles.serviceDesc, { color: colors.secondaryText }]}>
+                                                                    <CustomSecondaryText style={[styles.serviceDesc, { color: colors.secondaryText }]}>
                                                                         {ser.serviceDesc}
-                                                                    </CustomText>
+                                                                    </CustomSecondaryText>
                                                                     <View
                                                                         style={{
                                                                             flexDirection: "row",
@@ -943,9 +943,9 @@ const salon = () => {
                                                                             marginTop: verticalScale(5),
                                                                         }}
                                                                     >
-                                                                        <CustomText style={styles.servicePrice}>
+                                                                        <CustomSecondaryText style={styles.servicePrice}>
                                                                             {authenticatedUser?.currency} {ser.servicePrice}
-                                                                        </CustomText>
+                                                                        </CustomSecondaryText>
                                                                         <CustomText style={[styles.serviceEWT, { color: colors.secondaryText }]}>
                                                                             ~ {formatMinutesToHrMin(ser.serviceEWT)}
                                                                         </CustomText>
@@ -1128,18 +1128,18 @@ const styles = StyleSheet.create({
     },
     
     serviceName: {
-        fontSize: scale(16),
-        fontFamily: "AirbnbCereal_W_Bd"
+        // fontSize: scale(16),
+        fontFamily: "AirbnbCereal_W_XBd"
     },
     serviceDesc: {
-        fontSize: scale(14),
+        // fontSize: scale(14),
     },
     servicePrice: {
-        fontSize: scale(14),
+        // fontSize: scale(14),
         fontFamily: "AirbnbCereal_W_Bd",
         color: '#14b8a6'
     },
     serviceEWT: {
-        fontSize: scale(12),
+        fontSize: moderateScale(12),
     },
 })
