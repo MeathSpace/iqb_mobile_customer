@@ -1015,9 +1015,34 @@ const Dashboard = () => {
                       </View>
                       <TouchableOpacity
                         onPress={() => {
-                          Linking.openURL(
-                            "https://play.google.com/store/apps/details?id=com.iqbook.iqb"
-                          );
+                          // if (Platform.OS === "ios") {
+                          //   console.log("Go to ios");
+                          // } else {
+                          //   Linking.openURL(
+                          //     "https://play.google.com/store/apps/details?id=com.iqbook.iqb"
+                          //   );
+                          // }
+
+                          if (Platform.OS === "ios") {
+                            const iosUrl = `https://apps.apple.com/in/app/iqbook/id6742742449`;
+
+                            Linking.openURL(iosUrl).catch((err) => {
+                              console.error(
+                                "Could not open iOS App Store link:",
+                                err
+                              );
+                            });
+                          } else {
+                            const androidUrl =
+                              "https://play.google.com/store/apps/details?id=com.iqbook.iqb";
+
+                            Linking.openURL(androidUrl).catch((err) => {
+                              console.error(
+                                "Could not open Android Play Store link:",
+                                err
+                              );
+                            });
+                          }
                         }}
                         style={{
                           paddingHorizontal: scale(10),
