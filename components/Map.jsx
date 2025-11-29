@@ -1384,7 +1384,7 @@ const Map = () => {
                                                                                     },
                                                                                 ]}
                                                                             >
-                                                                                <Image source={{ uri: ser?.serviceIcon?.url }} style={styles.icon} />
+                                                                                {/* <Image source={{ uri: ser?.serviceIcon?.url }} style={styles.icon} /> */}
                                                                                 <View style={styles.cardContent}>
                                                                                     <CustomText style={styles.serviceName}>{ser.serviceName}</CustomText>
                                                                                     <CustomSecondaryText style={[styles.serviceDesc, {  }]}>

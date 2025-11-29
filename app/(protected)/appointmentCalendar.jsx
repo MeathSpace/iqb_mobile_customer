@@ -25,13 +25,7 @@ import { Toast } from "toastify-react-native";
 import CustomSecondaryText from "../../components/CustomSecondaryText";
 import CustomText from "../../components/CustomText";
 import Skeleton from "../../components/Skeleton";
-import {
-  ArrowLeftIcon,
-  CheckIcon,
-  ClockIcon,
-  LeftIcon,
-  RightIcon,
-} from "../../constants/icons";
+import { ArrowLeftIcon, LeftIcon, RightIcon } from "../../constants/icons";
 import { useAuth } from "../../context/AuthContext";
 
 const appointmentCalendar = () => {
@@ -719,120 +713,216 @@ const appointmentCalendar = () => {
                 })
               : salonServices?.data?.map((item, index) => {
                   return (
+                    // <Pressable
+                    //   key={item?.serviceId}
+                    //   style={{
+                    //     borderRadius: scale(10),
+                    //     backgroundColor: "#00B0901A",
+                    //     padding: scale(12),
+                    //     gap: verticalScale(10),
+                    //   }}
+                    // >
+                    //   <View
+                    //     style={{
+                    //       flexDirection: "row",
+                    //       justifyContent: "space-between",
+                    //     }}
+                    //   >
+                    //     <View
+                    //       style={{
+                    //         flexDirection: "row",
+                    //         alignItems: "center",
+                    //         gap: scale(10),
+                    //         width: "75%",
+                    //       }}
+                    //     >
+
+                    //       <View
+                    //         style={{
+                    //           gap: verticalScale(5),
+                    //         }}
+                    //       >
+                    //         <CustomText
+                    //           style={{
+                    //             fontSize: moderateScale(14),
+                    //             fontFamily: "AirbnbCereal_W_Bd",
+                    //           }}
+                    //         >
+                    //           {item?.serviceName}
+                    //         </CustomText>
+                    //         <Pressable
+                    //           style={{
+                    //             height: verticalScale(15),
+                    //             paddingHorizontal: scale(8),
+                    //             backgroundColor: "#00B0901A",
+                    //             borderRadius: scale(4),
+                    //             justifyContent: "center",
+                    //             alignItems: "center",
+                    //             alignSelf: "flex-start",
+                    //           }}
+                    //         >
+                    //           <CustomText
+                    //             style={{
+                    //               fontSize: moderateScale(10),
+                    //               color: "#00B090",
+                    //             }}
+                    //           >
+                    //             {item?.serviceCategoryName}
+                    //           </CustomText>
+                    //         </Pressable>
+
+                    //         <CustomSecondaryText>
+                    //           {item?.serviceDesc}
+                    //         </CustomSecondaryText>
+
+                    //         <CustomText
+                    //           style={{
+                    //             fontFamily: "AirbnbCereal_W_Blk",
+                    //             fontSize: scale(18),
+                    //             color: "#14b8a6",
+                    //           }}
+                    //         >
+                    //           {authenticatedUser?.currency} {item?.servicePrice}
+                    //         </CustomText>
+                    //       </View>
+                    //     </View>
+
+                    //     {item?.selected ? (
+                    //       <Pressable
+                    //         onPress={() => removeServiceHandler(item)}
+                    //         style={{
+                    //           height: verticalScale(20),
+                    //           width: scale(60),
+                    //           backgroundColor: "#E11D48",
+                    //           borderRadius: scale(4),
+                    //           justifyContent: "center",
+                    //           alignItems: "center",
+                    //         }}
+                    //       >
+                    //         <CustomText
+                    //           style={{ fontSize: scale(12), color: "#fff" }}
+                    //         >
+                    //           Remove
+                    //         </CustomText>
+                    //       </Pressable>
+                    //     ) : (
+                    //       <Pressable
+                    //         onPress={() => addServiceHandler(item)}
+                    //         style={{
+                    //           height: verticalScale(20),
+                    //           width: scale(55),
+                    //           backgroundColor: "#1f2937",
+                    //           borderRadius: scale(4),
+                    //           justifyContent: "center",
+                    //           alignItems: "center",
+                    //         }}
+                    //       >
+                    //         <CustomText
+                    //           style={{ fontSize: scale(12), color: "#fff" }}
+                    //         >
+                    //           Add
+                    //         </CustomText>
+                    //       </Pressable>
+                    //     )}
+                    //   </View>
+                    // </Pressable>
+
                     <Pressable
                       key={item?.serviceId}
                       style={{
-                        borderRadius: scale(10),
-                        backgroundColor: "#00B0901A",
-                        padding: scale(12),
-                        gap: verticalScale(10),
+                        borderRadius: scale(12),
+                        backgroundColor: colors.background,
+                        padding: scale(14),
+                        gap: verticalScale(12),
+                        borderWidth: 1,
+                        borderColor: colors.cardBorder,
                       }}
                     >
                       <View
                         style={{
                           flexDirection: "row",
                           justifyContent: "space-between",
+                          alignItems: "flex-start",
                         }}
                       >
+                        {/* LEFT SIDE */}
                         <View
                           style={{
                             flexDirection: "row",
-                            alignItems: "center",
-                            gap: scale(10),
+                            alignItems: "flex-start",
+                            gap: scale(12),
                             width: "75%",
                           }}
                         >
-                          {item?.selected ? (
-                            <View
-                              style={{
-                                height: scale(50),
-                                width: scale(50),
-                                borderRadius: scale(80),
-                                backgroundColor: "rgba(0,0,0,0.4)",
-                                position: "relative",
-                              }}
-                            >
-                              <Image
-                                style={{
-                                  height: scale(50),
-                                  width: scale(50),
-                                  borderRadius: scale(80),
-                                  zIndex: -1,
-                                }}
-                                source={{ uri: item?.serviceIcon?.url }}
-                                // placeholder={{ blurhash }}
-                                contentFit="cover"
-                                transition={300}
-                              />
-                              <CheckIcon
-                                color="#fff"
-                                style={{
-                                  position: "absolute",
-                                  top: scale(14),
-                                  left: scale(14),
-                                }}
-                              />
-                            </View>
-                          ) : (
-                            <Image
-                              style={{
-                                height: scale(50),
-                                width: scale(50),
-                                borderRadius: scale(80),
-                              }}
-                              source={{ uri: item?.serviceIcon?.url }}
-                              // placeholder={{ blurhash }}
-                              contentFit="cover"
-                              transition={300}
-                            />
-                          )}
-
                           <View
-                            style={{
-                              gap: verticalScale(5),
-                              width: "65%",
-                            }}
+                            style={{ gap: verticalScale(8), flexShrink: 1 }}
                           >
+                            {/* SERVICE NAME */}
                             <CustomText
                               style={{
-                                fontSize: moderateScale(14),
+                                fontSize: moderateScale(15),
                                 fontFamily: "AirbnbCereal_W_Bd",
-                                // maxWidth: "85%"
+                                // color: "#0F172A",
                               }}
                             >
                               {item?.serviceName}
                             </CustomText>
+
+                            {/* CATEGORY BADGE */}
                             <Pressable
                               style={{
-                                height: verticalScale(15),
-                                paddingHorizontal: scale(8),
-                                backgroundColor: "#00B0901A",
-                                borderRadius: scale(4),
-                                justifyContent: "center",
-                                alignItems: "center",
+                                paddingHorizontal: scale(10),
+                                paddingVertical: verticalScale(3),
+                                backgroundColor: "#CCF2E8",
+                                borderRadius: scale(6),
                                 alignSelf: "flex-start",
                               }}
                             >
                               <CustomText
                                 style={{
-                                  fontSize: moderateScale(10),
-                                  color: "#00B090",
+                                  fontSize: moderateScale(11),
+                                  fontFamily: "AirbnbCereal_W_Md",
+                                  color: "#0D9488",
                                 }}
                               >
                                 {item?.serviceCategoryName}
                               </CustomText>
                             </Pressable>
+
+                            {/* DESCRIPTION */}
+                            {/* <CustomSecondaryText
+                              style={{
+                                fontSize: moderateScale(12),
+                                // color: "#475569",
+                                lineHeight: scale(16),
+                              }}
+                            >
+                              {item?.serviceDesc}
+                            </CustomSecondaryText> */}
+
+                            {/* PRICE */}
+                            <CustomText
+                              style={{
+                                fontFamily: "AirbnbCereal_W_Blk",
+                                fontSize: scale(20),
+                                color: "#0D9488",
+                                marginTop: verticalScale(4),
+                              }}
+                            >
+                              {authenticatedUser?.currency} {item?.servicePrice}
+                            </CustomText>
                           </View>
                         </View>
 
+                        {/* RIGHT SIDE BUTTON */}
                         {item?.selected ? (
                           <Pressable
                             onPress={() => removeServiceHandler(item)}
                             style={{
-                              height: verticalScale(20),
-                              width: scale(60),
-                              backgroundColor: "#E11D48",
-                              borderRadius: scale(4),
+                              height: verticalScale(28),
+                              paddingHorizontal: scale(8),
+                              backgroundColor: "#DC2626",
+                              borderRadius: scale(6),
                               justifyContent: "center",
                               alignItems: "center",
                             }}
@@ -847,10 +937,10 @@ const appointmentCalendar = () => {
                           <Pressable
                             onPress={() => addServiceHandler(item)}
                             style={{
-                              height: verticalScale(20),
-                              width: scale(55),
-                              backgroundColor: "#1f2937",
-                              borderRadius: scale(4),
+                              height: verticalScale(28),
+                              paddingHorizontal: scale(12),
+                              backgroundColor: "#000",
+                              borderRadius: scale(6),
                               justifyContent: "center",
                               alignItems: "center",
                             }}
@@ -862,60 +952,6 @@ const appointmentCalendar = () => {
                             </CustomText>
                           </Pressable>
                         )}
-                      </View>
-
-                      <View
-                        style={{
-                          marginTop: verticalScale(5),
-                          gap: verticalScale(5),
-                        }}
-                      >
-                        <CustomSecondaryText
-                          style={
-                            {
-                              // fontSize: scale(12),
-                            }
-                          }
-                        >
-                          {item?.serviceDesc}
-                        </CustomSecondaryText>
-
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            justifyContent: "space-between",
-                          }}
-                        >
-                          {/* <View
-                            style={{
-                              flexDirection: "row",
-                              alignItems: "center",
-                              gap: scale(2),
-                              backgroundColor: colors.background,
-                              paddingHorizontal: scale(5),
-                              borderRadius: scale(4),
-                            }}
-                          >
-                            <ClockIcon size={scale(12)} color={"#14b8a6"} />
-                            <CustomText
-                              style={{ fontSize: scale(12), color: "#14b8a6" }}
-                            >
-                              {formatMinutesToHrMin(item?.serviceEWT)}
-                            </CustomText>
-                          </View> */}
-                          <View/>
-
-                          <CustomText
-                            style={{
-                              fontFamily: "AirbnbCereal_W_Blk",
-                              fontSize: scale(18),
-                              color: "#14b8a6",
-                            }}
-                          >
-                            {authenticatedUser?.currency} {item?.servicePrice}
-                          </CustomText>
-                        </View>
                       </View>
                     </Pressable>
                   );

@@ -12,11 +12,12 @@ import {
   View,
 } from "react-native";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
+import CustomSecondaryText from "../../components/CustomSecondaryText";
 import CustomText from "../../components/CustomText";
 import { useAuth } from "../../context/AuthContext";
 import { useGlobal } from "../../context/GlobalContext";
 import { ddmmformatDate } from "../../utils/ddmmformatDate";
-import CustomSecondaryText from "../../components/CustomSecondaryText";
+import moment from "moment";
 
 const appointmentPop = () => {
   const router = useRouter();
@@ -160,14 +161,16 @@ const appointmentPop = () => {
             >
               {selectedAppointmentParse?.barbername}
             </CustomText>
-            <CustomSecondaryText
-              style={[styles.datetime, {  }]}
-            >
-              {ddmmformatDate(selectedAppointmentParse?.appointmentDate?.split("T")[0])} (
-              {selectedAppointmentParse?.timeSlots})
+
+            <CustomSecondaryText style={styles.datetime}>
+              {`${moment(selectedAppointmentParse?.appointmentDate).format(
+                "dddd"
+              )}  |  ${ddmmformatDate(
+                selectedAppointmentParse?.appointmentDate?.split("T")[0]
+              )}  |  ${selectedAppointmentParse?.timeSlots?.split("-")[0]}`}
             </CustomSecondaryText>
 
-            <CustomSecondaryText style={[styles.meta, {  }]}>
+            <CustomSecondaryText style={[styles.meta, {}]}>
               {authenticatedUser?.currency}{" "}
               {selectedAppointmentParse?.services?.reduce(
                 (sum, service) => sum + (service?.servicePrice || 0),
@@ -292,9 +295,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "space-between",
   },
-  title: {
-
-  },
+  title: {},
   datetime: {
     fontSize: moderateScale(12),
     marginTop: verticalScale(2),

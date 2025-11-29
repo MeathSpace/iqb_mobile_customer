@@ -498,6 +498,7 @@ import { usePreventRemove, useTheme } from "@react-navigation/native";
 import axios from "axios";
 import { Image } from "expo-image";
 import { useFocusEffect, useRouter } from "expo-router";
+import moment from "moment/moment";
 import { useCallback, useState } from "react";
 import {
   Alert,
@@ -513,6 +514,7 @@ import {
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import { io } from "socket.io-client";
 import { Toast } from "toastify-react-native";
+import CustomSecondaryText from "../../../components/CustomSecondaryText";
 import CustomTabView from "../../../components/CustomTabView";
 import CustomText from "../../../components/CustomText";
 import Skeleton from "../../../components/Skeleton";
@@ -520,7 +522,6 @@ import { NotificationIcon } from "../../../constants/icons";
 import { useAuth } from "../../../context/AuthContext";
 import { useGlobal } from "../../../context/GlobalContext";
 import { ddmmformatDate } from "../../../utils/ddmmformatDate";
-import CustomSecondaryText from "../../../components/CustomSecondaryText";
 
 const appointment = () => {
   const customPageData = ["header", "list"];
@@ -987,16 +988,16 @@ const appointment = () => {
                     >
                       {item.barbername}
                     </CustomText>
-                    <CustomSecondaryText
-                      style={[styles.datetime, {  }]}
-                    >
-                      {ddmmformatDate(item?.appointmentDate?.split("T")[0])} (
-                      {item?.timeSlots})
+
+                    <CustomSecondaryText style={styles.datetime}>
+                      {`${moment(item?.appointmentDate).format(
+                        "dddd"
+                      )}  |  ${ddmmformatDate(
+                        item?.appointmentDate?.split("T")[0]
+                      )}  |  ${item?.timeSlots?.split("-")[0]}`}
                     </CustomSecondaryText>
 
-                    <CustomSecondaryText
-                      style={[styles.meta, {  }]}
-                    >
+                    <CustomSecondaryText style={[styles.meta, {}]}>
                       {authenticatedUser?.currency}{" "}
                       {item?.services?.reduce(
                         (sum, service) => sum + (service?.servicePrice || 0),
@@ -1173,7 +1174,7 @@ const styles = StyleSheet.create({
     marginTop: verticalScale(8),
   },
   meta: {
-    fontSize: moderateScale(12),
+    fontSize: moderateScale(12.5),
   },
   rebookButton: {
     backgroundColor: "#ccfbf1",
