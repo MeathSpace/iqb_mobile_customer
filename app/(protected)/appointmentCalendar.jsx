@@ -1202,48 +1202,6 @@ const appointmentCalendar = () => {
                     >
                       {day.date}
                     </CustomText>
-
-                    {/* {
-                                                disableDates?.includes(day?.fullDate) ? (
-                                                    <CustomText
-                                                        style={{
-                                                            fontSize: scale(13),
-                                                            fontFamily: "AirbnbCereal_W_Bk",
-                                                            lineHeight: scale(16),
-                                                            color: "#000"
-                                                        }}
-                                                    >
-                                                        -
-                                                    </CustomText>
-                                                ) : (
-                                                    <View
-                                                        style={{
-                                                            flexDirection: "row",
-                                                            alignItems: "center",
-                                                            gap: scale(5),
-                                                            paddingVertical: scale(2),
-                                                        }}
-                                                    >
-                                                        <View
-                                                            style={{
-                                                                width: scale(8),
-                                                                height: scale(8),
-                                                                borderRadius: scale(4),
-                                                                backgroundColor: day.bgcolor,
-                                                            }}
-                                                        />
-                                                        <CustomText
-                                                            style={{
-                                                                fontSize: scale(13),
-                                                                fontFamily: "AirbnbCereal_W_Bk",
-                                                                lineHeight: scale(16),
-                                                            }}
-                                                        >
-                                                            {day.slots} Slots
-                                                        </CustomText>
-                                                    </View>
-                                                )
-                                            } */}
                   </Pressable>
                 ))}
               </ScrollView>
@@ -1597,7 +1555,11 @@ const appointmentCalendar = () => {
             onPress={() => setActiveSection(key)}
           >
             {selectedEngageTimeSlot ? (
-              <CustomText>{selectedEngageTimeSlot}</CustomText>
+              <CustomText>
+                {selectedEngageTimeSlot} · {selectedCalenderDay?.dayName},{" "}
+                {selectedCalenderDay?.date} {selectedCalenderDay?.month}{" "}
+                {selectedCalenderDay?.year}
+              </CustomText>
             ) : (
               <CustomText>{title}</CustomText>
             )}

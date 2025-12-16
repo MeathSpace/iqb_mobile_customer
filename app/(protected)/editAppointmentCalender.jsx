@@ -651,7 +651,7 @@ const editAppointmentCalender = () => {
     updateNotifyCustomer();
   }, [isNotifyCheck, userToggled]);
 
-  const hasUnsavedChanges = true
+  const hasUnsavedChanges = true;
 
   usePreventRemove(
     hasUnsavedChanges, // This boolean determines if removal should be prevented
@@ -1532,9 +1532,7 @@ const editAppointmentCalender = () => {
                 style={{
                   flexGrow: 1,
                   width: "98%",
-                  // borderWidth: scale(1),
                   minHeight: verticalScale(150),
-                  // borderColor: "#DDDDDD",
                   padding: scale(16),
                   borderRadius: scale(4),
                   textAlignVertical: "top",
@@ -1569,7 +1567,6 @@ const editAppointmentCalender = () => {
           selectCustomerServices.length > 0 && (
             <View
               style={{
-                // height: verticalScale(50),
                 width: "100%",
                 borderTopColor: "#D2D2D2",
                 borderTopWidth: scale(0.5),
@@ -1578,24 +1575,8 @@ const editAppointmentCalender = () => {
                 justifyContent: "space-between",
                 paddingVertical: verticalScale(10),
                 marginBottom: -verticalScale(15),
-                // position: "absolute",
               }}
             >
-              {/* <View>
-                                <CustomText
-                                    style={{
-                                        fontSize: scale(18),
-                                        fontFamily: "AirbnbCereal_W_Blk"
-                                    }}
-                                >{authenticatedUser?.currency} {selectCustomerServices?.reduce((acc, item) => acc + item.servicePrice, 0)}</CustomText>
-                                <CustomText
-                                    style={{
-                                        fontSize: scale(12),
-                                        color: "gray"
-                                    }}
-                                >{selectCustomerServices.length} services | {formatMinutesToHrMin(selectCustomerServices?.reduce((acc, item) => acc + item.serviceEWT, 0))}</CustomText>
-                            </View> */}
-
               <Pressable
                 onPress={() => {
                   setContinueService(true);
@@ -1695,7 +1676,11 @@ const editAppointmentCalender = () => {
             onPress={() => setActiveSection(key)}
           >
             {selectedEngageTimeSlot ? (
-              <CustomText>{selectedEngageTimeSlot}</CustomText>
+              <CustomText>
+                {selectedEngageTimeSlot} · {selectedCalenderDay?.dayName},{" "}
+                {selectedCalenderDay?.date} {selectedCalenderDay?.month}{" "}
+                {selectedCalenderDay?.year}
+              </CustomText>
             ) : (
               <CustomText>{title}</CustomText>
             )}
