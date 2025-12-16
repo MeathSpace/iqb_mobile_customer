@@ -25,7 +25,7 @@ const AdvertiseCard = ({ item }) => {
                     borderColor: colors.queueBorder
                 }]}
                 source={{ uri: item.url }}
-                contentFit="cover"
+                contentFit="fill"
                 transition={300}
             />
         </Pressable>
@@ -36,15 +36,11 @@ export default AdvertiseCard
 
 const styles = StyleSheet.create({
     cardWrapper: {
-        // height: verticalScale(200),
-        // paddingVertical: verticalScale(20),
-        // marginBottom: verticalScale(10),
         width: scale(350),
         paddingHorizontal: scale(15),
         backgroundColor: "rgba(0,0,0,0.1)"
     },
     cardImage: {
-        // height: "100%",
         height: verticalScale(70),
         width: "100%",
         borderRadius: scale(0),

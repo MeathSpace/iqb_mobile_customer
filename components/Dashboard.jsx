@@ -1355,7 +1355,7 @@ const Dashboard = () => {
             keyExtractor={(item) => item._id}
             horizontal
             showsHorizontalScrollIndicator={false}
-            decelerationRate="fast"
+            // decelerationRate="fast"
             snapToInterval={scale(400)}
             pagingEnabled={true}
             onMomentumScrollEnd={(event) => {

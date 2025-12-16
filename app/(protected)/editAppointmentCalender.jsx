@@ -1,5 +1,5 @@
 import { BASE_URL } from "@/utils/api";
-import { useTheme } from "@react-navigation/native";
+import { usePreventRemove, useTheme } from "@react-navigation/native";
 import axios from "axios";
 import { Checkbox } from "expo-checkbox";
 import { Image } from "expo-image";
@@ -7,6 +7,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import moment from "moment";
 import { useEffect, useRef, useState } from "react";
 import {
+  Alert,
   Animated,
   KeyboardAvoidingView,
   Platform,
@@ -649,6 +650,33 @@ const editAppointmentCalender = () => {
 
     updateNotifyCustomer();
   }, [isNotifyCheck, userToggled]);
+
+  const hasUnsavedChanges = true
+
+  usePreventRemove(
+    hasUnsavedChanges, // This boolean determines if removal should be prevented
+    ({ data }) => {
+      // The action is still passed, but we're choosing not to dispatch it,
+      // effectively making "going back" impossible through these means.
+      Alert.alert(
+        "Confirm",
+        "If you go back now, your edit appointment progress will be lost. Are you sure you want to exit?",
+        [
+          {
+            text: "Cancel",
+            style: "cancel",
+            onPress: () => null, // Do nothing, stay on screen
+          },
+          {
+            text: "OK",
+            onPress: async () => {
+              router.push("/appointment");
+            },
+          },
+        ] // Only an 'OK' button
+      );
+    }
+  );
 
   const renderSection = (key, title, content) => {
     const isActive = activeSection === key;
