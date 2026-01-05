@@ -3,9 +3,9 @@ import { usePreventRemove, useTheme } from "@react-navigation/native";
 import axios from "axios";
 import { Checkbox } from "expo-checkbox";
 import { Image } from "expo-image";
-import { useRouter } from "expo-router";
+import { useFocusEffect, useRouter } from "expo-router";
 import moment from "moment";
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   Alert,
   Animated,
@@ -29,6 +29,31 @@ import { ArrowLeftIcon, LeftIcon, RightIcon } from "../../constants/icons";
 import { useAuth } from "../../context/AuthContext";
 
 const appointmentCalendar = () => {
+  const [paymentSettingsLoading, setPaymentSettingsLoading] = useState(false);
+  const [paymentSettingsData, setPaymentSettingsData] = useState(null);
+
+  useFocusEffect(
+    useCallback(() => {
+      const getSalonPaymentSettings = async () => {
+        try {
+          setPaymentSettingsLoading(true);
+          const { data } = await axios.get(
+            `${BASE_URL}/mobileRoutes/getPaymentSettings?salonId=${authenticatedUser?.salonId}`
+          );
+          setPaymentSettingsData(data?.response?.[1]);
+        } catch (error) {
+          console.log("Error fetching salon settings ", error);
+        } finally {
+          setPaymentSettingsLoading(false);
+        }
+      };
+
+      getSalonPaymentSettings();
+    }, [])
+  );
+
+  // console.log("paymentSettingsData ,", paymentSettingsData);
+
   const { authenticatedUser, setAuthenticatedUser } = useAuth();
 
   const [salonServices, setSalonServices] = useState({
@@ -184,8 +209,6 @@ const appointmentCalendar = () => {
     error: null,
     success: false,
   });
-
-  // console.log("engageTimeslotsData ", engageTimeslotsData?.data?.some((item) => item.disabled === true))
 
   const [selectedCalenderDate, setSelectedCalenderDate] = useState("");
   const [selectedCalenderDay, setSelectedCalenderDay] = useState("");
@@ -498,6 +521,7 @@ const appointmentCalendar = () => {
         selectedBookCalenderDate: JSON.stringify(selectedCalenderDate),
         selectedBookAppointmentNote: JSON.stringify(appointmentNote),
         bookAppointment: true,
+        paymentSettingsData: JSON.stringify(paymentSettingsData),
       },
     });
   };
@@ -1663,7 +1687,11 @@ const appointmentCalendar = () => {
           {!scrolling && (
             <View style={styles.footer}>
               <View />
-              <Pressable onPress={continueHandler} style={styles.searchButton}>
+              <Pressable
+                onPress={continueHandler}
+                disabled={paymentSettingsLoading}
+                style={styles.searchButton}
+              >
                 <CustomText style={{ color: "#fff" }}>Confirm</CustomText>
               </Pressable>
             </View>
