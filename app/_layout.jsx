@@ -11,6 +11,7 @@ import { tokenCache } from '@clerk/clerk-expo/token-cache'
 import { StatusBar } from 'expo-status-bar';
 import ToastManager from 'toastify-react-native'
 import AppInitializer from './appInitializer'
+import { StripeProvider } from "@stripe/stripe-react-native";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -117,6 +118,11 @@ const RootLayout = () => {
 
 
   return (
+    <StripeProvider
+      publishableKey={process.env.EXPO_PUBLIC_STRIPE_PUBLISHABLE_KEY}
+      merchantIdentifier="merchant.identifier" // required for Apple Pay
+      urlScheme="your-url-scheme" // required for 3D Secure and bank redirects
+    >
     <AuthProvider>
       <GlobalProvider>
         <ClerkProvider
@@ -133,6 +139,7 @@ const RootLayout = () => {
         </ClerkProvider>
       </GlobalProvider>
     </AuthProvider>
+    </StripeProvider>
   )
 }
 
