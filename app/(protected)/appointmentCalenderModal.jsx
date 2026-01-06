@@ -52,10 +52,6 @@ const appointmentCalenderModal = () => {
     ? JSON.parse(params?.paymentSettingsData)
     : "";
 
-  console.log(" paymentSettingsDataParse sdvwevewv ", paymentSettingsDataParse);
-
-  // console.log("selectedCustomerBookAppointmentBarberParse ", selectedCustomerBookAppointmentBarberParse)
-
   const [bookAppointmentLoader, setBookAppointmentLoader] = useState(false);
   const { newNotification, setNewNotification } = useGlobal();
 
@@ -119,14 +115,6 @@ const appointmentCalenderModal = () => {
 
   const [loading, setLoading] = useState(false);
 
-  // paymentSettingsDataParse?.advancePaymentPercent
-
-  // const totalServicePriceAmount =
-  //   selectedCustomerBookAppointmentServicesParse.reduce(
-  //     (sum, service) => sum + Number(service.servicePrice || 0),
-  //     0
-  //   );
-
   const totalServicePriceAmount =
     selectedCustomerBookAppointmentServicesParse.reduce(
       (sum, service) => sum + Number(service.servicePrice || 0),
@@ -143,7 +131,7 @@ const appointmentCalenderModal = () => {
 
   const fetchPaymentSheetParams = async () => {
     const response = await fetch(
-      "https://iqb-final.onrender.com/api/mobileRoutes/paymentApi",
+      `${BASE_URL}/mobileRoutes/paymentApi`,
       {
         method: "POST",
         headers: {
@@ -151,7 +139,7 @@ const appointmentCalenderModal = () => {
         },
         body: JSON.stringify({
           //stripe forces minimum amount to be 50 less than that will cause payment failed error
-          totalAmount: Math.round(advanceAmount * 100),
+          totalAmount: advanceAmount,
           salonId: authenticatedUser.salonId,
           currency: authenticatedUser?.isoCurrencyCode,
           joinPaymentType: "appointment",
@@ -248,10 +236,6 @@ const appointmentCalenderModal = () => {
     }
   };
 
-  // const bookAppointmentPressed = async () => {
-  //   console.log("Book Appointment");
-  // };
-
   function formatMinutesToHrMin(totalMinutes) {
     const hours = Math.floor(totalMinutes / 60);
     const mins = totalMinutes % 60;
@@ -337,9 +321,11 @@ const appointmentCalenderModal = () => {
                 gap: scale(6),
               }}
             >
-              <CustomText style={{ fontFamily: "AirbnbCereal_W_XBd" }}>
-                {authenticatedUser?.currency} {totalPrice.toFixed(2)}
-              </CustomText>
+              {!paymentSettingsDataParse?.enabled ? (
+                <CustomText style={{ fontFamily: "AirbnbCereal_W_XBd" }}>
+                  {authenticatedUser?.currency} {totalPrice.toFixed(2)}
+                </CustomText>
+              ) : null}
               <CustomSecondaryText>
                 ( {totalServices} {totalServices === 1 ? "service" : "services"}{" "}
                 | {formatMinutesToHrMin(totalTime)} )
@@ -375,6 +361,144 @@ const appointmentCalenderModal = () => {
                 {ddmmformatDate(selectedBookCalenderDateParse)}
               </CustomSecondaryText>
             </View>
+
+            {/* {paymentSettingsDataParse?.enabled ? (
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: scale(6),
+                }}
+              >
+                <CustomText style={{ fontFamily: "AirbnbCereal_W_XBd" }}>
+                  Advance Payment Percentage
+                </CustomText>
+                <CustomSecondaryText>
+                  {paymentSettingsDataParse?.advancePaymentPercent}%
+                </CustomSecondaryText>
+              </View>
+            ) : null} */}
+
+            {paymentSettingsDataParse?.enabled ? (
+              <View
+                style={{
+                  marginVertical: verticalScale(10),
+                  backgroundColor: colors.background,
+                  borderRadius: scale(8),
+                  borderWidth: scale(1),
+                  borderColor: "#2563eb",
+                  padding: scale(12),
+                  gap: verticalScale(8),
+                }}
+              >
+                <CustomText
+                  style={{
+                    fontFamily: "AirbnbCereal_W_Bd",
+                    fontSize: scale(14),
+                    color: "#2563eb",
+                  }}
+                >
+                  Payment Summary
+                </CustomText>
+
+                {/* Pay Now */}
+                <View
+                  style={{
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                  }}
+                >
+                  {/* Left */}
+                  <View style={{ flex: 1, paddingRight: scale(8) }}>
+                    <CustomText
+                      style={{
+                        fontFamily: "AirbnbCereal_W_Bd",
+                        fontSize: scale(14),
+                      }}
+                    >
+                      Pay Now
+                    </CustomText>
+                    <CustomSecondaryText numberOfLines={2}>
+                      Advance payment to confirm booking
+                    </CustomSecondaryText>
+                  </View>
+
+                  {/* Right */}
+                  <CustomText
+                    numberOfLines={1}
+                    adjustsFontSizeToFit
+                    style={{
+                      fontFamily: "AirbnbCereal_W_XBd",
+                      fontSize: scale(14),
+                      color: "#2563eb",
+                      flexShrink: 1,
+                      textAlign: "right",
+                      maxWidth: "45%",
+                    }}
+                  >
+                    {authenticatedUser?.currency} {advanceAmount.toFixed(2)}
+                  </CustomText>
+                </View>
+
+                {/* Divider */}
+                {paymentSettingsDataParse?.enabled && (
+                  <View
+                    style={{
+                      height: 1,
+                      backgroundColor: colors.cardBorder,
+                    }}
+                  />
+                )}
+
+                {/* Breakdown */}
+                {paymentSettingsDataParse?.enabled && (
+                  <>
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <CustomSecondaryText>
+                        Advance (
+                        {paymentSettingsDataParse?.advancePaymentPercent}%)
+                      </CustomSecondaryText>
+                      <CustomSecondaryText>
+                        {authenticatedUser?.currency} {advanceAmount.toFixed(2)}
+                      </CustomSecondaryText>
+                    </View>
+
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <CustomSecondaryText>
+                        Total service amount
+                      </CustomSecondaryText>
+                      <CustomSecondaryText>
+                        {authenticatedUser?.currency} {totalPrice.toFixed(2)}
+                      </CustomSecondaryText>
+                    </View>
+
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <CustomSecondaryText>Pay at salon</CustomSecondaryText>
+                      <CustomSecondaryText>
+                        {authenticatedUser?.currency}{" "}
+                        {(totalPrice - advanceAmount).toFixed(2)}
+                      </CustomSecondaryText>
+                    </View>
+                  </>
+                )}
+              </View>
+            ) : null}
 
             {selectedBookAppointmentNoteParse && (
               <View style={{ gap: scale(6) }}>
