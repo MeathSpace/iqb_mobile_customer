@@ -9,6 +9,7 @@ import {
   Alert,
   Button,
   Pressable,
+  ScrollView,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -130,37 +131,34 @@ const appointmentCalenderModal = () => {
   );
 
   const fetchPaymentSheetParams = async () => {
-    const response = await fetch(
-      `${BASE_URL}/mobileRoutes/paymentApi`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          //stripe forces minimum amount to be 50 less than that will cause payment failed error
-          totalAmount: advanceAmount,
-          salonId: authenticatedUser.salonId,
-          currency: authenticatedUser?.isoCurrencyCode,
-          joinPaymentType: "appointment",
+    const response = await fetch(`${BASE_URL}/mobileRoutes/paymentApi`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        //stripe forces minimum amount to be 50 less than that will cause payment failed error
+        totalAmount: advanceAmount,
+        salonId: authenticatedUser.salonId,
+        currency: authenticatedUser?.isoCurrencyCode,
+        joinPaymentType: "appointment",
+        customerEmail: authenticatedUser?.email,
+        bookAppointmentData: {
+          salonId: authenticatedUser?.salonId,
+          barberId: selectedCustomerBookAppointmentBarberParse?.barberId,
+          serviceId: selectedCustomerBookAppointmentServicesParse.map(
+            (item) => item.serviceId
+          ),
+          appointmentDate: selectedBookCalenderDateParse,
+          appointmentNotes: selectedBookAppointmentNoteParse,
+          startTime: selectedBookCalenderTimeslotParse,
           customerEmail: authenticatedUser?.email,
-          bookAppointmentData: {
-            salonId: authenticatedUser?.salonId,
-            barberId: selectedCustomerBookAppointmentBarberParse?.barberId,
-            serviceId: selectedCustomerBookAppointmentServicesParse.map(
-              (item) => item.serviceId
-            ),
-            appointmentDate: selectedBookCalenderDateParse,
-            appointmentNotes: selectedBookAppointmentNoteParse,
-            startTime: selectedBookCalenderTimeslotParse,
-            customerEmail: authenticatedUser?.email,
-            customerName: authenticatedUser?.name,
-            customerType: "Walk-In",
-            methodUsed: "App",
-          },
-        }),
-      }
-    );
+          customerName: authenticatedUser?.name,
+          customerType: "Walk-In",
+          methodUsed: "App",
+        },
+      }),
+    });
 
     if (!response.ok) {
       throw new Error("Failed to fetch payment params");
@@ -255,12 +253,12 @@ const appointmentCalenderModal = () => {
   const totalServices = selectedCustomerBookAppointmentServicesParse?.length;
 
   return (
-    <Pressable
-      onPress={() => {
-        if (!bookAppointmentLoader) {
-          router.back();
-        }
-      }}
+    <View
+      // onPress={() => {
+      //   if (!bookAppointmentLoader) {
+      //     router.back();
+      //   }
+      // }}
       style={{
         flex: 1,
         backgroundColor: "rgba(0,0,0,0.5)",
@@ -268,13 +266,16 @@ const appointmentCalenderModal = () => {
         alignItems: "center",
       }}
     >
-      <Pressable
-        onPress={() => {}}
+      {/* Stop backdrop click */}
+      <View
+        // onPress={() => {}}
         style={[
           styles.modalContainer,
           {
             backgroundColor: colors.cardColor,
             borderColor: colors.queueBorder,
+            maxHeight: "85%", // 👈 important for scroll
+            width: "90%",
           },
         ]}
       >
@@ -291,78 +292,57 @@ const appointmentCalenderModal = () => {
           <CustomText style={styles.titleText}>Please Confirm</CustomText>
         </View>
 
-        <View style={{ gap: verticalScale(5) }}>
-          <CustomSecondaryText style={styles.confirmText}>
-            Are you sure you want to proceed?
-          </CustomSecondaryText>
+        <CustomSecondaryText style={styles.confirmText}>
+          Are you sure you want to proceed?
+        </CustomSecondaryText>
 
-          <View
-            style={{
-              marginTop: verticalScale(5),
-              backgroundColor: colors.tabBackground, // Optional: subtle background to group
-              padding: scale(8),
-              borderRadius: scale(6),
-              gap: verticalScale(4),
-            }}
-          >
-            <CustomText
-              style={{
-                fontFamily: "AirbnbCereal_W_XBd",
-                fontSize: scale(14),
-              }}
-            >
-              {selectedCustomerBookAppointmentBarberParse?.name}
-            </CustomText>
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled"
+          contentContainerStyle={{
+            paddingBottom: verticalScale(16),
+          }}
+        >
+          {/* ===== CONTENT START ===== */}
 
+          <View style={{ gap: verticalScale(5) }}>
             <View
               style={{
-                flexDirection: "row",
-                alignItems: "center",
-                gap: scale(6),
+                marginTop: verticalScale(5),
+                backgroundColor: colors.tabBackground, // Optional: subtle background to group
+                padding: scale(8),
+                borderRadius: scale(6),
+                gap: verticalScale(4),
               }}
             >
-              {!paymentSettingsDataParse?.enabled ? (
-                <CustomText style={{ fontFamily: "AirbnbCereal_W_XBd" }}>
-                  {authenticatedUser?.currency} {totalPrice.toFixed(2)}
-                </CustomText>
-              ) : null}
-              <CustomSecondaryText>
-                ( {totalServices} {totalServices === 1 ? "service" : "services"}{" "}
-                | {formatMinutesToHrMin(totalTime)} )
-              </CustomSecondaryText>
-            </View>
-
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                gap: scale(6),
-              }}
-            >
-              <CustomText style={{ fontFamily: "AirbnbCereal_W_XBd" }}>
-                Timeslot
+              <CustomText
+                style={{
+                  fontFamily: "AirbnbCereal_W_XBd",
+                  fontSize: scale(14),
+                }}
+              >
+                {selectedCustomerBookAppointmentBarberParse?.name}
               </CustomText>
-              <CustomSecondaryText>
-                {selectedBookCalenderTimeslotParse}
-              </CustomSecondaryText>
-            </View>
 
-            <View
-              style={{
-                flexDirection: "row",
-                alignItems: "center",
-                gap: scale(6),
-              }}
-            >
-              <CustomText style={{ fontFamily: "AirbnbCereal_W_XBd" }}>
-                Date
-              </CustomText>
-              <CustomSecondaryText>
-                {ddmmformatDate(selectedBookCalenderDateParse)}
-              </CustomSecondaryText>
-            </View>
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: scale(6),
+                }}
+              >
+                {!paymentSettingsDataParse?.enabled ? (
+                  <CustomText style={{ fontFamily: "AirbnbCereal_W_XBd" }}>
+                    {authenticatedUser?.currency} {totalPrice.toFixed(2)}
+                  </CustomText>
+                ) : null}
+                <CustomSecondaryText>
+                  ( {totalServices}{" "}
+                  {totalServices === 1 ? "service" : "services"} |{" "}
+                  {formatMinutesToHrMin(totalTime)} )
+                </CustomSecondaryText>
+              </View>
 
-            {/* {paymentSettingsDataParse?.enabled ? (
               <View
                 style={{
                   flexDirection: "row",
@@ -371,186 +351,205 @@ const appointmentCalenderModal = () => {
                 }}
               >
                 <CustomText style={{ fontFamily: "AirbnbCereal_W_XBd" }}>
-                  Advance Payment Percentage
+                  Timeslot
                 </CustomText>
                 <CustomSecondaryText>
-                  {paymentSettingsDataParse?.advancePaymentPercent}%
+                  {selectedBookCalenderTimeslotParse}
                 </CustomSecondaryText>
               </View>
-            ) : null} */}
 
-            {paymentSettingsDataParse?.enabled ? (
               <View
                 style={{
-                  marginVertical: verticalScale(10),
-                  backgroundColor: colors.background,
-                  borderRadius: scale(8),
-                  borderWidth: scale(1),
-                  borderColor: "#2563eb",
-                  padding: scale(12),
-                  gap: verticalScale(8),
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: scale(6),
                 }}
               >
-                <CustomText
-                  style={{
-                    fontFamily: "AirbnbCereal_W_Bd",
-                    fontSize: scale(14),
-                    color: "#2563eb",
-                  }}
-                >
-                  Payment Summary
-                </CustomText>
-
-                {/* Pay Now */}
-                <View
-                  style={{
-                    flexDirection: "row",
-                    justifyContent: "space-between",
-                    alignItems: "center",
-                  }}
-                >
-                  {/* Left */}
-                  <View style={{ flex: 1, paddingRight: scale(8) }}>
-                    <CustomText
-                      style={{
-                        fontFamily: "AirbnbCereal_W_Bd",
-                        fontSize: scale(14),
-                      }}
-                    >
-                      Pay Now
-                    </CustomText>
-                    <CustomSecondaryText numberOfLines={2}>
-                      Advance payment to confirm booking
-                    </CustomSecondaryText>
-                  </View>
-
-                  {/* Right */}
-                  <CustomText
-                    numberOfLines={1}
-                    adjustsFontSizeToFit
-                    style={{
-                      fontFamily: "AirbnbCereal_W_XBd",
-                      fontSize: scale(14),
-                      color: "#2563eb",
-                      flexShrink: 1,
-                      textAlign: "right",
-                      maxWidth: "45%",
-                    }}
-                  >
-                    {authenticatedUser?.currency} {advanceAmount.toFixed(2)}
-                  </CustomText>
-                </View>
-
-                {/* Divider */}
-                {paymentSettingsDataParse?.enabled && (
-                  <View
-                    style={{
-                      height: 1,
-                      backgroundColor: colors.cardBorder,
-                    }}
-                  />
-                )}
-
-                {/* Breakdown */}
-                {paymentSettingsDataParse?.enabled && (
-                  <>
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <CustomSecondaryText>
-                        Advance (
-                        {paymentSettingsDataParse?.advancePaymentPercent}%)
-                      </CustomSecondaryText>
-                      <CustomSecondaryText>
-                        {authenticatedUser?.currency} {advanceAmount.toFixed(2)}
-                      </CustomSecondaryText>
-                    </View>
-
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <CustomSecondaryText>
-                        Total service amount
-                      </CustomSecondaryText>
-                      <CustomSecondaryText>
-                        {authenticatedUser?.currency} {totalPrice.toFixed(2)}
-                      </CustomSecondaryText>
-                    </View>
-
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                      }}
-                    >
-                      <CustomSecondaryText>Pay at salon</CustomSecondaryText>
-                      <CustomSecondaryText>
-                        {authenticatedUser?.currency}{" "}
-                        {(totalPrice - advanceAmount).toFixed(2)}
-                      </CustomSecondaryText>
-                    </View>
-                  </>
-                )}
-              </View>
-            ) : null}
-
-            {selectedBookAppointmentNoteParse && (
-              <View style={{ gap: scale(6) }}>
                 <CustomText style={{ fontFamily: "AirbnbCereal_W_XBd" }}>
-                  Note
+                  Date
                 </CustomText>
                 <CustomSecondaryText>
-                  {selectedBookAppointmentNoteParse}
+                  {ddmmformatDate(selectedBookCalenderDateParse)}
                 </CustomSecondaryText>
               </View>
-            )}
 
-            <View
-              style={{
-                width: "100%",
-                backgroundColor: colors.background,
-                borderWidth: scale(1),
-                borderColor: colors.cardBorder,
-                borderRadius: scale(5),
-                padding: scale(10),
-                marginTop: verticalScale(5),
-              }}
-            >
-              <CustomText style={{ fontSize: moderateScale(14) }}>
+              {paymentSettingsDataParse?.enabled ? (
+                <View
+                  style={{
+                    marginVertical: verticalScale(10),
+                    backgroundColor: colors.background,
+                    borderRadius: scale(8),
+                    borderWidth: scale(1),
+                    borderColor: "#2563eb",
+                    padding: scale(12),
+                    gap: verticalScale(8),
+                  }}
+                >
+                  <CustomText
+                    style={{
+                      fontFamily: "AirbnbCereal_W_Bd",
+                      fontSize: scale(14),
+                      color: "#2563eb",
+                    }}
+                  >
+                    Payment Summary
+                  </CustomText>
+
+                  {/* Pay Now */}
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      justifyContent: "space-between",
+                      alignItems: "center",
+                    }}
+                  >
+                    {/* Left */}
+                    <View style={{ flex: 1, paddingRight: scale(8) }}>
+                      <CustomText
+                        style={{
+                          fontFamily: "AirbnbCereal_W_Bd",
+                          fontSize: scale(14),
+                        }}
+                      >
+                        Pay Now
+                      </CustomText>
+                      <CustomSecondaryText numberOfLines={2}>
+                        Advance payment to confirm booking
+                      </CustomSecondaryText>
+                    </View>
+
+                    {/* Right */}
+                    <CustomText
+                      numberOfLines={1}
+                      adjustsFontSizeToFit
+                      style={{
+                        fontFamily: "AirbnbCereal_W_XBd",
+                        fontSize: scale(14),
+                        color: "#2563eb",
+                        flexShrink: 1,
+                        textAlign: "right",
+                        maxWidth: "45%",
+                      }}
+                    >
+                      {authenticatedUser?.currency} {advanceAmount.toFixed(2)}
+                    </CustomText>
+                  </View>
+
+                  {/* Divider */}
+                  {paymentSettingsDataParse?.enabled && (
+                    <View
+                      style={{
+                        height: 1,
+                        backgroundColor: colors.cardBorder,
+                      }}
+                    />
+                  )}
+
+                  {/* Breakdown */}
+                  {paymentSettingsDataParse?.enabled && (
+                    <>
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <CustomSecondaryText>
+                          Advance (
+                          {paymentSettingsDataParse?.advancePaymentPercent}%)
+                        </CustomSecondaryText>
+                        <CustomSecondaryText>
+                          {authenticatedUser?.currency}{" "}
+                          {advanceAmount.toFixed(2)}
+                        </CustomSecondaryText>
+                      </View>
+
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <CustomSecondaryText>
+                          Total service amount
+                        </CustomSecondaryText>
+                        <CustomSecondaryText>
+                          {authenticatedUser?.currency} {totalPrice.toFixed(2)}
+                        </CustomSecondaryText>
+                      </View>
+
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          justifyContent: "space-between",
+                        }}
+                      >
+                        <CustomSecondaryText>Pay at salon</CustomSecondaryText>
+                        <CustomSecondaryText>
+                          {authenticatedUser?.currency}{" "}
+                          {(totalPrice - advanceAmount).toFixed(2)}
+                        </CustomSecondaryText>
+                      </View>
+                    </>
+                  )}
+                </View>
+              ) : null}
+
+              {selectedBookAppointmentNoteParse && (
+                <View style={{ gap: scale(6) }}>
+                  <CustomText style={{ fontFamily: "AirbnbCereal_W_XBd" }}>
+                    Note
+                  </CustomText>
+                  <CustomSecondaryText>
+                    {selectedBookAppointmentNoteParse}
+                  </CustomSecondaryText>
+                </View>
+              )}
+
+              <View
+                style={{
+                  width: "100%",
+                  backgroundColor: colors.background,
+                  borderWidth: scale(1),
+                  borderColor: colors.cardBorder,
+                  borderRadius: scale(5),
+                  padding: scale(10),
+                  marginTop: verticalScale(5),
+                }}
+              >
+                <CustomText style={{ fontSize: moderateScale(14) }}>
+                  <CustomText
+                    style={{
+                      fontFamily: "AirbnbCereal_W_Bd",
+                      color: "#e11d48",
+                      fontSize: moderateScale(14),
+                    }}
+                  >
+                    Reminder:{" "}
+                  </CustomText>
+                  edits or cancellations made less than 24 hours before your
+                  appointment will be subject to a 50% fee.
+                </CustomText>
+                <View
+                  style={{
+                    height: verticalScale(5),
+                  }}
+                />
                 <CustomText
                   style={{
-                    fontFamily: "AirbnbCereal_W_Bd",
-                    color: "#e11d48",
                     fontSize: moderateScale(14),
                   }}
                 >
-                  Reminder:{" "}
+                  Kindly reach 5 minutes early for a seamless service.
                 </CustomText>
-                edits or cancellations made less than 24 hours before your
-                appointment will be subject to a 50% fee.
-              </CustomText>
-              <View
-                style={{
-                  height: verticalScale(5),
-                }}
-              />
-              <CustomText
-                style={{
-                  fontSize: moderateScale(14),
-                }}
-              >
-                Kindly reach 5 minutes early for a seamless service.
-              </CustomText>
+              </View>
             </View>
           </View>
-        </View>
 
+          {/* ===== CONTENT END ===== */}
+        </ScrollView>
+
+        {/* 🔒 Buttons fixed at bottom */}
         <View style={styles.buttonRow}>
           <TouchableOpacity
             onPress={() => {
@@ -558,12 +557,7 @@ const appointmentCalenderModal = () => {
                 router.back();
               }
             }}
-            style={[
-              styles.button,
-              {
-                // backgroundColor: '#ef4444'
-              },
-            ]}
+            style={styles.button}
           >
             <CustomText style={{ fontFamily: "AirbnbCereal_W_Bd" }}>
               No
@@ -586,10 +580,7 @@ const appointmentCalenderModal = () => {
                 <ActivityIndicator color="#fff" />
               ) : (
                 <CustomText
-                  style={{
-                    color: "#fff",
-                    fontFamily: "AirbnbCereal_W_Bd",
-                  }}
+                  style={{ color: "#fff", fontFamily: "AirbnbCereal_W_Bd" }}
                 >
                   Checkout
                 </CustomText>
@@ -599,15 +590,10 @@ const appointmentCalenderModal = () => {
             <TouchableOpacity
               disabled={bookAppointmentLoader}
               onPress={bookAppointmentPressed}
-              style={[
-                styles.button,
-                {
-                  backgroundColor: "#14b8a6",
-                },
-              ]}
+              style={[styles.button, { backgroundColor: "#14b8a6" }]}
             >
               {bookAppointmentLoader ? (
-                <ActivityIndicator color={"#fff"} />
+                <ActivityIndicator color="#fff" />
               ) : (
                 <CustomText
                   style={{ color: "#fff", fontFamily: "AirbnbCereal_W_Bd" }}
@@ -618,8 +604,8 @@ const appointmentCalenderModal = () => {
             </TouchableOpacity>
           )}
         </View>
-      </Pressable>
-    </Pressable>
+      </View>
+    </View>
   );
 };
 
@@ -641,7 +627,7 @@ const styles = StyleSheet.create({
     fontFamily: "AirbnbCereal_W_Bd",
   },
   confirmText: {
-    marginTop: verticalScale(10),
+    marginVertical: verticalScale(5),
   },
   buttonRow: {
     flexDirection: "row",
