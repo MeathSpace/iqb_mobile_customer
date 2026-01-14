@@ -3,6 +3,7 @@ import {
   Alert,
   BackHandler,
   Pressable,
+  ScrollView,
   StyleSheet,
   Text,
   TouchableOpacity,
@@ -273,12 +274,299 @@ const GroupJoinModal = () => {
   };
 
   return (
+    // <Pressable
+    //   style={{
+    //     flex: 1,
+    //     backgroundColor: "rgba(0, 0, 0, 0.5)",
+    //     justifyContent: "center",
+    //     alignItems: "center",
+    //   }}
+    //   onPress={() => {
+    //     if (!groupJoinLoader) {
+    //       router.back();
+    //     }
+    //   }}
+    // >
+    //   <Pressable
+    //     onPress={() => {}}
+    //     style={[
+    //       styles.modalContainer,
+    //       {
+    //         backgroundColor: colors.cardColor,
+    //         borderColor: colors.queueBorder,
+    //       },
+    //     ]}
+    //   >
+    //     {/* <CustomText style={{
+    //                 fontFamily: "AirbnbCereal_W_XBd",
+    //                 fontSize: scale(18),
+    //                 textAlign: "center"
+    //             }}>Confirm Group Booking</CustomText> */}
+    //     <View style={styles.iconContainer}>
+    //       <CheckIcon
+    //         style={{
+    //           backgroundColor: colors.tabBackground,
+    //           padding: scale(3),
+    //           borderRadius: scale(50),
+    //         }}
+    //         size={scale(16)}
+    //         color={colors.text}
+    //       />
+    //       <CustomText style={styles.titleText}>Please Confirm</CustomText>
+    //     </View>
+
+    //     <View
+    //       style={{
+    //         borderRadius: scale(10),
+    //         backgroundColor: colors.tabBackground,
+    //         padding: scale(10),
+    //         gap: verticalScale(10),
+    //       }}
+    //     >
+    //       <View style={styles.cardContent}>
+    //         <CustomText>Members</CustomText>
+    //         <CustomText>{groupJoinMembersParse?.length}</CustomText>
+    //       </View>
+
+    //       <View style={styles.cardContent}>
+    //         <CustomText>Total Services</CustomText>
+    //         <CustomText>{totalServicesLength}</CustomText>
+    //       </View>
+
+    //       <View style={styles.cardContent}>
+    //         <CustomText>Est. Time</CustomText>
+    //         <CustomText>{formatMinutesToHrMin(totalServiceEwt)}</CustomText>
+    //       </View>
+
+    //       {paymentSettingsDataParse?.enabled ? (
+    //         <View
+    //           style={{
+    //             marginBottom: verticalScale(10),
+    //             backgroundColor: colors.background,
+    //             borderRadius: scale(8),
+    //             borderWidth: scale(1),
+    //             borderColor: "#2563eb",
+    //             padding: scale(12),
+    //             gap: verticalScale(8),
+    //           }}
+    //         >
+    //           <CustomText
+    //             style={{
+    //               fontFamily: "AirbnbCereal_W_Bd",
+    //               fontSize: scale(14),
+    //               color: "#2563eb",
+    //             }}
+    //           >
+    //             Payment Summary
+    //           </CustomText>
+
+    //           {/* Pay Now */}
+    //           <View
+    //             style={{
+    //               flexDirection: "row",
+    //               justifyContent: "space-between",
+    //               alignItems: "center",
+    //             }}
+    //           >
+    //             {/* Left */}
+    //             <View style={{ flex: 1, paddingRight: scale(8) }}>
+    //               <CustomText
+    //                 style={{
+    //                   fontFamily: "AirbnbCereal_W_Bd",
+    //                   fontSize: scale(14),
+    //                 }}
+    //               >
+    //                 Pay Now
+    //               </CustomText>
+    //               <CustomSecondaryText numberOfLines={2}>
+    //                 Advance payment to confirm booking
+    //               </CustomSecondaryText>
+    //             </View>
+
+    //             {/* Right */}
+    //             <CustomText
+    //               numberOfLines={1}
+    //               adjustsFontSizeToFit
+    //               style={{
+    //                 fontFamily: "AirbnbCereal_W_XBd",
+    //                 fontSize: scale(14),
+    //                 color: "#2563eb",
+    //                 flexShrink: 1,
+    //                 textAlign: "right",
+    //                 maxWidth: "45%",
+    //               }}
+    //             >
+    //               {authenticatedUser?.currency} {advanceAmount.toFixed(2)}
+    //             </CustomText>
+    //           </View>
+
+    //           {/* Divider */}
+    //           {paymentSettingsDataParse?.enabled && (
+    //             <View
+    //               style={{
+    //                 height: 1,
+    //                 backgroundColor: colors.cardBorder,
+    //               }}
+    //             />
+    //           )}
+
+    //           {/* Breakdown */}
+    //           {paymentSettingsDataParse?.enabled && (
+    //             <>
+    //               <View
+    //                 style={{
+    //                   flexDirection: "row",
+    //                   justifyContent: "space-between",
+    //                 }}
+    //               >
+    //                 <CustomSecondaryText>
+    //                   Advance ({paymentSettingsDataParse?.advancePaymentPercent}
+    //                   %)
+    //                 </CustomSecondaryText>
+    //                 <CustomSecondaryText>
+    //                   {authenticatedUser?.currency} {advanceAmount.toFixed(2)}
+    //                 </CustomSecondaryText>
+    //               </View>
+
+    //               <View
+    //                 style={{
+    //                   flexDirection: "row",
+    //                   justifyContent: "space-between",
+    //                 }}
+    //               >
+    //                 <CustomSecondaryText>
+    //                   Total service amount
+    //                 </CustomSecondaryText>
+    //                 <CustomSecondaryText>
+    //                   {authenticatedUser?.currency}{" "}
+    //                   {totalServicePriceAmount.toFixed(2)}
+    //                 </CustomSecondaryText>
+    //               </View>
+
+    //               <View
+    //                 style={{
+    //                   flexDirection: "row",
+    //                   justifyContent: "space-between",
+    //                 }}
+    //               >
+    //                 <CustomSecondaryText>Pay at salon</CustomSecondaryText>
+    //                 <CustomSecondaryText>
+    //                   {authenticatedUser?.currency}{" "}
+    //                   {(totalServicePriceAmount - advanceAmount).toFixed(2)}
+    //                 </CustomSecondaryText>
+    //               </View>
+    //             </>
+    //           )}
+    //         </View>
+    //       ) : (
+    //         <>
+    //           <View
+    //             style={{
+    //               height: verticalScale(1),
+    //               backgroundColor: colors.secondaryText,
+    //             }}
+    //           />
+    //           <View style={styles.cardContent}>
+    //             <CustomText
+    //               style={{
+    //                 fontFamily: "AirbnbCereal_W_XBd",
+    //                 fontSize: scale(18),
+    //               }}
+    //             >
+    //               Total Price
+    //             </CustomText>
+    //             <CustomText
+    //               style={{
+    //                 fontFamily: "AirbnbCereal_W_XBd",
+    //                 fontSize: scale(18),
+    //               }}
+    //             >
+    //               {" "}
+    //               {authenticatedUser?.currency} {totalServicePriceAmount}
+    //             </CustomText>
+    //           </View>
+    //         </>
+    //       )}
+    //     </View>
+
+    //     <View style={styles.buttonRow}>
+    //       <TouchableOpacity
+    //         onPress={() => {
+    //           if (!groupJoinLoader) {
+    //             router.back();
+    //           }
+    //         }}
+    //         style={[
+    //           styles.button,
+    //           {
+    //             // backgroundColor: '#ef4444'
+    //           },
+    //         ]}
+    //       >
+    //         <CustomText style={{ fontFamily: "AirbnbCereal_W_Bd" }}>
+    //           No
+    //         </CustomText>
+    //       </TouchableOpacity>
+
+    //       {paymentSettingsDataParse?.enabled ? (
+    //         <TouchableOpacity
+    //           onPress={openPaymentSheet}
+    //           disabled={loading}
+    //           style={[
+    //             styles.button,
+    //             {
+    //               backgroundColor: loading ? "#9ca3af" : "#2563eb",
+    //               opacity: loading ? 0.7 : 1,
+    //             },
+    //           ]}
+    //         >
+    //           {loading ? (
+    //             <ActivityIndicator color="#fff" />
+    //           ) : (
+    //             <CustomText
+    //               style={{
+    //                 color: "#fff",
+    //                 fontFamily: "AirbnbCereal_W_Bd",
+    //               }}
+    //             >
+    //               Checkout
+    //             </CustomText>
+    //           )}
+    //         </TouchableOpacity>
+    //       ) : (
+    //         <TouchableOpacity
+    //           // onPress={() => router.replace("/groupJoinSuccessPage")}
+    //           disabled={groupJoinLoader}
+    //           onPress={groupJoinPressed}
+    //           style={[
+    //             styles.button,
+    //             {
+    //               backgroundColor: "#14b8a6",
+    //             },
+    //           ]}
+    //         >
+    //           {groupJoinLoader ? (
+    //             <ActivityIndicator color={"#fff"} />
+    //           ) : (
+    //             <CustomText
+    //               style={{ color: "#fff", fontFamily: "AirbnbCereal_W_Bd" }}
+    //             >
+    //               Yes
+    //             </CustomText>
+    //           )}
+    //         </TouchableOpacity>
+    //       )}
+    //     </View>
+    //   </Pressable>
+    // </Pressable>
+
     <Pressable
       style={{
         flex: 1,
-        backgroundColor: "rgba(0, 0, 0, 0.5)",
+        backgroundColor: "rgba(0, 0, 0, 0.7)",
         justifyContent: "center",
         alignItems: "center",
+        padding: scale(15),
       }}
       onPress={() => {
         if (!groupJoinLoader) {
@@ -288,143 +576,241 @@ const GroupJoinModal = () => {
     >
       <Pressable
         onPress={() => {}}
-        style={[
-          styles.modalContainer,
-          {
-            backgroundColor: colors.cardColor,
-            borderColor: colors.queueBorder,
-          },
-        ]}
+        style={{
+          width: "100%",
+          maxHeight: "90%",
+          backgroundColor: colors.modalBgColor,
+          borderRadius: moderateScale(28),
+          overflow: "hidden",
+          shadowColor: "#000",
+          shadowOffset: { width: 0, height: verticalScale(10) },
+          shadowOpacity: 0.15,
+          shadowRadius: moderateScale(20),
+          elevation: 10,
+          borderWidth: 1,
+          borderColor: colors.queueBorder,
+        }}
       >
-        {/* <CustomText style={{
-                    fontFamily: "AirbnbCereal_W_XBd",
-                    fontSize: scale(18),
-                    textAlign: "center"
-                }}>Confirm Group Booking</CustomText> */}
-        <View style={styles.iconContainer}>
-          <CheckIcon
-            style={{
-              backgroundColor: colors.tabBackground,
-              padding: scale(3),
-              borderRadius: scale(50),
-            }}
-            size={scale(16)}
-            color={colors.text}
-          />
-          <CustomText style={styles.titleText}>Please Confirm</CustomText>
-        </View>
-
+        {/* ===== HEADER ===== */}
         <View
           style={{
-            borderRadius: scale(10),
-            backgroundColor: colors.tabBackground,
-            padding: scale(10),
-            gap: verticalScale(10),
+            paddingTop: verticalScale(22),
+            paddingBottom: verticalScale(20),
+            paddingHorizontal: scale(24),
+            alignItems: "center",
           }}
         >
-          <View style={styles.cardContent}>
-            <CustomText>Members</CustomText>
-            <CustomText>{groupJoinMembersParse?.length}</CustomText>
+          <View
+            style={{
+              width: scale(64),
+              height: scale(64),
+              borderRadius: moderateScale(32),
+              backgroundColor: "#2563eb10", // Teal tint to match group join theme
+              justifyContent: "center",
+              alignItems: "center",
+              marginBottom: verticalScale(16),
+            }}
+          >
+            <CheckIcon size={moderateScale(28)} color="#2563eb" />
           </View>
 
-          <View style={styles.cardContent}>
-            <CustomText>Total Services</CustomText>
-            <CustomText>{totalServicesLength}</CustomText>
-          </View>
+          <CustomText
+            style={{
+              fontFamily: "AirbnbCereal_W_XBd",
+              fontSize: moderateScale(22),
+              textAlign: "center",
+            }}
+          >
+            Group Booking
+          </CustomText>
 
-          <View style={styles.cardContent}>
-            <CustomText>Est. Time</CustomText>
-            <CustomText>{formatMinutesToHrMin(totalServiceEwt)}</CustomText>
-          </View>
+          <CustomSecondaryText
+            style={{
+              textAlign: "center",
+              marginTop: verticalScale(6),
+              fontSize: moderateScale(14),
+              color: "#64748b",
+            }}
+          >
+            Please review your group details
+          </CustomSecondaryText>
+        </View>
 
-          {paymentSettingsDataParse?.enabled ? (
+        {/* ===== CONTENT ===== */}
+        <ScrollView
+          showsVerticalScrollIndicator={false}
+          contentContainerStyle={{
+            paddingHorizontal: scale(24),
+            paddingBottom: verticalScale(24),
+          }}
+        >
+          {/* Group Stats Grid */}
+          <View
+            style={{
+              flexDirection: "row",
+              backgroundColor: colors.modalSectionColor,
+              borderRadius: moderateScale(20),
+              padding: scale(16),
+              marginBottom: verticalScale(24),
+              borderWidth: 1,
+              borderColor: colors.queueBorder,
+            }}
+          >
             <View
               style={{
-                marginBottom: verticalScale(10),
-                backgroundColor: colors.background,
-                borderRadius: scale(8),
-                borderWidth: scale(1),
-                borderColor: "#2563eb",
-                padding: scale(12),
-                gap: verticalScale(8),
+                flex: 1,
+                alignItems: "center",
+                borderRightWidth: 1,
+                borderColor: colors.queueBorder,
               }}
             >
+              <CustomSecondaryText
+                style={{
+                  fontSize: moderateScale(10),
+                  textTransform: "uppercase",
+                  marginBottom: 4,
+                }}
+              >
+                Members
+              </CustomSecondaryText>
               <CustomText
                 style={{
                   fontFamily: "AirbnbCereal_W_Bd",
-                  fontSize: scale(14),
-                  color: "#2563eb",
+                  fontSize: moderateScale(16),
                 }}
               >
-                Payment Summary
+                {groupJoinMembersParse?.length}
               </CustomText>
+            </View>
+            <View
+              style={{
+                flex: 1,
+                alignItems: "center",
+                borderRightWidth: 1,
+                borderColor: colors.queueBorder,
+              }}
+            >
+              <CustomSecondaryText
+                style={{
+                  fontSize: moderateScale(10),
+                  textTransform: "uppercase",
+                  marginBottom: 4,
+                }}
+              >
+                Services
+              </CustomSecondaryText>
+              <CustomText
+                style={{
+                  fontFamily: "AirbnbCereal_W_Bd",
+                  fontSize: moderateScale(16),
+                }}
+              >
+                {totalServicesLength}
+              </CustomText>
+            </View>
+            <View style={{ flex: 1, alignItems: "center" }}>
+              <CustomSecondaryText
+                style={{
+                  fontSize: moderateScale(10),
+                  textTransform: "uppercase",
+                  marginBottom: 4,
+                }}
+              >
+                Time
+              </CustomSecondaryText>
+              <CustomText
+                style={{
+                  fontFamily: "AirbnbCereal_W_Bd",
+                  fontSize: moderateScale(16),
+                }}
+              >
+                {formatMinutesToHrMin(totalServiceEwt)}
+              </CustomText>
+            </View>
+          </View>
 
-              {/* Pay Now */}
+          {/* Payment Breakdown */}
+          <View
+            style={{
+              padding: scale(20),
+              borderRadius: moderateScale(20),
+              backgroundColor: colors.modalSectionColor,
+              borderWidth: 1,
+              borderColor: colors.queueBorder,
+              marginBottom: verticalScale(16),
+            }}
+          >
+            <CustomText
+              style={{
+                fontFamily: "AirbnbCereal_W_Bd",
+                fontSize: moderateScale(14),
+                marginBottom: verticalScale(16),
+              }}
+            >
+              {paymentSettingsDataParse?.enabled
+                ? "Payment Breakdown"
+                : "Pricing Summary"}
+            </CustomText>
+
+            <View style={{ gap: verticalScale(10) }}>
               <View
                 style={{
                   flexDirection: "row",
                   justifyContent: "space-between",
-                  alignItems: "center",
                 }}
               >
-                {/* Left */}
-                <View style={{ flex: 1, paddingRight: scale(8) }}>
-                  <CustomText
-                    style={{
-                      fontFamily: "AirbnbCereal_W_Bd",
-                      fontSize: scale(14),
-                    }}
-                  >
-                    Pay Now
-                  </CustomText>
-                  <CustomSecondaryText numberOfLines={2}>
-                    Advance payment to confirm booking
-                  </CustomSecondaryText>
-                </View>
-
-                {/* Right */}
+                <CustomSecondaryText style={{ fontSize: moderateScale(14) }}>
+                  Total Amount
+                </CustomSecondaryText>
                 <CustomText
-                  numberOfLines={1}
-                  adjustsFontSizeToFit
                   style={{
-                    fontFamily: "AirbnbCereal_W_XBd",
-                    fontSize: scale(14),
-                    color: "#2563eb",
-                    flexShrink: 1,
-                    textAlign: "right",
-                    maxWidth: "45%",
+                    fontFamily: "AirbnbCereal_W_Bd",
+                    fontSize: moderateScale(14),
                   }}
                 >
-                  {authenticatedUser?.currency} {advanceAmount.toFixed(2)}
+                  {authenticatedUser?.currency}{" "}
+                  {totalServicePriceAmount.toFixed(2)}
                 </CustomText>
               </View>
 
-              {/* Divider */}
-              {paymentSettingsDataParse?.enabled && (
-                <View
-                  style={{
-                    height: 1,
-                    backgroundColor: colors.cardBorder,
-                  }}
-                />
-              )}
-
-              {/* Breakdown */}
               {paymentSettingsDataParse?.enabled && (
                 <>
                   <View
                     style={{
                       flexDirection: "row",
                       justifyContent: "space-between",
+                      paddingVertical: verticalScale(12),
+                      borderTopWidth: 1,
+                      borderBottomWidth: 1,
+                      borderColor: colors.queueBorder,
+                      marginVertical: verticalScale(4),
                     }}
                   >
-                    <CustomSecondaryText>
-                      Advance ({paymentSettingsDataParse?.advancePaymentPercent}
-                      %)
-                    </CustomSecondaryText>
-                    <CustomSecondaryText>
+                    <View>
+                      <CustomText
+                        style={{
+                          fontFamily: "AirbnbCereal_W_Bd",
+                          color: "#2563eb",
+                        }}
+                      >
+                        Pay Now
+                      </CustomText>
+                      <CustomSecondaryText
+                        style={{ fontSize: moderateScale(12) }}
+                      >
+                        Deposit (
+                        {paymentSettingsDataParse?.advancePaymentPercent}%)
+                      </CustomSecondaryText>
+                    </View>
+                    <CustomText
+                      style={{
+                        fontFamily: "AirbnbCereal_W_XBd",
+                        color: "#2563eb",
+                        fontSize: moderateScale(18),
+                      }}
+                    >
                       {authenticatedUser?.currency} {advanceAmount.toFixed(2)}
-                    </CustomSecondaryText>
+                    </CustomText>
                   </View>
 
                   <View
@@ -433,91 +819,51 @@ const GroupJoinModal = () => {
                       justifyContent: "space-between",
                     }}
                   >
-                    <CustomSecondaryText>
-                      Total service amount
+                    <CustomSecondaryText
+                      style={{ fontSize: moderateScale(14) }}
+                    >
+                      Remaining Balance
                     </CustomSecondaryText>
-                    <CustomSecondaryText>
-                      {authenticatedUser?.currency}{" "}
-                      {totalServicePriceAmount.toFixed(2)}
-                    </CustomSecondaryText>
-                  </View>
-
-                  <View
-                    style={{
-                      flexDirection: "row",
-                      justifyContent: "space-between",
-                    }}
-                  >
-                    <CustomSecondaryText>Pay at salon</CustomSecondaryText>
-                    <CustomSecondaryText>
+                    <CustomText
+                      style={{
+                        fontFamily: "AirbnbCereal_W_Bd",
+                        fontSize: moderateScale(14),
+                        color: "#64748b",
+                      }}
+                    >
                       {authenticatedUser?.currency}{" "}
                       {(totalServicePriceAmount - advanceAmount).toFixed(2)}
-                    </CustomSecondaryText>
+                    </CustomText>
                   </View>
                 </>
               )}
             </View>
-          ) : (
-            <>
-              <View
-                style={{
-                  height: verticalScale(1),
-                  backgroundColor: colors.secondaryText,
-                }}
-              />
-              <View style={styles.cardContent}>
-                <CustomText
-                  style={{
-                    fontFamily: "AirbnbCereal_W_XBd",
-                    fontSize: scale(18),
-                  }}
-                >
-                  Total Price
-                </CustomText>
-                <CustomText
-                  style={{
-                    fontFamily: "AirbnbCereal_W_XBd",
-                    fontSize: scale(18),
-                  }}
-                >
-                  {" "}
-                  {authenticatedUser?.currency} {totalServicePriceAmount}
-                </CustomText>
-              </View>
-            </>
-          )}
-        </View>
+          </View>
+        </ScrollView>
 
-        <View style={styles.buttonRow}>
-          <TouchableOpacity
-            onPress={() => {
-              if (!groupJoinLoader) {
-                router.back();
-              }
-            }}
-            style={[
-              styles.button,
-              {
-                // backgroundColor: '#ef4444'
-              },
-            ]}
-          >
-            <CustomText style={{ fontFamily: "AirbnbCereal_W_Bd" }}>
-              No
-            </CustomText>
-          </TouchableOpacity>
-
+        {/* ===== FOOTER ===== */}
+        <View
+          style={{
+            padding: scale(24),
+            paddingBottom: scale(10),
+            borderTopWidth: 1,
+            borderColor: colors.queueBorder,
+          }}
+        >
           {paymentSettingsDataParse?.enabled ? (
             <TouchableOpacity
               onPress={openPaymentSheet}
               disabled={loading}
-              style={[
-                styles.button,
-                {
-                  backgroundColor: loading ? "#9ca3af" : "#2563eb",
-                  opacity: loading ? 0.7 : 1,
-                },
-              ]}
+              style={{
+                backgroundColor: loading ? "#94a3b8" : "#2563eb",
+                paddingVertical: verticalScale(18),
+                borderRadius: moderateScale(16),
+                alignItems: "center",
+                shadowColor: "#2563eb",
+                shadowOffset: { width: 0, height: verticalScale(4) },
+                shadowOpacity: 0.2,
+                shadowRadius: moderateScale(8),
+              }}
             >
               {loading ? (
                 <ActivityIndicator color="#fff" />
@@ -526,35 +872,58 @@ const GroupJoinModal = () => {
                   style={{
                     color: "#fff",
                     fontFamily: "AirbnbCereal_W_Bd",
+                    fontSize: moderateScale(16),
                   }}
                 >
-                  Checkout
+                  Proceed to Payment
                 </CustomText>
               )}
             </TouchableOpacity>
           ) : (
             <TouchableOpacity
-              // onPress={() => router.replace("/groupJoinSuccessPage")}
-              disabled={groupJoinLoader}
               onPress={groupJoinPressed}
-              style={[
-                styles.button,
-                {
-                  backgroundColor: "#14b8a6",
-                },
-              ]}
+              disabled={groupJoinLoader}
+              style={{
+                backgroundColor: groupJoinLoader ? "#94a3b8" : "#14b8a6",
+                paddingVertical: verticalScale(18),
+                borderRadius: moderateScale(16),
+                alignItems: "center",
+              }}
             >
               {groupJoinLoader ? (
-                <ActivityIndicator color={"#fff"} />
+                <ActivityIndicator color="#fff" />
               ) : (
                 <CustomText
-                  style={{ color: "#fff", fontFamily: "AirbnbCereal_W_Bd" }}
+                  style={{
+                    color: "#fff",
+                    fontFamily: "AirbnbCereal_W_Bd",
+                    fontSize: moderateScale(16),
+                  }}
                 >
-                  Yes
+                  Confirm Group Booking
                 </CustomText>
               )}
             </TouchableOpacity>
           )}
+
+          <TouchableOpacity
+            onPress={() => !groupJoinLoader && router.back()}
+            style={{
+              marginTop: verticalScale(12),
+              paddingVertical: verticalScale(8),
+              alignItems: "center",
+            }}
+          >
+            <CustomText
+              style={{
+                fontFamily: "AirbnbCereal_W_Bd",
+                color: "#64748b",
+                fontSize: moderateScale(15),
+              }}
+            >
+              Go Back
+            </CustomText>
+          </TouchableOpacity>
         </View>
       </Pressable>
     </Pressable>
