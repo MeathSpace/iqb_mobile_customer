@@ -159,6 +159,133 @@ const singleJoinModal = () => {
     (totalServicePriceAmount * advancePaymentPercent) / 100
   );
 
+  // const fetchPaymentSheetParams = async () => {
+  //   const response = await fetch(
+  //     `${BASE_URL}/mobileRoutes/singleJoinQueuePaymentApi`,
+  //     {
+  //       method: "POST",
+  //       headers: {
+  //         "Content-Type": "application/json",
+  //       },
+  //       body: JSON.stringify({
+  //         //stripe forces minimum amount to be 50 less than that will cause payment failed error
+  //         totalAmount: advanceAmount,
+  //         currency: authenticatedUser?.isoCurrencyCode,
+  //         queueJoinData: {
+  //           salonId: authenticatedUser?.salonId,
+  //           name: authenticatedUser?.name,
+  //           customerEmail: authenticatedUser?.email,
+  //           singleJoinedQType: "Single-Join",
+  //           methodUsed: "App",
+  //           mobileCountryCode: authenticatedUser?.mobileCountryCode,
+  //           mobileNumber: authenticatedUser?.mobileNumber.toString(),
+  //           barberName: parsedSelectBarber?.name,
+  //           barberId: parsedSelectBarber?.barberId,
+  //           services: parsedSelectedServices,
+  //         },
+  //       }),
+  //     }
+  //   );
+
+  //   if (!response.ok) {
+  //     throw new Error("Failed to fetch payment params");
+  //   }
+
+  //   const data = await response.json();
+  //   const { paymentIntent, ephemeralKey, customer } = data;
+
+  //   if (!paymentIntent || !ephemeralKey || !customer) {
+  //     throw new Error("Invalid Stripe response");
+  //   }
+
+  //   return { paymentIntent, ephemeralKey, customer };
+  // };
+
+  // const openPaymentSheet = async () => {
+  //   try {
+  //     setLoading(true);
+
+  //     // 1️⃣ Fetch fresh Stripe params (NEW PaymentIntent every time)
+  //     const { paymentIntent, ephemeralKey, customer } =
+  //       await fetchPaymentSheetParams();
+
+  //     // 2️⃣ Initialize Payment Sheet
+  //     const initResult = await initPaymentSheet({
+  //       merchantDisplayName: authenticatedUser?.salonName || "IQBook",
+  //       customerId: customer,
+  //       customerEphemeralKeySecret: ephemeralKey,
+  //       paymentIntentClientSecret: paymentIntent,
+  //       allowsDelayedPaymentMethods: true,
+  //       defaultBillingDetails: {
+  //         name: authenticatedUser?.name,
+  //         email: authenticatedUser?.email,
+  //         phone:
+  //           authenticatedUser?.mobileCountryCode &&
+  //           authenticatedUser?.mobileNumber
+  //             ? `+${authenticatedUser.mobileCountryCode}${authenticatedUser.mobileNumber}`
+  //             : undefined,
+  //       },
+  //       returnURL: "iqbmobilecustomer://stripe-redirect",
+  //     });
+
+  //     if (initResult.error) {
+  //       throw initResult.error;
+  //     }
+
+  //     // 3️⃣ Present Payment Sheet
+  //     const presentResult = await presentPaymentSheet();
+
+  //     if (presentResult.error) {
+  //       Alert.alert(
+  //         presentResult.error.code || "Payment error",
+  //         presentResult.error.message
+  //       );
+  //       return;
+  //     }
+
+  //     await AsyncStorage.setItem(
+  //       "newNotification",
+  //       JSON.stringify({
+  //         email: authenticatedUser?.email,
+  //         value: true,
+  //       })
+  //     );
+
+  //     setNewNotification({
+  //       email: authenticatedUser?.email,
+  //       value: true,
+  //     });
+
+  //     setQueueJoinType({
+  //       single: false,
+  //       group: false,
+  //     });
+
+  //     setJoinPopupType({
+  //       barberSelect: false,
+  //       serviceSelect: false,
+  //     });
+
+  //     router.replace("/singleJoinSuccessPage");
+
+  //     //   router.replace({
+  //     //     pathname: "/appointmentSuccessPage",
+  //     //     params: {
+  //     //       booked: true,
+  //     //       edit: false,
+  //     //     },
+  //     //   });
+  //   } catch (err) {
+  //     console.log("Stripe error:", err);
+  //     Alert.alert(
+  //       "Payment failed",
+  //       err && err.message ? err.message : "Something went wrong"
+  //     );
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   const fetchPaymentSheetParams = async () => {
     const response = await fetch(
       `${BASE_URL}/mobileRoutes/singleJoinQueuePaymentApi`,
@@ -168,8 +295,7 @@ const singleJoinModal = () => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          //stripe forces minimum amount to be 50 less than that will cause payment failed error
-          totalAmount: advanceAmount,
+          totalAmount: advanceAmount, // backend must convert to smallest unit
           currency: authenticatedUser?.isoCurrencyCode,
           queueJoinData: {
             salonId: authenticatedUser?.salonId,
@@ -178,7 +304,7 @@ const singleJoinModal = () => {
             singleJoinedQType: "Single-Join",
             methodUsed: "App",
             mobileCountryCode: authenticatedUser?.mobileCountryCode,
-            mobileNumber: authenticatedUser?.mobileNumber.toString(),
+            mobileNumber: authenticatedUser?.mobileNumber?.toString(),
             barberName: parsedSelectBarber?.name,
             barberId: parsedSelectBarber?.barberId,
             services: parsedSelectedServices,
@@ -187,11 +313,13 @@ const singleJoinModal = () => {
       }
     );
 
+    const data = await response.json();
+
+    // ✅ Do NOT mask backend error message
     if (!response.ok) {
-      throw new Error("Failed to fetch payment params");
+      throw new Error(data?.message || "Payment initialization failed");
     }
 
-    const data = await response.json();
     const { paymentIntent, ephemeralKey, customer } = data;
 
     if (!paymentIntent || !ephemeralKey || !customer) {
@@ -205,11 +333,11 @@ const singleJoinModal = () => {
     try {
       setLoading(true);
 
-      // 1️⃣ Fetch fresh Stripe params (NEW PaymentIntent every time)
+      // 1️⃣ Always fetch fresh Stripe params
       const { paymentIntent, ephemeralKey, customer } =
         await fetchPaymentSheetParams();
 
-      // 2️⃣ Initialize Payment Sheet
+      // 2️⃣ Initialize Stripe Payment Sheet
       const initResult = await initPaymentSheet({
         merchantDisplayName: authenticatedUser?.salonName || "IQBook",
         customerId: customer,
@@ -228,21 +356,18 @@ const singleJoinModal = () => {
         returnURL: "iqbmobilecustomer://stripe-redirect",
       });
 
-      if (initResult.error) {
-        throw initResult.error;
+      if (initResult?.error) {
+        throw new Error(initResult.error.message);
       }
 
       // 3️⃣ Present Payment Sheet
       const presentResult = await presentPaymentSheet();
 
-      if (presentResult.error) {
-        Alert.alert(
-          presentResult.error.code || "Payment error",
-          presentResult.error.message
-        );
-        return;
+      if (presentResult?.error) {
+        throw new Error(presentResult.error.message);
       }
 
+      // 4️⃣ Post-payment success flow
       await AsyncStorage.setItem(
         "newNotification",
         JSON.stringify({
@@ -267,20 +392,10 @@ const singleJoinModal = () => {
       });
 
       router.replace("/singleJoinSuccessPage");
-
-      //   router.replace({
-      //     pathname: "/appointmentSuccessPage",
-      //     params: {
-      //       booked: true,
-      //       edit: false,
-      //     },
-      //   });
     } catch (err) {
-      console.log("Stripe error:", err);
-      Alert.alert(
-        "Payment failed",
-        err && err.message ? err.message : "Something went wrong"
-      );
+      console.log("Stripe error:", err?.message);
+
+      Alert.alert("Payment failed", err?.message || "Something went wrong");
     } finally {
       setLoading(false);
     }

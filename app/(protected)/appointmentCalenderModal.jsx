@@ -130,6 +130,110 @@ const appointmentCalenderModal = () => {
     (totalServicePriceAmount * advancePaymentPercent) / 100
   );
 
+  // const fetchPaymentSheetParams = async () => {
+  //   const response = await fetch(`${BASE_URL}/mobileRoutes/paymentApi`, {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify({
+  //       //stripe forces minimum amount to be 50 less than that will cause payment failed error
+  //       totalAmount: advanceAmount,
+  //       salonId: authenticatedUser.salonId,
+  //       currency: authenticatedUser?.isoCurrencyCode,
+  //       joinPaymentType: "appointment",
+  //       customerEmail: authenticatedUser?.email,
+  //       bookAppointmentData: {
+  //         salonId: authenticatedUser?.salonId,
+  //         barberId: selectedCustomerBookAppointmentBarberParse?.barberId,
+  //         serviceId: selectedCustomerBookAppointmentServicesParse.map(
+  //           (item) => item.serviceId
+  //         ),
+  //         appointmentDate: selectedBookCalenderDateParse,
+  //         appointmentNotes: selectedBookAppointmentNoteParse,
+  //         startTime: selectedBookCalenderTimeslotParse,
+  //         customerEmail: authenticatedUser?.email,
+  //         customerName: authenticatedUser?.name,
+  //         customerType: "Walk-In",
+  //         methodUsed: "App",
+  //       },
+  //     }),
+  //   });
+
+  //   if (!response.ok) {
+  //     throw new Error("Failed to fetch payment params");
+  //   }
+
+  //   const data = await response.json();
+  //   const { paymentIntent, ephemeralKey, customer } = data;
+
+  //   if (!paymentIntent || !ephemeralKey || !customer) {
+  //     throw new Error("Invalid Stripe response");
+  //   }
+
+  //   return { paymentIntent, ephemeralKey, customer };
+  // };
+
+  // const openPaymentSheet = async () => {
+  //   try {
+  //     setLoading(true);
+
+  //     // 1️⃣ Fetch fresh Stripe params (NEW PaymentIntent every time)
+  //     const { paymentIntent, ephemeralKey, customer } =
+  //       await fetchPaymentSheetParams();
+
+  //     // 2️⃣ Initialize Payment Sheet
+  //     const initResult = await initPaymentSheet({
+  //       merchantDisplayName: authenticatedUser?.salonName || "IQBook",
+  //       customerId: customer,
+  //       customerEphemeralKeySecret: ephemeralKey,
+  //       paymentIntentClientSecret: paymentIntent,
+  //       allowsDelayedPaymentMethods: true,
+  //       defaultBillingDetails: {
+  //         name: authenticatedUser?.name,
+  //         email: authenticatedUser?.email,
+  //         phone:
+  //           authenticatedUser?.mobileCountryCode &&
+  //           authenticatedUser?.mobileNumber
+  //             ? `+${authenticatedUser.mobileCountryCode}${authenticatedUser.mobileNumber}`
+  //             : undefined,
+  //       },
+  //       returnURL: "iqbmobilecustomer://stripe-redirect",
+  //     });
+
+  //     if (initResult.error) {
+  //       throw initResult.error;
+  //     }
+
+  //     // 3️⃣ Present Payment Sheet
+  //     const presentResult = await presentPaymentSheet();
+
+  //     if (presentResult.error) {
+  //       Alert.alert(
+  //         presentResult.error.code || "Payment error",
+  //         presentResult.error.message
+  //       );
+  //       return;
+  //     }
+
+  //     router.replace({
+  //       pathname: "/appointmentSuccessPage",
+  //       params: {
+  //         booked: true,
+  //         edit: false,
+  //       },
+  //     });
+  //   } catch (err) {
+  //     console.log("Stripe error:", err?.message);
+  //     // Alert.alert(
+  //     //   "Payment failed",
+  //     //   err && err.message ? err.message : "Something went wrong"
+  //     // );
+  //   } finally {
+  //     setLoading(false);
+  //   }
+  // };
+
   const fetchPaymentSheetParams = async () => {
     const response = await fetch(`${BASE_URL}/mobileRoutes/paymentApi`, {
       method: "POST",
@@ -137,9 +241,8 @@ const appointmentCalenderModal = () => {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        //stripe forces minimum amount to be 50 less than that will cause payment failed error
-        totalAmount: advanceAmount,
-        salonId: authenticatedUser.salonId,
+        totalAmount: advanceAmount, // backend must convert to smallest unit
+        salonId: authenticatedUser?.salonId,
         currency: authenticatedUser?.isoCurrencyCode,
         joinPaymentType: "appointment",
         customerEmail: authenticatedUser?.email,
@@ -160,11 +263,12 @@ const appointmentCalenderModal = () => {
       }),
     });
 
+    const data = await response.json();
+
     if (!response.ok) {
-      throw new Error("Failed to fetch payment params");
+      throw new Error(data?.message || "Payment initialization failed");
     }
 
-    const data = await response.json();
     const { paymentIntent, ephemeralKey, customer } = data;
 
     if (!paymentIntent || !ephemeralKey || !customer) {
@@ -178,11 +282,9 @@ const appointmentCalenderModal = () => {
     try {
       setLoading(true);
 
-      // 1️⃣ Fetch fresh Stripe params (NEW PaymentIntent every time)
       const { paymentIntent, ephemeralKey, customer } =
         await fetchPaymentSheetParams();
 
-      // 2️⃣ Initialize Payment Sheet
       const initResult = await initPaymentSheet({
         merchantDisplayName: authenticatedUser?.salonName || "IQBook",
         customerId: customer,
@@ -201,19 +303,14 @@ const appointmentCalenderModal = () => {
         returnURL: "iqbmobilecustomer://stripe-redirect",
       });
 
-      if (initResult.error) {
-        throw initResult.error;
+      if (initResult?.error) {
+        throw new Error(initResult.error.message);
       }
 
-      // 3️⃣ Present Payment Sheet
       const presentResult = await presentPaymentSheet();
 
-      if (presentResult.error) {
-        Alert.alert(
-          presentResult.error.code || "Payment error",
-          presentResult.error.message
-        );
-        return;
+      if (presentResult?.error) {
+        throw new Error(presentResult.error.message);
       }
 
       router.replace({
@@ -224,11 +321,9 @@ const appointmentCalenderModal = () => {
         },
       });
     } catch (err) {
-      console.log("Stripe error:", err);
-      Alert.alert(
-        "Payment failed",
-        err && err.message ? err.message : "Something went wrong"
-      );
+      console.log("Stripe error:", err?.message);
+
+      Alert.alert("Payment failed", err?.message || "Something went wrong");
     } finally {
       setLoading(false);
     }
