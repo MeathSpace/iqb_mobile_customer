@@ -1,9 +1,11 @@
 import { useTheme } from "@react-navigation/native";
 import { Image } from "expo-image";
-import { StyleSheet, View } from "react-native";
+import { StyleSheet, View, Dimensions, TouchableOpacity } from "react-native";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import CustomSecondaryText from "./CustomSecondaryText";
 import CustomText from "./CustomText";
+
+const { width } = Dimensions.get('window');
 
 const BarberCard = ({ item }) => {
   const { colors } = useTheme();
@@ -11,7 +13,6 @@ const BarberCard = ({ item }) => {
   function formatMinutesToHrMin(totalMinutes) {
     const hours = Math.floor(totalMinutes / 60);
     const mins = totalMinutes % 60;
-
     if (hours > 0 && mins > 0) return `${hours}hr ${mins}m`;
     if (hours > 0) return `${hours}hr`;
     return `${mins}m`;
@@ -19,65 +20,106 @@ const BarberCard = ({ item }) => {
 
   return (
     <View
-      style={[
-        styles.cardWrapper,
-        {
-          backgroundColor: colors.cardColor,
-          borderColor: colors.queueBorder,
-          borderWidth: scale(1),
-        },
-      ]}
+      style={{
+        width: (width - scale(46)) / 2, // Perfect 2-column alignment
+        backgroundColor: colors.modalBgColor,
+        borderRadius: moderateScale(28), // Matching Hero & Modal corners
+        padding: scale(12),
+        borderWidth: 1,
+        borderColor: colors.queueBorder,
+        alignItems: 'center', // Premium centered look
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.05,
+        shadowRadius: 12,
+        elevation: 3,
+        marginBottom: verticalScale(2),
+      }}
     >
-      <View style={{ position: "relative" }}>
-        <Image
-          style={styles.cardImage}
-          source={{ uri: item?.profile?.[0]?.url }}
-          contentFit="cover"
-          transition={300}
-        />
-
-        <View style={styles.statusBadgeWrapper}>
-          <View
-            style={[
-              styles.statusBadge,
-              {
-                backgroundColor: item?.isOnline ? "#00B090" : "#E11D48",
-              },
-            ]}
-          >
-            <CustomText style={styles.statusText}>
-              {item?.isOnline ? "Online" : "Offline"}
-            </CustomText>
-          </View>
+      {/* Profile Image with Online Ring */}
+      <View style={{ marginTop: verticalScale(5) }}>
+        <View style={{
+            padding: scale(3),
+            borderRadius: scale(100),
+            borderWidth: 2,
+            borderColor: item?.isOnline ? "#14b8a6" : "#cbd5e1", // Status ring
+        }}>
+            <Image
+            style={{
+                height: scale(70),
+                width: scale(70),
+                borderRadius: scale(100),
+                backgroundColor: colors.modalSectionColor,
+            }}
+            source={{ uri: item?.profile?.[0]?.url }}
+            contentFit="cover"
+            transition={300}
+            />
         </View>
+        
+        {/* Status Dot */}
+        <View style={{
+            position: 'absolute',
+            bottom: scale(2),
+            right: scale(5),
+            width: scale(14),
+            height: scale(14),
+            borderRadius: scale(10),
+            backgroundColor: item?.isOnline ? "#14b8a6" : "#ef4444",
+            borderWidth: 2,
+            borderColor: colors.modalBgColor,
+        }} />
       </View>
 
-      <View
-        style={{
-          padding: scale(10),
-          gap: verticalScale(3),
-        }}
-      >
+      {/* Info Section */}
+      <View style={{ alignItems: 'center', marginTop: verticalScale(10), width: '100%' }}>
         <CustomText
           style={{
-            fontFamily: "AirbnbCereal_W_Bd",
+            fontFamily: "AirbnbCereal_W_XBd", // Extra Bold for hierarchy
+            fontSize: moderateScale(15),
+            color: colors.text,
+            textAlign: 'center'
           }}
+          numberOfLines={1}
         >
           {item.name}
         </CustomText>
+        
+        {/* Wait Time Badge */}
         <View
           style={{
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "space-between",
-            gap: scale(2),
-            flex: 1,
+            marginTop: verticalScale(6),
+            backgroundColor: colors.background, // Nested contrast
+            paddingHorizontal: scale(10),
+            paddingVertical: verticalScale(4),
+            borderRadius: moderateScale(10),
+            borderWidth: 1,
+            borderColor: colors.queueBorder,
+            width: '100%',
+            alignItems: 'center'
           }}
         >
-          {/* <ClockIcon size={scale(14)} color={colors.secondaryText} /> */}
-          <CustomSecondaryText style={{ flex: 1 }}>
-            ~ {formatMinutesToHrMin(item?.barberEWT)}
-          </CustomSecondaryText>
+          <CustomText
+            style={{
+              fontFamily: "AirbnbCereal_W_Bd",
+              fontSize: moderateScale(10),
+              textTransform: 'uppercase',
+              letterSpacing: 0.8,
+              color: "#64748b",
+            }}
+          >
+            Wait Time
+          </CustomText>
+          <CustomText
+            style={{
+              fontFamily: "AirbnbCereal_W_XBd",
+              fontSize: moderateScale(13),
+              color: colors.primary,
+              marginTop: 1
+            }}
+          >
+            {formatMinutesToHrMin(item?.barberEWT)}
+          </CustomText>
         </View>
       </View>
     </View>
@@ -85,50 +127,3 @@ const BarberCard = ({ item }) => {
 };
 
 export default BarberCard;
-
-const styles = StyleSheet.create({
-  cardWrapper: {
-    width: scale(160),
-    marginBottom: scale(0),
-    // gap: verticalScale(2),
-    borderRadius: scale(10),
-  },
-  cardImage: {
-    height: verticalScale(110),
-    width: "100%",
-    borderTopLeftRadius: scale(10),
-    borderTopRightRadius: scale(10),
-
-    // marginBottom: verticalScale(5),
-    // borderWidth: scale(1)
-  },
-  cardContentWrapper: {
-    gap: verticalScale(5),
-  },
-
-  statusBadgeWrapper: {
-    position: "absolute",
-    top: verticalScale(8),
-    right: scale(8),
-    zIndex: 2,
-    elevation: 3, // For Android shadow
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.2,
-    shadowRadius: 2,
-  },
-
-  statusBadge: {
-    paddingHorizontal: scale(10),
-    paddingVertical: verticalScale(4),
-    borderRadius: scale(20),
-    alignItems: "center",
-    justifyContent: "center",
-  },
-
-  statusText: {
-    fontSize: moderateScale(12),
-    color: "#fff",
-    fontWeight: "600",
-  },
-});

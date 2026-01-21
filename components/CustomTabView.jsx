@@ -21,7 +21,7 @@ const CustomTabView = ({ style, children, scrollable = false, ...props }) => {
                 style={{
                     backgroundColor: colors.background,
                     flex: 1,
-                    paddingHorizontal: scale(10),
+                    paddingHorizontal: scale(0),
                     paddingTop: verticalScale(10),
                     ...style
                 }}

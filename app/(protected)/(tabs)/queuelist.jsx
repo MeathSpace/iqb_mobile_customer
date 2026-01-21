@@ -245,7 +245,6 @@ const QueueList = () => {
       <View
         style={{
           paddingHorizontal: scale(10),
-          //   paddingTop: verticalScale(0),
           paddingBottom: verticalScale(10),
           flexDirection: "row",
           justifyContent: "space-between",
@@ -508,82 +507,6 @@ const QueueList = () => {
 
 export default QueueList;
 
-const styles = StyleSheet.create({
-  queueButton: {
-    width: "100%",
-    backgroundColor: "#14b8a6", // bg-teal-500
-    paddingVertical: verticalScale(16), // py-4
-    borderRadius: scale(12), // rounded-xl
-    marginBottom: verticalScale(15), // mb-6
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  queueButtonText: {
-    color: "#fff", // text-white
-    fontFamily: "AirbnbCereal_W_XBd",
-    fontSize: scale(16),
-  },
-
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    height: verticalScale(40),
-  },
-
-  bellWrapper: {
-    padding: scale(8),
-    borderRadius: scale(999),
-    position: "relative",
-  },
-  badge: {
-    position: "absolute",
-    top: scale(6),
-    right: scale(6),
-    width: scale(8),
-    height: scale(8),
-    borderRadius: scale(4),
-    backgroundColor: "#2dd4bf", // bg-teal-400
-  },
-
-  queueListContainer: {
-    flex: Platform.OS === "ios" ? 0.93 : 0.98,
-    borderWidth: scale(1),
-    borderRadius: scale(12),
-  },
-
-  queueListheader: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    height: verticalScale(40),
-    paddingHorizontal: scale(12),
-    borderBottomWidth: scale(1),
-    gap: scale(2),
-  },
-  queueListheaderText: {
-    fontFamily: "AirbnbCereal_W_Bd",
-    fontSize: scale(14),
-  },
-
-  noQueueContainer: {
-    width: "100%",
-    borderWidth: scale(1),
-    borderRadius: scale(12),
-    // flex: 0.90,
-    padding: scale(30),
-    gap: verticalScale(10),
-  },
-
-  iconContainer: {
-    width: scale(80),
-    height: scale(80),
-    borderRadius: scale(80),
-    justifyContent: "center",
-    alignItems: "center",
-    marginHorizontal: "auto",
-  },
-});
 
 // import { Platform, StyleSheet, Text, View } from 'react-native'
 // import React from 'react'

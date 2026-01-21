@@ -2,13 +2,11 @@ import { BASE_URL } from "@/utils/api";
 import { usePreventRemove, useTheme } from "@react-navigation/native";
 import axios from "axios";
 import { Image } from "expo-image";
-import { router, useFocusEffect } from "expo-router";
+import { useFocusEffect } from "expo-router";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
-  ActivityIndicator,
-  Alert,
+  Dimensions,
   FlatList,
-  Linking,
   Platform,
   Pressable,
   StyleSheet,
@@ -16,17 +14,11 @@ import {
   View,
 } from "react-native";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
-import {
-  CalendarIcon,
-  RightIcon,
-  SalonIcon,
-  UploadIcon,
-} from "../constants/icons";
+import { RightIcon } from "../constants/icons";
 import { useAuth } from "../context/AuthContext";
 import { useGlobal } from "../context/GlobalContext";
 import AdvertiseCard from "./AdvertiseCard";
 import BarberCard from "./BarberCard";
-import CustomSecondaryText from "./CustomSecondaryText";
 import CustomTabView from "./CustomTabView";
 import CustomText from "./CustomText";
 import Skeleton from "./Skeleton";
@@ -36,10 +28,12 @@ import * as Device from "expo-device";
 import * as Notifications from "expo-notifications";
 import { io } from "socket.io-client";
 
-import { Feather } from "@expo/vector-icons";
-import { LinearGradient } from "expo-linear-gradient";
-import { Toast } from "toastify-react-native";
+import Card from "./Card";
 import Header from "./Header";
+import SalonHint from "./SalonHint";
+import StatusCard from "./StatusCard";
+
+const { width, height } = Dimensions.get("window");
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -76,7 +70,7 @@ async function registerForPushNotificationsAsync() {
     }
     if (finalStatus !== "granted") {
       handleRegistrationError(
-        "Permission not granted to get push token for push notification!"
+        "Permission not granted to get push token for push notification!",
       );
       return;
     }
@@ -110,7 +104,7 @@ const Dashboard = () => {
       const fetch_new_version = async () => {
         try {
           const { data } = await axios.get(
-            `${BASE_URL}/version/getMobileVersion`
+            `${BASE_URL}/version/getMobileVersion`,
           );
           const recentAppVersion = Constants.expoConfig.version;
 
@@ -130,7 +124,7 @@ const Dashboard = () => {
 
       // cleanup (optional)
       return () => {};
-    }, [])
+    }, []),
   );
 
   const { homeDashboardData, setHomeDashboardData } = useGlobal();
@@ -180,7 +174,7 @@ const Dashboard = () => {
               {
                 salonId: authenticatedUser?.salonId,
                 customerEmail: authenticatedUser?.email,
-              }
+              },
             );
 
             setHomeDashboardData((prev) => ({
@@ -200,7 +194,7 @@ const Dashboard = () => {
             }));
             console.error(
               "Error fetching dashboard data: ",
-              error?.response?.data
+              error?.response?.data,
             );
           }
         };
@@ -213,7 +207,7 @@ const Dashboard = () => {
               `${BASE_URL}/mobileRoutes/getAllAdvertisements`,
               {
                 salonId: authenticatedUser?.salonId,
-              }
+              },
             );
 
             setHomeAdvertisementData((prev) => ({
@@ -240,7 +234,7 @@ const Dashboard = () => {
             setServiceCategoryData((prev) => ({ ...prev, loading: true }));
 
             const { data } = await axios.get(
-              `${BASE_URL}/mobileRoutes/getAllServiceCategories`
+              `${BASE_URL}/mobileRoutes/getAllServiceCategories`,
             );
 
             setServiceCategoryData((prev) => ({
@@ -271,7 +265,7 @@ const Dashboard = () => {
               {
                 salonId: authenticatedUser?.salonId,
                 customerEmail: authenticatedUser?.email,
-              }
+              },
             );
 
             setCustomerLiveData((prev) => ({
@@ -301,7 +295,7 @@ const Dashboard = () => {
               `${BASE_URL}/mobileRoutes/getSalonFeatures`,
               {
                 salonId: authenticatedUser?.salonId,
-              }
+              },
             );
 
             setGetSalonFeature((prev) => ({
@@ -334,7 +328,7 @@ const Dashboard = () => {
         // Do something when the screen is unfocused
         // Useful for cleanup functions
       };
-    }, [authenticatedUser])
+    }, [authenticatedUser]),
   );
 
   const socket = io("https://iqb-final.onrender.com", {
@@ -370,7 +364,7 @@ const Dashboard = () => {
           error: null,
         }));
       });
-    }, [authenticatedUser])
+    }, [authenticatedUser]),
   );
 
   const { colors } = useTheme();
@@ -427,7 +421,7 @@ const Dashboard = () => {
         notificationListener.remove();
         responseListener.remove();
       };
-    }, [])
+    }, []),
   );
 
   useFocusEffect(
@@ -443,7 +437,7 @@ const Dashboard = () => {
                 email: authenticatedUser?.email,
                 deviceToken: expoPushToken,
                 deviceType: "android",
-              }
+              },
             );
 
             // console.log("Saved Notifcation Data ", data)
@@ -454,7 +448,7 @@ const Dashboard = () => {
 
         saveExpoPushToken();
       }
-    }, [expoPushToken, authenticatedUser])
+    }, [expoPushToken, authenticatedUser]),
   );
 
   const { setJoinModes, joinModes } = useGlobal();
@@ -471,7 +465,7 @@ const Dashboard = () => {
       //     'You cannot go back during the signup flow. Please complete the current step.',
       //     [{ text: 'OK', onPress: () => null }] // Only an 'OK' button
       // );
-    }
+    },
   );
 
   const statusData = [
@@ -613,6 +607,7 @@ const Dashboard = () => {
     <CustomTabView
       style={{
         paddingTop: verticalScale(0),
+        paddingHorizontal: scale(10),
         paddingBottom:
           Platform.OS === "ios" ? verticalScale(70) : verticalScale(50),
       }}
@@ -628,492 +623,72 @@ const Dashboard = () => {
             case "header": {
               return <Header />;
             }
+
             case "hero": {
               return (
-                <>
-                  {customerLivetData?.loading ? (
-                    <Skeleton
-                      borderRadius={scale(20)}
-                      height={verticalScale(90)}
-                    />
-                  ) : customerLivetData?.liveQueueData?.isJoinedData?.length >
-                    0 ? (
-                    <LinearGradient
-                      colors={["#14b8a6", "#0d9488"]}
-                      style={styles.card}
-                      start={{ x: 0, y: 0 }}
-                      end={{ x: 1, y: 1 }}
-                    >
-                      <View style={styles.topRow}>
-                        <View>
-                          <View
-                            style={{
-                              flexDirection: "row",
-                              alignItems: "center",
-                              gap: scale(10),
-                            }}
-                          >
-                            <CustomText
-                              style={[styles.title, {}]}
-                              numberOfLines={1}
-                              ellipsizeMode="tail"
-                            >
-                              {
-                                customerLivetData?.liveQueueData
-                                  ?.isJoinedData?.[0]?.name
-                              }
-                            </CustomText>
-                          </View>
-
-                          <CustomText style={styles.subtitle}>
-                            {
-                              customerLivetData?.liveQueueData
-                                ?.isJoinedData?.[0]?.barberName
-                            }
-                          </CustomText>
-                        </View>
-                        <View>
-                          <CustomText
-                            style={[
-                              styles.title,
-                              {
-                                marginLeft: "auto",
-                              },
-                            ]}
-                          >
-                            {customerLivetData?.liveQueueData?.isJoinedData?.[0]
-                              ?.qPosition === 1
-                              ? "Next"
-                              : `#${customerLivetData?.liveQueueData?.isJoinedData?.[0]?.qPosition}`}
-                          </CustomText>
-                          <CustomText style={styles.subtitle}>
-                            ~
-                            {formatMinutesToHrMin(
-                              customerLivetData?.liveQueueData
-                                ?.isJoinedData?.[0]?.customerEWT
-                            )}
-                          </CustomText>
-                        </View>
-                      </View>
-
-                      <View style={styles.btnContainer}>
-                        <TouchableOpacity
-                          disabled={cancelQueueLoading}
-                          onPress={async () => {
-                            Alert.alert(
-                              "Cancel Queue",
-                              "Are you sure you want to cancel this queue?",
-                              [
-                                {
-                                  text: "No",
-                                  style: "cancel",
-                                },
-                                {
-                                  text: "Yes",
-                                  onPress: async () => {
-                                    try {
-                                      const cancelQueueData = {
-                                        salonId: authenticatedUser?.salonId,
-                                        barberId:
-                                          customerLivetData?.liveQueueData
-                                            ?.isJoinedData?.[0]?.barberId,
-                                        customerEmail:
-                                          customerLivetData?.liveQueueData
-                                            ?.isJoinedData?.[0]?.customerEmail,
-                                        _id: customerLivetData?.liveQueueData
-                                          ?.isJoinedData?.[0]?._id,
-                                      };
-
-                                      setCancelQueueLoading(true);
-
-                                      const { data } = await axios.post(
-                                        `${BASE_URL}/mobileRoutes/cancelQueueByCustomer`,
-                                        cancelQueueData
-                                      );
-
-                                      setCustomerLiveData((prev) => ({
-                                        ...prev,
-                                        loading: true,
-                                      }));
-
-                                      const { data: livedata } =
-                                        await axios.post(
-                                          `${BASE_URL}/customer/customerLiveQueue`,
-                                          {
-                                            salonId: authenticatedUser?.salonId,
-                                            customerEmail:
-                                              authenticatedUser?.email,
-                                          }
-                                        );
-
-                                      setCustomerLiveData((prev) => ({
-                                        ...prev,
-                                        loading: false,
-                                        liveQueueData: livedata?.response,
-                                        success: true,
-                                        error: null,
-                                      }));
-                                    } catch (error) {
-                                      console.log("Error from live queue data");
-                                    } finally {
-                                      setCancelQueueLoading(false);
-                                    }
-                                  },
-                                },
-                              ]
-                            );
-                          }}
-                          style={[styles.joinQueue]}
-                          activeOpacity={0.85}
-                        >
-                          {cancelQueueLoading ? (
-                            <ActivityIndicator size="small" color="#000" />
-                          ) : (
-                            <CustomText style={styles.joinQueueText}>
-                              Cancel
-                            </CustomText>
-                          )}
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                          onPress={() => {
-                            if (!authenticatedUser?.isAppointments) {
-                              return Toast.error(
-                                "Appointment feature is not available at this salon"
-                              );
-                            }
-
-                            setJoinModes((prev) => ({
-                              ...prev,
-                              appointment: true,
-                              appointmentType: "Book",
-                            }));
-                            router.push("/appointmentCalendar");
-                          }}
-                          style={[
-                            styles.bookAhead,
-                            {
-                              borderWidth: scale(1),
-                              borderColor: "#fff",
-                            },
-                          ]}
-                          activeOpacity={0.85}
-                        >
-                          <CustomText style={styles.bookAheadText}>
-                            Book
-                          </CustomText>
-                        </TouchableOpacity>
-                      </View>
-
-                      {/* +4 more text inside the card */}
-                    </LinearGradient>
-                  ) : (
-                    <LinearGradient
-                      colors={["#14b8a6", "#0d9488"]}
-                      style={styles.card}
-                      start={{ x: 0, y: 0 }}
-                      end={{ x: 1, y: 1 }}
-                    >
-                      <View style={styles.topRow}>
-                        <View>
-                          <CustomText style={styles.title}>
-                            Your Visit, Your Way
-                          </CustomText>
-                          <CustomText style={styles.subtitle}>
-                            Join the virtual queue or book an appointment.
-                          </CustomText>
-                        </View>
-                        <CalendarIcon color="white" style={styles.icon} />
-                      </View>
-
-                      <View style={styles.btnContainer}>
-                        <TouchableOpacity
-                          onPress={() => {
-                            if (!getSalonFeature?.salonFeature?.isQueuing) {
-                              return Toast.error(
-                                "Queueing feature is not available at this salon"
-                              );
-                            }
-
-                            if (
-                              !homeDashboardData?.dashboardData?.salonInfo
-                                ?.mobileBookingAvailability
-                            ) {
-                              return Toast.error("Mobile queueing is off");
-                            }
-
-                            router.push("/joinpopup");
-                          }}
-                          style={[styles.joinQueue]}
-                          activeOpacity={0.85}
-                        >
-                          <CustomText style={styles.joinQueueText}>
-                            Join Queue
-                          </CustomText>
-                        </TouchableOpacity>
-
-                        <TouchableOpacity
-                          onPress={() => {
-                            if (
-                              !getSalonFeature?.salonFeature?.isAppointments
-                            ) {
-                              return Toast.error(
-                                "Appointment feature is not available at this salon"
-                              );
-                            }
-
-                            setJoinModes((prev) => ({
-                              ...prev,
-                              appointment: true,
-                              appointmentType: "Book",
-                            }));
-                            router.push("/appointmentCalendar");
-                          }}
-                          style={[
-                            styles.bookAhead,
-                            {
-                              borderWidth: scale(1),
-                              borderColor: "#fff",
-                            },
-                          ]}
-                          activeOpacity={0.85}
-                        >
-                          <CustomText style={styles.bookAheadText}>
-                            Book
-                          </CustomText>
-                        </TouchableOpacity>
-                      </View>
-                    </LinearGradient>
-                  )}
-                </>
-              );
-            }
-
-            case "status": {
-              return homeDashboardData?.loading ? (
-                <View>
-                  <CustomText style={styles.heading}>
-                    Live Queue Status
-                  </CustomText>
-                  <View style={styles.grid}>
-                    {statusData.map((item, index) => (
-                      <Skeleton
-                        key={index}
-                        width={"48%"}
-                        height={verticalScale(75)}
-                        style={{
-                          width: "48%",
-                          borderRadius: scale(12),
-                          marginBottom: verticalScale(16),
-                        }}
-                      />
-                    ))}
-                  </View>
-                </View>
-              ) : (
-                <View>
-                  <CustomText style={styles.heading}>
-                    Live Queue Status
-                  </CustomText>
-                  <View style={styles.grid}>
-                    {statusData.map((item, index) => (
-                      <View
-                        key={index}
-                        style={[
-                          styles.statusCard,
-                          {
-                            backgroundColor: colors.cardColor,
-                            borderColor: colors.queueBorder,
-                          },
-                        ]}
-                      >
-                        <View
-                          style={[
-                            styles.iconContainer,
-                            { backgroundColor: item.bgColor },
-                          ]}
-                        >
-                          <Feather
-                            name={item.icon}
-                            size={24}
-                            color={item.iconColor}
-                          />
-                        </View>
-                        <View>
-                          <CustomText
-                            style={[
-                              styles.label,
-                              {
-                                // color: colors.secondaryText
-                              },
-                            ]}
-                          >
-                            {item.label}
-                          </CustomText>
-                          <CustomText
-                            style={[
-                              styles.value,
-                              item.valueColor && { color: item.valueColor },
-                              item.fontSize && { fontSize: item.fontSize },
-                            ]}
-                          >
-                            {item.value}
-                          </CustomText>
-                        </View>
-                      </View>
-                    ))}
-                  </View>
-                </View>
+                <Card
+                  customerLivetData={customerLivetData}
+                  cancelQueueLoading={cancelQueueLoading}
+                  setCancelQueueLoading={setCancelQueueLoading}
+                />
               );
             }
 
             case "hint": {
               return (
-                <>
-                  {latestVersion && (
-                    <View
-                      style={[
-                        styles.hintCard,
-                        {
-                          backgroundColor: colors.cardColor,
-                          borderColor: colors.queueBorder,
-                          marginBottom: verticalScale(15),
-                          flexDirection: "row",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                        },
-                      ]}
-                    >
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          alignItems: "center",
-                          justifyContent: "space-between",
-                          gap: scale(10),
-                        }}
-                      >
-                        <View
-                          style={[
-                            styles.hintIconWrapper,
-                            {
-                              backgroundColor: colors.background,
-                              borderColor: colors.cardBorder,
-                              borderWidth: scale(1),
-                            },
-                          ]}
-                        >
-                          <UploadIcon color={colors.text} />
-                        </View>
-                        <View>
-                          <CustomText style={[styles.hintTitle, {}]}>
-                            New update
-                          </CustomText>
-                          <CustomSecondaryText>
-                            Lastest: {latestVersion}
-                          </CustomSecondaryText>
-                        </View>
-                      </View>
-                      <TouchableOpacity
-                        onPress={() => {
-                          // if (Platform.OS === "ios") {
-                          //   console.log("Go to ios");
-                          // } else {
-                          //   Linking.openURL(
-                          //     "https://play.google.com/store/apps/details?id=com.iqbook.iqb"
-                          //   );
-                          // }
-
-                          if (Platform.OS === "ios") {
-                            const iosUrl = `https://apps.apple.com/in/app/iqbook/id6742742449`;
-
-                            Linking.openURL(iosUrl).catch((err) => {
-                              console.error(
-                                "Could not open iOS App Store link:",
-                                err
-                              );
-                            });
-                          } else {
-                            const androidUrl =
-                              "https://play.google.com/store/apps/details?id=com.iqbook.iqb";
-
-                            Linking.openURL(androidUrl).catch((err) => {
-                              console.error(
-                                "Could not open Android Play Store link:",
-                                err
-                              );
-                            });
-                          }
-                        }}
-                        style={{
-                          paddingHorizontal: scale(10),
-                          paddingVertical: verticalScale(6),
-                          backgroundColor: "#14b8a6",
-                          justifyContent: "center",
-                          alignItems: "center",
-                          borderRadius: scale(5),
-                        }}
-                      >
-                        <CustomText
-                          style={{
-                            color: "#fff",
-                            fontSize: moderateScale(12),
-                          }}
-                        >
-                          Update
-                        </CustomText>
-                      </TouchableOpacity>
-                    </View>
-                  )}
-                  <View
-                    style={[
-                      styles.hintCard,
-                      {
-                        backgroundColor: colors.cardColor,
-                        borderColor: colors.queueBorder,
-                      },
-                    ]}
+                <SalonHint
+                  latestVersion={latestVersion}
+                  lengthMore={lengthMore}
+                  salonInfo={salonInfo}
+                  textShown={textShown}
+                  toggleNumberOfLines={toggleNumberOfLines}
+                  onTextLayout={onTextLayout}
+                />
+              );
+            }
+            
+            case "status": {
+              return (
+                <View>
+                  {/* Section Header */}
+                  <CustomText
+                    style={{
+                      fontSize: moderateScale(20),
+                      fontFamily: "AirbnbCereal_W_XBd",
+                      color: colors.text,
+                      marginBottom: verticalScale(18),
+                    }}
                   >
-                    <View
-                      style={[
-                        styles.hintIconWrapper,
-                        {
-                          backgroundColor: colors.background,
-                          borderColor: colors.cardBorder,
-                          borderWidth: scale(1),
-                        },
-                      ]}
-                    >
-                      <SalonIcon color={colors.text} />
-                    </View>
+                    Live Queue Status
+                  </CustomText>
 
-                    <View style={styles.hintTextWrapper}>
-                      <CustomText style={[styles.hintTitle, {}]}>
-                        Salon Info
-                      </CustomText>
-
-                      <CustomSecondaryText
-                        onTextLayout={onTextLayout}
-                        numberOfLines={textShown ? undefined : 5}
-                        style={{ lineHeight: 21 }}
-                      >
-                        {salonInfo}
-                      </CustomSecondaryText>
-
-                      {lengthMore ? (
-                        <CustomText
-                          onPress={toggleNumberOfLines}
-                          style={{
-                            lineHeight: verticalScale(21),
-                            marginTop: verticalScale(5),
-                            color: colors.primary,
-                          }}
-                        >
-                          {textShown ? "Read less..." : "Read more..."}
-                        </CustomText>
-                      ) : null}
-                    </View>
+                  <View
+                    style={{
+                      flexDirection: "row",
+                      flexWrap: "wrap",
+                      justifyContent: "space-between",
+                      rowGap: verticalScale(14),
+                    }}
+                  >
+                    {homeDashboardData?.loading
+                      ? statusData.map((_, index) => (
+                          <Skeleton
+                            key={index}
+                            width={(width - scale(46)) / 2} // Perfectly calculated 2-column width
+                            height={verticalScale(85)}
+                            borderRadius={moderateScale(24)}
+                          />
+                        ))
+                      : statusData.map((item, index) => (
+                          <StatusCard
+                            item={item}
+                            index={index}
+                            width={width}
+                            height={height}
+                          />
+                        ))}
                   </View>
-                </>
+                </View>
               );
             }
 
@@ -1124,7 +699,6 @@ const Dashboard = () => {
                     style={{
                       flexDirection: "row",
                       alignItems: "center",
-                      // marginBottom: verticalScale(10)
                     }}
                   >
                     <CustomText style={styles.heading}>
@@ -1132,7 +706,6 @@ const Dashboard = () => {
                         ? "Barbers"
                         : "Stylists"}{" "}
                       On Duty
-                      {/* <CustomText style={[styles.heading, { color: Colors.modeColor.colorCode }]}>{homeDashboardData?.dashboardData?.barberOnDuty}</CustomText> */}
                     </CustomText>
 
                     <View
@@ -1196,7 +769,7 @@ const Dashboard = () => {
                       )}
                       data={homeDashboardData?.dashboardData?.barbers.slice(
                         0,
-                        sliceBarber
+                        sliceBarber,
                       )}
                       renderItem={({ item }) => <BarberCard item={item} />}
                       keyExtractor={(item) => item.barberId}
@@ -1227,7 +800,7 @@ const Dashboard = () => {
                     <Pressable
                       onPress={() => {
                         setSliceBarber(
-                          homeDashboardData?.dashboardData?.barbers?.length
+                          homeDashboardData?.dashboardData?.barbers?.length,
                         );
                       }}
                       style={{

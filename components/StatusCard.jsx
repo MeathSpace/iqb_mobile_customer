@@ -1,61 +1,80 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import { moderateScale, scale, verticalScale } from 'react-native-size-matters'
-import { useTheme } from '@react-navigation/native'
-import CustomText from './CustomText'
-import CustomSecondaryText from './CustomSecondaryText'
+import { Feather } from "@expo/vector-icons";
+import { useTheme } from "@react-navigation/native";
+import { StyleSheet, View } from "react-native";
+import { moderateScale, scale, verticalScale } from "react-native-size-matters";
+import CustomText from "./CustomText";
 
-const StatusCard = ({ item }) => {
+const StatusCard = ({ item, index, width, height }) => {
+  const { colors } = useTheme();
 
-    const { colors } = useTheme()
-    
-
-    return (
-        <View style={[styles.statusCard]}>
-            <View style={[styles.icon, { backgroundColor: item.color2 }]}>
-                <item.icon size={moderateScale(18)} color={item.color1} />
-            </View>
-            <CustomText style={{ fontSize: scale(11), textAlign: "center", marginVertical: verticalScale(6), color: "gray" }}>{item.title}</CustomText>
-            <CustomText style={{
-                fontFamily: "AirbnbCereal_W_Bd",
-                fontSize: scale(14),
-                textAlign: "center",
-                color: item.title === "System Status" ? (item.color1) : undefined
-                // color: `${item.color1}`
-            }}>{item.value}</CustomText>
-        </View>
-    )
-}
-
-export default StatusCard
-
-const styles = StyleSheet.create({
-    statusCard: {
-        // width: scale(75),
-        // height: verticalScale(125),
-        // borderRadius: moderateScale(4),
-        // padding: moderateScale(10),
-        // marginTop: verticalScale(17),
-        // borderWidth: scale(1),
-        // elevation: 4,
-        // gap: verticalScale(5),
-        marginBottom: verticalScale(20)
-    },
-    icon: {
-        width: scale(40),
-        height: scale(40),
-        borderRadius: scale(8),
-        justifyContent: "center",
+  return (
+    <View
+      key={index}
+      style={{
+        width: (width - scale(46)) / 2,
+        backgroundColor: colors.modalBgColor,
+        borderRadius: moderateScale(24),
+        padding: scale(16),
+        borderWidth: 1,
+        borderColor: colors.queueBorder,
+        flexDirection: "row",
         alignItems: "center",
-        marginHorizontal: "auto",
-        // borderWidth: moderateScale(2),
-        // borderColor: "#fff",
-        // elevation: 25,
-        // shadowOffset: {
-        //     width: 0,
-        //     height: 10,
-        // },
-        // shadowOpacity: 0.6,
-        // shadowRadius: 20,
-    }
-})
+        gap: scale(12),
+        // Premium Depth
+        shadowColor: "#000",
+        shadowOffset: { width: 0, height: 4 },
+        shadowOpacity: 0.05,
+        shadowRadius: 8,
+        elevation: 2,
+      }}
+    >
+      {/* Icon Circle */}
+      <View
+        style={{
+          width: scale(42),
+          height: scale(42),
+          borderRadius: moderateScale(14),
+          backgroundColor: item.bgColor || "#f1f5f9",
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
+        <Feather
+          name={item.icon}
+          size={moderateScale(20)}
+          color={item.iconColor || colors.primary}
+        />
+      </View>
+
+      {/* Text Content */}
+      <View style={{ flex: 1 }}>
+        <CustomText
+          style={{
+            fontSize: moderateScale(10),
+            fontFamily: "AirbnbCereal_W_Bd",
+            textTransform: "uppercase",
+            letterSpacing: 1.2,
+            color: "#94a3b8",
+            marginBottom: verticalScale(2),
+          }}
+        >
+          {item.label}
+        </CustomText>
+        <CustomText
+          style={{
+            fontFamily: "AirbnbCereal_W_XBd",
+            fontSize: moderateScale(17),
+            color: item.valueColor || colors.text,
+          }}
+          numberOfLines={1}
+        >
+          {item.value}
+        </CustomText>
+      </View>
+    </View>
+  );
+};
+
+export default StatusCard;
+
+const styles = StyleSheet.create({});
