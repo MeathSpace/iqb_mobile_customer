@@ -20,12 +20,6 @@ const StatusCard = ({ item, index, width, height }) => {
         flexDirection: "row",
         alignItems: "center",
         gap: scale(12),
-        // Premium Depth
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.05,
-        shadowRadius: 8,
-        elevation: 2,
       }}
     >
       {/* Icon Circle */}

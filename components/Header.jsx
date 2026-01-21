@@ -10,7 +10,6 @@
 // //     //     await AsyncStorage.setItem('modeColor', JSON.stringify({ ...colorMode, default: false }));
 // //     // }
 
-
 // //     return (
 // //         <View>
 // //             <Text>Header</Text>
@@ -23,8 +22,6 @@
 // //                 }}
 // //             >
 // //                 <CustomText>button</CustomText>
-
-
 
 // //             </Pressable>
 
@@ -39,224 +36,149 @@
 
 // // const styles = StyleSheet.create({})
 
-
 // // ========= The top commented code is for changing theme colors  =======
 
-import { Pressable, StyleSheet, Text, View } from 'react-native'
-import { Image } from 'expo-image';
-import React, { memo, useState } from 'react'
-import { NotificationIcon } from '../constants/icons'
-import { useAuth } from '../context/AuthContext'
-import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
-import { useTheme } from '@react-navigation/native'
-import CustomText from './CustomText'
-import { Link, useRouter } from 'expo-router';
-import { useGlobal } from '../context/GlobalContext';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTheme } from "@react-navigation/native";
+import { Image } from "expo-image";
+import { useRouter } from "expo-router";
+import { memo } from "react";
+import { Pressable, View } from "react-native";
+import { moderateScale, scale, verticalScale } from "react-native-size-matters";
+import { NotificationIcon } from "../constants/icons";
+import { useAuth } from "../context/AuthContext";
+import { useGlobal } from "../context/GlobalContext";
+import CustomSecondaryText from "./CustomSecondaryText";
+import CustomText from "./CustomText";
 
 const Header = () => {
+  const { authenticatedUser } = useAuth();
+  const { colors } = useTheme();
+  const router = useRouter();
+  const { newNotification, setNewNotification } = useGlobal();
 
-    const { authenticatedUser } = useAuth()
-    const { colors } = useTheme()
+  const handleNotification = async () => {
+    if (newNotification.value) {
+      await AsyncStorage.setItem(
+        "newNotification",
+        JSON.stringify({
+          email: authenticatedUser?.email,
+          value: false,
+        }),
+      );
+      setNewNotification({ email: "", value: false });
+    }
+    router.push("/notification");
+  };
 
-    const blurhash =
-        'https://thumbs.dreamstime.com/b/default-profile-picture-avatar-photo-placeholder-vector-illustration-default-profile-picture-avatar-photo-placeholder-vector-189495158.jpg';
+  return (
+    <View
+      style={{
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        // paddingBottom: verticalScale(15),
+      }}
+    >
+      {/* --- LEFT SECTION: PROFILE & GREETING --- */}
+      <View
+        style={{ flexDirection: "row", alignItems: "center", gap: scale(12) }}
+      >
+        <Pressable
+          onPress={() => router.push("/profile")}
+          style={{
+            padding: scale(3),
+            borderRadius: moderateScale(15),
+            backgroundColor: colors.modalBgColor,
+            borderWidth: 1,
+            borderColor: colors.queueBorder,
+          }}
+        >
+          <Image
+            source={{ uri: authenticatedUser?.profile?.[0]?.url }}
+            style={{
+              width: scale(45),
+              height: scale(45),
+              borderRadius: moderateScale(12),
+            }}
+            contentFit="cover"
+            transition={500}
+          />
+        </Pressable>
 
-    const router = useRouter()
-
-    const { newNotification, setNewNotification } = useGlobal()
-
-    console.log("authenticatedUser ", authenticatedUser?.salonType)
-
-    return (
-        // <View style={[styles.headerWrapper, {
-        //     backgroundColor: colors.background,
-        // }]}>
-        //     <View style={styles.headerLeft}>
-        //         <Image
-        //             style={{
-        //                 height: scale(37.25),
-        //                 width: scale(37.25),
-        //                 borderRadius: scale(20),
-        //                 position: "relative"
-        //             }}
-        //             source={authenticatedUser?.salonLogo?.[0]?.url}
-        //             placeholder={{ blurhash }}
-        //             contentFit="cover"
-        //             transition={1000}
-        //         />
-
-        //         <CustomText style={{ fontSize: scale(16), fontFamily: "AirbnbCereal_W_Blk" }}>{authenticatedUser?.salonName}</CustomText>
-        //     </View>
-
-
-        //     <View
-        //         style={{
-        //             position: "relative"
-        //         }}
-        //     >
-        //         <Pressable
-        //             style={{
-        //                 height: scale(40),
-        //                 width: scale(40),
-        //                 borderRadius: scale(30),
-        //                 justifyContent: "center",
-        //                 alignItems: "center"
-        //             }}
-        //             onPress={async () => {
-
-        //                 if (newNotification.value) {
-        //                     await AsyncStorage.setItem(
-        //                         "newNotification",
-        //                         JSON.stringify({
-        //                             email: authenticatedUser?.email,
-        //                             value: false
-        //                         })
-        //                     );
-        //                     setNewNotification({
-        //                         email: "",
-        //                         value: false
-        //                     })
-        //                 }
-
-        //                 router.push("/notification")
-        //             }}
-        //         >
-        //             <NotificationIcon size={moderateScale(24)} color={colors.text} />
-        //         </Pressable>
-
-        //         {
-        //             newNotification.value && (
-        //                 <View
-        //                     style={{
-        //                         width: scale(7),
-        //                         height: scale(7),
-        //                         backgroundColor: "#D63163",
-        //                         borderRadius: scale(20),
-        //                         position: "absolute",
-        //                         top: scale(6),
-        //                         right: scale(8)
-        //                     }}
-        //                 />
-        //             )
-        //         }
-
-        //     </View>
-
-        // </View>
-
-        <View style={styles.header}>
-            {/* Left section - Avatar and Welcome Text */}
-            <View style={styles.leftSection}>
-                <Image
-                    source={{ uri: authenticatedUser?.profile?.[0]?.url }}
-                    style={styles.avatar}
-                />
-                <View>
-                    <CustomText style={styles.nameText}>{authenticatedUser?.name}</CustomText>
-                    <CustomText style={[styles.welcomeText, { color: colors.secondaryText }]}>{authenticatedUser?.salonName}</CustomText>
-                </View>
-            </View>
-
-            {/* Right section - Notification bell */}
-            <Pressable
-                style={styles.bellWrapper}
-                activeOpacity={0.7}
-                onPress={async () => {
-
-                    if (newNotification.value) {
-                        await AsyncStorage.setItem(
-                            "newNotification",
-                            JSON.stringify({
-                                email: authenticatedUser?.email,
-                                value: false
-                            })
-                        );
-                        setNewNotification({
-                            email: "",
-                            value: false
-                        })
-                    }
-
-                    router.push("/notification")
-                }}
+        <View>
+          <CustomText
+            style={{
+              fontFamily: "AirbnbCereal_W_XBd",
+              fontSize: moderateScale(18),
+              color: colors.text,
+              letterSpacing: -0.5,
+            }}
+          >
+            Hello, {authenticatedUser?.name.split(" ")[0]}
+          </CustomText>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              gap: scale(4),
+            }}
+          >
+            {/* <View
+              style={{
+                width: scale(6),
+                height: scale(6),
+                borderRadius: 3,
+                backgroundColor: "#14b8a6",
+              }}
+            /> */}
+            <CustomSecondaryText
+              style={{
+                fontSize: moderateScale(12),
+                color: "#64748b",
+                fontFamily: "AirbnbCereal_W_Bd",
+              }}
             >
-                <NotificationIcon size={moderateScale(24)} color={colors.notificationBellColor} />
-                {/* {
-                    newNotification.value && (
-                        <View style={styles.badge} />
-                    )
-                } */}
-
-            </Pressable>
+              {authenticatedUser?.salonName}
+            </CustomSecondaryText>
+          </View>
         </View>
+      </View>
 
-    )
-}
+      {/* --- RIGHT SECTION: NOTIFICATION BELL --- */}
+      <Pressable
+        onPress={handleNotification}
+        style={({ pressed }) => ({
+          width: scale(44),
+          height: scale(44),
+          borderRadius: moderateScale(22),
+          backgroundColor: colors.cardColor,
+          justifyContent: "center",
+          alignItems: "center",
+          borderWidth: 1,
+          borderColor: colors.queueBorder,
+        })}
+      >
+        <NotificationIcon size={moderateScale(22)} color={colors.text} />
 
-export default memo(Header)
+        {newNotification.value && (
+          <View
+            style={{
+              position: "absolute",
+              top: verticalScale(12),
+              right: scale(13),
+              width: scale(9),
+              height: scale(9),
+              borderRadius: 5,
+              backgroundColor: "#ef4444",
+              borderWidth: 2,
+              borderColor: colors.modalBgColor,
+            }}
+          />
+        )}
+      </Pressable>
+    </View>
+  );
+};
 
-const styles = StyleSheet.create({
-    // headerWrapper: {
-    //     flexDirection: "row",
-    //     justifyContent: "space-between",
-    //     alignItems: "center",
-    //     paddingHorizontal: scale(10),
-    //     minHeight: verticalScale(50)
-    // },
-    // headerLeft: {
-    //     flexDirection: "row",
-    //     alignItems: "center",
-    //     gap: scale(10),
-    //     height: "100%",
-    // },
-    // headerRight: {
-    //     flexDirection: "row",
-    //     alignItems: "center",
-    //     gap: scale(10),
-    //     height: "100%",
-    // },
-
-
-    header: {
-        // paddingHorizontal: scale(10),
-        // paddingTop: verticalScale(5),
-        // paddingBottom: verticalScale(12),
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
-        height: verticalScale(40),
-    },
-    leftSection: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: scale(12),
-    },
-    avatar: {
-        width: scale(40),
-        height: scale(40),
-        borderRadius: scale(20),
-    },
-    welcomeText: {
-        fontSize: scale(14),
-    },
-    nameText: {
-        fontSize: scale(18),
-        fontFamily: "AirbnbCereal_W_XBd"
-    },
-    bellWrapper: {
-        padding: scale(8),
-        borderRadius: scale(999),
-        position: 'relative',
-    },
-    badge: {
-        position: 'absolute',
-        top: scale(6),
-        right: scale(6),
-        width: scale(8),
-        height: scale(8),
-        borderRadius: scale(4),
-        backgroundColor: '#2dd4bf', // bg-teal-400
-    },
-})
-
+export default memo(Header);

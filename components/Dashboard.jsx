@@ -607,24 +607,25 @@ const Dashboard = () => {
     <CustomTabView
       style={{
         paddingTop: verticalScale(0),
-        paddingHorizontal: scale(10),
-        paddingBottom:
-          Platform.OS === "ios" ? verticalScale(70) : verticalScale(50),
+        backgroundColor: colors.background, // Ensure solid background color
       }}
     >
       <FlatList
         data={pageData}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
-          gap: verticalScale(20),
+          paddingHorizontal: scale(15), // Increased for luxury "breathability"
+          paddingTop: verticalScale(10),
+          paddingBottom:
+            Platform.OS === "ios" ? verticalScale(160) : verticalScale(120),
+          gap: verticalScale(20), // Consistent large gap between sections
         }}
         renderItem={({ item }) => {
           switch (item.title) {
-            case "header": {
+            case "header":
               return <Header />;
-            }
 
-            case "hero": {
+            case "hero":
               return (
                 <Card
                   customerLivetData={customerLivetData}
@@ -632,9 +633,8 @@ const Dashboard = () => {
                   setCancelQueueLoading={setCancelQueueLoading}
                 />
               );
-            }
 
-            case "hint": {
+            case "hint":
               return (
                 <SalonHint
                   latestVersion={latestVersion}
@@ -645,17 +645,14 @@ const Dashboard = () => {
                   onTextLayout={onTextLayout}
                 />
               );
-            }
-            
-            case "status": {
+
+            case "status":
               return (
                 <View>
-                  {/* Section Header */}
                   <CustomText
                     style={{
-                      fontSize: moderateScale(20),
                       fontFamily: "AirbnbCereal_W_XBd",
-                      color: colors.text,
+                      fontSize: moderateScale(18),
                       marginBottom: verticalScale(18),
                     }}
                   >
@@ -671,16 +668,17 @@ const Dashboard = () => {
                     }}
                   >
                     {homeDashboardData?.loading
-                      ? statusData.map((_, index) => (
+                      ? [1, 2, 3, 4].map((_, index) => (
                           <Skeleton
                             key={index}
-                            width={(width - scale(46)) / 2} // Perfectly calculated 2-column width
+                            width={(width - scale(46)) / 2}
                             height={verticalScale(85)}
                             borderRadius={moderateScale(24)}
                           />
                         ))
                       : statusData.map((item, index) => (
                           <StatusCard
+                            key={index}
                             item={item}
                             index={index}
                             width={width}
@@ -690,18 +688,28 @@ const Dashboard = () => {
                   </View>
                 </View>
               );
-            }
 
             case "barber": {
-              return homeDashboardData?.dashboardData?.barberOnDuty ? (
-                <>
+              const barberCount =
+                homeDashboardData?.dashboardData?.barberOnDuty;
+              if (!barberCount) return null;
+
+              return (
+                <View>
                   <View
                     style={{
                       flexDirection: "row",
+                      justifyContent: "space-between",
                       alignItems: "center",
+                      marginBottom: verticalScale(18),
                     }}
                   >
-                    <CustomText style={styles.heading}>
+                    <CustomText
+                      style={{
+                        fontFamily: "AirbnbCereal_W_XBd",
+                        fontSize: moderateScale(18),
+                      }}
+                    >
                       {authenticatedUser?.salonType === "Barber Shop"
                         ? "Barbers"
                         : "Stylists"}{" "}
@@ -710,62 +718,51 @@ const Dashboard = () => {
 
                     <View
                       style={{
-                        marginLeft: scale(8),
-                        width: scale(24),
-                        height: scale(24),
-                        borderRadius: scale(12),
-                        backgroundColor: colors.cardColor,
-                        alignItems: "center",
-                        justifyContent: "center",
-                        marginBottom: verticalScale(10),
+                        backgroundColor: "#f1f5f9", // Light grey minimal badge
+                        paddingHorizontal: scale(10),
+                        paddingVertical: verticalScale(4),
+                        borderRadius: scale(8),
+                        borderWidth: 1,
+                        borderColor: "#e2e8f0",
                       }}
                     >
                       <CustomText
                         style={{
-                          fontSize: scale(14),
                           fontFamily: "AirbnbCereal_W_Bd",
+                          color: "#64748b",
+                          fontSize: moderateScale(12),
                         }}
                       >
-                        {homeDashboardData?.dashboardData?.barberOnDuty}
+                        {barberCount} Online
                       </CustomText>
                     </View>
                   </View>
 
                   {homeDashboardData?.loading ? (
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <Skeleton
+                        height={verticalScale(180)}
+                        width={(width - scale(46)) / 2}
+                        borderRadius={moderateScale(24)}
+                      />
+                      <Skeleton
+                        height={verticalScale(180)}
+                        width={(width - scale(46)) / 2}
+                        borderRadius={moderateScale(24)}
+                      />
+                    </View>
+                  ) : (
                     <FlatList
                       key={2}
-                      style={{
-                        overflow: "visible",
-                      }}
-                      columnWrapperStyle={{
-                        columnGap: scale(10),
-                      }}
-                      data={[0, 1, 2, 3]}
-                      renderItem={({ item }) => (
-                        <Skeleton
-                          height={verticalScale(160)}
-                          width={scale(160)}
-                          borderRadius={scale(10)}
-                          style={{
-                            marginBottom: verticalScale(15),
-                          }}
-                        />
-                      )}
-                      keyExtractor={(item) => item}
-                      bounces={false}
-                      numColumns={2}
-                    />
-                  ) : homeDashboardData?.dashboardData?.barbers?.length ? (
-                    <FlatList
-                      key={2}
-                      style={{
-                        overflow: "visible",
-                      }}
-                      columnWrapperStyle={{
-                        columnGap: scale(10),
-                      }}
+                      scrollEnabled={false} // Important inside parent FlatList
+                      columnWrapperStyle={{ justifyContent: "space-between" }}
                       ItemSeparatorComponent={() => (
-                        <View style={{ height: scale(10) }} />
+                        <View style={{ height: scale(14) }} />
                       )}
                       data={homeDashboardData?.dashboardData?.barbers.slice(
                         0,
@@ -773,196 +770,108 @@ const Dashboard = () => {
                       )}
                       renderItem={({ item }) => <BarberCard item={item} />}
                       keyExtractor={(item) => item.barberId}
-                      bounces={false}
                       numColumns={2}
                     />
-                  ) : (
-                    <View
-                      style={{
-                        height: verticalScale(100),
-                        justifyContent: "center",
-                        alignItems: "center",
-                        marginBottom: verticalScale(40),
-                      }}
-                    >
-                      <CustomText>
-                        No{" "}
-                        {authenticatedUser?.salonType === "Barber Shop"
-                          ? "barbers"
-                          : "stylists"}{" "}
-                        available
-                      </CustomText>
-                    </View>
                   )}
 
                   {sliceBarber <
                     homeDashboardData?.dashboardData?.barbers?.length && (
                     <Pressable
-                      onPress={() => {
+                      onPress={() =>
                         setSliceBarber(
                           homeDashboardData?.dashboardData?.barbers?.length,
-                        );
-                      }}
+                        )
+                      }
                       style={{
-                        height: verticalScale(35),
-                        // backgroundColor: "#00B0901A",
+                        height: verticalScale(50),
                         backgroundColor: "#14b8a6",
-                        borderRadius: scale(4),
+                        borderRadius: moderateScale(16),
                         justifyContent: "center",
                         alignItems: "center",
-                        marginTop: verticalScale(15),
-                        // marginBottom: verticalScale(20)
+                        marginTop: verticalScale(20),
+                        flexDirection: "row",
+                        gap: scale(12),
+                        elevation: 4,
+                        shadowColor: "#14b8a6",
+                        shadowOpacity: 0.3,
+                        shadowRadius: 10,
                       }}
                     >
                       <View
+                        style={{ flexDirection: "row", alignItems: "center" }}
+                      >
+                        {homeDashboardData?.dashboardData?.barbers
+                          ?.slice(0, 3)
+                          .map((item, index) => (
+                            <Image
+                              key={index}
+                              style={{
+                                height: scale(26),
+                                width: scale(26),
+                                borderRadius: scale(13),
+                                borderWidth: 2,
+                                borderColor: "#fff",
+                                marginLeft: index === 0 ? 0 : -scale(8),
+                              }}
+                              source={{ uri: item?.profile?.[0]?.url }}
+                            />
+                          ))}
+                      </View>
+                      <CustomText
                         style={{
-                          flexDirection: "row",
-                          alignItems: "center",
-                          gap: scale(10),
+                          color: "#fff",
+                          fontFamily: "AirbnbCereal_W_XBd",
+                          fontSize: moderateScale(14),
                         }}
                       >
-                        <View
-                          style={{ flexDirection: "row", alignItems: "center" }}
-                        >
-                          {homeDashboardData?.dashboardData?.barbers
-                            ?.slice(0, 3)
-                            .map((item, index) => {
-                              return (
-                                <View
-                                  key={index}
-                                  style={{
-                                    height: scale(25),
-                                    width: scale(25),
-                                    borderRadius: scale(20),
-                                    marginLeft: -scale(1 * 5),
-                                  }}
-                                >
-                                  <Image
-                                    style={{
-                                      height: "100%",
-                                      width: "100%",
-                                      borderRadius: scale(20),
-                                    }}
-                                    source={{ uri: item?.profile?.[0]?.url }}
-                                    contentFit="cover"
-                                    transition={300}
-                                  />
-                                </View>
-                              );
-                            })}
-                        </View>
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            gap: scale(5),
-                          }}
-                        >
-                          <CustomText style={{ color: "#fff" }}>
-                            See all{" "}
-                            {authenticatedUser?.salonType === "Barber Shop"
-                              ? "barbers"
-                              : "stylists"}
-                          </CustomText>
-                          <RightIcon size={scale(14)} color={"#fff"} />
-                        </View>
-                      </View>
+                        See all{" "}
+                        {authenticatedUser?.salonType === "Barber Shop"
+                          ? "barbers"
+                          : "stylists"}
+                      </CustomText>
+                      <RightIcon size={scale(16)} color={"#fff"} />
                     </Pressable>
                   )}
-                </>
-              ) : null;
+                </View>
+              );
             }
           }
         }}
         keyExtractor={(item) => item.title}
-        ListFooterComponent={
-          <View
-            style={{ height: Platform.OS === "ios" ? verticalScale(60) : 0 }}
-          />
-        }
       />
 
+      {/* FIXED PREMIUM FLOATING ADVERTISEMENT */}
       <View
         style={{
           position: "absolute",
           bottom: Platform.OS === "ios" ? verticalScale(80) : verticalScale(0),
-          left: 0,
-          right: 0,
-          height: verticalScale(70),
+          left: scale(16),
+          right: scale(16),
+          height: verticalScale(80),
+          backgroundColor: colors.modalBgColor,
+          // borderRadius: moderateScale(20),
+          padding: scale(2),
+          overflow: "hidden",
+          borderWidth: 1,
+          borderColor: colors.queueBorder,
         }}
       >
         {homeAdvertisementData?.loading ? (
-          // Loader Skeletons
-          <FlatList
-            style={{
-              overflow: "visible",
-            }}
-            contentContainerStyle={{
-              gap: scale(10),
-            }}
-            data={[0, 1, 2, 3]}
-            renderItem={({ item }) => (
-              <View>
-                <Skeleton
-                  width={scale(350)}
-                  height={verticalScale(70)}
-                  borderRadius={scale(0)}
-                />
-              </View>
-            )}
-            keyExtractor={(item) => item.toString()}
-            horizontal
-            showsHorizontalScrollIndicator={false}
+          <Skeleton
+            width="100%"
+            height="100%"
+            borderRadius={moderateScale(18)}
           />
-        ) : homeAdvertisementData?.advertisementData?.length > 0 ? (
-          // Advertisement FlatList
+        ) : (
           <FlatList
-            style={{
-              overflow: "visible",
-            }}
-            contentContainerStyle={{
-              gap: scale(10),
-            }}
+            ref={flatlistRef}
             data={homeAdvertisementData?.advertisementData}
             renderItem={({ item }) => <AdvertiseCard item={item} />}
             keyExtractor={(item) => item._id}
             horizontal
+            pagingEnabled
             showsHorizontalScrollIndicator={false}
-            // decelerationRate="fast"
-            snapToInterval={scale(400)}
-            pagingEnabled={true}
-            onMomentumScrollEnd={(event) => {
-              const offsetX = event.nativeEvent.contentOffset.x;
-              const index = Math.round(offsetX / scale(400));
-              setCurrentIndex(index);
-            }}
-            initialNumToRender={3}
-            maxToRenderPerBatch={3}
-            ref={flatlistRef}
           />
-        ) : (
-          // Fallback Dummy Image
-          <View
-            style={{
-              width: "100%",
-              height: verticalScale(70),
-              backgroundColor: "#d3d3d3",
-              // paddingVertical: verticalScale(20),
-            }}
-          >
-            <Image
-              style={{
-                width: "100%",
-                height: "100%",
-                borderRadius: scale(0),
-                borderWidth: scale(1),
-                borderColor: "#d3d3d3",
-              }}
-              source={require("@/assets/images/dummygallery.jpg")}
-              contentFit="cover"
-              transition={300}
-            />
-          </View>
         )}
       </View>
     </CustomTabView>

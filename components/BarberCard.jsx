@@ -28,11 +28,6 @@ const BarberCard = ({ item }) => {
         borderWidth: 1,
         borderColor: colors.queueBorder,
         alignItems: 'center', // Premium centered look
-        shadowColor: "#000",
-        shadowOffset: { width: 0, height: 4 },
-        shadowOpacity: 0.05,
-        shadowRadius: 12,
-        elevation: 3,
         marginBottom: verticalScale(2),
       }}
     >

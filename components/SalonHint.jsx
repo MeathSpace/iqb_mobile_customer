@@ -138,11 +138,6 @@ const SalonHint = ({
             borderRadius: moderateScale(28),
             borderWidth: 1,
             borderColor: colors.queueBorder,
-            shadowColor: "#000",
-            shadowOffset: { width: 0, height: 4 },
-            shadowOpacity: 0.05,
-            shadowRadius: 10,
-            elevation: 3,
           }}
         >
           <View style={{ flexDirection: "row", gap: scale(12) }}>

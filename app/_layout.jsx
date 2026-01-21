@@ -92,7 +92,7 @@ const RootLayout = () => {
     ...DarkTheme,
     colors: {
       ...DarkTheme.colors,
-      background: "#111827",
+      background: "#0A0A0A",
       tabBackground: "#151718",
       text: "#ffffff",
       // secondaryText: "#6b7280", // text-gray-500
@@ -102,11 +102,11 @@ const RootLayout = () => {
       notificationBellColor: "#D1D5DB",
       cardColor: "#1F2937",
       cardBorder: "#1F2937",
-      queueBorder: "#374151",
+      queueBorder: "#262626",
       selected: "#14b8a619",
       appointmentDisableBg: "#a1a1a1",
 
-      modalBgColor: "#111827",
+      modalBgColor: "#161616",
       modalSectionColor: "#1F2937",
     },
   };
