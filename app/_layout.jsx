@@ -72,8 +72,7 @@ const RootLayout = () => {
       background: "#F9FAFB",
       tabBackground: "#efefef",
       text: "#1f2937",
-      // secondaryText: "#6b7280", // text-gray-500
-      secondaryText: "rgba(0,0,0,1)",
+      secondaryText: "#6b7280",
       secondaryInputBackground: "#efefef",
       borderBottomColor: "#efefef",
       notificationBellColor: "#6b7280",
@@ -85,6 +84,7 @@ const RootLayout = () => {
 
       modalBgColor: "#fff",
       modalSectionColor: "#F9FAFB",
+      thickBorderColor: "#f1f5f9"
     },
   };
 
@@ -92,22 +92,22 @@ const RootLayout = () => {
     ...DarkTheme,
     colors: {
       ...DarkTheme.colors,
-      background: "#0A0A0A",
+      background: "#1e1e1e",
       tabBackground: "#151718",
-      text: "#ffffff",
-      // secondaryText: "#6b7280", // text-gray-500
-      secondaryText: "rgba(255, 255, 255, 1)",
+      text: "#f1f5f9",
+      secondaryText: "#94a3b8",
       secondaryInputBackground: "#000000",
       borderBottomColor: "#101010",
       notificationBellColor: "#D1D5DB",
-      cardColor: "#1F2937",
+      cardColor: "#09090b",
       cardBorder: "#1F2937",
-      queueBorder: "#262626",
+      queueBorder: "#252526",
       selected: "#14b8a619",
       appointmentDisableBg: "#a1a1a1",
 
       modalBgColor: "#161616",
       modalSectionColor: "#1F2937",
+      thickBorderColor: "#2a2a2a"
     },
   };
 

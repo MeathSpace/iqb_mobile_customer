@@ -44,14 +44,12 @@ const Card = ({
       ) : customerLivetData?.liveQueueData?.isJoinedData?.length > 0 ? (
         /* --- ACTIVE QUEUE CARD (PREMIUM LIGHT BENTO) --- */
         <LinearGradient
-          colors={["#10b981", "#14b8a6", "#0f766e"]}
+          colors={["#10b981", "#0f766e", "#0a5f55"]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={{
             borderRadius: moderateScale(28),
             padding: scale(20),
-            borderWidth: 1,
-            borderColor: "#e2e8f0",
           }}
         >
           <View>
@@ -184,18 +182,16 @@ const Card = ({
                 style={{
                   flex: 1,
                   height: verticalScale(48),
-                  backgroundColor: colors.modalSectionColor,
+                  backgroundColor: "#fff",
                   borderRadius: moderateScale(14),
                   justifyContent: "center",
                   alignItems: "center",
-                  borderWidth: 1,
-                  borderColor: colors.queueBorder,
                 }}
                 activeOpacity={0.85}
               >
                 <CustomText
                   style={{
-                    color: colors.text,
+                    color: "#000",
                     fontFamily: "AirbnbCereal_W_Bd",
                   }}
                 >

@@ -353,7 +353,8 @@ const index = () => {
             borderRadius: moderateScale(22),
             justifyContent: "center",
             alignItems: "center",
-            backgroundColor: pressed ? "#e5e7eb" : "#fff",
+            // backgroundColor: pressed ? "#e5e7eb" : "#fff",
+            backgroundColor: colors.cardColor
           })}
         >
           <NotificationIcon
@@ -382,19 +383,18 @@ const index = () => {
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
           paddingBottom: verticalScale(24),
-          backgroundColor: "#fff",
         }}
       >
         {/* ================= USER SECTION (BLINKIT STYLE) ================= */}
         <View
           style={{
             borderBottomWidth: verticalScale(10),
-            borderBottomColor: "#f1f5f9",
+            borderBottomColor: colors.thickBorderColor,
           }}
         >
           <View
             style={{
-              backgroundColor: "#ffffff",
+              // backgroundColor: colors.card,
               padding: scale(16),
               flexDirection: "row",
               alignItems: "center",
@@ -407,7 +407,7 @@ const index = () => {
                 width: scale(60),
                 height: scale(60),
                 borderRadius: moderateScale(30),
-                backgroundColor: "#ecfeff",
+                backgroundColor: colors.cardColor,
                 justifyContent: "center",
                 alignItems: "center",
               }}
@@ -428,7 +428,7 @@ const index = () => {
                 style={{
                   fontFamily: "AirbnbCereal_W_XBd",
                   fontSize: moderateScale(16),
-                  color: "#0f172a",
+                  // color: "#0f172a",
                 }}
               >
                 {authenticatedUser?.name}
@@ -439,7 +439,7 @@ const index = () => {
                 style={{
                   marginTop: verticalScale(4),
                   fontSize: moderateScale(13),
-                  color: "#64748b",
+                  // color: "#64748b",
                 }}
               >
                 {authenticatedUser?.email}
@@ -453,7 +453,7 @@ const index = () => {
                 width: scale(36),
                 height: scale(36),
                 borderRadius: moderateScale(18),
-                backgroundColor: "#f1f5f9",
+                backgroundColor: colors.cardColor,
                 justifyContent: "center",
                 alignItems: "center",
               }}
@@ -469,7 +469,8 @@ const index = () => {
             paddingHorizontal: scale(16),
             paddingVertical: verticalScale(8),
             borderBottomWidth: verticalScale(10),
-            borderBottomColor: "#f1f5f9",
+            // borderBottomColor: "#f1f5f9",
+            borderBottomColor: colors.thickBorderColor,
           }}
         >
           {profileOptions.map((opt, idx) => {
@@ -535,7 +536,7 @@ const index = () => {
             paddingHorizontal: scale(16),
             paddingVertical: verticalScale(8),
             borderBottomWidth: verticalScale(10),
-            borderBottomColor: "#f1f5f9",
+            borderBottomColor: colors.thickBorderColor,
           }}
         >
           <TouchableOpacity

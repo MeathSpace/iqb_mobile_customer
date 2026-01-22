@@ -3,6 +3,7 @@ import { useTheme } from "@react-navigation/native";
 import { StyleSheet, View } from "react-native";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import CustomText from "./CustomText";
+import CustomSecondaryText from "./CustomSecondaryText";
 
 const StatusCard = ({ item, index, width, height }) => {
   const { colors } = useTheme();
@@ -42,18 +43,17 @@ const StatusCard = ({ item, index, width, height }) => {
 
       {/* Text Content */}
       <View style={{ flex: 1 }}>
-        <CustomText
+        <CustomSecondaryText
           style={{
             fontSize: moderateScale(10),
             fontFamily: "AirbnbCereal_W_Bd",
             textTransform: "uppercase",
             letterSpacing: 1.2,
-            color: "#94a3b8",
             marginBottom: verticalScale(2),
           }}
         >
           {item.label}
-        </CustomText>
+        </CustomSecondaryText>
         <CustomText
           style={{
             fontFamily: "AirbnbCereal_W_XBd",

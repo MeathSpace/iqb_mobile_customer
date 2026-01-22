@@ -32,6 +32,7 @@ import Card from "./Card";
 import Header from "./Header";
 import SalonHint from "./SalonHint";
 import StatusCard from "./StatusCard";
+import CustomSecondaryText from "./CustomSecondaryText";
 
 const { width, height } = Dimensions.get("window");
 
@@ -718,23 +719,22 @@ const Dashboard = () => {
 
                     <View
                       style={{
-                        backgroundColor: "#f1f5f9", // Light grey minimal badge
+                        backgroundColor: colors.cardColor, // Light grey minimal badge
                         paddingHorizontal: scale(10),
                         paddingVertical: verticalScale(4),
                         borderRadius: scale(8),
                         borderWidth: 1,
-                        borderColor: "#e2e8f0",
+                        borderColor: colors.queueBorder,
                       }}
                     >
-                      <CustomText
+                      <CustomSecondaryText
                         style={{
                           fontFamily: "AirbnbCereal_W_Bd",
-                          color: "#64748b",
                           fontSize: moderateScale(12),
                         }}
                       >
                         {barberCount} Online
-                      </CustomText>
+                      </CustomSecondaryText>
                     </View>
                   </View>
 

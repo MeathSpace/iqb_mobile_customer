@@ -10,7 +10,6 @@ import {
   Platform,
   Pressable,
   RefreshControl,
-  StyleSheet,
   TouchableOpacity,
   View,
 } from "react-native";
@@ -393,17 +392,41 @@ const QueueList = () => {
                 backgroundColor: colors.cardColor,
               }}
             >
-              <CustomSecondaryText style={{ width: "37%" }}>
+              <CustomSecondaryText
+                style={{
+                  width: "37%",
+                  textTransform: "uppercase",
+                  letterSpacing: 1.2,
+                  fontSize: moderateScale(12),
+                  fontFamily: "AirbnbCereal_W_Bd",
+                }}
+              >
                 {authenticatedUser?.salonType === "Barber Shop"
                   ? "BARBER"
                   : "STYLIST"}
               </CustomSecondaryText>
               <CustomSecondaryText
-                style={{ width: "33%", textAlign: "center" }}
+                style={{
+                  width: "33%",
+                  textAlign: "center",
+                  textTransform: "uppercase",
+                  letterSpacing: 1.2,
+                  fontSize: moderateScale(12),
+                  fontFamily: "AirbnbCereal_W_Bd",
+                }}
               >
                 CUSTOMER
               </CustomSecondaryText>
-              <CustomSecondaryText style={{ width: "28%", textAlign: "right" }}>
+              <CustomSecondaryText
+                style={{
+                  width: "28%",
+                  textAlign: "right",
+                  textTransform: "uppercase",
+                  letterSpacing: 1.2,
+                  fontSize: moderateScale(12),
+                  fontFamily: "AirbnbCereal_W_Bd",
+                }}
+              >
                 POS / WAIT
               </CustomSecondaryText>
             </View>
@@ -506,7 +529,6 @@ const QueueList = () => {
 };
 
 export default QueueList;
-
 
 // import { Platform, StyleSheet, Text, View } from 'react-native'
 // import React from 'react'

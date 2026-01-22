@@ -153,7 +153,7 @@ const SalonHint = ({
                 borderColor: colors.queueBorder,
               }}
             >
-              <SalonIcon color={colors.primary} size={scale(20)} />
+              <SalonIcon color={colors.text} size={scale(20)} />
             </View>
 
             <View style={{ flex: 1 }}>
@@ -163,7 +163,8 @@ const SalonHint = ({
                   fontSize: moderateScale(11),
                   textTransform: "uppercase",
                   letterSpacing: 1.2,
-                  color: "#94a3b8",
+                  // color: "#94a3b8",
+                  // color: "#f1f5f9",
                   marginBottom: verticalScale(4),
                 }}
               >
@@ -176,7 +177,8 @@ const SalonHint = ({
                 style={{
                   lineHeight: 22,
                   fontSize: moderateScale(14),
-                  color: "#64748b",
+                  // color: "#64748b",
+                  // color: "#e2e8f0"
                 }}
               >
                 {salonInfo}

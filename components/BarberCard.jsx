@@ -22,7 +22,7 @@ const BarberCard = ({ item }) => {
     <View
       style={{
         width: (width - scale(46)) / 2, // Perfect 2-column alignment
-        backgroundColor: colors.modalBgColor,
+        backgroundColor: colors.cardColor,
         borderRadius: moderateScale(28), // Matching Hero & Modal corners
         padding: scale(12),
         borderWidth: 1,
@@ -62,7 +62,7 @@ const BarberCard = ({ item }) => {
             borderRadius: scale(10),
             backgroundColor: item?.isOnline ? "#14b8a6" : "#ef4444",
             borderWidth: 2,
-            borderColor: colors.modalBgColor,
+            borderColor: colors.background,
         }} />
       </View>
 
@@ -94,22 +94,21 @@ const BarberCard = ({ item }) => {
             alignItems: 'center'
           }}
         >
-          <CustomText
+          <CustomSecondaryText
             style={{
               fontFamily: "AirbnbCereal_W_Bd",
               fontSize: moderateScale(10),
               textTransform: 'uppercase',
               letterSpacing: 0.8,
-              color: "#64748b",
             }}
           >
             Wait Time
-          </CustomText>
+          </CustomSecondaryText>
           <CustomText
             style={{
               fontFamily: "AirbnbCereal_W_XBd",
               fontSize: moderateScale(13),
-              color: colors.primary,
+              color: "#14b8a6",
               marginTop: 1
             }}
           >
