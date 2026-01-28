@@ -1,14 +1,13 @@
 import { BASE_URL } from "@/utils/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "@react-navigation/native";
+import { useStripe } from "@stripe/stripe-react-native";
 import axios from "axios";
-import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
-import { useCallback, useState } from "react";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
-  Button,
-  Pressable,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -22,9 +21,15 @@ import { CheckIcon } from "../../constants/icons";
 import { useAuth } from "../../context/AuthContext";
 import { useGlobal } from "../../context/GlobalContext";
 import { ddmmformatDate } from "../../utils/ddmmformatDate";
-import { useStripe } from "@stripe/stripe-react-native";
 
 const appointmentCalenderModal = () => {
+  const {
+    appointmentPopupType,
+    setAppointmentPopupType,
+    newNotification,
+    setNewNotification,
+  } = useGlobal();
+
   const router = useRouter();
   const { colors } = useTheme();
   const { authenticatedUser } = useAuth();
@@ -54,14 +59,13 @@ const appointmentCalenderModal = () => {
     : "";
 
   const [bookAppointmentLoader, setBookAppointmentLoader] = useState(false);
-  const { newNotification, setNewNotification } = useGlobal();
 
   const bookAppointmentPressed = async () => {
     const appData = {
       salonId: authenticatedUser?.salonId,
       barberId: selectedCustomerBookAppointmentBarberParse?.barberId,
       serviceId: selectedCustomerBookAppointmentServicesParse.map(
-        (item) => item.serviceId
+        (item) => item.serviceId,
       ),
       appointmentDate: selectedBookCalenderDateParse,
       appointmentNotes: selectedBookAppointmentNoteParse,
@@ -77,7 +81,7 @@ const appointmentCalenderModal = () => {
 
       const { data } = await axios.post(
         `${BASE_URL}/mobileRoutes/createAppointment`,
-        appData
+        appData,
       );
 
       Toast.success(data?.message);
@@ -88,7 +92,7 @@ const appointmentCalenderModal = () => {
         JSON.stringify({
           email: authenticatedUser?.email,
           value: true,
-        })
+        }),
       );
 
       setNewNotification({
@@ -119,120 +123,14 @@ const appointmentCalenderModal = () => {
   const totalServicePriceAmount =
     selectedCustomerBookAppointmentServicesParse.reduce(
       (sum, service) => sum + Number(service.servicePrice || 0),
-      0
+      0,
     );
 
   const advancePaymentPercent = Number(
-    paymentSettingsDataParse?.advancePaymentPercent || 0
+    paymentSettingsDataParse?.advancePaymentPercent || 0,
   );
 
-  const advanceAmount = Math.round(
-    (totalServicePriceAmount * advancePaymentPercent) / 100
-  );
-
-  // const fetchPaymentSheetParams = async () => {
-  //   const response = await fetch(`${BASE_URL}/mobileRoutes/paymentApi`, {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //     },
-  //     body: JSON.stringify({
-  //       //stripe forces minimum amount to be 50 less than that will cause payment failed error
-  //       totalAmount: advanceAmount,
-  //       salonId: authenticatedUser.salonId,
-  //       currency: authenticatedUser?.isoCurrencyCode,
-  //       joinPaymentType: "appointment",
-  //       customerEmail: authenticatedUser?.email,
-  //       bookAppointmentData: {
-  //         salonId: authenticatedUser?.salonId,
-  //         barberId: selectedCustomerBookAppointmentBarberParse?.barberId,
-  //         serviceId: selectedCustomerBookAppointmentServicesParse.map(
-  //           (item) => item.serviceId
-  //         ),
-  //         appointmentDate: selectedBookCalenderDateParse,
-  //         appointmentNotes: selectedBookAppointmentNoteParse,
-  //         startTime: selectedBookCalenderTimeslotParse,
-  //         customerEmail: authenticatedUser?.email,
-  //         customerName: authenticatedUser?.name,
-  //         customerType: "Walk-In",
-  //         methodUsed: "App",
-  //       },
-  //     }),
-  //   });
-
-  //   if (!response.ok) {
-  //     throw new Error("Failed to fetch payment params");
-  //   }
-
-  //   const data = await response.json();
-  //   const { paymentIntent, ephemeralKey, customer } = data;
-
-  //   if (!paymentIntent || !ephemeralKey || !customer) {
-  //     throw new Error("Invalid Stripe response");
-  //   }
-
-  //   return { paymentIntent, ephemeralKey, customer };
-  // };
-
-  // const openPaymentSheet = async () => {
-  //   try {
-  //     setLoading(true);
-
-  //     // 1️⃣ Fetch fresh Stripe params (NEW PaymentIntent every time)
-  //     const { paymentIntent, ephemeralKey, customer } =
-  //       await fetchPaymentSheetParams();
-
-  //     // 2️⃣ Initialize Payment Sheet
-  //     const initResult = await initPaymentSheet({
-  //       merchantDisplayName: authenticatedUser?.salonName || "IQBook",
-  //       customerId: customer,
-  //       customerEphemeralKeySecret: ephemeralKey,
-  //       paymentIntentClientSecret: paymentIntent,
-  //       allowsDelayedPaymentMethods: true,
-  //       defaultBillingDetails: {
-  //         name: authenticatedUser?.name,
-  //         email: authenticatedUser?.email,
-  //         phone:
-  //           authenticatedUser?.mobileCountryCode &&
-  //           authenticatedUser?.mobileNumber
-  //             ? `+${authenticatedUser.mobileCountryCode}${authenticatedUser.mobileNumber}`
-  //             : undefined,
-  //       },
-  //       returnURL: "iqbmobilecustomer://stripe-redirect",
-  //     });
-
-  //     if (initResult.error) {
-  //       throw initResult.error;
-  //     }
-
-  //     // 3️⃣ Present Payment Sheet
-  //     const presentResult = await presentPaymentSheet();
-
-  //     if (presentResult.error) {
-  //       Alert.alert(
-  //         presentResult.error.code || "Payment error",
-  //         presentResult.error.message
-  //       );
-  //       return;
-  //     }
-
-  //     router.replace({
-  //       pathname: "/appointmentSuccessPage",
-  //       params: {
-  //         booked: true,
-  //         edit: false,
-  //       },
-  //     });
-  //   } catch (err) {
-  //     console.log("Stripe error:", err?.message);
-  //     // Alert.alert(
-  //     //   "Payment failed",
-  //     //   err && err.message ? err.message : "Something went wrong"
-  //     // );
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
+  const advanceAmount = (totalServicePriceAmount * advancePaymentPercent) / 100;
 
   const fetchPaymentSheetParams = async () => {
     const response = await fetch(`${BASE_URL}/mobileRoutes/paymentApi`, {
@@ -250,7 +148,7 @@ const appointmentCalenderModal = () => {
           salonId: authenticatedUser?.salonId,
           barberId: selectedCustomerBookAppointmentBarberParse?.barberId,
           serviceId: selectedCustomerBookAppointmentServicesParse.map(
-            (item) => item.serviceId
+            (item) => item.serviceId,
           ),
           appointmentDate: selectedBookCalenderDateParse,
           appointmentNotes: selectedBookAppointmentNoteParse,
@@ -340,368 +238,35 @@ const appointmentCalenderModal = () => {
 
   const totalPrice = selectedCustomerBookAppointmentServicesParse?.reduce(
     (acc, service) => acc + service.servicePrice,
-    0
+    0,
   );
+
   // const totalTime = selectedCustomerBookAppointmentServicesParse?.reduce((acc, service) => acc + service.serviceEWT, 0);
-  const totalTime =
-    selectedCustomerBookAppointmentBarberParse?.totalBarberServiceEWT;
+
+  console.log(appointmentPopupType);
+
+  const [totalTime, setTotalTime] = useState(0);
+
+  useEffect(() => {
+    if (appointmentPopupType?.selectServices) {
+      setTotalTime(
+        selectedCustomerBookAppointmentBarberParse?.totalBarberServiceEWT,
+      );
+    } else {
+      setTotalTime(
+        selectedCustomerBookAppointmentServicesParse.reduce(
+          (sum, item) => sum + (Number(item.barberServiceEWT) || 0),
+          0,
+        ),
+      );
+    }
+  }, []);
+
+  // const totalTime =
+  //   selectedCustomerBookAppointmentBarberParse?.totalBarberServiceEWT;
   const totalServices = selectedCustomerBookAppointmentServicesParse?.length;
 
   return (
-    // <View
-    //   // onPress={() => {
-    //   //   if (!bookAppointmentLoader) {
-    //   //     router.back();
-    //   //   }
-    //   // }}
-    //   style={{
-    //     flex: 1,
-    //     backgroundColor: "rgba(0,0,0,0.5)",
-    //     justifyContent: "center",
-    //     alignItems: "center",
-    //   }}
-    // >
-    //   {/* Stop backdrop click */}
-    //   <View
-    //     // onPress={() => {}}
-    //     style={[
-    //       styles.modalContainer,
-    //       {
-    //         backgroundColor: colors.cardColor,
-    //         borderColor: colors.queueBorder,
-    //         maxHeight: "85%", // 👈 important for scroll
-    //         width: "90%",
-    //       },
-    //     ]}
-    //   >
-    //     <View style={styles.iconContainer}>
-    //       <CheckIcon
-    //         style={{
-    //           backgroundColor: colors.tabBackground,
-    //           padding: scale(3),
-    //           borderRadius: scale(50),
-    //         }}
-    //         size={scale(16)}
-    //         color={colors.text}
-    //       />
-    //       <CustomText style={styles.titleText}>Please Confirm</CustomText>
-    //     </View>
-
-    //     <CustomSecondaryText style={styles.confirmText}>
-    //       Are you sure you want to proceed?
-    //     </CustomSecondaryText>
-
-    //     <ScrollView
-    //       showsVerticalScrollIndicator={false}
-    //       keyboardShouldPersistTaps="handled"
-    //       contentContainerStyle={{
-    //         paddingBottom: verticalScale(16),
-    //       }}
-    //     >
-    //       {/* ===== CONTENT START ===== */}
-
-    //       <View style={{ gap: verticalScale(5) }}>
-    //         <View
-    //           style={{
-    //             marginTop: verticalScale(5),
-    //             backgroundColor: colors.tabBackground, // Optional: subtle background to group
-    //             padding: scale(8),
-    //             borderRadius: scale(6),
-    //             gap: verticalScale(4),
-    //           }}
-    //         >
-    //           <CustomText
-    //             style={{
-    //               fontFamily: "AirbnbCereal_W_XBd",
-    //               fontSize: scale(14),
-    //             }}
-    //           >
-    //             {selectedCustomerBookAppointmentBarberParse?.name}
-    //           </CustomText>
-
-    //           <View
-    //             style={{
-    //               flexDirection: "row",
-    //               alignItems: "center",
-    //               gap: scale(6),
-    //             }}
-    //           >
-    //             {!paymentSettingsDataParse?.enabled ? (
-    //               <CustomText style={{ fontFamily: "AirbnbCereal_W_XBd" }}>
-    //                 {authenticatedUser?.currency} {totalPrice.toFixed(2)}
-    //               </CustomText>
-    //             ) : null}
-    //             <CustomSecondaryText>
-    //               ( {totalServices}{" "}
-    //               {totalServices === 1 ? "service" : "services"} |{" "}
-    //               {formatMinutesToHrMin(totalTime)} )
-    //             </CustomSecondaryText>
-    //           </View>
-
-    //           <View
-    //             style={{
-    //               flexDirection: "row",
-    //               alignItems: "center",
-    //               gap: scale(6),
-    //             }}
-    //           >
-    //             <CustomText style={{ fontFamily: "AirbnbCereal_W_XBd" }}>
-    //               Timeslot
-    //             </CustomText>
-    //             <CustomSecondaryText>
-    //               {selectedBookCalenderTimeslotParse}
-    //             </CustomSecondaryText>
-    //           </View>
-
-    //           <View
-    //             style={{
-    //               flexDirection: "row",
-    //               alignItems: "center",
-    //               gap: scale(6),
-    //             }}
-    //           >
-    //             <CustomText style={{ fontFamily: "AirbnbCereal_W_XBd" }}>
-    //               Date
-    //             </CustomText>
-    //             <CustomSecondaryText>
-    //               {ddmmformatDate(selectedBookCalenderDateParse)}
-    //             </CustomSecondaryText>
-    //           </View>
-
-    //           {paymentSettingsDataParse?.enabled ? (
-    //             <View
-    //               style={{
-    //                 marginVertical: verticalScale(10),
-    //                 backgroundColor: colors.background,
-    //                 borderRadius: scale(8),
-    //                 borderWidth: scale(1),
-    //                 borderColor: "#2563eb",
-    //                 padding: scale(12),
-    //                 gap: verticalScale(8),
-    //               }}
-    //             >
-    //               <CustomText
-    //                 style={{
-    //                   fontFamily: "AirbnbCereal_W_Bd",
-    //                   fontSize: scale(14),
-    //                   color: "#2563eb",
-    //                 }}
-    //               >
-    //                 Payment Summary
-    //               </CustomText>
-
-    //               {/* Pay Now */}
-    //               <View
-    //                 style={{
-    //                   flexDirection: "row",
-    //                   justifyContent: "space-between",
-    //                   alignItems: "center",
-    //                 }}
-    //               >
-    //                 {/* Left */}
-    //                 <View style={{ flex: 1, paddingRight: scale(8) }}>
-    //                   <CustomText
-    //                     style={{
-    //                       fontFamily: "AirbnbCereal_W_Bd",
-    //                       fontSize: scale(14),
-    //                     }}
-    //                   >
-    //                     Pay Now
-    //                   </CustomText>
-    //                   <CustomSecondaryText numberOfLines={2}>
-    //                     Advance payment to confirm booking
-    //                   </CustomSecondaryText>
-    //                 </View>
-
-    //                 {/* Right */}
-    //                 <CustomText
-    //                   numberOfLines={1}
-    //                   adjustsFontSizeToFit
-    //                   style={{
-    //                     fontFamily: "AirbnbCereal_W_XBd",
-    //                     fontSize: scale(14),
-    //                     color: "#2563eb",
-    //                     flexShrink: 1,
-    //                     textAlign: "right",
-    //                     maxWidth: "45%",
-    //                   }}
-    //                 >
-    //                   {authenticatedUser?.currency} {advanceAmount.toFixed(2)}
-    //                 </CustomText>
-    //               </View>
-
-    //               {/* Divider */}
-    //               {paymentSettingsDataParse?.enabled && (
-    //                 <View
-    //                   style={{
-    //                     height: 1,
-    //                     backgroundColor: colors.cardBorder,
-    //                   }}
-    //                 />
-    //               )}
-
-    //               {/* Breakdown */}
-    //               {paymentSettingsDataParse?.enabled && (
-    //                 <>
-    //                   <View
-    //                     style={{
-    //                       flexDirection: "row",
-    //                       justifyContent: "space-between",
-    //                     }}
-    //                   >
-    //                     <CustomSecondaryText>
-    //                       Advance (
-    //                       {paymentSettingsDataParse?.advancePaymentPercent}%)
-    //                     </CustomSecondaryText>
-    //                     <CustomSecondaryText>
-    //                       {authenticatedUser?.currency}{" "}
-    //                       {advanceAmount.toFixed(2)}
-    //                     </CustomSecondaryText>
-    //                   </View>
-
-    //                   <View
-    //                     style={{
-    //                       flexDirection: "row",
-    //                       justifyContent: "space-between",
-    //                     }}
-    //                   >
-    //                     <CustomSecondaryText>
-    //                       Total service amount
-    //                     </CustomSecondaryText>
-    //                     <CustomSecondaryText>
-    //                       {authenticatedUser?.currency} {totalPrice.toFixed(2)}
-    //                     </CustomSecondaryText>
-    //                   </View>
-
-    //                   <View
-    //                     style={{
-    //                       flexDirection: "row",
-    //                       justifyContent: "space-between",
-    //                     }}
-    //                   >
-    //                     <CustomSecondaryText>Pay at salon</CustomSecondaryText>
-    //                     <CustomSecondaryText>
-    //                       {authenticatedUser?.currency}{" "}
-    //                       {(totalPrice - advanceAmount).toFixed(2)}
-    //                     </CustomSecondaryText>
-    //                   </View>
-    //                 </>
-    //               )}
-    //             </View>
-    //           ) : null}
-
-    //           {selectedBookAppointmentNoteParse && (
-    //             <View style={{ gap: scale(6) }}>
-    //               <CustomText style={{ fontFamily: "AirbnbCereal_W_XBd" }}>
-    //                 Note
-    //               </CustomText>
-    //               <CustomSecondaryText>
-    //                 {selectedBookAppointmentNoteParse}
-    //               </CustomSecondaryText>
-    //             </View>
-    //           )}
-
-    //           <View
-    //             style={{
-    //               width: "100%",
-    //               backgroundColor: colors.background,
-    //               borderWidth: scale(1),
-    //               borderColor: colors.cardBorder,
-    //               borderRadius: scale(5),
-    //               padding: scale(10),
-    //               marginTop: verticalScale(5),
-    //             }}
-    //           >
-    //             <CustomText style={{ fontSize: moderateScale(14) }}>
-    //               <CustomText
-    //                 style={{
-    //                   fontFamily: "AirbnbCereal_W_Bd",
-    //                   color: "#e11d48",
-    //                   fontSize: moderateScale(14),
-    //                 }}
-    //               >
-    //                 Reminder:{" "}
-    //               </CustomText>
-    //               edits or cancellations made less than 24 hours before your
-    //               appointment will be subject to a 50% fee.
-    //             </CustomText>
-    //             <View
-    //               style={{
-    //                 height: verticalScale(5),
-    //               }}
-    //             />
-    //             <CustomText
-    //               style={{
-    //                 fontSize: moderateScale(14),
-    //               }}
-    //             >
-    //               Kindly reach 5 minutes early for a seamless service.
-    //             </CustomText>
-    //           </View>
-    //         </View>
-    //       </View>
-
-    //       {/* ===== CONTENT END ===== */}
-    //     </ScrollView>
-
-    //     {/* 🔒 Buttons fixed at bottom */}
-    //     <View style={styles.buttonRow}>
-    //       <TouchableOpacity
-    //         onPress={() => {
-    //           if (!bookAppointmentLoader) {
-    //             router.back();
-    //           }
-    //         }}
-    //         style={styles.button}
-    //       >
-    //         <CustomText style={{ fontFamily: "AirbnbCereal_W_Bd" }}>
-    //           No
-    //         </CustomText>
-    //       </TouchableOpacity>
-
-    //       {paymentSettingsDataParse?.enabled ? (
-    //         <TouchableOpacity
-    //           onPress={openPaymentSheet}
-    //           disabled={loading}
-    //           style={[
-    //             styles.button,
-    //             {
-    //               backgroundColor: loading ? "#9ca3af" : "#2563eb",
-    //               opacity: loading ? 0.7 : 1,
-    //             },
-    //           ]}
-    //         >
-    //           {loading ? (
-    //             <ActivityIndicator color="#fff" />
-    //           ) : (
-    //             <CustomText
-    //               style={{ color: "#fff", fontFamily: "AirbnbCereal_W_Bd" }}
-    //             >
-    //               Checkout
-    //             </CustomText>
-    //           )}
-    //         </TouchableOpacity>
-    //       ) : (
-    //         <TouchableOpacity
-    //           disabled={bookAppointmentLoader}
-    //           onPress={bookAppointmentPressed}
-    //           style={[styles.button, { backgroundColor: "#14b8a6" }]}
-    //         >
-    //           {bookAppointmentLoader ? (
-    //             <ActivityIndicator color="#fff" />
-    //           ) : (
-    //             <CustomText
-    //               style={{ color: "#fff", fontFamily: "AirbnbCereal_W_Bd" }}
-    //             >
-    //               Yes
-    //             </CustomText>
-    //           )}
-    //         </TouchableOpacity>
-    //       )}
-    //     </View>
-    //   </View>
-    // </View>
-
     <View
       style={{
         flex: 1,
@@ -735,6 +300,8 @@ const appointmentCalenderModal = () => {
             paddingBottom: verticalScale(20),
             paddingHorizontal: scale(24),
             alignItems: "center",
+            borderBottomColor: colors.queueBorder,
+            borderBottomWidth: scale(1),
           }}
         >
           <View
@@ -777,6 +344,7 @@ const appointmentCalenderModal = () => {
         <ScrollView
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{
+            paddingTop: verticalScale(20),
             paddingHorizontal: scale(24),
             paddingBottom: verticalScale(24),
           }}

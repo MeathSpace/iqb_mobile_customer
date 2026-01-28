@@ -3,6 +3,7 @@ import { useTheme } from "@react-navigation/native";
 import axios from "axios";
 import { Image } from "expo-image";
 import { useLocalSearchParams, useRouter } from "expo-router";
+import moment from "moment";
 import { useState } from "react";
 import {
   ActivityIndicator,
@@ -17,7 +18,6 @@ import CustomText from "../../components/CustomText";
 import { useAuth } from "../../context/AuthContext";
 import { useGlobal } from "../../context/GlobalContext";
 import { ddmmformatDate } from "../../utils/ddmmformatDate";
-import moment from "moment";
 
 const appointmentPop = () => {
   const router = useRouter();
@@ -49,7 +49,7 @@ const appointmentPop = () => {
           onPress: () => deleteHandler(),
         },
       ],
-      { cancelable: true }
+      { cancelable: true },
     );
   };
 
@@ -64,24 +64,26 @@ const appointmentPop = () => {
             salonId: authenticatedUser?.salonId,
             appointmentId: selectedAppointmentParse?._id,
           },
-        }
+        },
       );
 
       setDeleteAppointmentLoader(false);
 
-      Alert.alert(
-        "Appointment Deleted",
-        "The appointment was deleted successfully.",
-        [
-          {
-            text: "OK",
-            onPress: () => {
-              router.back();
-            },
-          },
-        ],
-        { cancelable: false }
-      );
+      router.back();
+
+      // Alert.alert(
+      //   "Appointment Deleted",
+      //   "The appointment was deleted successfully.",
+      //   [
+      //     {
+      //       text: "OK",
+      //       onPress: () => {
+      //         router.back();
+      //       },
+      //     },
+      //   ],
+      //   { cancelable: false }
+      // );
     } catch (error) {
       // Toast.error(error?.response?.data?.message)
       Alert.alert(
@@ -93,7 +95,7 @@ const appointmentPop = () => {
             onPress: () => {},
           },
         ],
-        { cancelable: false }
+        { cancelable: false },
       );
       console.log("Error deleting appointment ", error);
     } finally {
@@ -164,9 +166,9 @@ const appointmentPop = () => {
 
             <CustomSecondaryText style={styles.datetime}>
               {`${moment(selectedAppointmentParse?.appointmentDate).format(
-                "dddd"
+                "dddd",
               )}  |  ${ddmmformatDate(
-                selectedAppointmentParse?.appointmentDate?.split("T")[0]
+                selectedAppointmentParse?.appointmentDate?.split("T")[0],
               )}  |  ${selectedAppointmentParse?.timeSlots?.split("-")[0]}`}
             </CustomSecondaryText>
 
@@ -174,7 +176,7 @@ const appointmentPop = () => {
               {authenticatedUser?.currency}{" "}
               {selectedAppointmentParse?.services?.reduce(
                 (sum, service) => sum + (service?.servicePrice || 0),
-                0
+                0,
               )}{" "}
               • {selectedAppointmentParse?.services.length} service
               {selectedAppointmentParse?.services.length > 1 ? "s" : ""}

@@ -77,7 +77,7 @@ const appointment = () => {
         `${BASE_URL}/mobileRoutes/getSalonFeatures`,
         {
           salonId: authenticatedUser?.salonId,
-        }
+        },
       );
 
       setGetSalonFeature((prev) => ({
@@ -131,7 +131,7 @@ const appointment = () => {
                 salonId: authenticatedUser?.salonId,
                 customerEmail: authenticatedUser?.email,
                 status: applyAppointmentFilter.selectedTab,
-              }
+              },
             );
 
             setAppointmentListData((prev) => ({
@@ -155,7 +155,7 @@ const appointment = () => {
 
         fetchAppointmentList();
       }
-    }, [authenticatedUser, applyAppointmentFilter])
+    }, [authenticatedUser, applyAppointmentFilter]),
   );
 
   const { colors } = useTheme();
@@ -195,7 +195,7 @@ const appointment = () => {
 
   usePreventRemove(
     true, // This boolean determines if removal should be prevented
-    ({ data }) => {}
+    ({ data }) => {},
   );
 
   function formatMinutesToHrMin(totalMinutes) {
@@ -206,8 +206,6 @@ const appointment = () => {
     if (hours > 0) return `${hours}hr`;
     return `${mins}m`;
   }
-
- 
 
   return (
     <CustomTabView
@@ -235,7 +233,7 @@ const appointment = () => {
                 JSON.stringify({
                   email: authenticatedUser?.email,
                   value: false,
-                })
+                }),
               );
               setNewNotification({
                 email: "",
@@ -311,7 +309,7 @@ const appointment = () => {
                 onPress={() => {
                   if (!getSalonFeature?.salonFeature?.isAppointments) {
                     return Toast.error(
-                      "Appointment feature is not available at this salon"
+                      "Appointment feature is not available at this salon",
                     );
                   }
                   setJoinModes((prev) => ({
@@ -319,7 +317,10 @@ const appointment = () => {
                     appointment: true,
                     appointmentType: "Book",
                   }));
-                  router.push("/appointmentCalendar");
+
+                  router.push("/appointmentpopup");
+
+                  // router.push("/appointmentCalendar");
                 }}
                 style={styles.bookButton}
                 activeOpacity={0.85}
@@ -369,7 +370,7 @@ const appointment = () => {
                   onPress={() => {
                     if (!getSalonFeature?.salonFeature?.isAppointments) {
                       return Toast.error(
-                        "Appointment feature is not available at this salon"
+                        "Appointment feature is not available at this salon",
                       );
                     }
                     setJoinModes((prev) => ({
@@ -377,7 +378,9 @@ const appointment = () => {
                       appointment: true,
                       appointmentType: "Book",
                     }));
-                    router.push("/appointmentCalendar");
+
+                    router.push("/appointmentpopup");
+                    // router.push("/appointmentCalendar");
                   }}
                   style={styles.bookButton}
                   activeOpacity={0.85}
@@ -406,7 +409,7 @@ const appointment = () => {
                       onPress={() => {
                         if (!getSalonFeature?.salonFeature?.isAppointments) {
                           return Toast.error(
-                            "Appointment feature is not available at this salon"
+                            "Appointment feature is not available at this salon",
                           );
                         }
                         setJoinModes((prev) => ({
@@ -414,7 +417,9 @@ const appointment = () => {
                           appointment: true,
                           appointmentType: "Book",
                         }));
-                        router.push("/appointmentCalendar");
+
+                        router.push("/appointmentpopup");
+                        // router.push("/appointmentCalendar");
                       }}
                       style={[
                         styles.bookButton,
@@ -465,7 +470,7 @@ const appointment = () => {
                         "Warning",
                         `This appointment is already ${item.status}`,
                         [{ text: "OK", onPress: () => {} }],
-                        { cancelable: true }
+                        { cancelable: true },
                       );
                     }
                   }}
@@ -500,9 +505,9 @@ const appointment = () => {
 
                     <CustomSecondaryText style={styles.datetime}>
                       {`${moment(item?.appointmentDate).format(
-                        "dddd"
+                        "dddd",
                       )}  |  ${ddmmformatDate(
-                        item?.appointmentDate?.split("T")[0]
+                        item?.appointmentDate?.split("T")[0],
                       )}  |  ${item?.timeSlots?.split("-")[0]}`}
                     </CustomSecondaryText>
 
@@ -510,7 +515,7 @@ const appointment = () => {
                       {authenticatedUser?.currency}{" "}
                       {item?.services?.reduce(
                         (sum, service) => sum + (service?.servicePrice || 0),
-                        0
+                        0,
                       )}{" "}
                       • {item?.services.length} service
                       {item?.services.length > 1 ? "s" : ""}
@@ -543,7 +548,7 @@ const appointment = () => {
                               !getSalonFeature?.salonFeature?.isAppointments
                             ) {
                               return Toast.error(
-                                "Appointment feature is not available at this salon"
+                                "Appointment feature is not available at this salon",
                               );
                             }
                             setJoinModes((prev) => ({

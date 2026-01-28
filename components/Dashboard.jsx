@@ -76,7 +76,7 @@ async function registerForPushNotificationsAsync() {
     }
     if (finalStatus !== "granted") {
       handleRegistrationError(
-        "Permission not granted to get push token for push notification!"
+        "Permission not granted to get push token for push notification!",
       );
       return;
     }
@@ -110,7 +110,7 @@ const Dashboard = () => {
       const fetch_new_version = async () => {
         try {
           const { data } = await axios.get(
-            `${BASE_URL}/version/getMobileVersion`
+            `${BASE_URL}/version/getMobileVersion`,
           );
           const recentAppVersion = Constants.expoConfig.version;
 
@@ -130,7 +130,7 @@ const Dashboard = () => {
 
       // cleanup (optional)
       return () => {};
-    }, [])
+    }, []),
   );
 
   const { homeDashboardData, setHomeDashboardData } = useGlobal();
@@ -180,7 +180,7 @@ const Dashboard = () => {
               {
                 salonId: authenticatedUser?.salonId,
                 customerEmail: authenticatedUser?.email,
-              }
+              },
             );
 
             setHomeDashboardData((prev) => ({
@@ -200,7 +200,7 @@ const Dashboard = () => {
             }));
             console.error(
               "Error fetching dashboard data: ",
-              error?.response?.data
+              error?.response?.data,
             );
           }
         };
@@ -213,7 +213,7 @@ const Dashboard = () => {
               `${BASE_URL}/mobileRoutes/getAllAdvertisements`,
               {
                 salonId: authenticatedUser?.salonId,
-              }
+              },
             );
 
             setHomeAdvertisementData((prev) => ({
@@ -240,7 +240,7 @@ const Dashboard = () => {
             setServiceCategoryData((prev) => ({ ...prev, loading: true }));
 
             const { data } = await axios.get(
-              `${BASE_URL}/mobileRoutes/getAllServiceCategories`
+              `${BASE_URL}/mobileRoutes/getAllServiceCategories`,
             );
 
             setServiceCategoryData((prev) => ({
@@ -271,7 +271,7 @@ const Dashboard = () => {
               {
                 salonId: authenticatedUser?.salonId,
                 customerEmail: authenticatedUser?.email,
-              }
+              },
             );
 
             setCustomerLiveData((prev) => ({
@@ -301,7 +301,7 @@ const Dashboard = () => {
               `${BASE_URL}/mobileRoutes/getSalonFeatures`,
               {
                 salonId: authenticatedUser?.salonId,
-              }
+              },
             );
 
             setGetSalonFeature((prev) => ({
@@ -334,7 +334,7 @@ const Dashboard = () => {
         // Do something when the screen is unfocused
         // Useful for cleanup functions
       };
-    }, [authenticatedUser])
+    }, [authenticatedUser]),
   );
 
   const socket = io("https://iqb-final.onrender.com", {
@@ -370,7 +370,7 @@ const Dashboard = () => {
           error: null,
         }));
       });
-    }, [authenticatedUser])
+    }, [authenticatedUser]),
   );
 
   const { colors } = useTheme();
@@ -427,7 +427,7 @@ const Dashboard = () => {
         notificationListener.remove();
         responseListener.remove();
       };
-    }, [])
+    }, []),
   );
 
   useFocusEffect(
@@ -443,7 +443,7 @@ const Dashboard = () => {
                 email: authenticatedUser?.email,
                 deviceToken: expoPushToken,
                 deviceType: "android",
-              }
+              },
             );
 
             // console.log("Saved Notifcation Data ", data)
@@ -454,7 +454,7 @@ const Dashboard = () => {
 
         saveExpoPushToken();
       }
-    }, [expoPushToken, authenticatedUser])
+    }, [expoPushToken, authenticatedUser]),
   );
 
   const { setJoinModes, joinModes } = useGlobal();
@@ -471,7 +471,7 @@ const Dashboard = () => {
       //     'You cannot go back during the signup flow. Please complete the current step.',
       //     [{ text: 'OK', onPress: () => null }] // Only an 'OK' button
       // );
-    }
+    },
   );
 
   const statusData = [
@@ -690,7 +690,7 @@ const Dashboard = () => {
                             ~
                             {formatMinutesToHrMin(
                               customerLivetData?.liveQueueData
-                                ?.isJoinedData?.[0]?.customerEWT
+                                ?.isJoinedData?.[0]?.customerEWT,
                             )}
                           </CustomText>
                         </View>
@@ -728,7 +728,7 @@ const Dashboard = () => {
 
                                       const { data } = await axios.post(
                                         `${BASE_URL}/mobileRoutes/cancelQueueByCustomer`,
-                                        cancelQueueData
+                                        cancelQueueData,
                                       );
 
                                       setCustomerLiveData((prev) => ({
@@ -743,7 +743,7 @@ const Dashboard = () => {
                                             salonId: authenticatedUser?.salonId,
                                             customerEmail:
                                               authenticatedUser?.email,
-                                          }
+                                          },
                                         );
 
                                       setCustomerLiveData((prev) => ({
@@ -760,7 +760,7 @@ const Dashboard = () => {
                                     }
                                   },
                                 },
-                              ]
+                              ],
                             );
                           }}
                           style={[styles.joinQueue]}
@@ -779,7 +779,7 @@ const Dashboard = () => {
                           onPress={() => {
                             if (!authenticatedUser?.isAppointments) {
                               return Toast.error(
-                                "Appointment feature is not available at this salon"
+                                "Appointment feature is not available at this salon",
                               );
                             }
 
@@ -788,7 +788,9 @@ const Dashboard = () => {
                               appointment: true,
                               appointmentType: "Book",
                             }));
-                            router.push("/appointmentCalendar");
+
+                            router.push("/appointmentpopup");
+                            // router.push("/appointmentCalendar");
                           }}
                           style={[
                             styles.bookAhead,
@@ -831,7 +833,7 @@ const Dashboard = () => {
                           onPress={() => {
                             if (!getSalonFeature?.salonFeature?.isQueuing) {
                               return Toast.error(
-                                "Queueing feature is not available at this salon"
+                                "Queueing feature is not available at this salon",
                               );
                             }
 
@@ -858,7 +860,7 @@ const Dashboard = () => {
                               !getSalonFeature?.salonFeature?.isAppointments
                             ) {
                               return Toast.error(
-                                "Appointment feature is not available at this salon"
+                                "Appointment feature is not available at this salon",
                               );
                             }
 
@@ -867,7 +869,9 @@ const Dashboard = () => {
                               appointment: true,
                               appointmentType: "Book",
                             }));
-                            router.push("/appointmentCalendar");
+
+                            router.push("/appointmentpopup");
+                            // router.push("/appointmentCalendar");
                           }}
                           style={[
                             styles.bookAhead,
@@ -1029,7 +1033,7 @@ const Dashboard = () => {
                             Linking.openURL(iosUrl).catch((err) => {
                               console.error(
                                 "Could not open iOS App Store link:",
-                                err
+                                err,
                               );
                             });
                           } else {
@@ -1039,7 +1043,7 @@ const Dashboard = () => {
                             Linking.openURL(androidUrl).catch((err) => {
                               console.error(
                                 "Could not open Android Play Store link:",
-                                err
+                                err,
                               );
                             });
                           }
@@ -1196,7 +1200,7 @@ const Dashboard = () => {
                       )}
                       data={homeDashboardData?.dashboardData?.barbers.slice(
                         0,
-                        sliceBarber
+                        sliceBarber,
                       )}
                       renderItem={({ item }) => <BarberCard item={item} />}
                       keyExtractor={(item) => item.barberId}
@@ -1227,7 +1231,7 @@ const Dashboard = () => {
                     <Pressable
                       onPress={() => {
                         setSliceBarber(
-                          homeDashboardData?.dashboardData?.barbers?.length
+                          homeDashboardData?.dashboardData?.barbers?.length,
                         );
                       }}
                       style={{

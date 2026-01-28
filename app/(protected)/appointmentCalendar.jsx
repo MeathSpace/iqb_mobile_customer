@@ -27,8 +27,13 @@ import CustomText from "../../components/CustomText";
 import Skeleton from "../../components/Skeleton";
 import { ArrowLeftIcon, LeftIcon, RightIcon } from "../../constants/icons";
 import { useAuth } from "../../context/AuthContext";
+import { useGlobal } from "../../context/GlobalContext";
 
 const appointmentCalendar = () => {
+  const { appointmentPopupType, setAppointmentPopupType } = useGlobal();
+
+  // console.log(appointmentPopupType?.selectServices);
+
   const [paymentSettingsLoading, setPaymentSettingsLoading] = useState(false);
   const [paymentSettingsData, setPaymentSettingsData] = useState(null);
 
@@ -38,7 +43,7 @@ const appointmentCalendar = () => {
         try {
           setPaymentSettingsLoading(true);
           const { data } = await axios.get(
-            `${BASE_URL}/mobileRoutes/getPaymentSettings?salonId=${authenticatedUser?.salonId}`
+            `${BASE_URL}/mobileRoutes/getPaymentSettings?salonId=${authenticatedUser?.salonId}`,
           );
           setPaymentSettingsData(data?.response?.[1]);
         } catch (error) {
@@ -49,7 +54,7 @@ const appointmentCalendar = () => {
       };
 
       getSalonPaymentSettings();
-    }, [])
+    }, []),
   );
 
   // console.log("paymentSettingsData ,", paymentSettingsData);
@@ -79,50 +84,56 @@ const appointmentCalendar = () => {
 
   // console.log("maxAppointmentDays ", maxAppointmentDays?.data?.appointmentAdvanceDays)
 
-  useEffect(() => {
-    const fetchSalonServices = async () => {
-      try {
-        setSalonServices((prev) => ({ ...prev, loading: true }));
-
-        const { data } = await axios.get(
-          `${BASE_URL}/mobileRoutes/getAllSalonServices`,
-          {
-            params: {
-              salonId: authenticatedUser?.salonId,
-            },
-          }
-        );
-
-        setSalonServices((prev) => ({
-          ...prev,
-          loading: false,
-          data: data?.response?.map((item) => {
-            return { ...item, selected: false };
-          }),
-          success: true,
-          error: null,
-        }));
-      } catch (error) {
-        setSalonServices((prev) => ({
-          ...prev,
-          loading: false,
-          data: null,
-          success: false,
-          error: error,
-        }));
-        console.log("Error fetching salon Info ", error);
-      }
-    };
-
-    fetchSalonServices();
-  }, [authenticatedUser]);
-
   const [selectCustomerServices, setSelectedCustomerServices] = useState([]);
   const [selectedCustomerBarber, setSelectedCustomerBarber] = useState(null);
   const [continueService, setContinueService] = useState(false);
 
   useEffect(() => {
-    if (selectCustomerServices.length > 0 && continueService) {
+    if (appointmentPopupType?.selectServices) {
+      const fetchSalonServices = async () => {
+        try {
+          setSalonServices((prev) => ({ ...prev, loading: true }));
+
+          const { data } = await axios.get(
+            `${BASE_URL}/mobileRoutes/getAllSalonServices`,
+            {
+              params: {
+                salonId: authenticatedUser?.salonId,
+              },
+            },
+          );
+
+          setSalonServices((prev) => ({
+            ...prev,
+            loading: false,
+            data: data?.response?.map((item) => {
+              return { ...item, selected: false };
+            }),
+            success: true,
+            error: null,
+          }));
+        } catch (error) {
+          setSalonServices((prev) => ({
+            ...prev,
+            loading: false,
+            data: null,
+            success: false,
+            error: error,
+          }));
+          console.log("Error fetching salon Info ", error);
+        }
+      };
+
+      fetchSalonServices();
+    }
+  }, [authenticatedUser, appointmentPopupType?.selectServices]);
+
+  useEffect(() => {
+    if (
+      appointmentPopupType?.selectServices &&
+      selectCustomerServices.length > 0 &&
+      continueService
+    ) {
       const fetchBarbersByMultipleServiceId = async () => {
         try {
           setSalonBarber((prev) => ({ ...prev, loading: true }));
@@ -132,7 +143,7 @@ const appointmentCalendar = () => {
             {
               salonId: authenticatedUser.salonId,
               serviceIds: selectCustomerServices.map((item) => item.serviceId),
-            }
+            },
           );
 
           setSalonBarber((prev) => ({
@@ -152,14 +163,108 @@ const appointmentCalendar = () => {
           }));
           console.log(
             "Error fetching barbers by multiple service Id",
-            error?.response?.data
+            error?.response?.data,
           );
         }
       };
 
       fetchBarbersByMultipleServiceId();
     }
-  }, [authenticatedUser, selectCustomerServices, continueService]);
+  }, [
+    authenticatedUser,
+    selectCustomerServices,
+    continueService,
+    appointmentPopupType?.selectServices,
+  ]);
+
+  useEffect(() => {
+    if (appointmentPopupType?.selectBarber) {
+      const fetchAppointmentBarbers = async () => {
+        try {
+          setSalonBarber((prev) => ({ ...prev, loading: true }));
+
+          const { data } = await axios.post(
+            `${BASE_URL}/mobileRoutes/getAppointmentBarbers`,
+            {
+              salonId: authenticatedUser.salonId,
+            },
+          );
+
+          setSalonBarber((prev) => ({
+            ...prev,
+            loading: false,
+            data: data?.response,
+            success: true,
+            error: null,
+          }));
+        } catch (error) {
+          setSalonBarber((prev) => ({
+            ...prev,
+            loading: false,
+            data: null,
+            success: false,
+            error: error,
+          }));
+          console.log(
+            "Error fetching barbers by salon Id",
+            error?.response?.data,
+          );
+        }
+      };
+
+      fetchAppointmentBarbers();
+    }
+  }, [appointmentPopupType?.selectBarber]);
+
+  // console.log("Customer Barber ", selectedCustomerBarber)
+
+  useEffect(() => {
+    if (
+      appointmentPopupType?.selectBarber &&
+      continueService &&
+      selectedCustomerBarber
+    ) {
+      const fetchServiceByBarberId = async () => {
+        try {
+          setSalonServices((prev) => ({ ...prev, loading: true }));
+
+          const { data } = await axios.post(
+            `${BASE_URL}/mobileRoutes/getServicesByBarberId`,
+            {
+              salonId: authenticatedUser?.salonId,
+              barberId: selectedCustomerBarber?.barberId,
+            },
+          );
+
+          setSalonServices((prev) => ({
+            ...prev,
+            loading: false,
+            data: data?.response?.map((item) => {
+              return { ...item, selected: false };
+            }),
+            success: true,
+            error: null,
+          }));
+        } catch (error) {
+          setSalonServices((prev) => ({
+            ...prev,
+            loading: false,
+            data: null,
+            success: false,
+            error: error,
+          }));
+          console.log("Error fetching salon Info ", error);
+        }
+      };
+
+      fetchServiceByBarberId();
+    }
+  }, [
+    appointmentPopupType?.selectBarber,
+    selectedCustomerBarber,
+    continueService,
+    authenticatedUser?.salonId,
+  ]);
 
   const addServiceHandler = (service) => {
     setContinueService(false);
@@ -178,6 +283,8 @@ const appointmentCalendar = () => {
 
     setSelectedCustomerServices([...selectCustomerServices, service]);
   };
+
+  // console.log(selectCustomerServices);
 
   const removeServiceHandler = (service) => {
     setContinueService(false);
@@ -231,7 +338,7 @@ const appointmentCalendar = () => {
               salonId: selectedCustomerBarber?.salonId,
               barberId: selectedCustomerBarber?.barberId,
               date: selectedCalenderDate,
-            }
+            },
           );
 
           setEngageTimeslotsData((prev) => ({
@@ -267,7 +374,7 @@ const appointmentCalendar = () => {
             `${BASE_URL}/mobileRoutes/getMaxAppointmentDays`,
             {
               salonId: selectedCustomerBarber?.salonId,
-            }
+            },
           );
 
           setMaxAppointmentDays((prev) => ({
@@ -282,7 +389,7 @@ const appointmentCalendar = () => {
         } catch (error) {
           console.log(
             "Error fetching maximum appointment dates ",
-            error?.response
+            error?.response,
           );
         }
       };
@@ -296,7 +403,7 @@ const appointmentCalendar = () => {
             {
               salonId: selectedCustomerBarber?.salonId,
               barberId: selectedCustomerBarber?.barberId,
-            }
+            },
           );
 
           setDisbaleDates((prev) => [...prev, ...data.response]);
@@ -306,7 +413,7 @@ const appointmentCalendar = () => {
         } catch (error) {
           console.log(
             "Error fetching fully booked dates ",
-            error?.response?.data
+            error?.response?.data,
           );
           setDisableLoader(false);
         }
@@ -320,7 +427,7 @@ const appointmentCalendar = () => {
             {
               salonId: selectedCustomerBarber?.salonId,
               barberId: selectedCustomerBarber?.barberId,
-            }
+            },
           );
 
           setDisbaleDates((prev) => [...prev, ...data.response]);
@@ -332,7 +439,7 @@ const appointmentCalendar = () => {
         } catch (error) {
           console.log(
             "Error fetching barber disable appointment dates ",
-            error?.response?.data
+            error?.response?.data,
           );
           setDisableLoader(false);
         }
@@ -343,8 +450,6 @@ const appointmentCalendar = () => {
       fetchMaxAppointmentDays();
     }
   }, [selectedCustomerBarber]);
-
-  // console.log("disableSalonDates ", disableSalonDates)
 
   const [activeSection, setActiveSection] = useState("services");
   const [scrolling, setScrolling] = useState(false);
@@ -367,43 +472,15 @@ const appointmentCalendar = () => {
     if (selectedCustomerBarber) {
       generateDatesForMonth(
         currentMonth,
-        maxAppointmentDays?.data?.appointmentAdvanceDays
+        maxAppointmentDays?.data?.appointmentAdvanceDays,
       );
     }
   }, [
     currentMonth,
     maxAppointmentDays?.data?.appointmentAdvanceDays,
     selectedCustomerBarber,
+    appointmentPopupType?.selectServices,
   ]);
-
-  // const generateDatesForMonth = (monthMoment) => {
-  //     const startOfMonth = monthMoment.clone().startOf('month');
-  //     const endOfMonth = monthMoment.clone().endOf('month');
-  //     const daysInMonth = monthMoment.daysInMonth();
-
-  //     const today = moment().startOf('day'); // current date at 00:00
-
-  //     let tempDates = [];
-
-  //     for (let i = 0; i < daysInMonth; i++) {
-  //         const dayMoment = startOfMonth.clone().add(i, 'days');
-
-  //         // 🔥 Skip today and past dates
-  //         if (dayMoment.isSameOrBefore(today)) continue;
-
-  //         tempDates.push({
-  //             dayName: dayMoment.format('ddd'),
-  //             date: dayMoment.format('DD'),
-  //             month: dayMoment.format('MMM'),
-  //             year: dayMoment.format('YYYY'),
-  //             fullDate: dayMoment.format('YYYY-MM-DD'),
-  //             slots: Math.floor(Math.random() * 10),
-  //             bgcolor: getRandomColor()
-  //         });
-  //     }
-
-  //     setDates(tempDates);
-  // };
 
   const generateDatesForMonth = (monthMoment, rangeDays) => {
     const today = moment().startOf("day");
@@ -450,10 +527,6 @@ const appointmentCalendar = () => {
   const goToPrevMonth = () => {
     setCurrentMonth((prev) => prev.clone().subtract(1, "month"));
   };
-
-  // const goToNextMonth = () => {
-  //     setCurrentMonth((prev) => prev.clone().add(1, 'month'));
-  // };
 
   const RANGE_DAYS = maxAppointmentDays?.data?.appointmentAdvanceDays;
   const maxAllowedDate = moment().startOf("day").add(RANGE_DAYS, "days");
@@ -508,14 +581,15 @@ const appointmentCalendar = () => {
       Toast.error("Please select a date");
       return;
     }
+
     router.push({
       pathname: "/appointmentCalenderModal",
       params: {
         selectedCustomerBookAppointmentServices: JSON.stringify(
-          selectCustomerServices
+          selectCustomerServices,
         ),
         selectedCustomerBookAppointmentBarber: JSON.stringify(
-          selectedCustomerBarber
+          selectedCustomerBarber,
         ),
         selectedBookCalenderTimeslot: JSON.stringify(selectedEngageTimeSlot),
         selectedBookCalenderDate: JSON.stringify(selectedCalenderDate),
@@ -550,10 +624,8 @@ const appointmentCalendar = () => {
 
           const { data } = await axios.post(
             `${BASE_URL}/customer/getCustomerToNotifyAppointmentAvailability`,
-            payload
+            payload,
           );
-
-          // console.log(data?.response?.timeSlotsUpdate)
 
           if (data?.response?.timeSlotsUpdate?.length > 0) {
             setIsNotifyCheck(data?.response?.timeSlotsUpdate[0]?.checkValue);
@@ -585,7 +657,7 @@ const appointmentCalendar = () => {
 
       const { data } = await axios.post(
         `${BASE_URL}/customer/saveCustomerToNotifyAppointmentAvailability`,
-        payload
+        payload,
       );
 
       Toast.success(data?.message);
@@ -607,7 +679,7 @@ const appointmentCalendar = () => {
 
       const { data } = await axios.post(
         `${BASE_URL}/customer/deleteCustomerToNotifyAppointmentAvailability`,
-        payload
+        payload,
       );
 
       Toast.success(data?.message);
@@ -656,12 +728,16 @@ const appointmentCalendar = () => {
           {
             text: "OK",
             onPress: async () => {
+              setAppointmentPopupType({
+                selectServices: false,
+                selectBarber: false,
+              });
               router.push("/appointment");
             },
           },
-        ] // Only an 'OK' button
+        ], // Only an 'OK' button
       );
-    }
+    },
   );
 
   const renderSection = (key, title, content) => {
@@ -699,24 +775,36 @@ const appointmentCalendar = () => {
           >
             <Pressable
               onPress={() => {
-                setSelectedCustomerServices([]);
-                const updatedSalonServices = salonServices?.data?.map(
-                  (item) => {
-                    return { ...item, selected: false };
-                  }
-                );
-                setSalonServices({
-                  data: updatedSalonServices,
-                  loading: false,
-                  error: null,
-                  success: false,
-                });
-                setSalonBarber({
-                  data: null,
-                  loading: false,
-                  error: null,
-                  success: false,
-                });
+                if (appointmentPopupType?.selectServices) {
+                  setSelectedCustomerServices([]);
+                  const updatedSalonServices = salonServices?.data?.map(
+                    (item) => {
+                      return { ...item, selected: false };
+                    },
+                  );
+                  setSalonServices({
+                    data: updatedSalonServices,
+                    loading: false,
+                    error: null,
+                    success: false,
+                  });
+                  setSalonBarber({
+                    data: null,
+                    loading: false,
+                    error: null,
+                    success: false,
+                  });
+                } else {
+                  setSelectedCustomerServices([]);
+                  setSalonServices({
+                    data: null,
+                    loading: false,
+                    error: null,
+                    success: false,
+                  });
+                  setSelectedCustomerBarber(null);
+                }
+
                 setDisbaleDates([]);
                 setDates([]);
                 setEngageTimeslotsData({
@@ -751,7 +839,7 @@ const appointmentCalendar = () => {
             </Pressable>
           </View>
 
-          {activeSection === "services" &&
+          {activeSection === "servicesFirst" &&
             (salonServices?.loading
               ? [0, 1, 2, 3, 4, 5].map((_, index) => {
                   return (
@@ -764,120 +852,6 @@ const appointmentCalendar = () => {
                 })
               : salonServices?.data?.map((item, index) => {
                   return (
-                    // <Pressable
-                    //   key={item?.serviceId}
-                    //   style={{
-                    //     borderRadius: scale(10),
-                    //     backgroundColor: "#00B0901A",
-                    //     padding: scale(12),
-                    //     gap: verticalScale(10),
-                    //   }}
-                    // >
-                    //   <View
-                    //     style={{
-                    //       flexDirection: "row",
-                    //       justifyContent: "space-between",
-                    //     }}
-                    //   >
-                    //     <View
-                    //       style={{
-                    //         flexDirection: "row",
-                    //         alignItems: "center",
-                    //         gap: scale(10),
-                    //         width: "75%",
-                    //       }}
-                    //     >
-
-                    //       <View
-                    //         style={{
-                    //           gap: verticalScale(5),
-                    //         }}
-                    //       >
-                    //         <CustomText
-                    //           style={{
-                    //             fontSize: moderateScale(14),
-                    //             fontFamily: "AirbnbCereal_W_Bd",
-                    //           }}
-                    //         >
-                    //           {item?.serviceName}
-                    //         </CustomText>
-                    //         <Pressable
-                    //           style={{
-                    //             height: verticalScale(15),
-                    //             paddingHorizontal: scale(8),
-                    //             backgroundColor: "#00B0901A",
-                    //             borderRadius: scale(4),
-                    //             justifyContent: "center",
-                    //             alignItems: "center",
-                    //             alignSelf: "flex-start",
-                    //           }}
-                    //         >
-                    //           <CustomText
-                    //             style={{
-                    //               fontSize: moderateScale(10),
-                    //               color: "#00B090",
-                    //             }}
-                    //           >
-                    //             {item?.serviceCategoryName}
-                    //           </CustomText>
-                    //         </Pressable>
-
-                    //         <CustomSecondaryText>
-                    //           {item?.serviceDesc}
-                    //         </CustomSecondaryText>
-
-                    //         <CustomText
-                    //           style={{
-                    //             fontFamily: "AirbnbCereal_W_Blk",
-                    //             fontSize: scale(18),
-                    //             color: "#14b8a6",
-                    //           }}
-                    //         >
-                    //           {authenticatedUser?.currency} {item?.servicePrice}
-                    //         </CustomText>
-                    //       </View>
-                    //     </View>
-
-                    //     {item?.selected ? (
-                    //       <Pressable
-                    //         onPress={() => removeServiceHandler(item)}
-                    //         style={{
-                    //           height: verticalScale(20),
-                    //           width: scale(60),
-                    //           backgroundColor: "#E11D48",
-                    //           borderRadius: scale(4),
-                    //           justifyContent: "center",
-                    //           alignItems: "center",
-                    //         }}
-                    //       >
-                    //         <CustomText
-                    //           style={{ fontSize: scale(12), color: "#fff" }}
-                    //         >
-                    //           Remove
-                    //         </CustomText>
-                    //       </Pressable>
-                    //     ) : (
-                    //       <Pressable
-                    //         onPress={() => addServiceHandler(item)}
-                    //         style={{
-                    //           height: verticalScale(20),
-                    //           width: scale(55),
-                    //           backgroundColor: "#1f2937",
-                    //           borderRadius: scale(4),
-                    //           justifyContent: "center",
-                    //           alignItems: "center",
-                    //         }}
-                    //       >
-                    //         <CustomText
-                    //           style={{ fontSize: scale(12), color: "#fff" }}
-                    //         >
-                    //           Add
-                    //         </CustomText>
-                    //       </Pressable>
-                    //     )}
-                    //   </View>
-                    // </Pressable>
-
                     <Pressable
                       key={item?.serviceId}
                       style={{
@@ -940,17 +914,6 @@ const appointmentCalendar = () => {
                               </CustomText>
                             </Pressable>
 
-                            {/* DESCRIPTION */}
-                            {/* <CustomSecondaryText
-                              style={{
-                                fontSize: moderateScale(12),
-                                // color: "#475569",
-                                lineHeight: scale(16),
-                              }}
-                            >
-                              {item?.serviceDesc}
-                            </CustomSecondaryText> */}
-
                             {/* PRICE */}
                             <CustomText
                               style={{
@@ -1008,7 +971,7 @@ const appointmentCalendar = () => {
                   );
                 }))}
 
-          {activeSection === "barber" &&
+          {activeSection === "barberSecond" &&
             (salonBarber?.loading ? (
               [0, 1, 2, 3, 4, 5].map((_, index) => {
                 return (
@@ -1067,28 +1030,8 @@ const appointmentCalendar = () => {
                         >
                           {item?.name}
                         </CustomText>
-                        {/* <View style={{
-                                                        flexDirection: "row",
-                                                        alignItems: "center",
-                                                        justifyContent: "space-between",
-                                                        gap: scale(2),
-                                                        minWidth: scale(75),
-                                                        flex: 1
-                                                    }}>
-                                                        <ClockIcon size={scale(12)} color='gray' />
-                                                        <CustomText style={{ fontSize: scale(12), flex: 1, color: "gray" }}>{item?.barberEWT} mins</CustomText>
-                                                    </View> */}
                       </View>
                     </View>
-
-                    {/* <View
-                                                style={{
-
-                                                }}
-                                            >
-                                                <CustomText style={{ fontSize: scale(16), fontFamily: "AirbnbCereal_W_Blk", textAlign: "center" }}>{item?.queueCount}</CustomText>
-                                                <CustomText style={{ fontSize: scale(14), color: "gray" }}>In Queue</CustomText>
-                                            </View> */}
                   </Pressable>
                 );
               })
@@ -1105,6 +1048,228 @@ const appointmentCalendar = () => {
                     : "stylists"}{" "}
                   available
                 </CustomText>
+              </View>
+            ))}
+
+          {activeSection === "barberFirst" &&
+            (salonBarber?.loading ? (
+              [0, 1, 2, 3, 4, 5].map((_, index) => {
+                return (
+                  <Skeleton
+                    key={index}
+                    height={verticalScale(60)}
+                    borderRadius={scale(10)}
+                  />
+                );
+              })
+            ) : salonBarber?.data?.length > 0 ? (
+              salonBarber?.data?.map((item, index) => {
+                return (
+                  <Pressable
+                    key={item?.barberId}
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      justifyContent: "space-between",
+                      backgroundColor: "#00B0901A",
+                      borderRadius: scale(10),
+                      padding: scale(10),
+                    }}
+                    onPress={() => {
+                      setSelectedCustomerBarber(item);
+                      setSelectedCustomerServices([]);
+                      setScrolling(false);
+                      setActiveSection("servicesSecond");
+                      setAddIconPressCount(0);
+                      setSelectedCalenderDate("");
+                      setDisbaleDates([]);
+                      setContinueService(true);
+                    }}
+                  >
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                        gap: scale(10),
+                      }}
+                    >
+                      <Image
+                        style={{
+                          height: scale(50),
+                          width: scale(50),
+                          borderRadius: scale(40),
+                        }}
+                        source={{ uri: item?.profile?.[0]?.url }}
+                        contentFit="cover"
+                        transition={300}
+                      />
+
+                      <View>
+                        <CustomText
+                          style={{
+                            fontSize: scale(14),
+                          }}
+                        >
+                          {item?.name}
+                        </CustomText>
+                      </View>
+                    </View>
+                  </Pressable>
+                );
+              })
+            ) : (
+              <View
+                style={{
+                  paddingTop: verticalScale(20),
+                }}
+              >
+                <CustomText>
+                  No{" "}
+                  {authenticatedUser?.salonType === "Barber Shop"
+                    ? "barbers"
+                    : "stylists"}{" "}
+                  available
+                </CustomText>
+              </View>
+            ))}
+
+          {activeSection === "servicesSecond" &&
+            (salonServices?.loading ? (
+              [0, 1, 2, 3, 4, 5].map((_, index) => {
+                return (
+                  <Skeleton
+                    key={index}
+                    height={verticalScale(150)}
+                    borderRadius={scale(10)}
+                  />
+                );
+              })
+            ) : salonServices?.data?.length > 0 ? (
+              salonServices?.data?.map((item, index) => {
+                return (
+                  <Pressable
+                    key={item?.serviceId}
+                    style={{
+                      borderRadius: scale(12),
+                      backgroundColor: colors.background,
+                      padding: scale(14),
+                      gap: verticalScale(12),
+                      borderWidth: 1,
+                      borderColor: colors.cardBorder,
+                    }}
+                  >
+                    <View
+                      style={{
+                        flexDirection: "row",
+                        justifyContent: "space-between",
+                        alignItems: "flex-start",
+                      }}
+                    >
+                      {/* LEFT SIDE */}
+                      <View
+                        style={{
+                          flexDirection: "row",
+                          alignItems: "flex-start",
+                          gap: scale(12),
+                          width: "75%",
+                        }}
+                      >
+                        <View style={{ gap: verticalScale(8), flexShrink: 1 }}>
+                          {/* SERVICE NAME */}
+                          <CustomText
+                            style={{
+                              fontSize: moderateScale(15),
+                              fontFamily: "AirbnbCereal_W_Bd",
+                              // color: "#0F172A",
+                            }}
+                          >
+                            {item?.serviceName}
+                          </CustomText>
+
+                          {/* CATEGORY BADGE */}
+                          <Pressable
+                            style={{
+                              paddingHorizontal: scale(10),
+                              paddingVertical: verticalScale(3),
+                              backgroundColor: "#CCF2E8",
+                              borderRadius: scale(6),
+                              alignSelf: "flex-start",
+                            }}
+                          >
+                            <CustomText
+                              style={{
+                                fontSize: moderateScale(11),
+                                fontFamily: "AirbnbCereal_W_Md",
+                                color: "#0D9488",
+                              }}
+                            >
+                              {item?.serviceCategoryName}
+                            </CustomText>
+                          </Pressable>
+
+                          {/* PRICE */}
+                          <CustomText
+                            style={{
+                              fontFamily: "AirbnbCereal_W_Blk",
+                              fontSize: scale(20),
+                              color: "#0D9488",
+                              marginTop: verticalScale(4),
+                            }}
+                          >
+                            {authenticatedUser?.currency} {item?.servicePrice}
+                          </CustomText>
+                        </View>
+                      </View>
+
+                      {/* RIGHT SIDE BUTTON */}
+                      {item?.selected ? (
+                        <Pressable
+                          onPress={() => removeServiceHandler(item)}
+                          style={{
+                            height: verticalScale(28),
+                            paddingHorizontal: scale(8),
+                            backgroundColor: "#DC2626",
+                            borderRadius: scale(6),
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                        >
+                          <CustomText
+                            style={{ fontSize: scale(12), color: "#fff" }}
+                          >
+                            Remove
+                          </CustomText>
+                        </Pressable>
+                      ) : (
+                        <Pressable
+                          onPress={() => addServiceHandler(item)}
+                          style={{
+                            height: verticalScale(28),
+                            paddingHorizontal: scale(12),
+                            backgroundColor: "#000",
+                            borderRadius: scale(6),
+                            justifyContent: "center",
+                            alignItems: "center",
+                          }}
+                        >
+                          <CustomText
+                            style={{ fontSize: scale(12), color: "#fff" }}
+                          >
+                            Add
+                          </CustomText>
+                        </Pressable>
+                      )}
+                    </View>
+                  </Pressable>
+                );
+              })
+            ) : (
+              <View
+                style={{
+                  paddingTop: verticalScale(20),
+                }}
+              >
+                <CustomText>No services available</CustomText>
               </View>
             ))}
 
@@ -1183,14 +1348,14 @@ const appointmentCalendar = () => {
                       {
                         // backgroundColor: disableDates?.includes(day?.fullDate) && "#e5e5e5",
                         backgroundColor: disableSalonDates?.includes(
-                          day?.fullDate
+                          day?.fullDate,
                         )
                           ? colors.appointmentDisableBg
                           : disableAppointmentDates?.includes(day?.fullDate)
-                          ? colors.appointmentDisableBg
-                          : disableDates?.includes(day?.fullDate)
-                          ? colors.appointmentDisableBg
-                          : "#00B0901A",
+                            ? colors.appointmentDisableBg
+                            : disableDates?.includes(day?.fullDate)
+                              ? colors.appointmentDisableBg
+                              : "#00B0901A",
 
                         borderColor:
                           selectedCalenderDate === day?.fullDate
@@ -1218,10 +1383,10 @@ const appointmentCalendar = () => {
                         color: disableSalonDates?.includes(day?.fullDate)
                           ? colors.text
                           : disableAppointmentDates?.includes(day?.fullDate)
-                          ? colors.text
-                          : disableDates?.includes(day?.fullDate)
-                          ? colors.text
-                          : "#14b8a6",
+                            ? colors.text
+                            : disableDates?.includes(day?.fullDate)
+                              ? colors.text
+                              : "#14b8a6",
                       }}
                     >
                       {day.date}
@@ -1232,10 +1397,10 @@ const appointmentCalendar = () => {
 
               {!disableSalonDates?.includes(selectedCalenderDay?.fullDate) &&
                 !disableAppointmentDates?.includes(
-                  selectedCalenderDay?.fullDate
+                  selectedCalenderDay?.fullDate,
                 ) &&
                 engageTimeslotsData?.data?.some(
-                  (item) => item.disabled === true
+                  (item) => item.disabled === true,
                 ) && (
                   <View
                     style={{
@@ -1362,7 +1527,7 @@ const appointmentCalendar = () => {
                     />
                   </>
                 ) : disableSalonDates?.includes(
-                    selectedCalenderDay?.fullDate
+                    selectedCalenderDay?.fullDate,
                   ) ? (
                   <View
                     style={{
@@ -1375,7 +1540,7 @@ const appointmentCalendar = () => {
                     <CustomText>The salon is closed on this day.</CustomText>
                   </View>
                 ) : disableAppointmentDates?.includes(
-                    selectedCalenderDay?.fullDate
+                    selectedCalenderDay?.fullDate,
                   ) ? (
                   <View
                     style={{
@@ -1469,7 +1634,8 @@ const appointmentCalendar = () => {
         </ScrollView>
 
         {scrolling &&
-          activeSection === "services" &&
+          (activeSection === "servicesFirst" ||
+            activeSection === "servicesSecond") &&
           selectCustomerServices.length > 0 && (
             <View
               style={{
@@ -1485,9 +1651,15 @@ const appointmentCalendar = () => {
             >
               <Pressable
                 onPress={() => {
-                  setContinueService(true);
                   setScrolling(false);
-                  setActiveSection("barber");
+                  if (activeSection === "servicesFirst") {
+                    setContinueService(true);
+                    setActiveSection("barberSecond");
+                  } else {
+                    setContinueService(false);
+                    setActiveSection("calendar");
+                  }
+
                   setAddIconPressCount(0);
                 }}
                 style={{
@@ -1525,7 +1697,9 @@ const appointmentCalendar = () => {
                 justifyContent: "flex-start",
               },
             ]}
-            onPress={() => setActiveSection(key)}
+            onPress={() => {
+              setActiveSection(key);
+            }}
           >
             {selectCustomerServices?.length > 0 ? (
               <CustomText
@@ -1632,7 +1806,6 @@ const appointmentCalendar = () => {
               alignItems: "center",
               height: verticalScale(40),
               gap: scale(10),
-              // marginBottom: verticalScale(20),
             }}
           >
             <Pressable onPress={() => router.replace("/appointment")}>
@@ -1650,36 +1823,74 @@ const appointmentCalendar = () => {
           </View>
 
           <View style={{ flex: 1, gap: verticalScale(15) }}>
-            {renderSection("services", "Choose Services", [
-              { id: 1 },
-              { id: 2 },
-              { id: 3 },
-              { id: 4 },
-              { id: 5 },
-              { id: 6 },
-              { id: 7 },
-              { id: 8 },
-              { id: 9 },
-            ])}
-            {renderSection(
-              "barber",
-              `Choose ${
-                authenticatedUser?.salonType === "Barber Shop"
-                  ? "Barber"
-                  : "Stylist"
-              }`,
-              [
-                { id: 1 },
-                { id: 2 },
-                { id: 3 },
-                { id: 4 },
-                { id: 5 },
-                { id: 6 },
-                { id: 7 },
-                { id: 8 },
-                { id: 9 },
-              ]
+            {appointmentPopupType?.selectServices ? (
+              <>
+                {renderSection("servicesFirst", "Choose Services", [
+                  { id: 1 },
+                  { id: 2 },
+                  { id: 3 },
+                  { id: 4 },
+                  { id: 5 },
+                  { id: 6 },
+                  { id: 7 },
+                  { id: 8 },
+                  { id: 9 },
+                ])}
+                {renderSection(
+                  "barberSecond",
+                  `Choose ${
+                    authenticatedUser?.salonType === "Barber Shop"
+                      ? "Barber"
+                      : "Stylist"
+                  }`,
+                  [
+                    { id: 1 },
+                    { id: 2 },
+                    { id: 3 },
+                    { id: 4 },
+                    { id: 5 },
+                    { id: 6 },
+                    { id: 7 },
+                    { id: 8 },
+                    { id: 9 },
+                  ],
+                )}
+              </>
+            ) : (
+              <>
+                {renderSection(
+                  "barberFirst",
+                  `Choose ${
+                    authenticatedUser?.salonType === "Barber Shop"
+                      ? "Barber"
+                      : "Stylist"
+                  }`,
+                  [
+                    { id: 1 },
+                    { id: 2 },
+                    { id: 3 },
+                    { id: 4 },
+                    { id: 5 },
+                    { id: 6 },
+                    { id: 7 },
+                    { id: 8 },
+                    { id: 9 },
+                  ],
+                )}
+                {renderSection("servicesSecond", "Choose Services", [
+                  { id: 1 },
+                  { id: 2 },
+                  { id: 3 },
+                  { id: 4 },
+                  { id: 5 },
+                  { id: 6 },
+                  { id: 7 },
+                  { id: 8 },
+                  { id: 9 },
+                ])}
+              </>
             )}
+
             {renderSection("calendar", "Choose Date", "")}
             {renderSection("appointmentnote", "Appointment Note", "")}
           </View>
@@ -1707,7 +1918,6 @@ export default appointmentCalendar;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    // paddingHorizontal: scale(15),
   },
   boxOpenWrapper: {
     borderRadius: scale(20),
