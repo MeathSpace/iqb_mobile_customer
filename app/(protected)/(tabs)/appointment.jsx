@@ -461,10 +461,18 @@ const appointment = () => {
                 <Pressable
                   onPress={() => {
                     if (item.status === "upcoming") {
+
                       router.push({
                         pathname: "/appointmentPop",
-                        params: { selectedAppointment: JSON.stringify(item) },
+                        params: {
+                          selectedAppointment: JSON.stringify(item),
+                        },
                       });
+
+                      // router.push({
+                      //   pathname: "/appointmentPop",
+                      //   params: { selectedAppointment: JSON.stringify(item) },
+                      // });
                     } else {
                       Alert.alert(
                         "Warning",
@@ -556,7 +564,9 @@ const appointment = () => {
                               appointment: true,
                               appointmentType: "Book",
                             }));
-                            router.push("/appointmentCalendar");
+
+                            router.push("/appointmentpopup");
+                            // router.push("/appointmentCalendar");
                           }}
                           style={styles.rebookButton}
                         >

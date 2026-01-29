@@ -71,14 +71,6 @@ const ProtectedLayout = () => {
       />
 
       <Stack.Screen
-        name="appointmentPop"
-        options={{
-          presentation: "transparentModal",
-          animation: "fade",
-        }}
-      />
-
-      <Stack.Screen
         name="singleJoinModal"
         options={{
           presentation: "transparentModal",
@@ -135,12 +127,28 @@ const ProtectedLayout = () => {
       />
 
       <Stack.Screen
+        name="appointmentPop"
+        options={{
+          presentation: "transparentModal",
+          animation: "fade",
+        }}
+      />
+
+      <Stack.Screen
         name="appointmentpopup"
         options={{
           presentation: "transparentModal",
           animation: "fade",
         }}
       />
+
+      <Stack.Screen
+        name="editAppointmentCalender"
+        options={{
+          presentation: "card",
+        }}
+      />
+      {/* editAppointmentCalender */}
     </Stack>
   );
 };

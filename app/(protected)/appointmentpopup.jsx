@@ -1,5 +1,5 @@
 import { useTheme } from "@react-navigation/native";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { Pressable, StyleSheet, TouchableOpacity, View } from "react-native";
 import { scale, verticalScale } from "react-native-size-matters";
 import CustomSecondaryText from "../../components/CustomSecondaryText";
@@ -9,6 +9,16 @@ import { useGlobal } from "../../context/GlobalContext";
 
 const appointmentpopup = () => {
   const router = useRouter();
+  const params = useLocalSearchParams();
+
+  const selectedAppointmentParse = params?.selectedAppointment
+    ? JSON.parse(params?.selectedAppointment)
+    : {};
+
+  const is_editAppointment = params?.is_editAppointment
+    ? Boolean(params?.is_editAppointment)
+    : false;
+
   const { colors } = useTheme();
   const { authenticatedUser } = useAuth();
 
@@ -74,7 +84,20 @@ const appointmentpopup = () => {
                 selectServices: true,
                 selectBarber: false,
               });
-              router.replace("/appointmentCalendar");
+
+              if (is_editAppointment) {
+                router.back()
+                router.push({
+                  pathname: "/editAppointmentCalender",
+                  params: {
+                    selectedAppointment: JSON.stringify(
+                      selectedAppointmentParse,
+                    ),
+                  },
+                });
+              } else {
+                router.replace("/appointmentCalendar");
+              }
             }}
             style={styles.queueButton}
             activeOpacity={0.85}
@@ -115,7 +138,20 @@ const appointmentpopup = () => {
                 selectServices: false,
                 selectBarber: true,
               });
-              router.replace("/appointmentCalendar");
+
+              if (is_editAppointment) {
+                router.back();
+                router.push({
+                  pathname: "/editAppointmentCalender",
+                  params: {
+                    selectedAppointment: JSON.stringify(
+                      selectedAppointmentParse,
+                    ),
+                  },
+                });
+              } else {
+                router.replace("/appointmentCalendar");
+              }
             }}
             style={styles.queueButton}
             activeOpacity={0.85}

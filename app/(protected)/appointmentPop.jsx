@@ -2,9 +2,9 @@ import { BASE_URL } from "@/utils/api";
 import { useTheme } from "@react-navigation/native";
 import axios from "axios";
 import { Image } from "expo-image";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import moment from "moment";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -20,6 +20,31 @@ import { useGlobal } from "../../context/GlobalContext";
 import { ddmmformatDate } from "../../utils/ddmmformatDate";
 
 const appointmentPop = () => {
+  const [paymentSettingsLoading, setPaymentSettingsLoading] = useState(false);
+  const [paymentSettingsData, setPaymentSettingsData] = useState(null);
+
+  useFocusEffect(
+    useCallback(() => {
+      const getSalonPaymentSettings = async () => {
+        try {
+          setPaymentSettingsLoading(true);
+          const { data } = await axios.get(
+            `${BASE_URL}/mobileRoutes/getPaymentSettings?salonId=${authenticatedUser?.salonId}`,
+          );
+          setPaymentSettingsData(data?.response?.[1]);
+        } catch (error) {
+          console.log("Error fetching salon settings ", error);
+        } finally {
+          setPaymentSettingsLoading(false);
+        }
+      };
+
+      getSalonPaymentSettings();
+    }, []),
+  );
+
+  // console.log(paymentSettingsData?.enabled);
+
   const router = useRouter();
   const { colors } = useTheme();
   const params = useLocalSearchParams();
@@ -181,48 +206,6 @@ const appointmentPop = () => {
               • {selectedAppointmentParse?.services.length} service
               {selectedAppointmentParse?.services.length > 1 ? "s" : ""}
             </CustomSecondaryText>
-
-            {/* 
-            <View style={styles.footer}>
-              {section.title !== "Upcoming" && (
-                <CustomText
-                  style={{
-                    fontSize: scale(14),
-                    backgroundColor:
-                      item.status === "served"
-                        ? "rgba(34, 197, 94, 0.1)"
-                        : "rgba(239, 68, 68, 0.1)",
-                    color: item.status === "served" ? "#14b8a6" : "#ef4444",
-                    paddingHorizontal: scale(10),
-                    paddingVertical: verticalScale(3),
-                    borderRadius: scale(15),
-                  }}
-                >
-                  {item.status}
-                </CustomText>
-              )}
-
-              {section.title !== "Upcoming" && (
-                <TouchableOpacity
-                  onPress={() => {
-                    if (!getSalonFeature?.salonFeature?.isAppointments) {
-                      return Toast.error(
-                        "Appointment feature is not available at this salon"
-                      );
-                    }
-                    setJoinModes((prev) => ({
-                      ...prev,
-                      appointment: true,
-                      appointmentType: "Book",
-                    }));
-                    router.push("/appointmentCalendar");
-                  }}
-                  style={styles.rebookButton}
-                >
-                  <Text style={styles.rebookText}>Book again</Text>
-                </TouchableOpacity>
-              )}
-            </View> */}
           </View>
         </View>
 
@@ -235,7 +218,9 @@ const appointmentPop = () => {
         >
           <Pressable
             disabled={deleteAppointmentLoader}
-            onPress={confirmDeleteHandler}
+            onPress={() => {
+              confirmDeleteHandler();
+            }}
             style={{
               height: verticalScale(35),
               width: "48%",
@@ -253,11 +238,21 @@ const appointmentPop = () => {
           </Pressable>
           <Pressable
             onPress={() => {
+              if (paymentSettingsData?.enabled) {
+                Alert.alert(
+                  "Updation Not Allowed",
+                  "This appointment cannot be updated because payment has already been enabled for it. Please contact the salon for assistance.",
+                  [{ text: "OK" }],
+                  { cancelable: true },
+                );
+                return;
+              }
+
               router.replace({
-                pathname: "/editAppointmentCalender",
+                pathname: "/appointmentpopup",
                 params: {
                   selectedAppointment: JSON.stringify(selectedAppointmentParse),
-                  editAppointment: true,
+                  is_editAppointment: true,
                 },
               });
             }}
