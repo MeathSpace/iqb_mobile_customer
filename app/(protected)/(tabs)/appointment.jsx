@@ -461,7 +461,6 @@ const appointment = () => {
                 <Pressable
                   onPress={() => {
                     if (item.status === "upcoming") {
-
                       router.push({
                         pathname: "/appointmentPop",
                         params: {

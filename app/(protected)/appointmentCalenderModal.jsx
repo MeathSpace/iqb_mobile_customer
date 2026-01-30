@@ -243,8 +243,6 @@ const appointmentCalenderModal = () => {
 
   // const totalTime = selectedCustomerBookAppointmentServicesParse?.reduce((acc, service) => acc + service.serviceEWT, 0);
 
-  console.log(appointmentPopupType);
-
   const [totalTime, setTotalTime] = useState(0);
 
   useEffect(() => {

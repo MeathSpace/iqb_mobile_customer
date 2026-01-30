@@ -44,7 +44,6 @@ const appointmentPop = () => {
   );
 
   // console.log(paymentSettingsData?.enabled);
-
   const router = useRouter();
   const { colors } = useTheme();
   const params = useLocalSearchParams();
@@ -208,6 +207,63 @@ const appointmentPop = () => {
             </CustomSecondaryText>
           </View>
         </View>
+
+        {/* <View
+          style={[
+            styles.card,
+            {
+              backgroundColor: colors.cardColor,
+              borderColor: colors.cardBorder,
+            },
+          ]}
+        >
+          <CustomSecondaryText>
+            {selectedAppointmentParse?.isPaid
+              ? "Payment Done"
+              : "Payment not done"}
+          </CustomSecondaryText>
+        </View> */}
+
+        {selectedAppointmentParse?.isPaid && (
+          <View
+            style={{
+              padding: scale(16),
+              borderRadius: moderateScale(16),
+              backgroundColor: "#fff1f2",
+              borderWidth: 1,
+              borderColor: "#ffe4e6",
+            }}
+          >
+            <View
+              style={{
+                flexDirection: "row",
+                alignItems: "center",
+                marginBottom: verticalScale(4),
+                gap: scale(6),
+              }}
+            >
+              <CustomText
+                style={{
+                  fontFamily: "AirbnbCereal_W_Bd",
+                  color: "#e11d48",
+                  fontSize: moderateScale(13),
+                }}
+              >
+                Cancellation Policy
+              </CustomText>
+            </View>
+            <CustomText
+              style={{
+                fontSize: moderateScale(12),
+                color: "#9f1239",
+                lineHeight: verticalScale(18),
+              }}
+            >
+              Cancellations within 24 hours incur a 50% fee. Please arrive 5
+              minutes early.
+            </CustomText>
+          </View>
+        )}
 
         <View
           style={{
