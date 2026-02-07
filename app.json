@@ -2,7 +2,7 @@
   "expo": {
     "name": "IQBook",
     "slug": "iqb_mobile_customer",
-    "version": "1.0.16",
+    "version": "1.0.17",
     "orientation": "portrait",
     "icon": "./assets/images/iqbookAdaptive.png",
     "scheme": "iqbmobilecustomer",
@@ -11,7 +11,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.iqbook.iqb",
-      "buildNumber": "58",
+      "buildNumber": "59",
       "config": {
         "googleMapsApiKey": "AIzaSyCFTy8N-ZV2Oji8QbpQjuzXHwuC-kNSdmU",
         "usesNonExemptEncryption": false
@@ -22,7 +22,7 @@
       "usesAppleSignIn": true
     },
     "android": {
-      "versionCode": 26,
+      "versionCode": 27,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/iqbookAdaptive.png",
         "backgroundColor": "#ffffff"

@@ -30,6 +30,7 @@ const appointmentCalenderModal = () => {
     setNewNotification,
   } = useGlobal();
 
+
   const router = useRouter();
   const { colors } = useTheme();
   const { authenticatedUser } = useAuth();
@@ -74,6 +75,8 @@ const appointmentCalenderModal = () => {
       customerName: authenticatedUser?.name,
       customerType: "Walk-In",
       methodUsed: "App",
+      selectServices: appointmentPopupType?.selectServices,
+      selectBarber: appointmentPopupType?.selectBarber,
     };
 
     try {
@@ -157,6 +160,8 @@ const appointmentCalenderModal = () => {
           customerName: authenticatedUser?.name,
           customerType: "Walk-In",
           methodUsed: "App",
+          selectServices: appointmentPopupType?.selectServices,
+          selectBarber: appointmentPopupType?.selectBarber,
         },
       }),
     });
@@ -307,13 +312,13 @@ const appointmentCalenderModal = () => {
               width: scale(64),
               height: scale(64), // Using scale for icon containers to keep them square
               borderRadius: moderateScale(32),
-              backgroundColor: "#2563eb10",
+              backgroundColor: "#14b8a610",
               justifyContent: "center",
               alignItems: "center",
               marginBottom: verticalScale(16),
             }}
           >
-            <CheckIcon size={moderateScale(28)} color="#2563eb" />
+            <CheckIcon size={moderateScale(28)} color="#14b8a6" />
           </View>
 
           <CustomText
@@ -513,7 +518,7 @@ const appointmentCalenderModal = () => {
                     <CustomText
                       style={{
                         fontFamily: "AirbnbCereal_W_Bd",
-                        color: "#2563eb",
+                        color: "#14b8a6",
                       }}
                     >
                       Pay Now
@@ -528,7 +533,7 @@ const appointmentCalenderModal = () => {
                   <CustomText
                     style={{
                       fontFamily: "AirbnbCereal_W_XBd",
-                      color: "#2563eb",
+                      color: "#14b8a6",
                       fontSize: moderateScale(18),
                     }}
                   >
@@ -646,11 +651,11 @@ const appointmentCalenderModal = () => {
               onPress={openPaymentSheet}
               disabled={loading}
               style={{
-                backgroundColor: loading ? "#94a3b8" : "#2563eb",
+                backgroundColor: loading ? "#94a3b8" : "#14b8a6",
                 paddingVertical: verticalScale(18),
                 borderRadius: moderateScale(16),
                 alignItems: "center",
-                shadowColor: "#2563eb",
+                shadowColor: "#14b8a6",
                 shadowOffset: { width: 0, height: verticalScale(4) },
                 shadowOpacity: 0.2,
                 shadowRadius: moderateScale(8),
@@ -675,7 +680,7 @@ const appointmentCalenderModal = () => {
               onPress={bookAppointmentPressed}
               disabled={bookAppointmentLoader}
               style={{
-                backgroundColor: bookAppointmentLoader ? "#94a3b8" : "#0d9488",
+                backgroundColor: bookAppointmentLoader ? "#94a3b8" : "#14b8a6",
                 paddingVertical: verticalScale(18),
                 borderRadius: moderateScale(16),
                 alignItems: "center",

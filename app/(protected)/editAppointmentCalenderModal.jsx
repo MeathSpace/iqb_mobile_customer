@@ -45,9 +45,21 @@ const editAppointmentCalenderModal = () => {
     ? JSON.parse(params?.selectedBookAppointmentNote)
     : "";
 
+  // const isDateNotPresentParse = params?.isDateNotPresent
+  //   ? JSON.parse(params?.isDateNotPresent)
+  //   : "";
+
+  // const isTimeSlotNotPresentParse = params?.isTimeSlotNotPresent
+  //   ? JSON.parse(params?.isTimeSlotNotPresent)
+  //   : "";
+
+  console.log(params?.isDateNotPresent)
+  console.log(params?.isTimeSlotNotPresent)
+
   // console.log("selectedCustomerBookAppointmentBarberParse ", selectedCustomerBookAppointmentBarberParse)
 
-  const { newNotification, setNewNotification, appointmentPopupType } = useGlobal();
+  const { newNotification, setNewNotification, appointmentPopupType } =
+    useGlobal();
   const [editAppointmentLoader, setEditAppointmentLoader] = useState(false);
 
   const editAppointmentPressed = async () => {
@@ -119,225 +131,33 @@ const editAppointmentCalenderModal = () => {
   );
 
   const [totalTime, setTotalTime] = useState(0);
-  
-    useEffect(() => {
-      if (appointmentPopupType?.selectServices) {
-        setTotalTime(
-          selectedCustomerBookAppointmentBarberParse?.totalBarberServiceEWT,
-        );
-      } else {
-        setTotalTime(
-          selectedCustomerBookAppointmentServicesParse.reduce(
-            (sum, item) => sum + (Number(item.barberServiceEWT) || 0),
-            0,
-          ),
-        );
-      }
-    }, []);
 
-  // const totalTime = selectedCustomerBookAppointmentServicesParse?.reduce((acc, service) => acc + service.serviceEWT, 0);
-  // const totalTime =
-  //   selectedCustomerBookAppointmentBarberParse?.totalBarberServiceEWT;
+  // console.log("++++++++= ", selectedCustomerBookAppointmentServicesParse);
+
+  useEffect(() => {
+    if (appointmentPopupType?.selectServices) {
+      // setTotalTime(
+      //   selectedCustomerBookAppointmentBarberParse?.totalBarberServiceEWT,
+      // );
+      setTotalTime(
+        selectedCustomerBookAppointmentServicesParse.reduce(
+          (sum, item) => sum + (Number(item.serviceEWT) || 0),
+          0,
+        ),
+      );
+    } else {
+      setTotalTime(
+        selectedCustomerBookAppointmentServicesParse.reduce(
+          (sum, item) => sum + (Number(item.barberServiceEWT) || 0),
+          0,
+        ),
+      );
+    }
+  }, []);
+
   const totalServices = selectedCustomerBookAppointmentServicesParse?.length;
 
   return (
-    // <Pressable
-    //   onPress={() => {
-    //     if (!editAppointmentLoader) {
-    //       router.back();
-    //     }
-    //   }}
-    //   style={{
-    //     flex: 1,
-    //     backgroundColor: "rgba(0,0,0,0.5)",
-    //     justifyContent: "center",
-    //     alignItems: "center",
-    //   }}
-    // >
-    //   <Pressable
-    //     onPress={() => {}}
-    //     style={[
-    //       styles.modalContainer,
-    //       {
-    //         backgroundColor: colors.cardColor,
-    //         borderColor: colors.queueBorder,
-    //       },
-    //     ]}
-    //   >
-    //     <View style={styles.iconContainer}>
-    //       <CheckIcon
-    //         style={{
-    //           backgroundColor: colors.tabBackground,
-    //           padding: scale(3),
-    //           borderRadius: scale(50),
-    //         }}
-    //         size={scale(16)}
-    //         color={colors.text}
-    //       />
-    //       <CustomText style={styles.titleText}>Please Confirm</CustomText>
-    //     </View>
-
-    //     <View style={{ gap: verticalScale(5) }}>
-    //       <CustomSecondaryText style={styles.confirmText}>
-    //         Are you sure you want to proceed?
-    //       </CustomSecondaryText>
-
-    //       <View
-    //         style={{
-    //           marginTop: verticalScale(5),
-    //           backgroundColor: colors.tabBackground, // Optional: subtle background to group
-    //           padding: scale(8),
-    //           borderRadius: scale(6),
-    //           gap: verticalScale(4),
-    //         }}
-    //       >
-    //         <CustomText
-    //           style={{
-    //             fontFamily: "AirbnbCereal_W_XBd",
-    //             fontSize: scale(14),
-    //           }}
-    //         >
-    //           {selectedCustomerBookAppointmentBarberParse?.name}
-    //         </CustomText>
-
-    //         <View
-    //           style={{
-    //             flexDirection: "row",
-    //             alignItems: "center",
-    //             gap: scale(6),
-    //           }}
-    //         >
-    //           <CustomText style={{ fontFamily: "AirbnbCereal_W_XBd" }}>
-    //             {authenticatedUser?.currency} {totalPrice.toFixed(2)}
-    //           </CustomText>
-    //           <CustomSecondaryText>
-    //             ( {totalServices} {totalServices === 1 ? "service" : "services"}{" "}
-    //             | {formatMinutesToHrMin(totalTime)} )
-    //           </CustomSecondaryText>
-    //         </View>
-
-    //         <View
-    //           style={{
-    //             flexDirection: "row",
-    //             alignItems: "center",
-    //             gap: scale(6),
-    //           }}
-    //         >
-    //           <CustomText style={{ fontFamily: "AirbnbCereal_W_XBd" }}>
-    //             Timeslot
-    //           </CustomText>
-    //           <CustomSecondaryText>
-    //             {selectedBookCalenderTimeslotParse}
-    //           </CustomSecondaryText>
-    //         </View>
-
-    //         <View
-    //           style={{
-    //             flexDirection: "row",
-    //             alignItems: "center",
-    //             gap: scale(6),
-    //           }}
-    //         >
-    //           <CustomText style={{ fontFamily: "AirbnbCereal_W_XBd" }}>
-    //             Date
-    //           </CustomText>
-    //           <CustomSecondaryText>
-    //             {ddmmformatDate(selectedBookCalenderDateParse)}
-    //           </CustomSecondaryText>
-    //         </View>
-
-    //         {selectedBookAppointmentNoteParse && (
-    //           <View style={{ gap: scale(6) }}>
-    //             <CustomText style={{ fontFamily: "AirbnbCereal_W_XBd" }}>
-    //               Note
-    //             </CustomText>
-    //             <CustomSecondaryText>
-    //               {selectedBookAppointmentNoteParse}
-    //             </CustomSecondaryText>
-    //           </View>
-    //         )}
-
-    //         <View
-    //           style={{
-    //             width: "100%",
-    //             backgroundColor: colors.background,
-    //             borderWidth: scale(1),
-    //             borderColor: colors.cardBorder,
-    //             borderRadius: scale(5),
-    //             padding: scale(10),
-    //           }}
-    //         >
-    //           <CustomText style={{ fontSize: moderateScale(14) }}>
-    //             <CustomText
-    //               style={{
-    //                 fontFamily: "AirbnbCereal_W_Bd",
-    //                 color: "#e11d48",
-    //                 fontSize: moderateScale(14),
-    //               }}
-    //             >
-    //               Reminder:{" "}
-    //             </CustomText>
-    //             edits or cancellations made less than 24 hours before your
-    //             appointment will be subject to a 50% fee.
-    //           </CustomText>
-    //           <View
-    //             style={{
-    //               height: verticalScale(5),
-    //             }}
-    //           />
-    //           <CustomText
-    //             style={{
-    //               fontSize: moderateScale(14),
-    //             }}
-    //           >
-    //             Kindly reach 5 minutes early for a seamless service.
-    //           </CustomText>
-    //         </View>
-    //       </View>
-    //     </View>
-
-    //     <View style={styles.buttonRow}>
-    //       <TouchableOpacity
-    //         onPress={() => {
-    //           if (!editAppointmentLoader) {
-    //             router.back();
-    //           }
-    //         }}
-    //         style={[
-    //           styles.button,
-    //           {
-    //             // backgroundColor: '#ef4444'
-    //           },
-    //         ]}
-    //       >
-    //         <CustomText style={{ fontFamily: "AirbnbCereal_W_Bd" }}>
-    //           No
-    //         </CustomText>
-    //       </TouchableOpacity>
-    //       <TouchableOpacity
-    //         disabled={editAppointmentLoader}
-    //         onPress={editAppointmentPressed}
-    //         style={[
-    //           styles.button,
-    //           {
-    //             backgroundColor: "#14b8a6",
-    //           },
-    //         ]}
-    //       >
-    //         {editAppointmentLoader ? (
-    //           <ActivityIndicator color={"#fff"} />
-    //         ) : (
-    //           <CustomText
-    //             style={{ color: "#fff", fontFamily: "AirbnbCereal_W_Bd" }}
-    //           >
-    //             Yes
-    //           </CustomText>
-    //         )}
-    //       </TouchableOpacity>
-    //     </View>
-    //   </Pressable>
-    // </Pressable>
-
     <View
       style={{
         flex: 1,
@@ -380,13 +200,13 @@ const editAppointmentCalenderModal = () => {
               width: scale(64),
               height: scale(64), // Using scale for icon containers to keep them square
               borderRadius: moderateScale(32),
-              backgroundColor: "#2563eb10",
+              backgroundColor: "#14b8a610",
               justifyContent: "center",
               alignItems: "center",
               marginBottom: verticalScale(16),
             }}
           >
-            <CheckIcon size={moderateScale(28)} color="#2563eb" />
+            <CheckIcon size={moderateScale(28)} color="#14b8a6" />
           </View>
 
           <CustomText
@@ -504,7 +324,7 @@ const editAppointmentCalenderModal = () => {
                   fontSize: moderateScale(15),
                 }}
               >
-                {ddmmformatDate(selectedBookCalenderDateParse)}
+                {selectedBookCalenderDateParse ? ddmmformatDate(selectedBookCalenderDateParse) : ddmmformatDate(params?.isDateNotPresent?.split("T")?.[0])}
               </CustomText>
             </View>
 
@@ -524,7 +344,7 @@ const editAppointmentCalenderModal = () => {
                   fontSize: moderateScale(15),
                 }}
               >
-                {selectedBookCalenderTimeslotParse}
+                {selectedBookCalenderTimeslotParse ? selectedBookCalenderTimeslotParse : params?.isTimeSlotNotPresent}
               </CustomText>
             </View>
           </View>
@@ -586,7 +406,7 @@ const editAppointmentCalenderModal = () => {
                     <CustomText
                       style={{
                         fontFamily: "AirbnbCereal_W_Bd",
-                        color: "#2563eb",
+                        color: "#14b8a6",
                       }}
                     >
                       Pay Now
@@ -594,14 +414,13 @@ const editAppointmentCalenderModal = () => {
                     <CustomSecondaryText
                       style={{ fontSize: moderateScale(12) }}
                     >
-                      Deposit (23
-                      %)
+                      Deposit (23 %)
                     </CustomSecondaryText>
                   </View>
                   <CustomText
                     style={{
                       fontFamily: "AirbnbCereal_W_XBd",
-                      color: "#2563eb",
+                      color: "#14b8a6",
                       fontSize: moderateScale(18),
                     }}
                   >
@@ -719,11 +538,11 @@ const editAppointmentCalenderModal = () => {
               onPress={openPaymentSheet}
               disabled={loading}
               style={{
-                backgroundColor: loading ? "#94a3b8" : "#2563eb",
+                backgroundColor: loading ? "#94a3b8" : "#14b8a6",
                 paddingVertical: verticalScale(18),
                 borderRadius: moderateScale(16),
                 alignItems: "center",
-                shadowColor: "#2563eb",
+                shadowColor: "#14b8a6",
                 shadowOffset: { width: 0, height: verticalScale(4) },
                 shadowOpacity: 0.2,
                 shadowRadius: moderateScale(8),
@@ -748,7 +567,7 @@ const editAppointmentCalenderModal = () => {
               onPress={editAppointmentPressed}
               disabled={editAppointmentLoader}
               style={{
-                backgroundColor: editAppointmentLoader ? "#94a3b8" : "#0d9488",
+                backgroundColor: editAppointmentLoader ? "#94a3b8" : "#14b8a6",
                 paddingVertical: verticalScale(18),
                 borderRadius: moderateScale(16),
                 alignItems: "center",

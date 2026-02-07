@@ -47,6 +47,7 @@ const appointment = () => {
     setNewNotification,
     appointmentListData,
     setAppointmentListData,
+    setAppointmentPopupType,
   } = useGlobal();
 
   const { authenticatedUser } = useAuth();
@@ -461,6 +462,11 @@ const appointment = () => {
                 <Pressable
                   onPress={() => {
                     if (item.status === "upcoming") {
+                      setAppointmentPopupType({
+                        selectServices: item?.selectServices,
+                        selectBarber: item?.selectBarber,
+                      });
+
                       router.push({
                         pathname: "/appointmentPop",
                         params: {

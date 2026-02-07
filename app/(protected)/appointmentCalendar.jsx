@@ -1707,8 +1707,7 @@ const appointmentCalendar = () => {
                 ellipsizeMode="tail"
                 style={{ flexShrink: 1 }}
               >
-                {selectCustomerServices?.[0]?.serviceName}
-
+                Services: {selectCustomerServices?.[0]?.serviceName}
                 {selectCustomerServices?.length > 1
                   ? ` + ${selectCustomerServices.length - 1} more`
                   : ""}
@@ -1735,7 +1734,7 @@ const appointmentCalendar = () => {
             onPress={() => setActiveSection(key)}
           >
             {selectedCustomerBarber?.name ? (
-              <CustomText>{selectedCustomerBarber?.name}</CustomText>
+              <CustomText>Barber: {selectedCustomerBarber?.name}</CustomText>
             ) : (
               <CustomText>{title}</CustomText>
             )}
@@ -1750,11 +1749,13 @@ const appointmentCalendar = () => {
                 borderColor: colors.queueBorder,
               },
             ]}
-            onPress={() => setActiveSection(key)}
+            onPress={() => {
+              setActiveSection(key);
+            }}
           >
             {selectedEngageTimeSlot ? (
               <CustomText>
-                {selectedEngageTimeSlot} · {selectedCalenderDay?.dayName},{" "}
+                Date: {selectedEngageTimeSlot} · {selectedCalenderDay?.dayName},{" "}
                 {selectedCalenderDay?.date} {selectedCalenderDay?.month}{" "}
                 {selectedCalenderDay?.year}
               </CustomText>

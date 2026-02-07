@@ -54,6 +54,7 @@ const appointmentPop = () => {
   const { authenticatedUser } = useAuth();
 
   // console.log("selectedAppointmentParse ", selectedAppointmentParse)
+
   const [deleteAppointmentLoader, setDeleteAppointmentLoader] = useState(false);
 
   const { appointmentListData, setAppointmentListData } = useGlobal();
@@ -294,23 +295,31 @@ const appointmentPop = () => {
           </Pressable>
           <Pressable
             onPress={() => {
-              if (paymentSettingsData?.enabled) {
-                Alert.alert(
-                  "Updation Not Allowed",
-                  "This appointment cannot be updated because payment has already been enabled for it. Please contact the salon for assistance.",
-                  [{ text: "OK" }],
-                  { cancelable: true },
-                );
-                return;
-              }
+              // if (paymentSettingsData?.enabled) {
+              //   Alert.alert(
+              //     "Updation Not Allowed",
+              //     "This appointment cannot be updated because payment has already been enabled for it. Please contact the salon for assistance.",
+              //     [{ text: "OK" }],
+              //     { cancelable: true },
+              //   );
+              //   return;
+              // }
 
               router.replace({
-                pathname: "/appointmentpopup",
+                pathname: "/editAppointmentCalender",
                 params: {
                   selectedAppointment: JSON.stringify(selectedAppointmentParse),
                   is_editAppointment: true,
                 },
               });
+
+              // router.replace({
+              //   pathname: "/appointmentpopup",
+              //   params: {
+              //     selectedAppointment: JSON.stringify(selectedAppointmentParse),
+              //     is_editAppointment: true,
+              //   },
+              // });
             }}
             style={{
               height: verticalScale(35),
