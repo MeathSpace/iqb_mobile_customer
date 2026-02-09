@@ -348,7 +348,7 @@ const editAppointmentCalender = () => {
         appointmentId: selectedEditAppointmentData?._id,
         editAppointment: true,
         isDateNotPresent: selectedEditAppointmentData?.appointmentDate,
-        isTimeSlotNotPresent: selectedEditAppointmentData?.startTime
+        isTimeSlotNotPresent: selectedEditAppointmentData?.startTime,
       },
     });
   };
@@ -905,16 +905,19 @@ const editAppointmentCalender = () => {
                     // disabled={disableLoader || disableDates?.includes(day?.fullDate)}
                     disabled={disableLoader}
                     onPress={() => {
-                      setSelectedCalenderDate(day?.fullDate);
-                      setSelectedCalenderDay(day);
+                      if (selectedCalenderDate === day?.fullDate) {
+                        setSelectedCalenderDate(null);
+                        setSelectedCalenderDay(null);
+                        setSelectedEngageTimeSlot("")
+                      } else {
+                        setSelectedCalenderDate(day?.fullDate);
+                        setSelectedCalenderDay(day);
+                      }
                     }}
                     key={day.fullDate}
                     style={[
                       styles.dayBox,
                       {
-                        // backgroundColor:selectedCalenderDate === day?.fullDate ? "red" : "blue"
-                        // backgroundColor: disableDates?.includes(day?.fullDate) && "#e5e5e5",
-
                         backgroundColor: disableSalonDates?.includes(
                           day?.fullDate,
                         )
@@ -1210,10 +1213,10 @@ const editAppointmentCalender = () => {
                 ellipsizeMode="tail"
                 style={{ flexShrink: 1 }}
               >
-                Services: {selectedEditAppointmentData?.services?.length > 0
+                Services:{" "}
+                {selectedEditAppointmentData?.services?.length > 0
                   ? selectedEditAppointmentData?.services[0].serviceName
                   : ""}
-
                 {selectedEditAppointmentData?.services?.length > 1
                   ? ` + ${selectedEditAppointmentData?.services.length - 1} more`
                   : ""}
@@ -1240,7 +1243,9 @@ const editAppointmentCalender = () => {
             // onPress={() => setActiveSection(key)}
           >
             {selectedEditAppointmentData?.barbername ? (
-              <CustomText>Barber: {selectedEditAppointmentData?.barbername}</CustomText>
+              <CustomText>
+                Barber: {selectedEditAppointmentData?.barbername}
+              </CustomText>
             ) : (
               <CustomText>{title}</CustomText>
             )}

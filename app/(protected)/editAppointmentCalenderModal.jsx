@@ -45,19 +45,6 @@ const editAppointmentCalenderModal = () => {
     ? JSON.parse(params?.selectedBookAppointmentNote)
     : "";
 
-  // const isDateNotPresentParse = params?.isDateNotPresent
-  //   ? JSON.parse(params?.isDateNotPresent)
-  //   : "";
-
-  // const isTimeSlotNotPresentParse = params?.isTimeSlotNotPresent
-  //   ? JSON.parse(params?.isTimeSlotNotPresent)
-  //   : "";
-
-  console.log(params?.isDateNotPresent)
-  console.log(params?.isTimeSlotNotPresent)
-
-  // console.log("selectedCustomerBookAppointmentBarberParse ", selectedCustomerBookAppointmentBarberParse)
-
   const { newNotification, setNewNotification, appointmentPopupType } =
     useGlobal();
   const [editAppointmentLoader, setEditAppointmentLoader] = useState(false);
@@ -132,13 +119,8 @@ const editAppointmentCalenderModal = () => {
 
   const [totalTime, setTotalTime] = useState(0);
 
-  // console.log("++++++++= ", selectedCustomerBookAppointmentServicesParse);
-
   useEffect(() => {
     if (appointmentPopupType?.selectServices) {
-      // setTotalTime(
-      //   selectedCustomerBookAppointmentBarberParse?.totalBarberServiceEWT,
-      // );
       setTotalTime(
         selectedCustomerBookAppointmentServicesParse.reduce(
           (sum, item) => sum + (Number(item.serviceEWT) || 0),
@@ -324,7 +306,9 @@ const editAppointmentCalenderModal = () => {
                   fontSize: moderateScale(15),
                 }}
               >
-                {selectedBookCalenderDateParse ? ddmmformatDate(selectedBookCalenderDateParse) : ddmmformatDate(params?.isDateNotPresent?.split("T")?.[0])}
+                {selectedBookCalenderDateParse
+                  ? ddmmformatDate(selectedBookCalenderDateParse)
+                  : ddmmformatDate(params?.isDateNotPresent?.split("T")?.[0])}
               </CustomText>
             </View>
 
@@ -344,7 +328,9 @@ const editAppointmentCalenderModal = () => {
                   fontSize: moderateScale(15),
                 }}
               >
-                {selectedBookCalenderTimeslotParse ? selectedBookCalenderTimeslotParse : params?.isTimeSlotNotPresent}
+                {selectedBookCalenderTimeslotParse
+                  ? selectedBookCalenderTimeslotParse
+                  : params?.isTimeSlotNotPresent?.split(" ")?.[0]}
               </CustomText>
             </View>
           </View>
