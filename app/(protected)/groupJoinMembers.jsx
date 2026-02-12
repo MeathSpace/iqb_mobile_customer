@@ -229,7 +229,7 @@ const GroupJoinMembers = () => {
             <ArrowLeftIcon color={colors.text} />
           </Pressable>
           <CustomText
-            style={{ fontFamily: "AirbnbCereal_W_XBd", fontSize: scale(22) }}
+            style={{ fontFamily: "AirbnbCereal_W_XBd", fontSize: scale(18) }}
           >
             Group Members
           </CustomText>

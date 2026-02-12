@@ -1,29 +1,27 @@
+import { BASE_URL } from "@/utils/api";
+import { useTheme } from "@react-navigation/native";
+import axios from "axios";
+import { Image } from "expo-image";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
 import {
   FlatList,
-  Platform,
   Pressable,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
-import CustomText from "../../components/CustomText";
-import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import {
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
-import { useTheme } from "@react-navigation/native";
-import { ArrowLeftIcon, NoUserIcon, ProfileIcon } from "../../constants/icons";
-import { moderateScale, scale, verticalScale } from "react-native-size-matters";
-import { Image } from "expo-image";
-import { useAuth } from "../../context/AuthContext";
-import CustomSecondaryText from "../../components/CustomSecondaryText";
-import axios from "axios";
-import { BASE_URL } from "@/utils/api";
+import { scale, verticalScale } from "react-native-size-matters";
 import { Toast } from "toastify-react-native";
+import CustomSecondaryText from "../../components/CustomSecondaryText";
+import CustomText from "../../components/CustomText";
 import Skeleton from "../../components/Skeleton";
+import { ArrowLeftIcon, ProfileIcon } from "../../constants/icons";
+import { useAuth } from "../../context/AuthContext";
 
 const SingleJoinBarber = () => {
   // fetching payment settings
@@ -37,7 +35,7 @@ const SingleJoinBarber = () => {
         try {
           setPaymentSettingsLoading(true);
           const { data } = await axios.get(
-            `${BASE_URL}/mobileRoutes/getPaymentSettings?salonId=${authenticatedUser?.salonId}`
+            `${BASE_URL}/mobileRoutes/getPaymentSettings?salonId=${authenticatedUser?.salonId}`,
           );
           setPaymentSettingsData(data?.response?.[0]);
         } catch (error) {
@@ -48,7 +46,7 @@ const SingleJoinBarber = () => {
       };
 
       getSalonPaymentSettings();
-    }, [])
+    }, []),
   );
 
   const { data } = useLocalSearchParams();
@@ -87,7 +85,7 @@ const SingleJoinBarber = () => {
             {
               salonId: authenticatedUser.salonId,
               serviceIds: parsedSelectedServices.map((item) => item.serviceId),
-            }
+            },
           );
 
           setBarberList((prev) => ({
@@ -116,11 +114,11 @@ const SingleJoinBarber = () => {
   const [selectBarber, setSelectedBarber] = useState("");
   const totalPrice = parsedSelectedServices?.reduce(
     (acc, service) => acc + service.servicePrice,
-    0
+    0,
   );
   const totalTime = parsedSelectedServices?.reduce(
     (acc, service) => acc + service.serviceEWT,
-    0
+    0,
   );
   const totalServices = parsedSelectedServices?.length;
 
@@ -148,13 +146,13 @@ const SingleJoinBarber = () => {
           }}
         >
           <Pressable onPress={() => router.back()}>
-            <ArrowLeftIcon color={colors.text} />
+            <ArrowLeftIcon color={colors.text} size={scale(16)} />
           </Pressable>
           <CustomText
             style={{
               flex: 1,
               fontFamily: "AirbnbCereal_W_XBd",
-              fontSize: scale(20),
+              fontSize: scale(18),
             }}
           >
             Single Join (

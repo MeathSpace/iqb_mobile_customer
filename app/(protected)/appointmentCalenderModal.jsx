@@ -30,7 +30,6 @@ const appointmentCalenderModal = () => {
     setNewNotification,
   } = useGlobal();
 
-
   const router = useRouter();
   const { colors } = useTheme();
   const { authenticatedUser } = useAuth();
@@ -59,6 +58,10 @@ const appointmentCalenderModal = () => {
     ? JSON.parse(params?.paymentSettingsData)
     : "";
 
+  const selectedCalenderDayParse = params?.selectedCalenderDay
+    ? JSON.parse(params?.selectedCalenderDay)
+    : "";
+
   const [bookAppointmentLoader, setBookAppointmentLoader] = useState(false);
 
   const bookAppointmentPressed = async () => {
@@ -77,6 +80,7 @@ const appointmentCalenderModal = () => {
       methodUsed: "App",
       selectServices: appointmentPopupType?.selectServices,
       selectBarber: appointmentPopupType?.selectBarber,
+      bookDateObject: selectedCalenderDayParse
     };
 
     try {

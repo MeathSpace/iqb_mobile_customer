@@ -127,12 +127,12 @@ const singleJoinServicesBarber = () => {
                     marginBottom: verticalScale(20), // Added some space below header
                 }}>
                     <Pressable onPress={() => router.back()}>
-                        <ArrowLeftIcon color={colors.text} />
+                        <ArrowLeftIcon color={colors.text} size={scale(16)}/>
                     </Pressable>
                     <CustomText style={{
                         flex: 1,
                         fontFamily: "AirbnbCereal_W_XBd",
-                        fontSize: scale(20),
+                        fontSize: scale(18),
                     }}>Single Join ({authenticatedUser?.salonType === "Barber Shop" ? "Barbers" : "Stylists"} )</CustomText>
                 </View>
 

@@ -2628,6 +2628,7 @@ const appointmentCalendar = () => {
     setCurrentMonth((prev) => prev.clone().subtract(1, "month"));
   };
 
+
   const RANGE_DAYS = maxAppointmentDays?.data?.appointmentAdvanceDays;
   const maxAllowedDate = moment().startOf("day").add(RANGE_DAYS, "days");
 
@@ -2696,18 +2697,11 @@ const appointmentCalendar = () => {
         selectedBookAppointmentNote: JSON.stringify(appointmentNote),
         bookAppointment: true,
         paymentSettingsData: JSON.stringify(paymentSettingsData),
+        selectedCalenderDay: JSON.stringify(selectedCalenderDay)
       },
     });
   };
 
-  function formatMinutesToHrMin(totalMinutes) {
-    const hours = Math.floor(totalMinutes / 60);
-    const mins = totalMinutes % 60;
-
-    if (hours > 0 && mins > 0) return `${hours}hr ${mins}min`;
-    if (hours > 0) return `${hours}hr`;
-    return `${mins}min`;
-  }
 
   const [hasLoadedInitially, setHasLoadedInitially] = useState(false);
   const [userToggled, setUserToggled] = useState(false);
@@ -2835,1193 +2829,18 @@ const appointmentCalendar = () => {
         },
       ],
     );
-
-    // setAppointmentPopupType({
-    //   selectServices: false,
-    //   selectBarber: false,
-    // });
-    // router.push("/appointment");
   });
 
   const [step, setStep] = useState(1);
 
-  const renderSection = (key, title) => {
-    const isActive = activeSection === key;
-
-    if (scrolling && !isActive) return null;
-
-    return isActive ? (
-      <Animated.View
-        style={[
-          styles.boxOpenWrapper,
-          {
-            flex: flexAnim,
-            backgroundColor: colors.cardColor,
-            borderWidth: scale(1),
-            borderColor: colors.queueBorder,
-          },
-        ]}
-      >
-        <ScrollView
-          style={{ flex: 1 }}
-          contentContainerStyle={{
-            gap: verticalScale(15),
-            paddingBottom: scale(30),
-          }}
-          onTouchStart={() => handleScrollStart(key)}
-          showsVerticalScrollIndicator={false}
-        >
-          <View
-            style={{
-              flexDirection: "row",
-              alignItems: "center",
-              justifyContent: "space-between",
-            }}
-          >
-            {activeSection !== "servicesFirst" && (
-              <Pressable
-                // onPress={() => {
-                //   if (appointmentPopupType?.selectServices) {
-                //     setSelectedCustomerServices([]);
-                //     const updatedSalonServices = salonServices?.data?.map(
-                //       (item) => {
-                //         return { ...item, selected: false };
-                //       },
-                //     );
-                //     setSalonServices({
-                //       data: updatedSalonServices,
-                //       loading: false,
-                //       error: null,
-                //       success: false,
-                //     });
-                //     setSalonBarber({
-                //       data: null,
-                //       loading: false,
-                //       error: null,
-                //       success: false,
-                //     });
-                //   } else {
-                //     setSelectedCustomerServices([]);
-                //     setSalonServices({
-                //       data: null,
-                //       loading: false,
-                //       error: null,
-                //       success: false,
-                //     });
-                //     setSelectedCustomerBarber(null);
-                //   }
-
-                //   setDisbaleDates([]);
-                //   setDates([]);
-                //   setEngageTimeslotsData({
-                //     data: null,
-                //     loading: false,
-                //     error: null,
-                //     success: false,
-                //   });
-                //   setSelectedCustomerBarber(null);
-                //   setSelectedCalenderDate("");
-                //   setScrolling(false);
-                //   setActiveSection("");
-                //   setAddIconPressCount(0);
-                //   setAppointmentNote("");
-                //   setSelectedEngageTimeSlot("");
-                // }}
-                // style={{
-                //   flexDirection: "row",
-                //   alignItems: "center",
-                //   gap: scale(5),
-                // }}
-                onPress={() => {
-                  if (appointmentPopupType?.selectServices) {
-                    if (activeSection === "appointmentnote") {
-                      setActiveSection("calendar");
-                      return;
-                    }
-                    if (activeSection === "calendar") {
-                      setActiveSection("barberSecond");
-                      return;
-                    }
-                    if (activeSection === "barberSecond") {
-                      setActiveSection("servicesFirst");
-                      return;
-                    }
-                  }
-                }}
-              >
-                <ArrowLeftIcon color={colors.text} />
-                <CustomText
-                  style={{
-                    fontSize: scale(16),
-                    fontFamily: "AirbnbCereal_W_Blk",
-                  }}
-                >
-                  {title}
-                </CustomText>
-              </Pressable>
-            )}
-          </View>
-
-          {activeSection === "servicesFirst" &&
-            (salonServices?.loading
-              ? [0, 1, 2, 3, 4, 5].map((_, index) => {
-                  return (
-                    <Skeleton
-                      key={index}
-                      height={verticalScale(150)}
-                      borderRadius={scale(10)}
-                    />
-                  );
-                })
-              : salonServices?.data?.map((item, index) => {
-                  return (
-                    <Pressable
-                      key={item?.serviceId}
-                      style={{
-                        borderRadius: scale(12),
-                        backgroundColor: colors.background,
-                        padding: scale(14),
-                        gap: verticalScale(12),
-                        borderWidth: 1,
-                        borderColor: colors.cardBorder,
-                      }}
-                    >
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          justifyContent: "space-between",
-                          alignItems: "flex-start",
-                        }}
-                      >
-                        {/* LEFT SIDE */}
-                        <View
-                          style={{
-                            flexDirection: "row",
-                            alignItems: "flex-start",
-                            gap: scale(12),
-                            width: "75%",
-                          }}
-                        >
-                          <View
-                            style={{ gap: verticalScale(8), flexShrink: 1 }}
-                          >
-                            {/* SERVICE NAME */}
-                            <CustomText
-                              style={{
-                                fontSize: moderateScale(15),
-                                fontFamily: "AirbnbCereal_W_Bd",
-                                // color: "#0F172A",
-                              }}
-                            >
-                              {item?.serviceName}
-                            </CustomText>
-
-                            {/* CATEGORY BADGE */}
-                            <Pressable
-                              style={{
-                                paddingHorizontal: scale(10),
-                                paddingVertical: verticalScale(3),
-                                backgroundColor: "#CCF2E8",
-                                borderRadius: scale(6),
-                                alignSelf: "flex-start",
-                              }}
-                            >
-                              <CustomText
-                                style={{
-                                  fontSize: moderateScale(11),
-                                  fontFamily: "AirbnbCereal_W_Md",
-                                  color: "#0D9488",
-                                }}
-                              >
-                                {item?.serviceCategoryName}
-                              </CustomText>
-                            </Pressable>
-
-                            {/* PRICE */}
-                            <CustomText
-                              style={{
-                                fontFamily: "AirbnbCereal_W_Blk",
-                                fontSize: scale(20),
-                                color: "#0D9488",
-                                marginTop: verticalScale(4),
-                              }}
-                            >
-                              {authenticatedUser?.currency} {item?.servicePrice}
-                            </CustomText>
-                          </View>
-                        </View>
-
-                        {/* RIGHT SIDE BUTTON */}
-                        {item?.selected ? (
-                          <Pressable
-                            onPress={() => removeServiceHandler(item)}
-                            style={{
-                              height: verticalScale(28),
-                              paddingHorizontal: scale(8),
-                              backgroundColor: "#DC2626",
-                              borderRadius: scale(6),
-                              justifyContent: "center",
-                              alignItems: "center",
-                            }}
-                          >
-                            <CustomText
-                              style={{ fontSize: scale(12), color: "#fff" }}
-                            >
-                              Remove
-                            </CustomText>
-                          </Pressable>
-                        ) : (
-                          <Pressable
-                            onPress={() => addServiceHandler(item)}
-                            style={{
-                              height: verticalScale(28),
-                              paddingHorizontal: scale(12),
-                              backgroundColor: "#000",
-                              borderRadius: scale(6),
-                              justifyContent: "center",
-                              alignItems: "center",
-                            }}
-                          >
-                            <CustomText
-                              style={{ fontSize: scale(12), color: "#fff" }}
-                            >
-                              Add
-                            </CustomText>
-                          </Pressable>
-                        )}
-                      </View>
-                    </Pressable>
-                  );
-                }))}
-
-          {activeSection === "barberSecond" &&
-            (salonBarber?.loading ? (
-              [0, 1, 2, 3, 4, 5].map((_, index) => {
-                return (
-                  <Skeleton
-                    key={index}
-                    height={verticalScale(60)}
-                    borderRadius={scale(10)}
-                  />
-                );
-              })
-            ) : salonBarber?.data?.length > 0 ? (
-              salonBarber?.data?.map((item, index) => {
-                return (
-                  <Pressable
-                    key={item?.barberId}
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      backgroundColor: "#00B0901A",
-                      borderRadius: scale(10),
-                      padding: scale(10),
-                    }}
-                    onPress={() => {
-                      setSelectedCustomerBarber(item);
-                      setScrolling(false);
-                      setActiveSection("calendar");
-                      setAddIconPressCount(0);
-                      setSelectedCalenderDate("");
-                      setDisbaleDates([]);
-                    }}
-                  >
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: scale(10),
-                      }}
-                    >
-                      <Image
-                        style={{
-                          height: scale(50),
-                          width: scale(50),
-                          borderRadius: scale(40),
-                        }}
-                        source={{ uri: item?.profile?.[0]?.url }}
-                        contentFit="cover"
-                        transition={300}
-                      />
-
-                      <View>
-                        <CustomText
-                          style={{
-                            fontSize: scale(14),
-                          }}
-                        >
-                          {item?.name}
-                        </CustomText>
-                      </View>
-                    </View>
-                  </Pressable>
-                );
-              })
-            ) : (
-              <View
-                style={{
-                  paddingTop: verticalScale(20),
-                }}
-              >
-                <CustomText>
-                  No{" "}
-                  {authenticatedUser?.salonType === "Barber Shop"
-                    ? "barbers"
-                    : "stylists"}{" "}
-                  available
-                </CustomText>
-              </View>
-            ))}
-
-          {activeSection === "barberFirst" &&
-            (salonBarber?.loading ? (
-              [0, 1, 2, 3, 4, 5].map((_, index) => {
-                return (
-                  <Skeleton
-                    key={index}
-                    height={verticalScale(60)}
-                    borderRadius={scale(10)}
-                  />
-                );
-              })
-            ) : salonBarber?.data?.length > 0 ? (
-              salonBarber?.data?.map((item, index) => {
-                return (
-                  <Pressable
-                    key={item?.barberId}
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      justifyContent: "space-between",
-                      backgroundColor: "#00B0901A",
-                      borderRadius: scale(10),
-                      padding: scale(10),
-                    }}
-                    onPress={() => {
-                      setSelectedCustomerBarber(item);
-                      setSelectedCustomerServices([]);
-                      setScrolling(false);
-                      setActiveSection("servicesSecond");
-                      setAddIconPressCount(0);
-                      setSelectedCalenderDate("");
-                      setDisbaleDates([]);
-                      setContinueService(true);
-                    }}
-                  >
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        alignItems: "center",
-                        gap: scale(10),
-                      }}
-                    >
-                      <Image
-                        style={{
-                          height: scale(50),
-                          width: scale(50),
-                          borderRadius: scale(40),
-                        }}
-                        source={{ uri: item?.profile?.[0]?.url }}
-                        contentFit="cover"
-                        transition={300}
-                      />
-
-                      <View>
-                        <CustomText
-                          style={{
-                            fontSize: scale(14),
-                          }}
-                        >
-                          {item?.name}
-                        </CustomText>
-                      </View>
-                    </View>
-                  </Pressable>
-                );
-              })
-            ) : (
-              <View
-                style={{
-                  paddingTop: verticalScale(20),
-                }}
-              >
-                <CustomText>
-                  No{" "}
-                  {authenticatedUser?.salonType === "Barber Shop"
-                    ? "barbers"
-                    : "stylists"}{" "}
-                  available
-                </CustomText>
-              </View>
-            ))}
-
-          {activeSection === "servicesSecond" &&
-            (salonServices?.loading ? (
-              [0, 1, 2, 3, 4, 5].map((_, index) => {
-                return (
-                  <Skeleton
-                    key={index}
-                    height={verticalScale(150)}
-                    borderRadius={scale(10)}
-                  />
-                );
-              })
-            ) : salonServices?.data?.length > 0 ? (
-              salonServices?.data?.map((item, index) => {
-                return (
-                  <Pressable
-                    key={item?.serviceId}
-                    style={{
-                      borderRadius: scale(12),
-                      backgroundColor: colors.background,
-                      padding: scale(14),
-                      gap: verticalScale(12),
-                      borderWidth: 1,
-                      borderColor: colors.cardBorder,
-                    }}
-                  >
-                    <View
-                      style={{
-                        flexDirection: "row",
-                        justifyContent: "space-between",
-                        alignItems: "flex-start",
-                      }}
-                    >
-                      {/* LEFT SIDE */}
-                      <View
-                        style={{
-                          flexDirection: "row",
-                          alignItems: "flex-start",
-                          gap: scale(12),
-                          width: "75%",
-                        }}
-                      >
-                        <View style={{ gap: verticalScale(8), flexShrink: 1 }}>
-                          {/* SERVICE NAME */}
-                          <CustomText
-                            style={{
-                              fontSize: moderateScale(15),
-                              fontFamily: "AirbnbCereal_W_Bd",
-                              // color: "#0F172A",
-                            }}
-                          >
-                            {item?.serviceName}
-                          </CustomText>
-
-                          {/* CATEGORY BADGE */}
-                          <Pressable
-                            style={{
-                              paddingHorizontal: scale(10),
-                              paddingVertical: verticalScale(3),
-                              backgroundColor: "#CCF2E8",
-                              borderRadius: scale(6),
-                              alignSelf: "flex-start",
-                            }}
-                          >
-                            <CustomText
-                              style={{
-                                fontSize: moderateScale(11),
-                                fontFamily: "AirbnbCereal_W_Md",
-                                color: "#0D9488",
-                              }}
-                            >
-                              {item?.serviceCategoryName}
-                            </CustomText>
-                          </Pressable>
-
-                          {/* PRICE */}
-                          <CustomText
-                            style={{
-                              fontFamily: "AirbnbCereal_W_Blk",
-                              fontSize: scale(20),
-                              color: "#0D9488",
-                              marginTop: verticalScale(4),
-                            }}
-                          >
-                            {authenticatedUser?.currency} {item?.servicePrice}
-                          </CustomText>
-                        </View>
-                      </View>
-
-                      {/* RIGHT SIDE BUTTON */}
-                      {item?.selected ? (
-                        <Pressable
-                          onPress={() => removeServiceHandler(item)}
-                          style={{
-                            height: verticalScale(28),
-                            paddingHorizontal: scale(8),
-                            backgroundColor: "#DC2626",
-                            borderRadius: scale(6),
-                            justifyContent: "center",
-                            alignItems: "center",
-                          }}
-                        >
-                          <CustomText
-                            style={{ fontSize: scale(12), color: "#fff" }}
-                          >
-                            Remove
-                          </CustomText>
-                        </Pressable>
-                      ) : (
-                        <Pressable
-                          onPress={() => addServiceHandler(item)}
-                          style={{
-                            height: verticalScale(28),
-                            paddingHorizontal: scale(12),
-                            backgroundColor: "#000",
-                            borderRadius: scale(6),
-                            justifyContent: "center",
-                            alignItems: "center",
-                          }}
-                        >
-                          <CustomText
-                            style={{ fontSize: scale(12), color: "#fff" }}
-                          >
-                            Add
-                          </CustomText>
-                        </Pressable>
-                      )}
-                    </View>
-                  </Pressable>
-                );
-              })
-            ) : (
-              <View
-                style={{
-                  paddingTop: verticalScale(20),
-                }}
-              >
-                <CustomText>No services available</CustomText>
-              </View>
-            ))}
-
-          {activeSection === "calendar" && (
-            <>
-              <View
-                style={{
-                  flexDirection: "row",
-                  justifyContent: "space-between",
-                  alignItems: "center",
-                }}
-              >
-                <View
-                  style={{
-                    paddingVertical: verticalScale(4),
-                    alignSelf: "flex-start",
-                    justifyContent: "center",
-                    alignItems: "center",
-                    borderRadius: scale(0.6),
-                  }}
-                >
-                  <CustomText
-                    style={{
-                      fontSize: scale(17),
-                    }}
-                  >
-                    {currentMonth.format("MMMM YYYY")}
-                  </CustomText>
-                </View>
-
-                <View style={styles.navButtons}>
-                  <Pressable
-                    onPress={
-                      currentMonth.isSame(moment(), "month")
-                        ? null
-                        : goToPrevMonth
-                    }
-                    style={[
-                      styles.navButton,
-                      currentMonth.isSame(moment(), "month") && {
-                        opacity: 0.3,
-                      }, // visually indicate disabled
-                    ]}
-                  >
-                    <LeftIcon color={"#14b8a6"} size={scale(16)} />
-                  </Pressable>
-                  <Pressable
-                    disabled={isNextDisabled}
-                    onPress={goToNextMonth}
-                    style={[
-                      styles.navButton,
-                      isNextDisabled && { opacity: 0.3 },
-                    ]}
-                  >
-                    <RightIcon color={"#14b8a6"} size={scale(16)} />
-                  </Pressable>
-                </View>
-              </View>
-
-              <ScrollView
-                horizontal
-                showsHorizontalScrollIndicator={false}
-                contentContainerStyle={styles.weekContainer}
-              >
-                {dates.map((day, index) => (
-                  <Pressable
-                    // disabled={disableLoader || disableDates?.includes(day?.fullDate)}
-                    disabled={disableLoader}
-                    onPress={() => {
-                      setSelectedCalenderDate(day?.fullDate);
-                      setSelectedCalenderDay(day);
-                    }}
-                    key={day.fullDate}
-                    style={[
-                      styles.dayBox,
-                      {
-                        // backgroundColor: disableDates?.includes(day?.fullDate) && "#e5e5e5",
-                        backgroundColor: disableSalonDates?.includes(
-                          day?.fullDate,
-                        )
-                          ? colors.appointmentDisableBg
-                          : disableAppointmentDates?.includes(day?.fullDate)
-                            ? colors.appointmentDisableBg
-                            : disableDates?.includes(day?.fullDate)
-                              ? colors.appointmentDisableBg
-                              : "#00B0901A",
-
-                        borderColor:
-                          selectedCalenderDate === day?.fullDate
-                            ? "#0BA3AD"
-                            : null,
-                        borderWidth:
-                          selectedCalenderDate === day?.fullDate
-                            ? scale(1)
-                            : null,
-                      },
-                    ]}
-                  >
-                    <CustomText
-                      style={{
-                        fontSize: scale(15),
-                        color:
-                          disableDates?.includes(day?.fullDate) && colors.text,
-                      }}
-                    >
-                      {day.dayName}
-                    </CustomText>
-                    <CustomText
-                      style={{
-                        fontSize: scale(16),
-                        color: disableSalonDates?.includes(day?.fullDate)
-                          ? colors.text
-                          : disableAppointmentDates?.includes(day?.fullDate)
-                            ? colors.text
-                            : disableDates?.includes(day?.fullDate)
-                              ? colors.text
-                              : "#14b8a6",
-                      }}
-                    >
-                      {day.date}
-                    </CustomText>
-                  </Pressable>
-                ))}
-              </ScrollView>
-
-              {!disableSalonDates?.includes(selectedCalenderDay?.fullDate) &&
-                !disableAppointmentDates?.includes(
-                  selectedCalenderDay?.fullDate,
-                ) &&
-                engageTimeslotsData?.data?.some(
-                  (item) => item.disabled === true,
-                ) && (
-                  <View
-                    style={{
-                      height: verticalScale(40),
-                      flexDirection: "row",
-                      alignItems: "center",
-                      gap: scale(10),
-                    }}
-                  >
-                    <Checkbox
-                      value={isNotifyCheck}
-                      // onValueChange={setIsNotifyCheck}
-                      onValueChange={(val) => {
-                        setIsNotifyCheck(val);
-                        setUserToggled(true); // ✅ Mark as manual user action
-                      }}
-                      color={isNotifyCheck ? "#00B090" : undefined}
-                      style={{
-                        height: scale(16),
-                        width: scale(16),
-                        borderRadius: scale(3),
-                      }}
-                    />
-                    <CustomText style={{ fontSize: scale(14) }}>
-                      Notify me when there is a cancellation
-                    </CustomText>
-                  </View>
-                )}
-
-              <View
-                style={{
-                  flex: 1,
-                  flexDirection: "row",
-                  flexWrap: "wrap",
-                  gap: scale(10),
-                }}
-              >
-                {!selectedCustomerBarber ? (
-                  <View
-                    style={{
-                      width: "100%",
-                      minHeight: verticalScale(300),
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <CustomText>Please select barber/stylist</CustomText>
-                  </View>
-                ) : !selectedCalenderDate ? (
-                  <View
-                    style={{
-                      width: "100%",
-                      minHeight: verticalScale(300),
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <CustomText>Please select date</CustomText>
-                  </View>
-                ) : engageTimeslotsData?.loading ? (
-                  <>
-                    <Skeleton
-                      width={scrolling ? "31%" : "48%"}
-                      height={verticalScale(40)}
-                      style={{
-                        borderRadius: scale(8),
-                      }}
-                    />
-                    <Skeleton
-                      width={scrolling ? "31%" : "48%"}
-                      height={verticalScale(40)}
-                      style={{
-                        borderRadius: scale(8),
-                      }}
-                    />
-                    <Skeleton
-                      width={scrolling ? "31%" : "48%"}
-                      height={verticalScale(40)}
-                      style={{
-                        borderRadius: scale(8),
-                      }}
-                    />
-                    <Skeleton
-                      width={scrolling ? "31%" : "48%"}
-                      height={verticalScale(40)}
-                      style={{
-                        borderRadius: scale(8),
-                      }}
-                    />
-                    <Skeleton
-                      width={scrolling ? "31%" : "48%"}
-                      height={verticalScale(40)}
-                      style={{
-                        borderRadius: scale(8),
-                      }}
-                    />
-                    <Skeleton
-                      width={scrolling ? "31%" : "48%"}
-                      height={verticalScale(40)}
-                      style={{
-                        borderRadius: scale(8),
-                      }}
-                    />
-                    <Skeleton
-                      width={scrolling ? "31%" : "48%"}
-                      height={verticalScale(40)}
-                      style={{
-                        borderRadius: scale(8),
-                      }}
-                    />
-                    <Skeleton
-                      width={scrolling ? "31%" : "48%"}
-                      height={verticalScale(40)}
-                      style={{
-                        borderRadius: scale(8),
-                      }}
-                    />
-                    <Skeleton
-                      width={scrolling ? "31%" : "48%"}
-                      height={verticalScale(40)}
-                      style={{
-                        borderRadius: scale(8),
-                      }}
-                    />
-                  </>
-                ) : disableSalonDates?.includes(
-                    selectedCalenderDay?.fullDate,
-                  ) ? (
-                  <View
-                    style={{
-                      width: "100%",
-                      minHeight: verticalScale(300),
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <CustomText>The salon is closed on this day.</CustomText>
-                  </View>
-                ) : disableAppointmentDates?.includes(
-                    selectedCalenderDay?.fullDate,
-                  ) ? (
-                  <View
-                    style={{
-                      width: "100%",
-                      minHeight: verticalScale(300),
-                      justifyContent: "center",
-                      alignItems: "center",
-                    }}
-                  >
-                    <CustomText style={{ textAlign: "center" }}>
-                      The selected stylist/barber is unavailable on this day.
-                    </CustomText>
-                  </View>
-                ) : (
-                  engageTimeslotsData?.data
-                    ?.filter((item) => !item?.disabled) // ✅ Only include items that are not disabled
-                    ?.map((item, index) => {
-                      return (
-                        <Pressable
-                          onPress={() => {
-                            if (addIconPressCount === 1) {
-                              setScrolling(false);
-                              setActiveSection("appointmentnote");
-                              setAddIconPressCount(0);
-                              setSelectedEngageTimeSlot(item?.timeInterval);
-                            }
-                          }}
-                          key={index}
-                          style={{
-                            backgroundColor: "#00B0901A",
-                            alignSelf: "flex-start",
-                            width: scrolling ? "31%" : "48%",
-                            height: verticalScale(40),
-                            justifyContent: "center",
-                            alignItems: "center",
-                            borderRadius: scale(6),
-                          }}
-                        >
-                          <CustomText
-                            style={{
-                              color: "#14b8a6",
-                              fontSize: scale(16),
-                            }}
-                          >
-                            {item?.timeInterval}
-                          </CustomText>
-                        </Pressable>
-                      );
-                    })
-                )}
-              </View>
-            </>
-          )}
-
-          {activeSection === "appointmentnote" && (
-            <>
-              <TextInput
-                style={{
-                  flexGrow: 1,
-                  width: "98%",
-                  minHeight: verticalScale(150),
-                  padding: scale(16),
-                  borderRadius: scale(8),
-                  textAlignVertical: "top",
-                  backgroundColor: "#00B0901A",
-                  color: colors.text,
-                  fontSize: moderateScale(16),
-                }}
-                multiline
-                placeholderTextColor={"gray"}
-                placeholder="Enter your appointment note"
-                value={appointmentNote}
-                onChangeText={(text) => setAppointmentNote(text)}
-              />
-              <Pressable
-                onPress={() => {
-                  if (addIconPressCount === 1) {
-                    // setScrolling(false);
-                    // setActiveSection("");
-                    // setAddIconPressCount(0);
-                  }
-                }}
-                style={styles.searchButton}
-              >
-                <CustomText style={{ color: "#fff" }}>Done</CustomText>
-              </Pressable>
-            </>
-          )}
-        </ScrollView>
-
-        {scrolling &&
-          (activeSection === "servicesFirst" ||
-            activeSection === "servicesSecond") &&
-          selectCustomerServices.length > 0 && (
-            <View
-              style={{
-                width: "100%",
-                borderTopColor: "#D2D2D2",
-                borderTopWidth: scale(0.5),
-                flexDirection: "row",
-                alignItems: "center",
-                justifyContent: "space-between",
-                paddingVertical: verticalScale(10),
-                marginBottom: -verticalScale(15),
-              }}
-            >
-              <Pressable
-                // onPress={() => {
-                // setScrolling(false);
-                // if (activeSection === "servicesFirst") {
-                //   setContinueService(true);
-                //   setActiveSection("barberSecond");
-                // } else {
-                //   setContinueService(false);
-                //   setActiveSection("calendar");
-                // }
-
-                //   setAddIconPressCount(0);
-                // }}
-                onPress={() => {
-                  setScrolling(false);
-                  if (activeSection === "servicesFirst") {
-                    setContinueService(true);
-                    setActiveSection("barberSecond");
-                  } else {
-                    setContinueService(false);
-                    setActiveSection("calendar");
-                  }
-                }}
-                style={{
-                  height: verticalScale(40),
-                  flex: 1,
-                  backgroundColor: "#14b8a6",
-                  borderRadius: scale(6),
-                  justifyContent: "center",
-                  alignItems: "center",
-                }}
-              >
-                <CustomText
-                  style={{
-                    color: "#fff",
-                    fontSize: scale(16),
-                  }}
-                >
-                  Continue
-                </CustomText>
-              </Pressable>
-            </View>
-          )}
-      </Animated.View>
-    ) : (
-      <>
-        {title === "Choose Services" ? (
-          <Pressable
-            style={[
-              styles.boxCloseWrapper,
-              {
-                backgroundColor: colors.cardColor,
-                borderWidth: scale(1),
-                borderColor: colors.queueBorder,
-                flexDirection: "row",
-                justifyContent: "flex-start",
-              },
-            ]}
-            onPress={() => {
-              setActiveSection(key);
-            }}
-          >
-            {selectCustomerServices?.length > 0 ? (
-              <CustomText
-                numberOfLines={1}
-                ellipsizeMode="tail"
-                style={{ flexShrink: 1 }}
-              >
-                Services: {selectCustomerServices?.[0]?.serviceName}
-                {selectCustomerServices?.length > 1
-                  ? ` + ${selectCustomerServices.length - 1} more`
-                  : ""}
-              </CustomText>
-            ) : (
-              <CustomText>{title}</CustomText>
-            )}
-          </Pressable>
-        ) : title ===
-          `Choose ${
-            authenticatedUser?.salonType === "Barber Shop"
-              ? "Barber"
-              : "Stylist"
-          }` ? (
-          <Pressable
-            style={[
-              styles.boxCloseWrapper,
-              {
-                backgroundColor: colors.cardColor,
-                borderWidth: scale(1),
-                borderColor: colors.queueBorder,
-              },
-            ]}
-            onPress={() => setActiveSection(key)}
-          >
-            {selectedCustomerBarber?.name ? (
-              <CustomText>Barber: {selectedCustomerBarber?.name}</CustomText>
-            ) : (
-              <CustomText>{title}</CustomText>
-            )}
-          </Pressable>
-        ) : title === "Choose Date" ? (
-          <Pressable
-            style={[
-              styles.boxCloseWrapper,
-              {
-                backgroundColor: colors.cardColor,
-                borderWidth: scale(1),
-                borderColor: colors.queueBorder,
-              },
-            ]}
-            onPress={() => {
-              setActiveSection(key);
-            }}
-          >
-            {selectedEngageTimeSlot ? (
-              <CustomText>
-                Date: {selectedEngageTimeSlot} · {selectedCalenderDay?.dayName},{" "}
-                {selectedCalenderDay?.date} {selectedCalenderDay?.month}{" "}
-                {selectedCalenderDay?.year}
-              </CustomText>
-            ) : (
-              <CustomText>{title}</CustomText>
-            )}
-          </Pressable>
-        ) : (
-          <Pressable
-            style={[
-              styles.boxCloseWrapper,
-              {
-                backgroundColor: colors.cardColor,
-                borderWidth: scale(1),
-                borderColor: colors.queueBorder,
-              },
-            ]}
-            onPress={() => setActiveSection(key)}
-          >
-            <CustomText>
-              {title} {"(Optional)"}
-            </CustomText>
-          </Pressable>
-        )}
-      </>
-    );
-  };
-
-  const insets = useSafeAreaInsets();
-
   return (
-    // <Animated.View
-    //   style={[
-    //     styles.container,
-    //     {
-    //       // paddingHorizontal: paddingAnim,
-    //     },
-    //   ]}
-    // >
-    //   <SafeAreaView style={{ flex: 1 }}>
-    //     <KeyboardAvoidingView
-    //       style={{ flex: 1 }}
-    //       behavior={Platform.OS === "ios" ? "padding" : undefined}
-    //     >
-    //       {/* Header */}
-    //       <View
-    //         style={{
-    //           flexDirection: "row",
-    //           alignItems: "center",
-    //           height: verticalScale(40),
-    //           gap: scale(10),
-    //         }}
-    //       >
-    //         <Pressable onPress={() => router.replace("/appointment")}>
-    //           <ArrowLeftIcon color={colors.text} />
-    //         </Pressable>
-    //         <CustomText
-    //           style={{
-    //             flex: 1,
-    //             fontFamily: "AirbnbCereal_W_XBd",
-    //             fontSize: scale(20),
-    //           }}
-    //         >
-    //           Book Appointment
-    //         </CustomText>
-    //       </View>
-
-    //       {/* <View style={{ flex: 1, gap: verticalScale(15) }}>
-    //         {activeSection === "servicesFirst" &&
-    //           renderSection("servicesFirst", "Choose Services")}
-
-    //         {activeSection === "barberSecond" &&
-    //           renderSection(
-    //             "barberSecond",
-    //             `Choose ${
-    //               authenticatedUser?.salonType === "Barber Shop"
-    //                 ? "Barber"
-    //                 : "Stylist"
-    //             }`,
-    //             [
-    //               { id: 1 },
-    //               { id: 2 },
-    //               { id: 3 },
-    //               { id: 4 },
-    //               { id: 5 },
-    //               { id: 6 },
-    //               { id: 7 },
-    //               { id: 8 },
-    //               { id: 9 },
-    //             ],
-    //           )}
-
-    //         {activeSection === "calendar" &&
-    //           renderSection("calendar", "Choose Date", "")}
-
-    //         {activeSection === "appointmentnote" &&
-    //           renderSection("appointmentnote", "Appointment Note", "")}
-    //       </View> */}
-
-    //       {/* {!scrolling && (
-    //         <View style={styles.footer}>
-    //           <View />
-    //           <Pressable
-    //             onPress={continueHandler}
-    //             disabled={paymentSettingsLoading}
-    //             style={styles.searchButton}
-    //           >
-    //             <CustomText style={{ color: "#fff" }}>Confirm</CustomText>
-    //           </Pressable>
-    //         </View>
-    //       )} */}
-
-    //       {/* main content */}
-    //       <View style={{ flex: 1, gap: verticalScale(15) }}>
-
-    //       </View>
-
-    //       {/* Footer */}
-    //       <View style={styles.footer}>
-    //         <View />
-    //         <Pressable
-    //           // onPress={continueHandler}
-    //           // disabled={paymentSettingsLoading}
-    //           style={styles.searchButton}
-    //         >
-    //           <CustomText style={{ color: "#fff" }}>Confirm</CustomText>
-    //         </Pressable>
-    //       </View>
-    //     </KeyboardAvoidingView>
-    //   </SafeAreaView>
-    // </Animated.View>
-
     <SafeAreaView style={{ flex: 1 }}>
       <KeyboardAvoidingView
-        style={{ flex: 1, gap: verticalScale(10) }}
+        style={{
+          flex: 1,
+          gap: verticalScale(10),
+          paddingHorizontal: scale(10),
+        }}
         behavior={Platform.OS === "ios" ? "padding" : undefined}
       >
         {/* ================= HEADER ================= */}
@@ -4030,17 +2849,18 @@ const appointmentCalendar = () => {
             flexDirection: "row",
             alignItems: "center",
             gap: scale(10),
+            paddingHorizontal: scale(16)
           }}
         >
           <Pressable onPress={() => router.replace("/appointment")}>
-            <ArrowLeftIcon color={colors.text} />
+            <ArrowLeftIcon color={colors.text} size={scale(16)}/>
           </Pressable>
 
           <CustomText
             style={{
               flex: 1,
               fontFamily: "AirbnbCereal_W_XBd",
-              fontSize: scale(20),
+              fontSize: scale(18),
             }}
           >
             Book Appointment
@@ -4096,7 +2916,9 @@ const appointmentCalendar = () => {
                 },
               ]}
             >
-              Barber
+              {authenticatedUser?.salonType === "Barber Shop"
+                ? "Barber"
+                : "Stylist"}
             </CustomText>
             <CustomText style={styles.value}>
               {selectedCustomerBarber?.name || "-"}
@@ -4166,7 +2988,6 @@ const appointmentCalendar = () => {
         <ScrollView
           style={{ flex: 1 }}
           contentContainerStyle={{
-            // paddingVertical: verticalScale(15),
             gap: verticalScale(15),
             paddingHorizontal: scale(10),
           }}
@@ -4672,7 +3493,7 @@ const appointmentCalendar = () => {
                       styles.navButton,
                       currentMonth.isSame(moment(), "month") && {
                         opacity: 0.3,
-                      }, // visually indicate disabled
+                      },
                     ]}
                   >
                     <LeftIcon color={"#14b8a6"} size={scale(16)} />
@@ -4697,7 +3518,6 @@ const appointmentCalendar = () => {
               >
                 {dates.map((day, index) => (
                   <Pressable
-                    // disabled={disableLoader || disableDates?.includes(day?.fullDate)}
                     disabled={disableLoader}
                     onPress={() => {
                       setSelectedCalenderDate(day?.fullDate);
@@ -4707,7 +3527,6 @@ const appointmentCalendar = () => {
                     style={[
                       styles.dayBox,
                       {
-                        // backgroundColor: disableDates?.includes(day?.fullDate) && "#e5e5e5",
                         backgroundColor: disableSalonDates?.includes(
                           day?.fullDate,
                         )
@@ -4732,9 +3551,7 @@ const appointmentCalendar = () => {
                     <CustomText
                       style={{
                         fontSize: scale(15),
-                        // color:
-                        //   disableDates?.includes(day?.fullDate) && colors.text,
-                        color: colors.text
+                        color: colors.text,
                       }}
                     >
                       {day.dayName}
@@ -4774,10 +3591,9 @@ const appointmentCalendar = () => {
                   >
                     <Checkbox
                       value={isNotifyCheck}
-                      // onValueChange={setIsNotifyCheck}
                       onValueChange={(val) => {
                         setIsNotifyCheck(val);
-                        setUserToggled(true); // ✅ Mark as manual user action
+                        setUserToggled(true); 
                       }}
                       color={isNotifyCheck ? "#00B090" : undefined}
                       style={{
@@ -4923,12 +3739,6 @@ const appointmentCalendar = () => {
                       return (
                         <Pressable
                           onPress={() => {
-                            // if (addIconPressCount === 1) {
-                            //   // setScrolling(false);
-                            //   // setActiveSection("appointmentnote");
-                            //   // setAddIconPressCount(0);
-                            //   // setSelectedEngageTimeSlot(item?.timeInterval);
-                            // }
                             setSelectedEngageTimeSlot(item?.timeInterval);
                           }}
                           key={index}
@@ -5230,12 +4040,6 @@ const styles = StyleSheet.create({
     padding: scale(14),
     borderRadius: scale(14),
     marginHorizontal: scale(10),
-    // marginTop: scale(10),
-    // shadowColor: "#000",
-    // shadowOpacity: 0.08,
-    // shadowRadius: 8,
-    // shadowOffset: { width: 0, height: 4 },
-    // elevation: 3,
   },
 
   row: {
@@ -5246,22 +4050,15 @@ const styles = StyleSheet.create({
 
   label: {
     fontSize: scale(11),
-    // color: "#6b7280", // soft gray
   },
 
   value: {
     fontSize: scale(11),
-    fontFamily: "AirbnbCereal_W_Bd"
-    // fontWeight: "600",
-    // color: "#111827",
-    // marginTop: scale(2),
-    // maxWidth: "70%",
-    // textAlign: "right",
+    fontFamily: "AirbnbCereal_W_Bd",
   },
 
   divider: {
     height: 1,
-    // backgroundColor: "#f3f4f6",
     marginVertical: scale(8),
   },
 });

@@ -712,13 +712,13 @@ const singleJoinModal = () => {
               width: scale(64),
               height: scale(64),
               borderRadius: moderateScale(32),
-              backgroundColor: "#2563eb10",
+              backgroundColor: "#14b8a610",
               justifyContent: "center",
               alignItems: "center",
               marginBottom: verticalScale(16),
             }}
           >
-            <CheckIcon size={moderateScale(28)} color="#2563eb" />
+            <CheckIcon size={moderateScale(28)} color="#14b8a6" />
           </View>
 
           <CustomText

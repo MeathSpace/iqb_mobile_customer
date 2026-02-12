@@ -221,13 +221,13 @@ const GroupJoin = () => {
                     }}
                 >
                     <Pressable onPress={() => router.replace("/queuelist")}>
-                        <ArrowLeftIcon color={colors.text} />
+                        <ArrowLeftIcon color={colors.text} size={scale(16)}/>
                     </Pressable>
                     <CustomText
                         style={{
                             flex: 1,
                             fontFamily: "AirbnbCereal_W_XBd",
-                            fontSize: scale(20),
+                            fontSize: scale(18),
                         }}
                     >
                         Group Join (Services)

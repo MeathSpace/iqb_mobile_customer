@@ -462,7 +462,6 @@ const appointment = () => {
                 <Pressable
                   onPress={() => {
                     if (item.status === "upcoming") {
-                      // console.log(item);
                       setAppointmentPopupType({
                         selectServices: item?.selectServices,
                         selectBarber: item?.selectBarber,

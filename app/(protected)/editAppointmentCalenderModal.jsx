@@ -306,9 +306,10 @@ const editAppointmentCalenderModal = () => {
                   fontSize: moderateScale(15),
                 }}
               >
-                {selectedBookCalenderDateParse
+                {/* {selectedBookCalenderDateParse
                   ? ddmmformatDate(selectedBookCalenderDateParse)
-                  : ddmmformatDate(params?.isDateNotPresent?.split("T")?.[0])}
+                  : ddmmformatDate(params?.isDateNotPresent?.split("T")?.[0])} */}
+                  {ddmmformatDate(selectedBookCalenderDateParse)}
               </CustomText>
             </View>
 
@@ -328,9 +329,10 @@ const editAppointmentCalenderModal = () => {
                   fontSize: moderateScale(15),
                 }}
               >
-                {selectedBookCalenderTimeslotParse
+                {/* {selectedBookCalenderTimeslotParse
                   ? selectedBookCalenderTimeslotParse
-                  : params?.isTimeSlotNotPresent?.split(" ")?.[0]}
+                  : params?.isTimeSlotNotPresent?.split(" ")?.[0]} */}
+                  {selectedBookCalenderTimeslotParse}
               </CustomText>
             </View>
           </View>

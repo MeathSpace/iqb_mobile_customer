@@ -717,13 +717,13 @@ const GroupJoinModal = () => {
               width: scale(64),
               height: scale(64),
               borderRadius: moderateScale(32),
-              backgroundColor: "#2563eb10", // Teal tint to match group join theme
+              backgroundColor: "#14b8a610", // Teal tint to match group join theme
               justifyContent: "center",
               alignItems: "center",
               marginBottom: verticalScale(16),
             }}
           >
-            <CheckIcon size={moderateScale(28)} color="#2563eb" />
+            <CheckIcon size={moderateScale(28)} color="#14b8a6" />
           </View>
 
           <CustomText
