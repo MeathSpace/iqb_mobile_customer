@@ -1317,7 +1317,7 @@ const appointmentCalendar = () => {
                         key={item?.serviceId}
                         style={{
                           borderRadius: scale(12),
-                          backgroundColor: colors.background,
+                          backgroundColor: colors.cardColor,
                           padding: scale(14),
                           gap: verticalScale(12),
                           borderWidth: 1,
