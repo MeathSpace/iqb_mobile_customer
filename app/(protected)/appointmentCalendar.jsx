@@ -1807,8 +1807,8 @@ const appointmentCalendar = () => {
             ) : (
               <Pressable
                 style={{
-                  padding: scale(10),
-                  backgroundColor: "#14b8a6",
+                  padding: scale(12),
+                  backgroundColor: colors.text,
                   borderRadius: scale(50),
                 }}
                 onPress={() => {
@@ -1840,14 +1840,21 @@ const appointmentCalendar = () => {
                   }
                 }}
               >
-                <LeftIcon size={scale(12)} color="#fff" />
+                {/* <LeftIcon size={scale(12)} color="#fff" /> */}
+                <CustomText
+                  style={{
+                    color: colors.background,
+                  }}
+                >
+                  Prev
+                </CustomText>
               </Pressable>
             )}
 
             <Pressable
               style={{
-                padding: scale(10),
-                backgroundColor: "#14b8a6",
+                padding: scale(12),
+                backgroundColor: colors.text,
                 borderRadius: scale(50),
               }}
               onPress={() => {
@@ -1916,7 +1923,14 @@ const appointmentCalendar = () => {
               {activeSection === "appointmentnote" ? (
                 <CustomText style={{ color: "#fff" }}>Finish</CustomText>
               ) : (
-                <RightIcon size={scale(12)} color="#fff" />
+                // <RightIcon size={scale(12)} color="#fff" />
+                <CustomText
+                  style={{
+                    color: colors.background,
+                  }}
+                >
+                  Next
+                </CustomText>
               )}
             </Pressable>
           </View>

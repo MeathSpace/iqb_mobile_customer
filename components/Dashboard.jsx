@@ -105,21 +105,74 @@ async function registerForPushNotificationsAsync() {
 const Dashboard = () => {
   const [latestVersion, setLatestVersion] = useState("");
 
+  // console.log("IOS", Constants?.expoConfig?.ios?.buildNumber);
+  // console.log("Android", Constants?.expoConfig?.android?.versionCode);
+
+  // Platform.OS
+
+  // useFocusEffect(
+  //   useCallback(() => {
+  //     const fetch_new_version = async () => {
+  //       try {
+  //         const { data } = await axios.get(
+  //           `${BASE_URL}/version/getMobileVersion`,
+  //         );
+  //         const recentAppVersion = Constants.expoConfig.version;
+
+  //         const newVersionAvailable = data?.response?.mobileVersion;
+
+  //         if (recentAppVersion !== newVersionAvailable) {
+  //           setLatestVersion(newVersionAvailable);
+  //         } else {
+  //           setLatestVersion("");
+  //         }
+  //       } catch (err) {
+  //         console.log("Version fetch error", err);
+  //       }
+  //     };
+
+  //     fetch_new_version();
+
+  //     // cleanup (optional)
+  //     return () => {};
+  //   }, []),
+  // );
+
+  const [apiVersionData, setApiVersionData] = useState(null);
+
   useFocusEffect(
     useCallback(() => {
       const fetch_new_version = async () => {
         try {
-          const { data } = await axios.get(
+          const { data } = await axios.post(
             `${BASE_URL}/version/getMobileVersion`,
+            {
+              platformType: Platform.OS,
+            },
           );
-          const recentAppVersion = Constants.expoConfig.version;
 
-          const newVersionAvailable = data?.response?.mobileVersion;
+          if (Platform.OS === "ios") {
+            let buildNumber = Number(data?.response?.buildNumber);
+            let prevBuildNumber = Number(
+              Constants?.expoConfig?.ios?.buildNumber,
+            );
 
-          if (recentAppVersion !== newVersionAvailable) {
-            setLatestVersion(newVersionAvailable);
+            if (buildNumber !== prevBuildNumber) {
+              setApiVersionData(data?.response);
+            }else{
+              setApiVersionData(null)
+            }
           } else {
-            setLatestVersion("");
+            let versionCode = Number(data?.response?.versionCode);
+            let prevVersionCode = Number(
+              Constants?.expoConfig?.android?.versionCode,
+            );
+
+            if (versionCode !== prevVersionCode) {
+              setApiVersionData(data?.response);
+            }else{
+              setApiVersionData(null)
+            }
           }
         } catch (err) {
           console.log("Version fetch error", err);
@@ -128,10 +181,10 @@ const Dashboard = () => {
 
       fetch_new_version();
 
-      // cleanup (optional)
       return () => {};
     }, []),
   );
+
 
   const { homeDashboardData, setHomeDashboardData } = useGlobal();
   const { authenticatedUser } = useAuth();
@@ -517,37 +570,6 @@ const Dashboard = () => {
       icon: "users",
       bgColor: "rgba(13, 148, 136, 0.1)", // teal-500/10
       iconColor: "#14b8a6",
-    },
-  ];
-
-  const services = [
-    {
-      id: "1",
-      title: "Haircut & Style",
-      image:
-        "https://images.unsplash.com/photo-1599351431202-184b39349549?q=80&w=2574&auto=format&fit=crop",
-      fallback: "https://placehold.co/160x200/E5E7EB/1F2937?text=Haircut",
-    },
-    {
-      id: "2",
-      title: "Beard Trim",
-      image:
-        "https://images.unsplash.com/photo-1600948836842-8453549544b3?q=80&w=2574&auto=format&fit=crop",
-      fallback: "https://placehold.co/160x200/E5E7EB/1F2937?text=Beard",
-    },
-    {
-      id: "3",
-      title: "Massage",
-      image:
-        "https://images.unsplash.com/photo-1515377905703-c4788e51af15?q=80&w=2670&auto=format&fit=crop",
-      fallback: "https://placehold.co/160x200/E5E7EB/1F2937?text=Massage",
-    },
-    {
-      id: "4",
-      title: "Spa Treatment",
-      image:
-        "https://images.unsplash.com/photo-1544161515-cfd826dbaa0b?q=80&w=2574&auto=format&fit=crop",
-      fallback: "https://placehold.co/160x200/E5E7EB/1F2937?text=Spa",
     },
   ];
 
@@ -974,7 +996,10 @@ const Dashboard = () => {
             case "hint": {
               return (
                 <>
-                  {latestVersion && (
+                  {((apiVersionData?.platform === "ios" &&
+                    apiVersionData?.buildNumber) ||
+                    (apiVersionData?.platform === "android" &&
+                      apiVersionData?.versionCode)) && (
                     <View
                       style={[
                         styles.hintCard,
@@ -1013,7 +1038,7 @@ const Dashboard = () => {
                             New update
                           </CustomText>
                           <CustomSecondaryText>
-                            Lastest: {latestVersion}
+                            Lastest: {apiVersionData?.version}
                           </CustomSecondaryText>
                         </View>
                       </View>

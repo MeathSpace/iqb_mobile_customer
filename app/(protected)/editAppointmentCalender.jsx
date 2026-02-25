@@ -58,7 +58,6 @@ const editAppointmentCalender = () => {
     success: false,
   });
 
-
   const [engageTimeslotsData, setEngageTimeslotsData] = useState({
     data: null,
     loading: false,
@@ -82,7 +81,6 @@ const editAppointmentCalender = () => {
   const [disableSalonDates, setDisableSalonDates] = useState([]);
   const [disableAppointmentDates, setDisableAppointmentDates] = useState([]);
   const [disableLoader, setDisableLoader] = useState(false);
-
 
   useEffect(() => {
     if (selectedCalenderDate) {
@@ -141,7 +139,6 @@ const editAppointmentCalender = () => {
           success: true,
           error: null,
         }));
-
       } catch (error) {
         console.log(
           "Error fetching maximum appointment dates ",
@@ -164,7 +161,6 @@ const editAppointmentCalender = () => {
 
         setDisbaleDates((prev) => [...prev, ...data.response]);
         setDisableLoader(false);
-
       } catch (error) {
         console.log(
           "Error fetching fully booked dates ",
@@ -189,7 +185,6 @@ const editAppointmentCalender = () => {
         setDisableSalonDates(data?.salonOffDaysResponse);
         setDisableAppointmentDates(data?.barberOffDaysResponse);
         setDisableLoader(false);
-
       } catch (error) {
         console.log(
           "Error fetching barber disable appointment dates ",
@@ -433,36 +428,30 @@ const editAppointmentCalender = () => {
 
   const hasUnsavedChanges = true;
 
-  usePreventRemove(
-    hasUnsavedChanges, 
-    ({ data }) => {
-      Alert.alert(
-        "Confirm",
-        "If you go back now, your edit appointment progress will be lost. Are you sure you want to exit?",
-        [
-          {
-            text: "Cancel",
-            style: "cancel",
-            onPress: () => null, 
+  usePreventRemove(hasUnsavedChanges, ({ data }) => {
+    Alert.alert(
+      "Confirm",
+      "If you go back now, your edit appointment progress will be lost. Are you sure you want to exit?",
+      [
+        {
+          text: "Cancel",
+          style: "cancel",
+          onPress: () => null,
+        },
+        {
+          text: "OK",
+          onPress: async () => {
+            router.push("/appointment");
           },
-          {
-            text: "OK",
-            onPress: async () => {
-              router.push("/appointment");
-            },
-          },
-        ], 
-      );
-    },
-  );
+        },
+      ],
+    );
+  });
 
   const [step, setStep] = useState(1);
 
   return (
-    <Animated.View
-      style={[
-        styles.container]}
-    >
+    <Animated.View style={[styles.container]}>
       <SafeAreaView style={{ flex: 1 }}>
         <KeyboardAvoidingView
           style={{ flex: 1, gap: verticalScale(10) }}
@@ -1007,8 +996,8 @@ const editAppointmentCalender = () => {
               ) : (
                 <Pressable
                   style={{
-                    padding: scale(10),
-                    backgroundColor: "#14b8a6",
+                    padding: scale(12),
+                    backgroundColor: colors.text,
                     borderRadius: scale(50),
                   }}
                   onPress={() => {
@@ -1018,14 +1007,21 @@ const editAppointmentCalender = () => {
                     }
                   }}
                 >
-                  <LeftIcon size={scale(12)} color="#fff" />
+                  {/* <LeftIcon size={scale(12)} color="#fff" /> */}
+                  <CustomText
+                    style={{
+                      color: colors.background,
+                    }}
+                  >
+                    Prev
+                  </CustomText>
                 </Pressable>
               )}
 
               <Pressable
                 style={{
-                  padding: scale(10),
-                  backgroundColor: "#14b8a6",
+                  padding: scale(12),
+                  backgroundColor: colors.text,
                   borderRadius: scale(50),
                 }}
                 onPress={() => {
@@ -1051,7 +1047,13 @@ const editAppointmentCalender = () => {
                 {activeSection === "appointmentnote" ? (
                   <CustomText style={{ color: "#fff" }}>Finish</CustomText>
                 ) : (
-                  <RightIcon size={scale(12)} color="#fff" />
+                  <CustomText
+                    style={{
+                      color: colors.background,
+                    }}
+                  >
+                    Next
+                  </CustomText>
                 )}
               </Pressable>
             </View>
