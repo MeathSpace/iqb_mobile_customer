@@ -1,37 +1,28 @@
+import { BASE_URL } from "@/utils/api";
+import { AntDesign, Feather } from "@expo/vector-icons";
+import { usePreventRemove, useTheme } from "@react-navigation/native";
+import axios from "axios";
+import { useFocusEffect, useRouter } from "expo-router";
+import { useCallback, useRef, useState } from "react";
 import {
   Alert,
   FlatList,
-  Platform,
   Pressable,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useCallback, useEffect, useRef, useState } from "react";
 import {
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
-import { useFocusEffect, useNavigation, useRouter } from "expo-router";
-import { usePreventRemove, useTheme } from "@react-navigation/native";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
-import CustomText from "../../components/CustomText";
-import {
-  AddIcon,
-  ArrowLeftIcon,
-  DeleteIcon,
-  PeopleIcon,
-  ProfileIcon,
-} from "../../constants/icons";
-import { Image } from "expo-image";
+import { Toast } from "toastify-react-native";
 import CustomSecondaryText from "../../components/CustomSecondaryText";
-import { AntDesign, Feather } from "@expo/vector-icons";
+import CustomText from "../../components/CustomText";
+import { AddIcon, ArrowLeftIcon, ProfileIcon } from "../../constants/icons";
 import { useAuth } from "../../context/AuthContext";
 import { useGlobal } from "../../context/GlobalContext";
-import { Toast } from "toastify-react-native";
-import axios from "axios";
-import { BASE_URL } from "@/utils/api";
 
 const GroupJoinMembers = () => {
   const { authenticatedUser } = useAuth();
@@ -47,7 +38,7 @@ const GroupJoinMembers = () => {
         try {
           setPaymentSettingsLoading(true);
           const { data } = await axios.get(
-            `${BASE_URL}/mobileRoutes/getPaymentSettings?salonId=${authenticatedUser?.salonId}`
+            `${BASE_URL}/mobileRoutes/getPaymentSettings?salonId=${authenticatedUser?.salonId}`,
           );
           setPaymentSettingsData(data?.response?.[0]);
         } catch (error) {
@@ -58,7 +49,7 @@ const GroupJoinMembers = () => {
       };
 
       getSalonPaymentSettings();
-    }, [])
+    }, []),
   );
 
   const router = useRouter();
@@ -85,7 +76,7 @@ const GroupJoinMembers = () => {
 
   const removeGroupMember = (member) => {
     const filteredData = groupJoinMembers.filter(
-      (item) => item.id !== member.id
+      (item) => item.id !== member.id,
     );
     setGroupJoinMembers(filteredData);
   };
@@ -94,7 +85,7 @@ const GroupJoinMembers = () => {
 
   const editMember = (item) => {
     const filteredData = groupJoinMembers.filter(
-      (member) => member.id !== item.id
+      (member) => member.id !== item.id,
     );
     setGroupJoinMembers(filteredData);
 
@@ -122,7 +113,7 @@ const GroupJoinMembers = () => {
 
   const totalServicesLength = groupJoinMembers?.reduce(
     (total, item) => total + (item?.selectedServices?.length || 0),
-    0
+    0,
   );
 
   // usePreventRemove(true, ({ data }) => {
@@ -169,7 +160,7 @@ const GroupJoinMembers = () => {
             },
           },
         ],
-        { cancelable: true }
+        { cancelable: true },
       );
     }
   });
@@ -222,7 +213,7 @@ const GroupJoinMembers = () => {
                     },
                   },
                 ],
-                { cancelable: true }
+                { cancelable: true },
               );
             }}
           >
@@ -283,7 +274,7 @@ const GroupJoinMembers = () => {
                         : item?.memberName}{" "}
                       <CustomText
                         style={{
-                          color: "#2dd4bf",
+                          color: colors.accentColor,
                         }}
                       >
                         {item?.memberName === authenticatedUser?.name
@@ -304,14 +295,14 @@ const GroupJoinMembers = () => {
                           width: scale(7),
                           height: scale(7),
                           borderRadius: scale(10),
-                          backgroundColor: "#2dd4bf",
+                          backgroundColor: colors.accentColor,
                         }}
                       />
                       <CustomText
                         style={{
                           fontSize: scale(12),
                           fontFamily: "AirbnbCereal_W_Bd",
-                          color: "#2dd4bf",
+                          color: colors.accentColor,
                         }}
                       >
                         Ready
@@ -350,14 +341,14 @@ const GroupJoinMembers = () => {
                       Subtotal: {authenticatedUser?.currency}{" "}
                       {item?.selectedServices?.reduce(
                         (acc, service) => acc + service.servicePrice,
-                        0
+                        0,
                       )}{" "}
                       (
                       {formatMinutesToHrMin(
                         item?.selectedServices?.reduce(
                           (acc, service) => acc + service.serviceEWT,
-                          0
-                        )
+                          0,
+                        ),
                       )}
                       )
                     </CustomText>
@@ -369,7 +360,7 @@ const GroupJoinMembers = () => {
                   style={[
                     styles.editButton,
                     {
-                      backgroundColor: "rgba(13, 148, 136, 0.1)",
+                      backgroundColor: `${colors.accentColor}1A`,
                       right: !(item?.memberName === authenticatedUser?.name)
                         ? scale(50)
                         : scale(12),
@@ -379,7 +370,7 @@ const GroupJoinMembers = () => {
                   <Feather
                     name="edit-2"
                     size={moderateScale(16)}
-                    color="#14b8a6"
+                    color={colors.accentColor}
                   />
                 </TouchableOpacity>
 
@@ -475,7 +466,7 @@ const GroupJoinMembers = () => {
                 },
               });
             }}
-            style={styles.queueButton}
+            style={[styles.queueButton, {backgroundColor: colors.accentColor}]}
             activeOpacity={0.85}
             disabled={paymentSettingsLoading}
           >
@@ -531,7 +522,7 @@ const styles = StyleSheet.create({
 
   queueButton: {
     width: "40%",
-    backgroundColor: "#14b8a6", // bg-teal-500
+     // bg-teal-500
     paddingVertical: verticalScale(12), // py-4
     borderRadius: scale(8), // rounded-xl
     // marginBottom: verticalScale(15), // mb-6

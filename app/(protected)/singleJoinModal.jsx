@@ -1,3 +1,10 @@
+import { BASE_URL } from "@/utils/api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTheme } from "@react-navigation/native";
+import { useStripe } from "@stripe/stripe-react-native";
+import axios from "axios";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
+import { useCallback, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -5,24 +12,15 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useCallback, useState } from "react";
-import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
-import CustomText from "../../components/CustomText";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
-import { useTheme } from "@react-navigation/native";
-import { useAuth } from "../../context/AuthContext";
-import { CheckIcon } from "../../constants/icons";
 import CustomSecondaryText from "../../components/CustomSecondaryText";
-import { Toast } from "toastify-react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import CustomText from "../../components/CustomText";
+import { CheckIcon } from "../../constants/icons";
+import { useAuth } from "../../context/AuthContext";
 import { useGlobal } from "../../context/GlobalContext";
-import axios from "axios";
-import { BASE_URL } from "@/utils/api";
-import { useStripe } from "@stripe/stripe-react-native";
 
 const singleJoinModal = () => {
   const { selectedServices, selectBarber, paymentSettingsData } =
@@ -49,11 +47,11 @@ const singleJoinModal = () => {
 
   const totalPrice = parsedSelectedServices?.reduce(
     (acc, service) => acc + service.servicePrice,
-    0
+    0,
   );
   const totalTime = parsedSelectedServices?.reduce(
     (acc, service) => acc + service.serviceEWT || service.barberServiceEWT,
-    0
+    0,
   );
   const totalServices = parsedSelectedServices?.length;
 
@@ -79,11 +77,11 @@ const singleJoinModal = () => {
 
       const subscription = BackHandler.addEventListener(
         "hardwareBackPress",
-        onBackPress
+        onBackPress,
       );
 
       return () => subscription.remove();
-    }, [singleJoinLoader])
+    }, [singleJoinLoader]),
   );
 
   const singleJoinPressed = async () => {
@@ -105,7 +103,7 @@ const singleJoinModal = () => {
 
       const { data } = await axios.post(
         `${BASE_URL}/mobileRoutes/singleJoinQueue`,
-        singleJoinData
+        singleJoinData,
       );
 
       await AsyncStorage.setItem(
@@ -113,7 +111,7 @@ const singleJoinModal = () => {
         JSON.stringify({
           email: authenticatedUser?.email,
           value: true,
-        })
+        }),
       );
 
       setNewNotification({
@@ -148,15 +146,15 @@ const singleJoinModal = () => {
 
   const totalServicePriceAmount = parsedSelectedServices.reduce(
     (sum, service) => sum + Number(service.servicePrice || 0),
-    0
+    0,
   );
 
   const advancePaymentPercent = Number(
-    paymentSettingsDataParse?.advancePaymentPercent || 0
+    paymentSettingsDataParse?.advancePaymentPercent || 0,
   );
 
   const advanceAmount = Math.round(
-    (totalServicePriceAmount * advancePaymentPercent) / 100
+    (totalServicePriceAmount * advancePaymentPercent) / 100,
   );
 
   // const fetchPaymentSheetParams = async () => {
@@ -310,7 +308,7 @@ const singleJoinModal = () => {
             services: parsedSelectedServices,
           },
         }),
-      }
+      },
     );
 
     const data = await response.json();
@@ -373,7 +371,7 @@ const singleJoinModal = () => {
         JSON.stringify({
           email: authenticatedUser?.email,
           value: true,
-        })
+        }),
       );
 
       setNewNotification({
@@ -652,7 +650,7 @@ const singleJoinModal = () => {
     //           style={[
     //             styles.button,
     //             {
-    //               backgroundColor: "#14b8a6",
+    //               backgroundColor: colors.accentColor,
     //             },
     //           ]}
     //         >
@@ -712,13 +710,13 @@ const singleJoinModal = () => {
               width: scale(64),
               height: scale(64),
               borderRadius: moderateScale(32),
-              backgroundColor: "#14b8a610",
+              backgroundColor: `${colors.accentColor}1A`,
               justifyContent: "center",
               alignItems: "center",
               marginBottom: verticalScale(16),
             }}
           >
-            <CheckIcon size={moderateScale(28)} color="#14b8a6" />
+            <CheckIcon size={moderateScale(28)} color={colors.accentColor} />
           </View>
 
           <CustomText
@@ -857,7 +855,7 @@ const singleJoinModal = () => {
                     <CustomText
                       style={{
                         fontFamily: "AirbnbCereal_W_Bd",
-                        color: "#2563eb",
+                        color: colors.accentColor,
                       }}
                     >
                       Pay Now
@@ -872,7 +870,7 @@ const singleJoinModal = () => {
                   <CustomText
                     style={{
                       fontFamily: "AirbnbCereal_W_XBd",
-                      color: "#2563eb",
+                      color: colors.accentColor,
                       fontSize: moderateScale(18),
                     }}
                   >
@@ -919,11 +917,11 @@ const singleJoinModal = () => {
               onPress={openPaymentSheet}
               disabled={loading}
               style={{
-                backgroundColor: loading ? "#94a3b8" : "#2563eb",
+                backgroundColor: loading ? "#94a3b8" : colors.accentColor,
                 paddingVertical: verticalScale(18),
                 borderRadius: moderateScale(16),
                 alignItems: "center",
-                shadowColor: "#2563eb",
+                shadowColor: colors.accentColor,
                 shadowOffset: { width: 0, height: verticalScale(4) },
                 shadowOpacity: 0.2,
                 shadowRadius: moderateScale(8),
@@ -948,7 +946,9 @@ const singleJoinModal = () => {
               onPress={singleJoinPressed}
               disabled={singleJoinLoader}
               style={{
-                backgroundColor: singleJoinLoader ? "#94a3b8" : "#14b8a6",
+                backgroundColor: singleJoinLoader
+                  ? "#94a3b8"
+                  : colors.accentColor,
                 paddingVertical: verticalScale(18),
                 borderRadius: moderateScale(16),
                 alignItems: "center",

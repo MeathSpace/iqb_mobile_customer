@@ -324,7 +324,7 @@ const appointmentPop = () => {
             style={{
               height: verticalScale(35),
               width: "48%",
-              backgroundColor: "#2dd4bf",
+              backgroundColor: colors.accentColor,
               borderRadius: scale(4),
               justifyContent: "center",
               alignItems: "center",

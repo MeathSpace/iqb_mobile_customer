@@ -42,10 +42,10 @@ const AppointmentSuccessPage = () => {
         <View
           style={[
             styles.iconContainer,
-            { backgroundColor: "rgba(13, 148, 136, 0.1)" },
+            { backgroundColor: `${colors.accentColor}1A`},
           ]}
         >
-          <CheckIcon size={scale(32)} color={"#14b8a6"} />
+          <CheckIcon size={scale(32)} color={colors.accentColor} />
         </View>
         <CustomText style={styles.cardTitle}>
           {params.booked === "true"
@@ -93,7 +93,7 @@ const AppointmentSuccessPage = () => {
               fontSize: moderateScale(14),
             }}
           >
-           Kindly reach 5 minutes early for a seamless service.
+            Kindly reach 5 minutes early for a seamless service.
           </CustomText>
         </View>
         {/* )} */}
@@ -103,7 +103,7 @@ const AppointmentSuccessPage = () => {
             homeNavigationRef.current = false;
             router.back();
           }}
-          style={styles.bookButton}
+          style={[styles.bookButton, { backgroundColor: colors.accentColor}]}
           activeOpacity={0.85}
         >
           <CustomText style={styles.bookButtonText}>
@@ -120,7 +120,7 @@ const AppointmentSuccessPage = () => {
         >
           <CustomText
             style={{
-              color: "#14b8a6",
+              color: colors.accentColor,
               textAlign: "center",
               fontFamily: "AirbnbCereal_W_XBd",
             }}
@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
   },
   bookButton: {
     width: "100%",
-    backgroundColor: "#14b8a6", // bg-teal-500
+     // bg-teal-500
     paddingVertical: verticalScale(16), // py-4
     borderRadius: scale(12), // rounded-xl
     // marginBottom: verticalScale(15), // mb-6

@@ -23,8 +23,8 @@ const BarberCard = ({ item }) => {
         styles.cardWrapper,
         {
           backgroundColor: colors.cardColor,
-          borderColor: colors.queueBorder,
-          borderWidth: scale(1),
+          // borderColor: colors.queueBorder,
+          // borderWidth: scale(1),
         },
       ]}
     >

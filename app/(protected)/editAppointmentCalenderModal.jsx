@@ -182,13 +182,13 @@ const editAppointmentCalenderModal = () => {
               width: scale(64),
               height: scale(64), // Using scale for icon containers to keep them square
               borderRadius: moderateScale(32),
-              backgroundColor: "#14b8a610",
+              backgroundColor: `${colors.accentColor}1A`,
               justifyContent: "center",
               alignItems: "center",
               marginBottom: verticalScale(16),
             }}
           >
-            <CheckIcon size={moderateScale(28)} color="#14b8a6" />
+            <CheckIcon size={moderateScale(28)} color={colors.accentColor} />
           </View>
 
           <CustomText
@@ -309,7 +309,7 @@ const editAppointmentCalenderModal = () => {
                 {/* {selectedBookCalenderDateParse
                   ? ddmmformatDate(selectedBookCalenderDateParse)
                   : ddmmformatDate(params?.isDateNotPresent?.split("T")?.[0])} */}
-                  {ddmmformatDate(selectedBookCalenderDateParse)}
+                {ddmmformatDate(selectedBookCalenderDateParse)}
               </CustomText>
             </View>
 
@@ -332,7 +332,7 @@ const editAppointmentCalenderModal = () => {
                 {/* {selectedBookCalenderTimeslotParse
                   ? selectedBookCalenderTimeslotParse
                   : params?.isTimeSlotNotPresent?.split(" ")?.[0]} */}
-                  {selectedBookCalenderTimeslotParse}
+                {selectedBookCalenderTimeslotParse}
               </CustomText>
             </View>
           </View>
@@ -394,7 +394,7 @@ const editAppointmentCalenderModal = () => {
                     <CustomText
                       style={{
                         fontFamily: "AirbnbCereal_W_Bd",
-                        color: "#14b8a6",
+                        color: colors.accentColor,
                       }}
                     >
                       Pay Now
@@ -408,7 +408,7 @@ const editAppointmentCalenderModal = () => {
                   <CustomText
                     style={{
                       fontFamily: "AirbnbCereal_W_XBd",
-                      color: "#14b8a6",
+                      color: colors.accentColor,
                       fontSize: moderateScale(18),
                     }}
                   >
@@ -526,11 +526,11 @@ const editAppointmentCalenderModal = () => {
               onPress={openPaymentSheet}
               disabled={loading}
               style={{
-                backgroundColor: loading ? "#94a3b8" : "#14b8a6",
+                backgroundColor: loading ? "#94a3b8" : colors.accentColor,
                 paddingVertical: verticalScale(18),
                 borderRadius: moderateScale(16),
                 alignItems: "center",
-                shadowColor: "#14b8a6",
+                shadowColor: colors.accentColor,
                 shadowOffset: { width: 0, height: verticalScale(4) },
                 shadowOpacity: 0.2,
                 shadowRadius: moderateScale(8),
@@ -555,7 +555,9 @@ const editAppointmentCalenderModal = () => {
               onPress={editAppointmentPressed}
               disabled={editAppointmentLoader}
               style={{
-                backgroundColor: editAppointmentLoader ? "#94a3b8" : "#14b8a6",
+                backgroundColor: editAppointmentLoader
+                  ? "#94a3b8"
+                  : colors.accentColor,
                 paddingVertical: verticalScale(18),
                 borderRadius: moderateScale(16),
                 alignItems: "center",

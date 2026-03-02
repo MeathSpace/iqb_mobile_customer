@@ -1,21 +1,20 @@
-import {
-  DefaultTheme,
-  DarkTheme,
-  ThemeProvider,
-} from "@react-navigation/native";
-import { StyleSheet, useColorScheme } from "react-native";
-import React, { useEffect } from "react";
-import { Slot, Stack } from "expo-router";
-import * as SplashScreen from "expo-splash-screen";
-import { useFonts } from "expo-font";
-import { AuthProvider } from "../context/AuthContext";
-import { GlobalProvider } from "../context/GlobalContext";
 import { ClerkProvider } from "@clerk/clerk-expo";
 import { tokenCache } from "@clerk/clerk-expo/token-cache";
-import { StatusBar } from "expo-status-bar";
-import ToastManager from "toastify-react-native";
-import AppInitializer from "./appInitializer";
+import {
+  DarkTheme,
+  DefaultTheme,
+  ThemeProvider,
+} from "@react-navigation/native";
 import { StripeProvider } from "@stripe/stripe-react-native";
+import { useFonts } from "expo-font";
+import { Stack } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+import { StatusBar } from "expo-status-bar";
+import React, { useEffect } from "react";
+import { StyleSheet, useColorScheme } from "react-native";
+import ToastManager from "toastify-react-native";
+import { AuthProvider } from "../context/AuthContext";
+import { GlobalProvider } from "../context/GlobalContext";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -64,12 +63,11 @@ const RootLayout = () => {
     return null;
   }
 
-
   const MyLightTheme = {
     ...DefaultTheme,
     colors: {
       ...DefaultTheme.colors,
-      background: "#F9FAFB",
+      background: "#efefef", // Main Background
       tabBackground: "#efefef",
       text: "#1f2937",
       // secondaryText: "#6b7280", // text-gray-500
@@ -85,6 +83,12 @@ const RootLayout = () => {
 
       modalBgColor: "#fff",
       modalSectionColor: "#F9FAFB",
+
+      // linearColor1: "#000000",
+      // linearColor2: "#1a1a1a",
+      linearColor1: "#E65100",
+      linearColor2: "#FF8F00",
+      accentColor: "#E65100"
     },
   };
 
@@ -92,7 +96,7 @@ const RootLayout = () => {
     ...DarkTheme,
     colors: {
       ...DarkTheme.colors,
-      background: "#111827",
+      background: "#121212", // Main Background
       tabBackground: "#151718",
       text: "#ffffff",
       // secondaryText: "#6b7280", // text-gray-500
@@ -100,14 +104,22 @@ const RootLayout = () => {
       secondaryInputBackground: "#000000",
       borderBottomColor: "#101010",
       notificationBellColor: "#D1D5DB",
-      cardColor: "#1F2937",
-      cardBorder: "#1F2937",
-      queueBorder: "#374151",
+      // cardColor: "#1F2937",
+      cardColor: "#2a2a2a",
+      cardBorder: "#303030",
+      queueBorder: "#303030",
       selected: "#14b8a619",
       appointmentDisableBg: "#a1a1a1",
 
-      modalBgColor: "#111827",
-      modalSectionColor: "#1F2937",
+      modalBgColor: "#121212",
+      modalSectionColor: "#2A2A2A",
+
+      // linearColor1: "#1e1e1e",
+      // linearColor2: "#2a2a2a",
+
+      linearColor1: "#FF6A00",
+      linearColor2: "#FFB347",
+      accentColor: "#FF6A00"
     },
   };
 

@@ -209,7 +209,7 @@ const SingleJoinBarber = () => {
                       backgroundColor: colors.cardColor,
                       borderColor:
                         selectBarber?.barberId === item?.barberId
-                          ? "#14b8a6"
+                          ? colors.accentColor
                           : colors.queueBorder,
                       borderWidth:
                         selectBarber?.barberId === item?.barberId
@@ -266,7 +266,7 @@ const SingleJoinBarber = () => {
                 { backgroundColor: "rgba(13, 148, 136, 0.1)" },
               ]}
             >
-              <ProfileIcon size={scale(32)} color={"#14b8a6"} />
+              <ProfileIcon size={scale(32)} color={colors.accentColor} />
             </View>
             <CustomText style={styles.cardTitle}>
               No{" "}
@@ -285,7 +285,10 @@ const SingleJoinBarber = () => {
             </CustomText>
             <TouchableOpacity
               onPress={() => router.back()}
-              style={styles.bookButton}
+              style={[
+                styles.bookButton,
+                { backgroundColor: colors.accentColor },
+              ]}
               activeOpacity={0.85}
             >
               <CustomText style={styles.bookButtonText}>
@@ -340,7 +343,7 @@ const SingleJoinBarber = () => {
                 },
               });
             }}
-            style={styles.queueButton}
+            style={[styles.queueButton, {backgroundColor: colors.accentColor }]}
             activeOpacity={0.85}
           >
             <CustomText style={styles.queueButtonText}>Continue</CustomText>
@@ -404,7 +407,7 @@ const styles = StyleSheet.create({
   },
   bookButton: {
     width: "100%",
-    backgroundColor: "#14b8a6", // bg-teal-500
+    // bg-teal-500
     paddingVertical: verticalScale(16), // py-4
     borderRadius: scale(12), // rounded-xl
     // marginBottom: verticalScale(15), // mb-6
@@ -419,7 +422,7 @@ const styles = StyleSheet.create({
 
   queueButton: {
     width: "40%",
-    backgroundColor: "#14b8a6", // bg-teal-500
+    // bg-teal-500
     paddingVertical: verticalScale(12), // py-4
     borderRadius: scale(8), // rounded-xl
     // marginBottom: verticalScale(15), // mb-6

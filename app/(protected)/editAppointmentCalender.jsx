@@ -665,7 +665,7 @@ const editAppointmentCalender = () => {
                         }, // visually indicate disabled
                       ]}
                     >
-                      <LeftIcon color={"#14b8a6"} size={scale(16)} />
+                      <LeftIcon color={colors.accentColor} size={scale(16)} />
                     </Pressable>
 
                     <Pressable
@@ -676,7 +676,7 @@ const editAppointmentCalender = () => {
                         isNextDisabled && { opacity: 0.3 },
                       ]}
                     >
-                      <RightIcon color={"#14b8a6"} size={scale(16)} />
+                      <RightIcon color={colors.accentColor} size={scale(16)} />
                     </Pressable>
                   </View>
                 </View>
@@ -712,11 +712,11 @@ const editAppointmentCalender = () => {
                               ? colors.appointmentDisableBg
                               : disableDates?.includes(day?.fullDate)
                                 ? colors.appointmentDisableBg
-                                : "#00B0901A",
+                                : `${colors.accentColor}1A`,
 
                           borderColor:
                             selectedCalenderDate === day?.fullDate
-                              ? "#0BA3AD"
+                              ? colors.accentColor
                               : null,
                           borderWidth:
                             selectedCalenderDate === day?.fullDate
@@ -743,8 +743,8 @@ const editAppointmentCalender = () => {
                               ? colors.text
                               : disableDates?.includes(day?.fullDate)
                                 ? colors.text
-                                : "#14b8a6",
-                          // color: disableDates?.includes(day?.fullDate) ? "#000" : '#14b8a6',
+                                : colors.accentColor,
+                          // color: disableDates?.includes(day?.fullDate) ? "#000" : 'colors.accentColor',
                         }}
                       >
                         {day.date}
@@ -775,7 +775,7 @@ const editAppointmentCalender = () => {
                           setIsNotifyCheck(val);
                           setUserToggled(true); // ✅ Mark as manual user action
                         }}
-                        color={isNotifyCheck ? "#00B090" : undefined}
+                        color={isNotifyCheck ? colors.accentColor : undefined}
                         style={{
                           height: scale(16),
                           width: scale(16),
@@ -912,7 +912,7 @@ const editAppointmentCalender = () => {
                             }}
                             key={index}
                             style={{
-                              backgroundColor: "#00B0901A",
+                              backgroundColor: `${colors.accentColor}1A`,
                               alignSelf: "flex-start",
                               width: "31%",
                               height: verticalScale(40),
@@ -925,13 +925,13 @@ const editAppointmentCalender = () => {
                                   : scale(0),
                               borderColor:
                                 selectedEngageTimeSlot === item?.timeInterval
-                                  ? "#0BA3AD"
+                                  ? colors.accentColor
                                   : null,
                             }}
                           >
                             <CustomText
                               style={{
-                                color: "#14b8a6",
+                                color: colors.accentColor,
                                 fontSize: scale(16),
                               }}
                             >
@@ -955,7 +955,7 @@ const editAppointmentCalender = () => {
                     padding: scale(16),
                     borderRadius: scale(4),
                     textAlignVertical: "top",
-                    backgroundColor: "#00B0901A",
+                    backgroundColor: `${colors.accentColor}1A`,
                     color: colors.text,
                     fontSize: moderateScale(16),
                   }}
@@ -1045,7 +1045,7 @@ const editAppointmentCalender = () => {
                 }}
               >
                 {activeSection === "appointmentnote" ? (
-                  <CustomText style={{ color: "#fff" }}>Finish</CustomText>
+                  <CustomText style={{ color: colors.background }}>Finish</CustomText>
                 ) : (
                   <CustomText
                     style={{
@@ -1093,7 +1093,7 @@ const styles = StyleSheet.create({
   searchButton: {
     height: verticalScale(40),
     borderRadius: scale(10),
-    backgroundColor: "#14b8a6",
+    
     paddingHorizontal: scale(25),
     justifyContent: "center",
     alignItems: "center",
@@ -1143,7 +1143,7 @@ const styles = StyleSheet.create({
 
   queueButton: {
     width: "40%",
-    backgroundColor: "#14b8a6", // bg-teal-500
+     // bg-teal-500
     paddingVertical: verticalScale(12), // py-4
     borderRadius: scale(8), // rounded-xl
     alignItems: "center",

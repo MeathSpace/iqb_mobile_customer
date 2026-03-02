@@ -37,11 +37,4 @@ const dashboard = () => {
 
 export default dashboard
 
-const styles = StyleSheet.create({
-    profileImage: {
-        width: 100,
-        height: 100,
-        borderRadius: 50, // Makes it circular
-    },
-})
 

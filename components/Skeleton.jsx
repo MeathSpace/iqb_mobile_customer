@@ -1,3 +1,4 @@
+import { useTheme } from '@react-navigation/native';
 import React, { useRef, useEffect, version } from 'react';
 import { Animated, StyleSheet, View } from 'react-native';
 import { scale, verticalScale } from 'react-native-size-matters';
@@ -20,8 +21,10 @@ const Skeleton = ({ width = '100%', height = verticalScale(20), borderRadius = s
         outputRange: [-100, 100],
     });
 
+    const {colors} = useTheme()
+
     return (
-        <View style={[styles.container, { width, height, borderRadius }, style]}>
+        <View style={[styles.container, { width, height, borderRadius, backgroundColor: `${colors.accentColor}1A` }, style]}>
             <Animated.View
                 style={[
                     StyleSheet.absoluteFill,
@@ -37,7 +40,6 @@ const Skeleton = ({ width = '100%', height = verticalScale(20), borderRadius = s
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: 'rgba(11, 163, 173, 0.1)',
         overflow: 'hidden',
         position: 'relative',
     },

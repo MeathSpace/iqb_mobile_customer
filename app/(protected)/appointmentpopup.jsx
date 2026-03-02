@@ -86,7 +86,7 @@ const appointmentpopup = () => {
               });
 
               if (is_editAppointment) {
-                router.back()
+                router.back();
                 router.push({
                   pathname: "/editAppointmentCalender",
                   params: {
@@ -99,7 +99,10 @@ const appointmentpopup = () => {
                 router.replace("/appointmentCalendar");
               }
             }}
-            style={styles.queueButton}
+            style={[
+              styles.queueButton,
+              { backgroundColor: colors.accentColor },
+            ]}
             activeOpacity={0.85}
           >
             <CustomText style={styles.queueButtonText}>
@@ -153,7 +156,10 @@ const appointmentpopup = () => {
                 router.replace("/appointmentCalendar");
               }
             }}
-            style={styles.queueButton}
+            style={[
+              styles.queueButton,
+              { backgroundColor: colors.accentColor },
+            ]}
             activeOpacity={0.85}
           >
             <CustomText style={styles.queueButtonText}>
@@ -171,7 +177,7 @@ export default appointmentpopup;
 const styles = StyleSheet.create({
   queueButton: {
     width: "100%",
-    backgroundColor: "#14b8a6", // bg-teal-500
+    // bg-teal-500
     paddingVertical: verticalScale(16), // py-4
     borderRadius: scale(12), // rounded-xl
     marginBottom: verticalScale(15), // mb-6

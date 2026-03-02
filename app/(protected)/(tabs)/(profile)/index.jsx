@@ -1,32 +1,37 @@
-import { Alert, FlatList, Platform, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React from 'react'
-import CustomTabView from '../../../../components/CustomTabView'
-import CustomText from '../../../../components/CustomText'
-import { useAuth } from '../../../../context/AuthContext'
-import { Link, useRouter } from 'expo-router'
-import { useClerk, useUser } from '@clerk/clerk-expo'
-import { Image } from 'expo-image'
-import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
-import { SafeAreaView } from 'react-native-safe-area-context'
-import { useTheme } from '@react-navigation/native'
-import CustomSecondaryText from '../../../../components/CustomSecondaryText'
-import CustomView from '../../../../components/CustomView'
-import { AboutIcon, ArrowLeftIcon, HeartIcon, HeartOutlineIcon, HelpIcon, LogoutIcon, NotificationIcon, PeopleIcon, ProfileIcon, RightIcon, SalonIcon, UserIcon } from '../../../../constants/icons'
-import { Colors } from '../../../../constants/Colors'
-import { useGlobal } from '../../../../context/GlobalContext'
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { LinearGradient } from 'expo-linear-gradient'
-import { Feather } from '@expo/vector-icons'
-import axios from 'axios'
-import { BASE_URL } from '@/utils/api';
-import { Toast } from 'toastify-react-native'
+import { BASE_URL } from "@/utils/api";
+import { useClerk, useUser } from "@clerk/clerk-expo";
+import { Feather } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTheme } from "@react-navigation/native";
+import axios from "axios";
+import { Image } from "expo-image";
+import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router";
+import {
+  Alert,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { moderateScale, scale, verticalScale } from "react-native-size-matters";
+import CustomText from "../../../../components/CustomText";
+import {
+  AboutIcon,
+  HeartOutlineIcon,
+  HelpIcon,
+  NotificationIcon,
+  RightIcon,
+  SalonIcon,
+} from "../../../../constants/icons";
+import { useAuth } from "../../../../context/AuthContext";
+import { useGlobal } from "../../../../context/GlobalContext";
 
 const index = () => {
-
-
-  const { colors } = useTheme()
-  const { signOut } = useClerk()
-  const { isSignedIn } = useUser()
+  const { colors } = useTheme();
+  const { signOut } = useClerk();
+  const { isSignedIn } = useUser();
   const {
     setSelectedBarber,
     setSelectedBarberServices,
@@ -38,78 +43,79 @@ const index = () => {
     // hasRun
   } = useGlobal();
 
-  const { setIsAuthenticated, authenticatedUser, setAuthenticatedUser } = useAuth()
-  const router = useRouter()
-
+  const { setIsAuthenticated, authenticatedUser, setAuthenticatedUser } =
+    useAuth();
+  const router = useRouter();
 
   const profileOptions = [
     {
-      label: 'Favorites',
-      icon: <HeartOutlineIcon color={'#dc2626'} />,
-      lightBg: '#fee2e2',
-      darkBg: '#7f1d1d33',
-      lightColor: '#dc2626',
-      darkColor: '#fca5a5',
+      label: "Favorites",
+      icon: <HeartOutlineIcon color={"#dc2626"} />,
+      lightBg: "#fee2e2",
+      darkBg: "#7f1d1d33",
+      lightColor: "#dc2626",
+      darkColor: "#fca5a5",
       route: "/myFavourites",
-      display: true
+      display: true,
     },
     {
-      label: 'Change Salon',
-      icon: <SalonIcon color={'#7c3aed'} />,
-      lightBg: '#ede9fe',
-      darkBg: '#5b21b633',
-      lightColor: '#7c3aed',
-      darkColor: '#c4b5fd',
+      label: "Change Salon",
+      icon: <SalonIcon color={"#7c3aed"} />,
+      lightBg: "#ede9fe",
+      darkBg: "#5b21b633",
+      lightColor: "#7c3aed",
+      darkColor: "#c4b5fd",
       route: "/connectSalon",
-      display: authenticatedUser?.salonId ? true : false
+      display: authenticatedUser?.salonId ? true : false,
     },
     {
-      label: 'Help & Support',
-      icon: <HelpIcon color={'#059669'} />,
-      lightBg: '#d1fae5',
-      darkBg: '#065f4633',
-      lightColor: '#059669',
-      darkColor: '#6ee7b7',
+      label: "Help & Support",
+      icon: <HelpIcon color={"#059669"} />,
+      lightBg: "#d1fae5",
+      darkBg: "#065f4633",
+      lightColor: "#059669",
+      darkColor: "#6ee7b7",
       route: "/helpSupport",
-      display: true
+      display: true,
     },
     {
-      label: 'About',
-      icon: <AboutIcon color={'#0284c7'} />,
-      lightBg: '#e0f2fe',
-      darkBg: '#1e3a8a33',
-      lightColor: '#0284c7',
-      darkColor: '#93c5fd',
+      label: "About",
+      icon: <AboutIcon color={"#0284c7"} />,
+      lightBg: "#e0f2fe",
+      darkBg: "#1e3a8a33",
+      lightColor: "#0284c7",
+      darkColor: "#93c5fd",
       route: "/(about)",
-      display: true
+      display: true,
     },
   ];
 
   const logoutPressed = async () => {
     if (isSignedIn) {
-      await signOut()
+      await signOut();
     }
-    setSelectedBarber({})
-    setSelectedBarberServices([])
-    setCustomerName("")
+    setSelectedBarber({});
+    setSelectedBarberServices([]);
+    setCustomerName("");
     if (rememberMe) {
-      await AsyncStorage.setItem("LoggedInUser", JSON.stringify({
-        email: authenticatedUser?.email,
-        userPassword: authenticatedUser?.userPassword,
-        authType: authenticatedUser?.AuthType
-      }))
+      await AsyncStorage.setItem(
+        "LoggedInUser",
+        JSON.stringify({
+          email: authenticatedUser?.email,
+          userPassword: authenticatedUser?.userPassword,
+          authType: authenticatedUser?.AuthType,
+        }),
+      );
     } else {
-      await AsyncStorage.removeItem("LoggedInUser")
+      await AsyncStorage.removeItem("LoggedInUser");
     }
-    await AsyncStorage.removeItem("isAuthenticated")
-    setIsAuthenticated(false)
-    setAuthenticatedUser(null)
+    await AsyncStorage.removeItem("isAuthenticated");
+    setIsAuthenticated(false);
+    setAuthenticatedUser(null);
     // router.push("/index")
-  }
+  };
 
-
-  const { user } = useUser()
-
+  const { user } = useUser();
 
   const deleteHandler = () => {
     Alert.alert(
@@ -117,8 +123,12 @@ const index = () => {
       "Are you sure you want to permanently delete your account?",
       [
         { text: "Cancel", style: "cancel" },
-        { text: "Delete", style: "destructive", onPress: handleDeleteConfirmed }
-      ]
+        {
+          text: "Delete",
+          style: "destructive",
+          onPress: handleDeleteConfirmed,
+        },
+      ],
     );
   };
 
@@ -139,8 +149,8 @@ const index = () => {
       setSelectedBarber({});
       setSelectedBarberServices([]);
       setCustomerName("");
-      await AsyncStorage.removeItem("LoggedInUser")
-      await AsyncStorage.removeItem("isAuthenticated")
+      await AsyncStorage.removeItem("LoggedInUser");
+      await AsyncStorage.removeItem("isAuthenticated");
       setIsAuthenticated(false);
       setAuthenticatedUser(null);
     } catch (err) {
@@ -157,39 +167,43 @@ const index = () => {
       }}
     >
       <View style={styles.header}>
-
-        <CustomText style={{ fontSize: scale(18), fontFamily: "AirbnbCereal_W_XBd" }}>Profile</CustomText>
+        <CustomText
+          style={{ fontSize: scale(18), fontFamily: "AirbnbCereal_W_XBd" }}
+        >
+          Profile
+        </CustomText>
 
         {/* Right section - Notification bell */}
         <Pressable
           style={styles.bellWrapper}
           activeOpacity={0.7}
           onPress={async () => {
-
             if (newNotification.value) {
               await AsyncStorage.setItem(
                 "newNotification",
                 JSON.stringify({
                   email: authenticatedUser?.email,
-                  value: false
-                })
+                  value: false,
+                }),
               );
               setNewNotification({
                 email: "",
-                value: false
-              })
+                value: false,
+              });
             }
 
-            router.push("/notification")
+            router.push("/notification");
           }}
         >
-          <NotificationIcon size={moderateScale(24)} color={colors.notificationBellColor} />
+          <NotificationIcon
+            size={moderateScale(24)}
+            color={colors.notificationBellColor}
+          />
           {/* {
             newNotification.value && (
               <View style={styles.badge} />
             )
           } */}
-
         </Pressable>
       </View>
 
@@ -200,7 +214,7 @@ const index = () => {
         {/* User Info Card */}
 
         <LinearGradient
-          colors={['#14b8a6', '#0d9488']}
+          colors={[colors.linearColor1, colors.linearColor2]}
           style={styles.card}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
@@ -208,36 +222,73 @@ const index = () => {
           <Image
             source={{ uri: authenticatedUser?.profile?.[0]?.url }}
             style={styles.avatar}
-            onError={() => { }}
+            onError={() => {}}
           />
           <View>
-            <CustomText style={styles.cardTitle}>{authenticatedUser?.name}</CustomText>
-            <CustomText style={[styles.cardSubtitle, { width: "100%" }]} numberOfLines={2}>{authenticatedUser?.email}</CustomText>
+            <CustomText style={styles.cardTitle}>
+              {authenticatedUser?.name}
+            </CustomText>
+            <CustomText
+              style={[styles.cardSubtitle, { width: "100%" }]}
+              numberOfLines={2}
+            >
+              {authenticatedUser?.email}
+            </CustomText>
           </View>
-          <TouchableOpacity style={styles.editButton} onPress={() => router.push("/editProfile")}>
+          <TouchableOpacity
+            style={styles.editButton}
+            onPress={() => router.push("/editProfile")}
+          >
             <Feather name="edit-2" size={moderateScale(16)} color="#fff" />
           </TouchableOpacity>
         </LinearGradient>
 
         {/* Profile Options */}
-        <View style={[styles.optionsBox, { backgroundColor: colors.cardColor, borderColor: colors.queueBorder }]}>
+        <View
+          style={[
+            styles.optionsBox,
+            {
+              backgroundColor: colors.cardColor,
+              borderColor: colors.queueBorder,
+            },
+          ]}
+        >
           {profileOptions.map((opt, idx) => {
             if (!opt.display) return null; // Skip if display is false
 
             return (
               <View key={idx}>
-                <TouchableOpacity style={styles.optionRow} onPress={() => router.push(opt.route)}>
-                  <View style={[styles.optionIconWrapper, { backgroundColor: opt.lightBg }]}>
+                <TouchableOpacity
+                  style={styles.optionRow}
+                  onPress={() => router.push(opt.route)}
+                >
+                  <View
+                    style={[
+                      styles.optionIconWrapper,
+                      { backgroundColor: opt.lightBg },
+                    ]}
+                  >
                     {/* <Feather name={opt?.icon} size={moderateScale(24)} color={opt.lightColor} /> */}
                     {opt?.icon}
                   </View>
-                  <CustomText style={[styles.optionLabel]}>{opt.label}</CustomText>
-                  <RightIcon size={moderateScale(16)} color={colors.text} style={{ marginLeft: 'auto' }} />
+                  <CustomText style={[styles.optionLabel]}>
+                    {opt.label}
+                  </CustomText>
+                  <RightIcon
+                    size={moderateScale(16)}
+                    color={colors.text}
+                    style={{ marginLeft: "auto" }}
+                  />
                 </TouchableOpacity>
                 {/* {idx !== profileOptions.length - 1 && (
                   <View style={[styles.separator, { backgroundColor: colors.queueBorder }]} />
                 )} */}
-                <View style={[styles.separator, { backgroundColor: colors.queueBorder }]} />
+                <View
+                  style={[
+                    styles.separator,
+                    { backgroundColor: colors.queueBorder },
+                  ]}
+                />
               </View>
             );
           })}
@@ -246,23 +297,29 @@ const index = () => {
             <TouchableOpacity
               style={styles.optionRow}
               onPress={() => {
-                deleteHandler()
+                deleteHandler();
               }}
             >
               <View
                 style={[
                   styles.optionIconWrapper,
-                  { backgroundColor: '#fee2e2' } // light red bg for delete
+                  { backgroundColor: "#fee2e2" }, // light red bg for delete
                 ]}
               >
-                <Feather name="trash-2" size={moderateScale(24)} color="#ef4444" />
+                <Feather
+                  name="trash-2"
+                  size={moderateScale(24)}
+                  color="#ef4444"
+                />
                 {/* trash icon + red color */}
               </View>
-              <CustomText style={[styles.optionLabel]}>Delete Account</CustomText>
+              <CustomText style={[styles.optionLabel]}>
+                Delete Account
+              </CustomText>
               <RightIcon
                 size={moderateScale(16)}
                 color={colors.text}
-                style={{ marginLeft: 'auto' }}
+                style={{ marginLeft: "auto" }}
               />
             </TouchableOpacity>
 
@@ -272,30 +329,30 @@ const index = () => {
                 { backgroundColor: colors.queueBorder }]}
             /> */}
           </View>
-
         </View>
-
 
         {/* Log Out */}
         <TouchableOpacity
-          style={[styles.logoutButton, { backgroundColor: '#fee2e2' }]}
+          style={[styles.logoutButton, { backgroundColor: "#fee2e2" }]}
           onPress={logoutPressed}
         >
-          <Feather name="log-out" size={moderateScale(16)} color={'#dc2626'} />
-          <CustomText style={[styles.logoutText, { color: '#dc2626' }]}>Log Out</CustomText>
+          <Feather name="log-out" size={moderateScale(16)} color={"#dc2626"} />
+          <CustomText style={[styles.logoutText, { color: "#dc2626" }]}>
+            Log Out
+          </CustomText>
         </TouchableOpacity>
       </ScrollView>
     </View>
-  )
-}
+  );
+};
 
-export default index
+export default index;
 
 const styles = StyleSheet.create({
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
     height: verticalScale(40),
     // paddingTop: verticalScale(5),
     // paddingBottom: verticalScale(12),
@@ -304,51 +361,51 @@ const styles = StyleSheet.create({
   bellWrapper: {
     padding: scale(8),
     borderRadius: scale(999),
-    position: 'relative',
+    position: "relative",
   },
   badge: {
-    position: 'absolute',
+    position: "absolute",
     top: scale(6),
     right: scale(6),
     width: scale(8),
     height: scale(8),
     borderRadius: scale(4),
-    backgroundColor: '#2dd4bf', // bg-teal-400
+    backgroundColor: "#2dd4bf", // bg-teal-400
   },
 
   card: {
     borderRadius: scale(12),
     paddingHorizontal: scale(16),
     paddingVertical: verticalScale(20),
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     gap: scale(12),
     marginBottom: verticalScale(24),
-    position: 'relative',
+    position: "relative",
   },
   avatar: {
     width: scale(80),
     height: scale(80),
     borderRadius: scale(40),
     borderWidth: scale(2),
-    borderColor: '#fff',
+    borderColor: "#fff",
   },
   cardTitle: {
     fontSize: scale(20),
     fontFamily: "AirbnbCereal_W_XBd",
-    color: '#fff',
+    color: "#fff",
   },
   cardSubtitle: {
     fontSize: scale(14),
-    color: '#fff',
+    color: "#fff",
     opacity: 0.9,
     marginTop: verticalScale(4),
   },
   editButton: {
-    position: 'absolute',
+    position: "absolute",
     top: verticalScale(12),
     right: scale(12),
-    backgroundColor: '#ffffff33',
+    backgroundColor: "#ffffff33",
     padding: scale(8),
     borderRadius: 999,
   },
@@ -358,8 +415,8 @@ const styles = StyleSheet.create({
     marginBottom: verticalScale(24),
   },
   optionRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    flexDirection: "row",
+    alignItems: "center",
     padding: scale(16),
   },
   optionIconWrapper: {
@@ -367,7 +424,7 @@ const styles = StyleSheet.create({
     width: scale(40),
     borderRadius: scale(12),
     justifyContent: "center",
-    alignItems: "center"
+    alignItems: "center",
   },
   optionLabel: {
     marginLeft: scale(12),
@@ -379,15 +436,14 @@ const styles = StyleSheet.create({
     marginHorizontal: scale(16),
   },
   logoutButton: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
     padding: scale(16),
     borderRadius: scale(12),
     gap: scale(8),
   },
   logoutText: {
-    fontWeight: '700',
+    fontWeight: "700",
   },
-})
-
+});

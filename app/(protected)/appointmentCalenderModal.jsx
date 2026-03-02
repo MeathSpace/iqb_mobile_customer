@@ -80,7 +80,7 @@ const appointmentCalenderModal = () => {
       methodUsed: "App",
       selectServices: appointmentPopupType?.selectServices,
       selectBarber: appointmentPopupType?.selectBarber,
-      bookDateObject: selectedCalenderDayParse
+      bookDateObject: selectedCalenderDayParse,
     };
 
     try {
@@ -316,13 +316,13 @@ const appointmentCalenderModal = () => {
               width: scale(64),
               height: scale(64), // Using scale for icon containers to keep them square
               borderRadius: moderateScale(32),
-              backgroundColor: "#14b8a610",
+              backgroundColor: `${colors.accentColor}1A`,
               justifyContent: "center",
               alignItems: "center",
               marginBottom: verticalScale(16),
             }}
           >
-            <CheckIcon size={moderateScale(28)} color="#14b8a6" />
+            <CheckIcon size={moderateScale(28)} color={colors.accentColor} />
           </View>
 
           <CustomText
@@ -522,7 +522,7 @@ const appointmentCalenderModal = () => {
                     <CustomText
                       style={{
                         fontFamily: "AirbnbCereal_W_Bd",
-                        color: "#14b8a6",
+                        color: colors.accentColor,
                       }}
                     >
                       Pay Now
@@ -537,7 +537,7 @@ const appointmentCalenderModal = () => {
                   <CustomText
                     style={{
                       fontFamily: "AirbnbCereal_W_XBd",
-                      color: "#14b8a6",
+                      color: colors.accentColor,
                       fontSize: moderateScale(18),
                     }}
                   >
@@ -655,11 +655,11 @@ const appointmentCalenderModal = () => {
               onPress={openPaymentSheet}
               disabled={loading}
               style={{
-                backgroundColor: loading ? "#94a3b8" : "#14b8a6",
+                backgroundColor: loading ? "#94a3b8" : colors.accentColor,
                 paddingVertical: verticalScale(18),
                 borderRadius: moderateScale(16),
                 alignItems: "center",
-                shadowColor: "#14b8a6",
+                shadowColor: colors.accentColor,
                 shadowOffset: { width: 0, height: verticalScale(4) },
                 shadowOpacity: 0.2,
                 shadowRadius: moderateScale(8),
@@ -684,7 +684,9 @@ const appointmentCalenderModal = () => {
               onPress={bookAppointmentPressed}
               disabled={bookAppointmentLoader}
               style={{
-                backgroundColor: bookAppointmentLoader ? "#94a3b8" : "#14b8a6",
+                backgroundColor: bookAppointmentLoader
+                  ? "#94a3b8"
+                  : colors.accentColor,
                 paddingVertical: verticalScale(18),
                 borderRadius: moderateScale(16),
                 alignItems: "center",

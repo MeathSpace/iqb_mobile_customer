@@ -3,7 +3,7 @@ import { usePreventRemove, useTheme } from "@react-navigation/native";
 import axios from "axios";
 import { Image } from "expo-image";
 import { router, useFocusEffect } from "expo-router";
-import React, { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -16,12 +16,7 @@ import {
   View,
 } from "react-native";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
-import {
-  CalendarIcon,
-  RightIcon,
-  SalonIcon,
-  UploadIcon,
-} from "../constants/icons";
+import { CalendarIcon, RightIcon, UploadIcon } from "../constants/icons";
 import { useAuth } from "../context/AuthContext";
 import { useGlobal } from "../context/GlobalContext";
 import AdvertiseCard from "./AdvertiseCard";
@@ -159,8 +154,8 @@ const Dashboard = () => {
 
             if (buildNumber !== prevBuildNumber) {
               setApiVersionData(data?.response);
-            }else{
-              setApiVersionData(null)
+            } else {
+              setApiVersionData(null);
             }
           } else {
             let versionCode = Number(data?.response?.versionCode);
@@ -170,8 +165,8 @@ const Dashboard = () => {
 
             if (versionCode !== prevVersionCode) {
               setApiVersionData(data?.response);
-            }else{
-              setApiVersionData(null)
+            } else {
+              setApiVersionData(null);
             }
           }
         } catch (err) {
@@ -184,7 +179,6 @@ const Dashboard = () => {
       return () => {};
     }, []),
   );
-
 
   const { homeDashboardData, setHomeDashboardData } = useGlobal();
   const { authenticatedUser } = useAuth();
@@ -568,8 +562,8 @@ const Dashboard = () => {
       label: "In Queue",
       value: homeDashboardData?.dashboardData?.totalQueueCount || 0,
       icon: "users",
-      bgColor: "rgba(13, 148, 136, 0.1)", // teal-500/10
-      iconColor: "#14b8a6",
+      bgColor: `${colors.accentColor}1A`, // teal-500/10
+      iconColor: colors.accentColor,
     },
   ];
 
@@ -661,7 +655,8 @@ const Dashboard = () => {
                   ) : customerLivetData?.liveQueueData?.isJoinedData?.length >
                     0 ? (
                     <LinearGradient
-                      colors={["#14b8a6", "#0d9488"]}
+                      // colors={[colors.accentColor, "#0d9488"]}
+                      colors={[colors.linearColor1, colors.linearColor2]}
                       style={styles.card}
                       start={{ x: 0, y: 0 }}
                       end={{ x: 1, y: 1 }}
@@ -833,7 +828,8 @@ const Dashboard = () => {
                     </LinearGradient>
                   ) : (
                     <LinearGradient
-                      colors={["#14b8a6", "#0d9488"]}
+                      // colors={[colors.accentColor, "#0d9488"]}
+                      colors={[colors.linearColor1, colors.linearColor2]}
                       style={styles.card}
                       start={{ x: 0, y: 0 }}
                       end={{ x: 1, y: 1 }}
@@ -949,7 +945,7 @@ const Dashboard = () => {
                           styles.statusCard,
                           {
                             backgroundColor: colors.cardColor,
-                            borderColor: colors.queueBorder,
+                            // borderColor: colors.queueBorder,
                           },
                         ]}
                       >
@@ -1005,7 +1001,7 @@ const Dashboard = () => {
                         styles.hintCard,
                         {
                           backgroundColor: colors.cardColor,
-                          borderColor: colors.queueBorder,
+                          // borderColor: colors.queueBorder,
                           marginBottom: verticalScale(15),
                           flexDirection: "row",
                           alignItems: "center",
@@ -1025,13 +1021,17 @@ const Dashboard = () => {
                           style={[
                             styles.hintIconWrapper,
                             {
-                              backgroundColor: colors.background,
-                              borderColor: colors.cardBorder,
-                              borderWidth: scale(1),
+                              // backgroundColor: colors.background,
+                              backgroundColor: "#000",
+                              // borderColor: colors.cardBorder,
+                              // borderWidth: scale(1),
                             },
                           ]}
                         >
-                          <UploadIcon color={colors.text} />
+                          <UploadIcon
+                            // color={colors.text}
+                            color="#fff"
+                          />
                         </View>
                         <View>
                           <CustomText style={[styles.hintTitle, {}]}>
@@ -1076,7 +1076,8 @@ const Dashboard = () => {
                         style={{
                           paddingHorizontal: scale(10),
                           paddingVertical: verticalScale(6),
-                          backgroundColor: "#14b8a6",
+                          // backgroundColor: colors.accentColor,
+                          backgroundColor: colors.accentColor,
                           justifyContent: "center",
                           alignItems: "center",
                           borderRadius: scale(5),
@@ -1102,18 +1103,23 @@ const Dashboard = () => {
                       },
                     ]}
                   >
-                    <View
+                    {/* <View
                       style={[
                         styles.hintIconWrapper,
                         {
-                          backgroundColor: colors.background,
-                          borderColor: colors.cardBorder,
-                          borderWidth: scale(1),
+                          // backgroundColor: colors.background,
+                          // borderColor: colors.cardBorder,
+                          // borderWidth: scale(1),
+
+                          backgroundColor: "#000"
                         },
                       ]}
                     >
-                      <SalonIcon color={colors.text} />
-                    </View>
+                      <SalonIcon 
+                      // color={colors.text} 
+                      color="#fff"
+                      />
+                    </View> */}
 
                     <View style={styles.hintTextWrapper}>
                       <CustomText style={[styles.hintTitle, {}]}>
@@ -1134,7 +1140,9 @@ const Dashboard = () => {
                           style={{
                             lineHeight: verticalScale(21),
                             marginTop: verticalScale(5),
-                            color: colors.primary,
+                            // color: colors.primary,
+                            color: "#FB8C00",
+                            fontSize: scale(14),
                           }}
                         >
                           {textShown ? "Read less..." : "Read more..."}
@@ -1262,7 +1270,8 @@ const Dashboard = () => {
                       style={{
                         height: verticalScale(35),
                         // backgroundColor: "#00B0901A",
-                        backgroundColor: "#14b8a6",
+                        // backgroundColor: colors.accentColor,
+                        backgroundColor: colors.accentColor,
                         borderRadius: scale(4),
                         justifyContent: "center",
                         alignItems: "center",
@@ -1348,7 +1357,6 @@ const Dashboard = () => {
         }}
       >
         {homeAdvertisementData?.loading ? (
-          // Loader Skeletons
           <FlatList
             style={{
               overflow: "visible",
@@ -1403,7 +1411,6 @@ const Dashboard = () => {
               width: "100%",
               height: verticalScale(70),
               backgroundColor: "#d3d3d3",
-              // paddingVertical: verticalScale(20),
             }}
           >
             <Image
@@ -1427,27 +1434,12 @@ const Dashboard = () => {
 
 export default Dashboard;
 
-const ServiceCard = ({ title, image, fallback }) => {
-  const [imgError, setImgError] = React.useState(false);
-
-  return (
-    <TouchableOpacity style={styles.serviceCard} activeOpacity={0.8}>
-      <Image
-        source={{ uri: imgError ? fallback : image }}
-        onError={() => setImgError(true)}
-        style={styles.image}
-      />
-      <CustomText style={styles.serviceCardTitle}>{title}</CustomText>
-    </TouchableOpacity>
-  );
-};
-
 const styles = StyleSheet.create({
   btnContainer: {
     marginTop: verticalScale(24),
     flexDirection: "row",
     justifyContent: "space-between",
-    gap: scale(12), // or use marginRight on first button if gap isn't supported
+    gap: scale(12),
   },
   joinQueue: {
     flex: 1,
@@ -1458,14 +1450,16 @@ const styles = StyleSheet.create({
     transform: [{ scale: 1 }],
   },
   joinQueueText: {
-    color: "#0d9488", // teal-600
+    // color: "#0d9488",
+    color: "#000",
     fontWeight: "bold",
     fontSize: scale(14),
     fontFamily: "AirbnbCereal_W_XBd",
   },
   bookAhead: {
     flex: 1,
-    backgroundColor: "rgba(255,255,255,0.25)", // white/25
+    // backgroundColor: "rgba(255,255,255,0.25)",
+    backgroundColor: "#212121",
     paddingVertical: verticalScale(12),
     borderRadius: scale(12),
     alignItems: "center",
@@ -1485,16 +1479,9 @@ const styles = StyleSheet.create({
     marginBottom: verticalScale(5),
   },
 
-  // Card Csss
   card: {
     borderRadius: scale(16),
     padding: scale(24),
-    // marginBottom: verticalScale(24),
-    shadowColor: "#000",
-    shadowOffset: { width: 0, height: 6 },
-    shadowOpacity: 0.15,
-    shadowRadius: 8,
-    elevation: 5,
   },
   topRow: {
     flexDirection: "row",
@@ -1531,8 +1518,6 @@ const styles = StyleSheet.create({
     fontSize: scale(16),
   },
 
-  // Status Card
-
   heading: {
     fontSize: scale(18),
     fontFamily: "AirbnbCereal_W_XBd",
@@ -1544,8 +1529,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   statusCard: {
-    // backgroundColor: '#fff',
-    // backgroundColor: "#1F2937",
     width: "47%",
     padding: scale(16),
     borderRadius: scale(12),
@@ -1553,36 +1536,28 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: scale(0),
-    borderWidth: scale(1),
-    // borderColor: '#e5e7eb', // border-gray-200
+    // borderWidth: scale(1),
   },
   iconContainer: {
     padding: scale(12),
     borderRadius: scale(12),
     marginRight: scale(12),
   },
-  label: {
-    // fontSize: scale(14),
-    // color: '#6b7280', // text-gray-500
-  },
+
   value: {
     fontSize: scale(24),
     fontFamily: "AirbnbCereal_W_XBd",
   },
 
   hintCard: {
-    borderWidth: 1,
+    // borderWidth: 1,
     borderRadius: scale(12),
     padding: scale(16),
-    // marginBottom: verticalScale(24),
     flexDirection: "row",
-    // alignItems: 'center',
     gap: scale(12),
   },
 
   hintIconWrapper: {
-    // backgroundColor: '#f3f4f6',  // bg-gray-100
-    // padding: scale(12),
     borderRadius: scale(12),
     width: scale(40),
     height: scale(40),
@@ -1591,30 +1566,18 @@ const styles = StyleSheet.create({
   },
 
   hintTextWrapper: {
-    width: "80%",
+    // width: "80%",
+    width: "100%",
   },
 
   hintTitle: {
     fontFamily: "AirbnbCereal_W_XBd",
-    // color: '#1f2937',            // text-gray-800
-    // fontSize: scale(16),
     marginBottom: verticalScale(2),
   },
 
-  hintDescription: {
-    // fontSize: scale(13),
-    // color: '#4b5563',            // text-gray-600
-  },
-
-  // Service Category Card
-
-  container: {
-    // marginBottom: verticalScale(32),
-  },
   sectionTitle: {
     fontSize: scale(20),
     fontWeight: "600",
-    // color: '#1f2937', // text-gray-800
     marginBottom: verticalScale(16),
   },
   scrollContainer: {
@@ -1626,7 +1589,7 @@ const styles = StyleSheet.create({
   },
   image: {
     width: "100%",
-    height: verticalScale(192), // equivalent to h-48
+    height: verticalScale(192),
     borderRadius: scale(16),
     marginBottom: verticalScale(8),
     backgroundColor: "#e5e7eb",
@@ -1634,7 +1597,6 @@ const styles = StyleSheet.create({
   serviceCardTitle: {
     textAlign: "center",
     fontWeight: "600",
-    // color: '#374151', // text-gray-700
   },
 
   moreWrapper: {

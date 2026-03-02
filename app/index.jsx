@@ -1,4 +1,3 @@
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
@@ -8,11 +7,8 @@ import CustomSecondaryText from "../components/CustomSecondaryText";
 import CustomText from "../components/CustomText";
 import CustomView from "../components/CustomView";
 import { useAuth } from "../context/AuthContext";
-import axios from 'axios';
-import { BASE_URL } from '@/utils/api';
 
 const index = () => {
-
   const { colors } = useTheme();
 
   const router = useRouter();
@@ -68,7 +64,13 @@ const index = () => {
         {isAuthenticated ? (
           <TouchableOpacity
             onPress={() => router.push("/home")}
-            style={[styles.authButton, { marginBottom: verticalScale(10) }]}
+            style={[
+              styles.authButton,
+              {
+                marginBottom: verticalScale(10),
+                backgroundColor: colors.accentColor,
+              },
+            ]}
             activeOpacity={0.85}
           >
             <CustomText style={styles.authButtonText}>Register</CustomText>
@@ -77,7 +79,13 @@ const index = () => {
           <>
             <TouchableOpacity
               onPress={() => router.push("/signup")}
-              style={[styles.authButton, { marginBottom: verticalScale(10) }]}
+              style={[
+                styles.authButton,
+                {
+                  marginBottom: verticalScale(10),
+                  backgroundColor: colors.accentColor,
+                },
+              ]}
               activeOpacity={0.85}
             >
               <CustomText style={styles.authButtonText}>Register</CustomText>
@@ -85,7 +93,10 @@ const index = () => {
 
             <TouchableOpacity
               onPress={() => router.push("/signin")}
-              style={styles.authButton}
+              style={[
+                styles.authButton,
+                { backgroundColor: colors.accentColor },
+              ]}
               activeOpacity={0.85}
             >
               <CustomText style={styles.authButtonText}>Log In</CustomText>
@@ -132,7 +143,7 @@ const styles = StyleSheet.create({
 
   authButton: {
     width: "100%",
-    backgroundColor: "#14b8a6", // bg-teal-500
+    // bg-teal-500
     paddingVertical: verticalScale(12), // py-4
     borderRadius: scale(8), // rounded-xl
     alignItems: "center",

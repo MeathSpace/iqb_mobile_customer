@@ -10,7 +10,6 @@
 //     const { colors } = useTheme()
 //     const { authenticatedUser } = useAuth()
 
-
 //     function formatMinutesToHrMin(totalMinutes) {
 //         const hours = Math.floor(totalMinutes / 60);
 //         const mins = totalMinutes % 60;
@@ -97,205 +96,258 @@
 //         fontFamily: "AirbnbCereal_W_Bd"
 //     },
 //     statusHighlight: {
-//         color: '#14b8a6', // text-teal-500
+//         color: 'colors.accentColor', // text-teal-500
 //     },
 // });
 
+import { BASE_URL } from "@/utils/api";
+import { useTheme } from "@react-navigation/native";
+import axios from "axios";
+import { Image } from "expo-image";
+import { Alert, StyleSheet, TouchableOpacity, View } from "react-native";
+import { scale, verticalScale } from "react-native-size-matters";
+import { Toast } from "toastify-react-native";
+import { useAuth } from "../context/AuthContext";
+import CustomText from "./CustomText";
 
-import { View, Text, StyleSheet, TouchableOpacity, Alert } from 'react-native';
-import { scale, verticalScale } from 'react-native-size-matters';
-import CustomText from './CustomText';
-import { Image } from 'expo-image'
-import { useAuth } from '../context/AuthContext';
-import { useTheme } from '@react-navigation/native';
-import axios from 'axios'
-import { BASE_URL } from '@/utils/api';
-import { Toast } from 'toastify-react-native';
+const QlistItem = ({
+  item,
+  index,
+  qlistLength,
+  setQlistData,
+  setShowHideQueBtn,
+}) => {
+  const { colors } = useTheme();
+  const { authenticatedUser } = useAuth();
 
-const QlistItem = ({ item, index, qlistLength, setQlistData, setShowHideQueBtn }) => {
+  function formatMinutesToHrMin(totalMinutes) {
+    const hours = Math.floor(totalMinutes / 60);
+    const mins = totalMinutes % 60;
 
-    const { colors } = useTheme()
-    const { authenticatedUser } = useAuth()
+    if (hours > 0 && mins > 0) return `${hours}hr ${mins}m`;
+    if (hours > 0) return `${hours}hr`;
+    return `${mins}m`;
+  }
 
+  const cancelQueuePressed = (item) => {
+    Alert.alert("Cancel Queue", "Are you sure you want to cancel this queue?", [
+      {
+        text: "No",
+        style: "cancel",
+      },
+      {
+        text: "Yes",
+        onPress: async () => {
+          try {
+            const cancelQueueData = {
+              salonId: authenticatedUser?.salonId,
+              barberId: item?.barberId,
+              customerEmail: item?.customerEmail,
+              _id: item?._id,
+            };
 
-    function formatMinutesToHrMin(totalMinutes) {
-        const hours = Math.floor(totalMinutes / 60);
-        const mins = totalMinutes % 60;
+            setQlistData((prev) => ({ ...prev, loading: true }));
 
-        if (hours > 0 && mins > 0) return `${hours}hr ${mins}m`;
-        if (hours > 0) return `${hours}hr`;
-        return `${mins}m`;
-    }
+            const { data } = await axios.post(
+              `${BASE_URL}/mobileRoutes/cancelQueueByCustomer`,
+              cancelQueueData,
+            );
 
-    const cancelQueuePressed = (item) => {
-        Alert.alert(
-            "Cancel Queue",
-            "Are you sure you want to cancel this queue?",
-            [
-                {
-                    text: "No",
-                    style: "cancel"
+            Toast.success(data?.message || "Customer cancelled successfully");
+
+            const { data: queuelistData } = await axios.get(
+              `${BASE_URL}/mobileRoutes/getQlistBySalonId`,
+              {
+                params: {
+                  salonId: authenticatedUser?.salonId,
+                  customerEmail: authenticatedUser?.email,
                 },
-                {
-                    text: "Yes",
-                    onPress: async () => {
-                        try {
-                            const cancelQueueData = {
-                                salonId: authenticatedUser?.salonId,
-                                barberId: item?.barberId,
-                                customerEmail: item?.customerEmail,
-                                _id: item?._id
-                            };
+              },
+            );
 
-                            setQlistData((prev) => ({ ...prev, loading: true }))
+            const multipleBarbers = queuelistData?.response?.filter(
+              (qlistItem) =>
+                qlistItem.customerEmail === authenticatedUser?.email,
+            );
 
-                            const { data } = await axios.post(`${BASE_URL}/mobileRoutes/cancelQueueByCustomer`, cancelQueueData);
+            const multipleBarberIds = multipleBarbers.map(
+              (item) => item.barberId,
+            );
 
-                            Toast.success(data?.message || "Customer cancelled successfully");
-
-                            const { data: queuelistData } = await axios.get(`${BASE_URL}/mobileRoutes/getQlistBySalonId`, {
-                                params: {
-                                    salonId: authenticatedUser?.salonId,
-                                    customerEmail: authenticatedUser?.email
-                                }
-                            })
-
-                            const multipleBarbers = queuelistData?.response?.filter(
-                                qlistItem => qlistItem.customerEmail === authenticatedUser?.email
-                            );
-
-                            const multipleBarberIds = multipleBarbers.map(item => item.barberId);
-
-                            const filteredQlistData = queuelistData?.response?.filter(qlistItem => {
-                                if (multipleBarberIds.includes(qlistItem.barberId)) {
-                                    return qlistItem
-                                }
-                            });
-
-                            setQlistData((prev) => ({ ...prev, loading: false, data: filteredQlistData, success: true, error: null, isJoinedQueue: queuelistData?.isJoinedQueue }))
-
-
-                            // setQlistData((prev) => ({ ...prev, loading: false, data: queuelistData?.response, success: true, error: null, isJoinedQueue: queuelistData?.isJoinedQueue }))
-
-
-
-
-                        } catch (error) {
-                            Toast.error(error?.response?.data?.message)
-                            console.log("Canceled queue error ", error?.response?.data);
-                            setQlistData((prev) => ({ ...prev, loading: false, data: null, success: false, error: error }))
-                            setShowHideQueBtn((prev) => ({ ...prev, loading: false, data: null, success: false, error: error }))
-                        }
-                    }
+            const filteredQlistData = queuelistData?.response?.filter(
+              (qlistItem) => {
+                if (multipleBarberIds.includes(qlistItem.barberId)) {
+                  return qlistItem;
                 }
-            ]
-        );
-    };
+              },
+            );
 
-    return (
-        <TouchableOpacity
-            disabled={authenticatedUser?.email !== item?.customerEmail}
-            onPress={() => {
-                if (authenticatedUser?.email === item?.customerEmail) {
-                    cancelQueuePressed(item)
-                }
-            }}
-            style={[styles.queueItem, {
-                borderBottomColor: index !== qlistLength.length - 1 ? colors.queueBorder : undefined,
-                borderBottomWidth: index !== qlistLength.length - 1 ? scale(1) : 0,
-                borderBottomLeftRadius: index === qlistLength.length - 1 ? scale(12) : 0,
-                borderBottomRightRadius: index === qlistLength.length - 1 ? scale(12) : 0,
-                backgroundColor: authenticatedUser?.email === item?.customerEmail && colors.selected
-            }]}>
-            <View style={styles.barberContainer}>
-                <Image
-                    style={[styles.avatar, {
-                        borderColor: colors.cardBorder
-                    }]}
-                    source={{ uri: item?.barberProfile?.[0]?.url }}
-                    contentFit="cover"
-                    transition={300}
-                />
-                <CustomText
-                    numberOfLines={1}
-                    ellipsizeMode="tail"
-                    style={styles.barberNameText}
-                >{item.barberName}</CustomText>
-            </View>
+            setQlistData((prev) => ({
+              ...prev,
+              loading: false,
+              data: filteredQlistData,
+              success: true,
+              error: null,
+              isJoinedQueue: queuelistData?.isJoinedQueue,
+            }));
 
-            <View style={[styles.customerContainer]}>
-                <CustomText numberOfLines={1}
-                    ellipsizeMode="tail"
-                    style={[styles.customerText, {
-                        color: colors.secondaryText,
-                    }]}
-                >{authenticatedUser?.email === item?.customerEmail ? item?.name : "Client"}</CustomText>
-            </View>
+            // setQlistData((prev) => ({ ...prev, loading: false, data: queuelistData?.response, success: true, error: null, isJoinedQueue: queuelistData?.isJoinedQueue }))
+          } catch (error) {
+            Toast.error(error?.response?.data?.message);
+            console.log("Canceled queue error ", error?.response?.data);
+            setQlistData((prev) => ({
+              ...prev,
+              loading: false,
+              data: null,
+              success: false,
+              error: error,
+            }));
+            setShowHideQueBtn((prev) => ({
+              ...prev,
+              loading: false,
+              data: null,
+              success: false,
+              error: error,
+            }));
+          }
+        },
+      },
+    ]);
+  };
 
-            <View style={styles.timeContainer}>
-                <CustomText style={[item.qPosition === 1 && styles.statusHighlight, { fontFamily: "AirbnbCereal_W_XBd", fontSize: scale(14) }]}>{item.qPosition === 1 ? "Next" : `#${item.qPosition}`}</CustomText>
-                <CustomText style={{
-                    color: colors.secondaryText,
-                    fontFamily: "AirbnbCereal_W_Bd",
-                    fontSize: scale(13),
-                }}>~{formatMinutesToHrMin(item.customerEWT)}</CustomText>
-            </View>
-        </TouchableOpacity>
-    )
-}
+  return (
+    <TouchableOpacity
+      disabled={authenticatedUser?.email !== item?.customerEmail}
+      onPress={() => {
+        if (authenticatedUser?.email === item?.customerEmail) {
+          cancelQueuePressed(item);
+        }
+      }}
+      style={[
+        styles.queueItem,
+        {
+          borderBottomColor:
+            index !== qlistLength.length - 1 ? colors.queueBorder : undefined,
+          borderBottomWidth: index !== qlistLength.length - 1 ? scale(1) : 0,
+          borderBottomLeftRadius:
+            index === qlistLength.length - 1 ? scale(12) : 0,
+          borderBottomRightRadius:
+            index === qlistLength.length - 1 ? scale(12) : 0,
+          backgroundColor:
+            authenticatedUser?.email === item?.customerEmail && `${colors.accentColor}1A`,
+        },
+      ]}
+    >
+      <View style={styles.barberContainer}>
+        <Image
+          style={[
+            styles.avatar,
+            {
+              borderColor: colors.cardBorder,
+            },
+          ]}
+          source={{ uri: item?.barberProfile?.[0]?.url }}
+          contentFit="cover"
+          transition={300}
+        />
+        <CustomText
+          numberOfLines={1}
+          ellipsizeMode="tail"
+          style={styles.barberNameText}
+        >
+          {item.barberName}
+        </CustomText>
+      </View>
 
-export default QlistItem
+      <View style={[styles.customerContainer]}>
+        <CustomText
+          numberOfLines={1}
+          ellipsizeMode="tail"
+          style={[
+            styles.customerText,
+            {
+              color: colors.secondaryText,
+            },
+          ]}
+        >
+          {authenticatedUser?.email === item?.customerEmail
+            ? item?.name
+            : "Client"}
+        </CustomText>
+      </View>
+
+      <View style={styles.timeContainer}>
+        <CustomText
+          style={[
+            item.qPosition === 1 && { color: colors.accentColor },
+            { fontFamily: "AirbnbCereal_W_XBd", fontSize: scale(14) },
+          ]}
+        >
+          {item.qPosition === 1 ? "Next" : `#${item.qPosition}`}
+        </CustomText>
+        <CustomText
+          style={{
+            color: colors.secondaryText,
+            fontFamily: "AirbnbCereal_W_Bd",
+            fontSize: scale(13),
+          }}
+        >
+          ~{formatMinutesToHrMin(item.customerEWT)}
+        </CustomText>
+      </View>
+    </TouchableOpacity>
+  );
+};
+
+export default QlistItem;
 
 const styles = StyleSheet.create({
-    queueItem: {
-        height: verticalScale(60),
-        paddingHorizontal: scale(12),
-        flexDirection: 'row',
-        alignItems: 'center',
-        justifyContent: 'space-between',
-        gap: scale(2)
-    },
-    barberContainer: {
-        flexDirection: 'row',
-        alignItems: 'center',
-        gap: scale(10),
-        width: "37%",
-        height: "100%",
-    },
-    barberNameText: {
-        flexShrink: 1,
-        overflow: 'hidden',
-        fontFamily: "AirbnbCereal_W_XBd",
-        fontSize: scale(14)
-    },
-    avatar: {
-        width: scale(40),
-        height: scale(40),
-        borderRadius: scale(40),
-        borderWidth: scale(1)
-    },
-    customerContainer: {
-        width: "33%",
-        height: "100%",
-        justifyContent: "center",
-        alignItems: "center",
-    },
+  queueItem: {
+    height: verticalScale(60),
+    paddingHorizontal: scale(12),
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    gap: scale(2),
+  },
+  barberContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: scale(10),
+    width: "37%",
+    height: "100%",
+  },
+  barberNameText: {
+    flexShrink: 1,
+    overflow: "hidden",
+    fontFamily: "AirbnbCereal_W_XBd",
+    fontSize: scale(14),
+  },
+  avatar: {
+    width: scale(40),
+    height: scale(40),
+    borderRadius: scale(40),
+    borderWidth: scale(1),
+  },
+  customerContainer: {
+    width: "33%",
+    height: "100%",
+    justifyContent: "center",
+    alignItems: "center",
+  },
 
-    customerText: {
-        flexShrink: 1,
-        overflow: 'hidden',
-        fontSize: scale(14)
-    },
-    timeContainer: {
-        flexDirection: "column",
-        gap: verticalScale(2),
-        alignItems: "flex-end",
-        width: "28%",
-        height: "100%",
-        justifyContent: "center",
-    },
-    statusHighlight: {
-        color: '#14b8a6'
-    },
+  customerText: {
+    flexShrink: 1,
+    overflow: "hidden",
+    fontSize: scale(14),
+  },
+  timeContainer: {
+    flexDirection: "column",
+    gap: verticalScale(2),
+    alignItems: "flex-end",
+    width: "28%",
+    height: "100%",
+    justifyContent: "center",
+  },
+  statusHighlight: {},
 });
-

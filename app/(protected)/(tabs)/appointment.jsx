@@ -288,13 +288,13 @@ const appointment = () => {
               <View
                 style={[
                   styles.iconContainer,
-                  { backgroundColor: "rgba(13, 148, 136, 0.1)" },
+                  { backgroundColor: `${colors.accentColor}1A` },
                 ]}
               >
                 <Feather
                   name={"calendar"}
                   size={moderateScale(32)}
-                  color={"#14b8a6"}
+                  color={colors.accentColor}
                 />
               </View>
               <CustomText style={styles.cardTitle}>No Appointments</CustomText>
@@ -323,7 +323,10 @@ const appointment = () => {
 
                   // router.push("/appointmentCalendar");
                 }}
-                style={styles.bookButton}
+                style={[
+                  styles.bookButton,
+                  { backgroundColor: colors.accentColor },
+                ]}
                 activeOpacity={0.85}
               >
                 <CustomText style={styles.bookButtonText}>
@@ -347,13 +350,13 @@ const appointment = () => {
                 <View
                   style={[
                     styles.iconContainer,
-                    { backgroundColor: "rgba(13, 148, 136, 0.1)" },
+                    { backgroundColor: `${colors.accentColor}1A`},
                   ]}
                 >
                   <Feather
                     name={"calendar"}
                     size={moderateScale(32)}
-                    color={"#14b8a6"}
+                    color={colors.accentColor}
                   />
                 </View>
                 <CustomText style={styles.cardTitle}>
@@ -383,7 +386,10 @@ const appointment = () => {
                     router.push("/appointmentpopup");
                     // router.push("/appointmentCalendar");
                   }}
-                  style={styles.bookButton}
+                  style={[
+                    styles.bookButton,
+                    { backgroundColor: colors.accentColor },
+                  ]}
                   activeOpacity={0.85}
                 >
                   <CustomText style={styles.bookButtonText}>
@@ -425,6 +431,7 @@ const appointment = () => {
                       style={[
                         styles.bookButton,
                         {
+                          backgroundColor: colors.accentColor,
                           marginBottom: verticalScale(15),
                         },
                       ]}
@@ -573,9 +580,13 @@ const appointment = () => {
                             router.push("/appointmentpopup");
                             // router.push("/appointmentCalendar");
                           }}
-                          style={styles.rebookButton}
+                          style={[styles.rebookButton, {
+                            backgroundColor: `${colors.accentColor}1A`
+                          }]}
                         >
-                          <Text style={styles.rebookText}>Book again</Text>
+                          <Text style={[styles.rebookText, {
+                            color: colors.accentColor
+                          }]}>Book again</Text>
                         </TouchableOpacity>
                       )}
                     </View>
@@ -660,7 +671,7 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   bookButton: {
-    backgroundColor: "#14b8a6", // bg-teal-500
+    // bg-teal-500
     paddingVertical: verticalScale(16), // py-4
     borderRadius: scale(12), // rounded-xl
     paddingHorizontal: scale(60),
@@ -706,13 +717,11 @@ const styles = StyleSheet.create({
     fontSize: moderateScale(12.5),
   },
   rebookButton: {
-    backgroundColor: "#ccfbf1",
     paddingHorizontal: scale(10),
     paddingVertical: verticalScale(5),
     borderRadius: scale(6),
   },
   rebookText: {
-    color: "#0f766e",
     fontSize: scale(12),
     fontWeight: "500",
   },

@@ -1,355 +1,426 @@
-import { Alert, Platform, Pressable, ScrollView, StyleSheet, Text, TouchableOpacity, View } from 'react-native'
-import React, { useCallback, useEffect } from 'react'
-import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
-import { useFocusEffect, useRouter } from 'expo-router';
-import CustomTabView from '../../../components/CustomTabView';
-import { ArrowLeftIcon, NotificationOffIcon } from '../../../constants/icons';
-import CustomText from '../../../components/CustomText';
-import { Image } from 'expo-image';
-import { useTheme } from '@react-navigation/native';
-import { useGlobal } from '../../../context/GlobalContext';
-import axios from 'axios'
-import { BASE_URL } from '@/utils/api';
-import { useAuth } from '../../../context/AuthContext';
-import Skeleton from '../../../components/Skeleton';
-import { io } from "socket.io-client";
-import CustomSecondaryText from '../../../components/CustomSecondaryText';
-import { Toast } from 'toastify-react-native';
+import { BASE_URL } from "@/utils/api";
+import { useTheme } from "@react-navigation/native";
+import axios from "axios";
+import { Image } from "expo-image";
+import { useFocusEffect, useRouter } from "expo-router";
+import { useCallback } from "react";
+import {
+  Alert,
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import { moderateScale, scale, verticalScale } from "react-native-size-matters";
+import { Toast } from "toastify-react-native";
+import CustomSecondaryText from "../../../components/CustomSecondaryText";
+import CustomText from "../../../components/CustomText";
+import Skeleton from "../../../components/Skeleton";
+import { ArrowLeftIcon, NotificationOffIcon } from "../../../constants/icons";
+import { useAuth } from "../../../context/AuthContext";
+import { useGlobal } from "../../../context/GlobalContext";
 
 const notification = () => {
+  const router = useRouter();
+  const { colors } = useTheme();
 
-    const router = useRouter()
-    const { colors } = useTheme()
+  const { notificationListData, setNotificationListData } = useGlobal();
+  const { authenticatedUser } = useAuth();
 
-    const { notificationListData, setNotificationListData } = useGlobal()
-    const { authenticatedUser } = useAuth()
+  // useEffect(() => {
+  //     const fetchNotifications = async () => {
+  //         try {
 
-    // useEffect(() => {
-    //     const fetchNotifications = async () => {
-    //         try {
+  //             setNotificationListData((prev) => ({ ...prev, loading: true }))
 
-    //             setNotificationListData((prev) => ({ ...prev, loading: true }))
+  //             const { data } = await axios.post(`${BASE_URL}/mobileRoutes/getAllNotificationsByCustomerEmail`, {
+  //                 email: authenticatedUser?.email
+  //             })
 
-    //             const { data } = await axios.post(`${BASE_URL}/mobileRoutes/getAllNotificationsByCustomerEmail`, {
-    //                 email: authenticatedUser?.email
-    //             })
+  //             // console.log(JSON.stringify(data?.response, null, 2));
 
-    //             // console.log(JSON.stringify(data?.response, null, 2));
+  //             setNotificationListData((prev) => ({ ...prev, loading: false, notificationData: data?.response, success: true, error: null }))
 
-    //             setNotificationListData((prev) => ({ ...prev, loading: false, notificationData: data?.response, success: true, error: null }))
+  //         } catch (error) {
+  //             setNotificationListData((prev) => ({ ...prev, loading: false, notificationData: null, success: false, error: error }))
+  //             console.log("Error fetching notifications ", error)
+  //         }
+  //     }
 
-    //         } catch (error) {
-    //             setNotificationListData((prev) => ({ ...prev, loading: false, notificationData: null, success: false, error: error }))
-    //             console.log("Error fetching notifications ", error)
-    //         }
-    //     }
+  //     fetchNotifications()
 
-    //     fetchNotifications()
+  // }, [])
 
-    // }, [])
+  // console.log("notificationListData ", notificationListData)
 
+  // const socket = io("https://iqb-final.onrender.com", {
+  //     transports: ['websocket'],
+  // });
 
-    // console.log("notificationListData ", notificationListData)
+  // const fetchNotifications = async () => {
+  //     try {
 
-    // const socket = io("https://iqb-final.onrender.com", {
-    //     transports: ['websocket'],
-    // });
+  //         setNotificationListData((prev) => ({ ...prev, loading: true }))
 
-    // const fetchNotifications = async () => {
-    //     try {
+  //         const { data } = await axios.post(`${BASE_URL}/mobileRoutes/getAllNotificationsByCustomerEmail`, {
+  //             email: authenticatedUser?.email
+  //         });
 
-    //         setNotificationListData((prev) => ({ ...prev, loading: true }))
+  //         // console.log("Data ",data)
 
-    //         const { data } = await axios.post(`${BASE_URL}/mobileRoutes/getAllNotificationsByCustomerEmail`, {
-    //             email: authenticatedUser?.email
-    //         });
+  //         setNotificationListData((prev) => ({
+  //             ...prev,
+  //             loading: false,
+  //             notificationData: data?.response || [],
+  //             success: true,
+  //             error: null
+  //         }));
+  //     } catch (error) {
+  //         setNotificationListData((prev) => ({
+  //             ...prev,
+  //             loading: false,
+  //             notificationData: [],
+  //             success: false,
+  //             error: error
+  //         }));
+  //         console.log("Error fetching notifications ", error);
+  //     }
+  // };
 
-    //         // console.log("Data ",data)
+  // useFocusEffect(
+  //     useCallback(() => {
 
-    //         setNotificationListData((prev) => ({
-    //             ...prev,
-    //             loading: false,
-    //             notificationData: data?.response || [],
-    //             success: true,
-    //             error: null
-    //         }));
-    //     } catch (error) {
-    //         setNotificationListData((prev) => ({
-    //             ...prev,
-    //             loading: false,
-    //             notificationData: [],
-    //             success: false,
-    //             error: error
-    //         }));
-    //         console.log("Error fetching notifications ", error);
-    //     }
-    // };
+  //         fetchNotifications();
 
+  //         socket.emit("joinCustomerforNotifications", { salonId: authenticatedUser?.salonId, customerEmail: authenticatedUser?.email });
 
-    // useFocusEffect(
-    //     useCallback(() => {
+  //         socket.on("receiveNotifications", (notificationData) => {
 
-    //         fetchNotifications();
+  //             setNotificationListData((prev) => ({
+  //                 ...prev,
+  //                 loading: false,
+  //                 notificationData: notificationData,
+  //                 success: true,
+  //                 error: null
+  //             }));
+  //         })
 
-    //         socket.emit("joinCustomerforNotifications", { salonId: authenticatedUser?.salonId, customerEmail: authenticatedUser?.email });
+  //     }, [authenticatedUser])
+  // )
 
-    //         socket.on("receiveNotifications", (notificationData) => {
+  useFocusEffect(
+    useCallback(() => {
+      const fetchNotifications = async () => {
+        try {
+          setNotificationListData((prev) => ({ ...prev, loading: true }));
 
-    //             setNotificationListData((prev) => ({
-    //                 ...prev,
-    //                 loading: false,
-    //                 notificationData: notificationData,
-    //                 success: true,
-    //                 error: null
-    //             }));
-    //         })
+          const { data } = await axios.post(
+            `${BASE_URL}/mobileRoutes/getAllNotificationsByCustomerEmail`,
+            {
+              email: authenticatedUser?.email,
+            },
+          );
 
-    //     }, [authenticatedUser])
-    // )
+          // console.log(JSON.stringify(data?.response, null, 2));
 
+          setNotificationListData((prev) => ({
+            ...prev,
+            loading: false,
+            notificationData: data?.response,
+            success: true,
+            error: null,
+          }));
+        } catch (error) {
+          setNotificationListData((prev) => ({
+            ...prev,
+            loading: false,
+            notificationData: null,
+            success: false,
+            error: error,
+          }));
+          console.log("Error fetching notifications ", error);
+        }
+      };
 
-    useFocusEffect(
-        useCallback(() => {
-            const fetchNotifications = async () => {
-                try {
+      fetchNotifications();
+    }, []),
+  );
 
-                    setNotificationListData((prev) => ({ ...prev, loading: true }))
+  const cancelNotificationPressed = (item) => {
+    Alert.alert(
+      "Delete Notification",
+      "Are you sure you want to delete this notification ?",
+      [
+        {
+          text: "No",
+          style: "cancel",
+        },
+        {
+          text: "Yes",
+          onPress: async () => {
+            try {
+              const cancelNotificationData = {
+                customerEmail: authenticatedUser?.email,
+                id: item?._id,
+              };
 
-                    const { data } = await axios.post(`${BASE_URL}/mobileRoutes/getAllNotificationsByCustomerEmail`, {
-                        email: authenticatedUser?.email
-                    })
+              const { data } = await axios.post(
+                `${BASE_URL}/mobileRoutes/deleteNotifications`,
+                cancelNotificationData,
+              );
 
-                    // console.log(JSON.stringify(data?.response, null, 2));
+              Toast.success(data?.message || "Customer cancelled successfully");
 
-                    setNotificationListData((prev) => ({ ...prev, loading: false, notificationData: data?.response, success: true, error: null }))
+              setNotificationListData((prev) => ({ ...prev, loading: true }));
 
-                } catch (error) {
-                    setNotificationListData((prev) => ({ ...prev, loading: false, notificationData: null, success: false, error: error }))
-                    console.log("Error fetching notifications ", error)
-                }
-            }
-
-            fetchNotifications()
-        }, [])
-    )
-
-
-    const cancelNotificationPressed = (item) => {
-        Alert.alert(
-            "Delete Notification",
-            "Are you sure you want to delete this notification ?",
-            [
+              const { data: notificationListData } = await axios.post(
+                `${BASE_URL}/mobileRoutes/getAllNotificationsByCustomerEmail`,
                 {
-                    text: "No",
-                    style: "cancel"
+                  email: authenticatedUser?.email,
                 },
-                {
-                    text: "Yes",
-                    onPress: async () => {
-                        try {
-                            const cancelNotificationData = {
-                                customerEmail: authenticatedUser?.email,
-                                id: item?._id
-                            };
+              );
 
-                            const { data } = await axios.post(`${BASE_URL}/mobileRoutes/deleteNotifications`, cancelNotificationData);
+              // console.log(JSON.stringify(data?.response, null, 2));
 
-                            Toast.success(data?.message || "Customer cancelled successfully");
+              setNotificationListData((prev) => ({
+                ...prev,
+                loading: false,
+                notificationData: notificationListData?.response,
+                success: true,
+                error: null,
+              }));
+            } catch (error) {
+              Toast.error(error?.response?.data?.message);
+              console.log("Canceled queue error ", error?.response?.data);
+              setQlistData((prev) => ({
+                ...prev,
+                loading: false,
+                data: null,
+                success: false,
+                error: error,
+              }));
+              setShowHideQueBtn((prev) => ({
+                ...prev,
+                loading: false,
+                data: null,
+                success: false,
+                error: error,
+              }));
+            }
+          },
+        },
+      ],
+    );
+  };
 
-                            setNotificationListData((prev) => ({ ...prev, loading: true }))
-
-                            const { data:notificationListData } = await axios.post(`${BASE_URL}/mobileRoutes/getAllNotificationsByCustomerEmail`, {
-                                email: authenticatedUser?.email
-                            })
-
-                            // console.log(JSON.stringify(data?.response, null, 2));
-
-                            setNotificationListData((prev) => ({ ...prev, loading: false, notificationData: notificationListData?.response, success: true, error: null }))
-
-
-                        } catch (error) {
-                            Toast.error(error?.response?.data?.message)
-                            console.log("Canceled queue error ", error?.response?.data);
-                            setQlistData((prev) => ({ ...prev, loading: false, data: null, success: false, error: error }))
-                            setShowHideQueBtn((prev) => ({ ...prev, loading: false, data: null, success: false, error: error }))
-                        }
-                    }
-                }
-            ]
-        );
-    };
-
-
-    return (
-        <View
-            style={{
-                paddingHorizontal: scale(10),
-                paddingTop: verticalScale(10),
-                backgroundColor: colors.background,
-                paddingVertical: verticalScale(0),
-                flex: 1,
-                paddingBottom: Platform.OS === "ios" ? verticalScale(80) : verticalScale(20),
-                gap: verticalScale(10),
-            }}
+  return (
+    <View
+      style={{
+        paddingHorizontal: scale(10),
+        paddingTop: verticalScale(10),
+        backgroundColor: colors.background,
+        paddingVertical: verticalScale(0),
+        flex: 1,
+        paddingBottom:
+          Platform.OS === "ios" ? verticalScale(80) : verticalScale(20),
+        gap: verticalScale(10),
+      }}
+    >
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          gap: scale(10),
+        }}
+      >
+        <Pressable onPress={() => router.replace("/home")}>
+          <ArrowLeftIcon color={colors.text} />
+        </Pressable>
+        <CustomText
+          style={{
+            flex: 1,
+            fontSize: scale(18),
+            fontFamily: "AirbnbCereal_W_XBd",
+          }}
         >
+          Notification
+        </CustomText>
+      </View>
 
-            <View style={{
+      <ScrollView
+        contentContainerStyle={{
+          gap: verticalScale(10),
+          paddingBottom: verticalScale(20),
+          flexGrow:
+            notificationListData?.loading ||
+            notificationListData?.notificationData?.length > 0
+              ? 0
+              : 1,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+        showsVerticalScrollIndicator={false}
+      >
+        {notificationListData?.loading ? (
+          <>
+            <Skeleton
+              height={verticalScale(70)}
+              style={{
+                borderRadius: scale(10),
+              }}
+            />
+            <Skeleton
+              height={verticalScale(70)}
+              style={{
+                borderRadius: scale(10),
+              }}
+            />
+            <Skeleton
+              height={verticalScale(70)}
+              style={{
+                borderRadius: scale(10),
+              }}
+            />
+            <Skeleton
+              height={verticalScale(70)}
+              style={{
+                borderRadius: scale(10),
+              }}
+            />
+            <Skeleton
+              height={verticalScale(70)}
+              style={{
+                borderRadius: scale(10),
+              }}
+            />
+          </>
+        ) : notificationListData?.notificationData?.length > 0 ? (
+          notificationListData?.notificationData?.map((item, index) => (
+            <TouchableOpacity
+              onPress={() => cancelNotificationPressed(item)}
+              key={index}
+              style={{
+                paddingVertical: verticalScale(15),
                 flexDirection: "row",
-                alignItems: "center",
-                gap: scale(10)
-            }}>
-                <Pressable onPress={() => router.replace("/home")}><ArrowLeftIcon color={colors.text} /></Pressable>
-                <CustomText style={{
-                    flex: 1,
-                    fontSize: scale(18),
-                    fontFamily: "AirbnbCereal_W_XBd",
-                }}>Notification</CustomText>
+                gap: scale(10),
+                borderRadius: scale(12),
+                paddingHorizontal: scale(15),
+                backgroundColor: colors.cardColor,
+                borderColor: colors.queueBorder,
+                borderWidth: scale(1),
+              }}
+            >
+              <Image
+                style={{
+                  height: scale(45),
+                  width: scale(45),
+                  borderRadius: scale(40),
+                }}
+                source={{ uri: item?.salonLogo?.[0]?.url }}
+                contentFit="cover"
+                transition={300}
+              />
+
+              <View style={{ gap: verticalScale(3), flex: 1 }}>
+                <CustomText
+                  style={{
+                    // fontSize: scale(14),
+                    fontFamily: "AirbnbCereal_W_Bd",
+                  }}
+                >
+                  {item?.title}
+                </CustomText>
+
+                <CustomSecondaryText
+                  style={
+                    {
+                      // fontSize: scale(12),
+                    }
+                  }
+                >
+                  {item?.body}
+                </CustomSecondaryText>
+              </View>
+            </TouchableOpacity>
+          ))
+        ) : (
+          <View
+            style={[
+              styles.noQueueContainer,
+              {
+                borderColor: colors.queueBorder,
+                backgroundColor: colors.cardColor,
+              },
+            ]}
+          >
+            <View
+              style={[
+                styles.iconContainer,
+                { backgroundColor: "rgba(13, 148, 136, 0.1)" },
+              ]}
+            >
+              <NotificationOffIcon
+                size={moderateScale(32)}
+                color={colors.accentColor}
+              />
             </View>
 
-            <ScrollView
-                contentContainerStyle={{
-                    gap: verticalScale(10),
-                    paddingBottom: verticalScale(20),
-                    flexGrow: notificationListData?.loading || notificationListData?.notificationData?.length > 0 ? 0 : 1,
-                    justifyContent: "center",
-                    alignItems: "center",
-                }}
-                showsVerticalScrollIndicator={false}
+            <CustomText
+              style={{
+                fontFamily: "AirbnbCereal_W_XBd",
+                fontSize: scale(20),
+                textAlign: "center",
+              }}
             >
-                {
-                    notificationListData?.loading ? (
-                        <>
-                            <Skeleton
-                                height={verticalScale(70)}
-                                style={{
-                                    borderRadius: scale(10),
-                                }}
-                            />
-                            <Skeleton
-                                height={verticalScale(70)}
-                                style={{
-                                    borderRadius: scale(10),
-                                }}
-                            />
-                            <Skeleton
-                                height={verticalScale(70)}
-                                style={{
-                                    borderRadius: scale(10),
-                                }}
-                            />
-                            <Skeleton
-                                height={verticalScale(70)}
-                                style={{
-                                    borderRadius: scale(10),
-                                }}
-                            />
-                            <Skeleton
-                                height={verticalScale(70)}
-                                style={{
-                                    borderRadius: scale(10),
-                                }}
-                            />
-                        </>
-                    ) : notificationListData?.notificationData?.length > 0 ? (
-                        notificationListData?.notificationData?.map((item, index) => (
-                            <TouchableOpacity
-                                onPress={() => cancelNotificationPressed(item)}
-                                key={index}
-                                style={{
-                                    paddingVertical: verticalScale(15),
-                                    flexDirection: "row",
-                                    gap: scale(10),
-                                    borderRadius: scale(12),
-                                    paddingHorizontal: scale(15),
-                                    backgroundColor: colors.cardColor,
-                                    borderColor: colors.queueBorder,
-                                    borderWidth: scale(1)
-                                }}
-                            >
-                                <Image
-                                    style={{ height: scale(45), width: scale(45), borderRadius: scale(40) }}
-                                    source={{ uri: item?.salonLogo?.[0]?.url }}
-                                    contentFit="cover"
-                                    transition={300}
-                                />
+              No Notification
+            </CustomText>
 
-                                <View style={{ gap: verticalScale(3), flex: 1 }}>
-                                    <CustomText
-                                        style={{
-                                            // fontSize: scale(14),
-                                            fontFamily: "AirbnbCereal_W_Bd"
-                                        }}
-                                    >{item?.title}</CustomText>
+            <CustomText
+              style={{
+                fontFamily: "AirbnbCereal_W_Bd",
+                fontSize: scale(16),
+                textAlign: "center",
+                color: colors.secondaryText,
+              }}
+            >
+              You don't have notification
+            </CustomText>
+          </View>
+        )}
+      </ScrollView>
+    </View>
+  );
+};
 
-                                    <CustomSecondaryText
-                                        style={{
-                                            // fontSize: scale(12),
-                                        }}
-                                    >{item?.body}</CustomSecondaryText>
-                                </View>
-                            </TouchableOpacity>
-                        ))
-                    ) : (
-                        <View style={[styles.noQueueContainer, {
-                            borderColor: colors.queueBorder,
-                            backgroundColor: colors.cardColor,
-                        }]}>
-                            <View style={[styles.iconContainer, { backgroundColor: "rgba(13, 148, 136, 0.1)" }]}>
-                                <NotificationOffIcon size={moderateScale(32)} color={"#14b8a6"} />
-                            </View>
-
-                            <CustomText style={{
-                                fontFamily: "AirbnbCereal_W_XBd",
-                                fontSize: scale(20),
-                                textAlign: "center",
-                            }}>No Notification</CustomText>
-
-                            <CustomText style={{
-                                fontFamily: "AirbnbCereal_W_Bd",
-                                fontSize: scale(16),
-                                textAlign: "center",
-                                color: colors.secondaryText,
-                            }}>
-                                You don't have notification
-                            </CustomText>
-                        </View>
-                    )
-
-                }
-            </ScrollView>
-
-        </View>
-    )
-}
-
-export default notification
+export default notification;
 
 const styles = StyleSheet.create({
-    noQueueContainer: {
-        width: '100%',
-        borderWidth: scale(1),
-        borderRadius: scale(12),
-        // flex: 0.90,
-        padding: scale(30),
-        gap: verticalScale(20)
-    },
+  noQueueContainer: {
+    width: "100%",
+    borderWidth: scale(1),
+    borderRadius: scale(12),
+    // flex: 0.90,
+    padding: scale(30),
+    gap: verticalScale(20),
+  },
 
-    iconContainer: {
-        width: scale(80),
-        height: scale(80),
-        borderRadius: scale(80),
-        justifyContent: "center",
-        alignItems: "center",
-        marginHorizontal: "auto",
-    }
-})
+  iconContainer: {
+    width: scale(80),
+    height: scale(80),
+    borderRadius: scale(80),
+    justifyContent: "center",
+    alignItems: "center",
+    marginHorizontal: "auto",
+  },
+});
 
 // import { useState, useEffect, useRef } from 'react';
 // import { Text, View, Button, Platform } from 'react-native';
 // import * as Device from 'expo-device';
 // import * as Notifications from 'expo-notifications';
 // import Constants from 'expo-constants';
-
 
 // Notifications.setNotificationHandler({
 //     handleNotification: async () => ({
@@ -359,8 +430,6 @@ const styles = StyleSheet.create({
 //         shouldShowList: true,
 //     }),
 // });
-
-
 
 // async function sendPushNotification(expoPushToken) {
 //     try {
@@ -384,7 +453,6 @@ const styles = StyleSheet.create({
 //             body: JSON.stringify(message),
 //         });
 
-
 //         const result = await response.json(); // ✅ Get actual result
 //         console.log("Push notification response:", result);
 
@@ -392,7 +460,6 @@ const styles = StyleSheet.create({
 //         console.log("Error sending notification ", error)
 //     }
 // }
-
 
 // function handleRegistrationError(errorMessage) {
 //     alert(errorMessage);
@@ -441,7 +508,6 @@ const styles = StyleSheet.create({
 //         handleRegistrationError('Must use physical device for push notifications');
 //     }
 // }
-
 
 // async function getNoti() {
 //     try {

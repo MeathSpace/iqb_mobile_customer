@@ -1046,7 +1046,7 @@ const appointmentCalendar = () => {
                                   style={{
                                     paddingHorizontal: scale(10),
                                     paddingVertical: verticalScale(3),
-                                    backgroundColor: "#CCF2E8",
+                                    backgroundColor: `${colors.accentColor}1A`,
                                     borderRadius: scale(6),
                                     alignSelf: "flex-start",
                                   }}
@@ -1055,7 +1055,7 @@ const appointmentCalendar = () => {
                                     style={{
                                       fontSize: moderateScale(11),
                                       fontFamily: "AirbnbCereal_W_Md",
-                                      color: "#0D9488",
+                                      color: colors.accentColor,
                                     }}
                                   >
                                     {item?.serviceCategoryName}
@@ -1067,7 +1067,7 @@ const appointmentCalendar = () => {
                                   style={{
                                     fontFamily: "AirbnbCereal_W_Blk",
                                     fontSize: scale(20),
-                                    color: "#0D9488",
+                                    color: colors.accentColor,
                                     marginTop: verticalScale(4),
                                   }}
                                 >
@@ -1140,7 +1140,7 @@ const appointmentCalendar = () => {
                           flexDirection: "row",
                           alignItems: "center",
                           justifyContent: "space-between",
-                          backgroundColor: "#00B0901A",
+                          backgroundColor: `${colors.accentColor}1A`,
                           borderRadius: scale(10),
                           padding: scale(10),
                           borderWidth:
@@ -1149,7 +1149,7 @@ const appointmentCalendar = () => {
                               : scale(0),
                           borderColor:
                             item?.barberId === selectedCustomerBarber?.barberId
-                              ? "#0BA3AD"
+                              ? colors.accentColor
                               : null,
                         }}
                         onPress={() => {
@@ -1229,7 +1229,7 @@ const appointmentCalendar = () => {
                           flexDirection: "row",
                           alignItems: "center",
                           justifyContent: "space-between",
-                          backgroundColor: "#00B0901A",
+                          backgroundColor: `${colors.accentColor}1A`,
                           borderRadius: scale(10),
                           padding: scale(10),
                           borderWidth:
@@ -1238,7 +1238,7 @@ const appointmentCalendar = () => {
                               : scale(0),
                           borderColor:
                             item?.barberId === selectedCustomerBarber?.barberId
-                              ? "#0BA3AD"
+                              ? colors.accentColor
                               : null,
                         }}
                         onPress={() => {
@@ -1359,7 +1359,7 @@ const appointmentCalendar = () => {
                                 style={{
                                   paddingHorizontal: scale(10),
                                   paddingVertical: verticalScale(3),
-                                  backgroundColor: "#CCF2E8",
+                                  backgroundColor: `${colors.accentColor}1A`,
                                   borderRadius: scale(6),
                                   alignSelf: "flex-start",
                                 }}
@@ -1368,7 +1368,7 @@ const appointmentCalendar = () => {
                                   style={{
                                     fontSize: moderateScale(11),
                                     fontFamily: "AirbnbCereal_W_Md",
-                                    color: "#0D9488",
+                                    color: colors.accentColor,
                                   }}
                                 >
                                   {item?.serviceCategoryName}
@@ -1380,7 +1380,7 @@ const appointmentCalendar = () => {
                                 style={{
                                   fontFamily: "AirbnbCereal_W_Blk",
                                   fontSize: scale(20),
-                                  color: "#0D9488",
+                                  color: colors.accentColor,
                                   marginTop: verticalScale(4),
                                 }}
                               >
@@ -1479,13 +1479,16 @@ const appointmentCalendar = () => {
                         : goToPrevMonth
                     }
                     style={[
-                      styles.navButton,
+                      [
+                        styles.navButton,
+                        { backgroundColor: `${colors.accentColor}1A` },
+                      ],
                       currentMonth.isSame(moment(), "month") && {
                         opacity: 0.3,
                       },
                     ]}
                   >
-                    <LeftIcon color={"#14b8a6"} size={scale(16)} />
+                    <LeftIcon color={colors.accentColor} size={scale(16)} />
                   </Pressable>
                   <Pressable
                     disabled={isNextDisabled}
@@ -1495,7 +1498,7 @@ const appointmentCalendar = () => {
                       isNextDisabled && { opacity: 0.3 },
                     ]}
                   >
-                    <RightIcon color={"#14b8a6"} size={scale(16)} />
+                    <RightIcon color={colors.accentColor} size={scale(16)} />
                   </Pressable>
                 </View>
               </View>
@@ -1525,11 +1528,11 @@ const appointmentCalendar = () => {
                             ? colors.appointmentDisableBg
                             : disableDates?.includes(day?.fullDate)
                               ? colors.appointmentDisableBg
-                              : "#00B0901A",
+                              : `${colors.accentColor}1A`,
 
                         borderColor:
                           selectedCalenderDate === day?.fullDate
-                            ? "#0BA3AD"
+                            ? colors.accentColor
                             : null,
                         borderWidth:
                           selectedCalenderDate === day?.fullDate
@@ -1555,7 +1558,7 @@ const appointmentCalendar = () => {
                             ? colors.text
                             : disableDates?.includes(day?.fullDate)
                               ? colors.text
-                              : "#14b8a6",
+                              : colors.accentColor,
                       }}
                     >
                       {day.date}
@@ -1585,7 +1588,7 @@ const appointmentCalendar = () => {
                         setIsNotifyCheck(val);
                         setUserToggled(true);
                       }}
-                      color={isNotifyCheck ? "#00B090" : undefined}
+                      color={isNotifyCheck ? colors.accentColor : undefined}
                       style={{
                         height: scale(16),
                         width: scale(16),
@@ -1733,7 +1736,7 @@ const appointmentCalendar = () => {
                           }}
                           key={index}
                           style={{
-                            backgroundColor: "#00B0901A",
+                            backgroundColor: `${colors.accentColor}1A`,
                             alignSelf: "flex-start",
                             width: "31%",
                             height: verticalScale(40),
@@ -1746,13 +1749,13 @@ const appointmentCalendar = () => {
                                 : scale(0),
                             borderColor:
                               selectedEngageTimeSlot === item?.timeInterval
-                                ? "#0BA3AD"
+                                ? colors.accentColor
                                 : null,
                           }}
                         >
                           <CustomText
                             style={{
-                              color: "#14b8a6",
+                              color: colors.accentColor,
                               fontSize: scale(16),
                             }}
                           >
@@ -1777,7 +1780,7 @@ const appointmentCalendar = () => {
                   padding: scale(16),
                   borderRadius: scale(8),
                   textAlignVertical: "top",
-                  backgroundColor: "#00B0901A",
+                  backgroundColor: `${colors.accentColor}1A`,
                   color: colors.text,
                   fontSize: moderateScale(16),
                 }}
@@ -1921,7 +1924,7 @@ const appointmentCalendar = () => {
               disabled={paymentSettingsLoading}
             >
               {activeSection === "appointmentnote" ? (
-                <CustomText style={{ color: "#fff" }}>Finish</CustomText>
+                <CustomText style={{ color: colors.background }}>Finish</CustomText>
               ) : (
                 // <RightIcon size={scale(12)} color="#fff" />
                 <CustomText
@@ -1970,7 +1973,6 @@ const styles = StyleSheet.create({
   searchButton: {
     height: verticalScale(40),
     borderRadius: scale(10),
-    backgroundColor: "#14b8a6",
     paddingHorizontal: scale(25),
     justifyContent: "center",
     alignItems: "center",
@@ -1997,7 +1999,6 @@ const styles = StyleSheet.create({
     gap: scale(10),
   },
   navButton: {
-    backgroundColor: "#00B0901A",
     width: scale(30),
     height: scale(30),
     borderRadius: scale(25),
@@ -2011,7 +2012,6 @@ const styles = StyleSheet.create({
   dayBox: {
     width: scale(60),
     height: verticalScale(70),
-    backgroundColor: "#00B0901A",
     borderRadius: scale(4),
     alignItems: "center",
     justifyContent: "center",
@@ -2020,7 +2020,7 @@ const styles = StyleSheet.create({
 
   queueButton: {
     width: "40%",
-    backgroundColor: "#14b8a6", // bg-teal-500
+    // bg-teal-500
     paddingVertical: verticalScale(12), // py-4
     borderRadius: scale(8), // rounded-xl
     marginBottom: verticalScale(15), // mb-6

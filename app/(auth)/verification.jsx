@@ -1,204 +1,250 @@
-import { ActivityIndicator, Alert, Keyboard, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { useLocalSearchParams, useRouter } from 'expo-router'
-import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
-import CustomView from '../../components/CustomView';
-import ProgressHeader from '../../components/ProgressHeader';
-import CustomText from '../../components/CustomText';
-import CustomSecondaryText from '../../components/CustomSecondaryText';
-import { usePreventRemove, useTheme } from '@react-navigation/native';
-import { Colors } from '@/constants/Colors';
-import { ErrorIcon } from '../../constants/icons';
-import axios from 'axios';
-import { BASE_URL } from '@/utils/api';
-import { Toast } from 'toastify-react-native'
-import { useAuth } from '../../context/AuthContext'
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { BASE_URL } from "@/utils/api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTheme } from "@react-navigation/native";
+import axios from "axios";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { useEffect, useState } from "react";
+import {
+  ActivityIndicator,
+  Keyboard,
+  Pressable,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
+import { moderateScale, scale, verticalScale } from "react-native-size-matters";
+import { Toast } from "toastify-react-native";
+import CustomSecondaryText from "../../components/CustomSecondaryText";
+import CustomText from "../../components/CustomText";
+import CustomView from "../../components/CustomView";
+import ProgressHeader from "../../components/ProgressHeader";
+import { ErrorIcon } from "../../constants/icons";
+import { useAuth } from "../../context/AuthContext";
 
 const verification = () => {
+  const {
+    email,
+    fullName,
+    gender,
+    callingCode,
+    phoneNumber,
+    // verificationOtp,
+    selectedDate,
+    authType,
+    password,
+  } = useLocalSearchParams();
 
-    const { email,
-        fullName,
+  const { colors } = useTheme();
+
+  // console.log("Current Email ", email)
+  // console.log("Auth Type Verification ", authType ?? " none")
+
+  const [verificationCode, setVerificationCode] = useState("");
+  const [verificationCodeError, setVerificationCodeError] = useState("");
+  const [currentVerificationOtp, setCurrentVerificationOtp] = useState("");
+  const [verificationCodeLoading, setVerificationCodeLoading] = useState(false);
+  const [signupLoading, setSignupLoading] = useState(false);
+
+  useEffect(() => {
+    if (email && phoneNumber && callingCode) {
+      const sendCustomerVerificationCodeFnc = async () => {
+        try {
+          const { data } = await axios.post(
+            `${BASE_URL}/customer/sendCustomerVerificationCode`,
+            {
+              email,
+              mobileCountryCode: callingCode,
+              mobileNumber: phoneNumber,
+            },
+          );
+          setCurrentVerificationOtp(data?.response);
+        } catch (error) {
+          Toast.error(error?.response?.data?.message);
+        }
+      };
+
+      sendCustomerVerificationCodeFnc();
+    }
+  }, [email, phoneNumber, callingCode]);
+
+  const router = useRouter();
+
+  const [progressOne, setProgressOne] = useState(1);
+  const [progressTwo, setProgressTwo] = useState(1);
+  const [progressThree, setProgressThree] = useState(0.5);
+
+  const {
+    setIsAuthenticated,
+    setAuthenticatedUser,
+    setSignInData,
+    signInData,
+  } = useAuth();
+
+  const signupHandler = async () => {
+    try {
+      if (!verificationCode) {
+        setVerificationCodeError("Verification code is required");
+        return;
+      } else if (Number(verificationCode) !== Number(currentVerificationOtp)) {
+        setVerificationCodeError("Verification code does not match");
+        return;
+      }
+
+      const signUpData = {
+        email,
+        name: fullName,
         gender,
-        callingCode,
-        phoneNumber,
-        // verificationOtp,
-        selectedDate,
-        authType,
-        password } = useLocalSearchParams();
+        dateOfBirth: selectedDate ? selectedDate : "",
+        mobileCountryCode: callingCode,
+        mobileNumber: phoneNumber,
+        password,
+      };
 
-    const { colors } = useTheme()
+      const oauthSignUpData = {
+        email,
+        name: fullName,
+        gender,
+        dateOfBirth: selectedDate ? selectedDate : "",
+        mobileCountryCode: callingCode,
+        mobileNumber: phoneNumber,
+      };
 
-    // console.log("Current Email ", email)
-    // console.log("Auth Type Verification ", authType ?? " none")
+      // console.log("Sign up data ", signUpData)
 
-    const [verificationCode, setVerificationCode] = useState("")
-    const [verificationCodeError, setVerificationCodeError] = useState("")
-    const [currentVerificationOtp, setCurrentVerificationOtp] = useState("")
-    const [verificationCodeLoading, setVerificationCodeLoading] = useState(false)
-    const [signupLoading, setSignupLoading] = useState(false)
+      setSignupLoading(true);
 
-    useEffect(() => {
-        if (email && phoneNumber && callingCode) {
-            const sendCustomerVerificationCodeFnc = async () => {
-                try {
-                    const { data } = await axios.post(`${BASE_URL}/customer/sendCustomerVerificationCode`, {
-                        email,
-                        mobileCountryCode: callingCode,
-                        mobileNumber: phoneNumber
-                    })
-                    setCurrentVerificationOtp(data?.response)
+      if (authType === "google") {
+        const { data } = await axios.post(
+          `${BASE_URL}/customer/googleCustomerSignup`,
+          oauthSignUpData,
+        );
+        setSignInData((prev) => ({
+          ...prev,
+          loading: false,
+          user: data?.response,
+          success: true,
+          error: null,
+        }));
 
-                } catch (error) {
-                    Toast.error(error?.response?.data?.message)
-                }
-            }
+        await AsyncStorage.setItem("isAuthenticated", JSON.stringify(true));
+        await AsyncStorage.setItem(
+          "LoggedInUser",
+          JSON.stringify(data?.response),
+        );
+        setAuthenticatedUser(data?.response);
+        setIsAuthenticated(true);
+        router.push("/home");
+      } else if (authType === "apple") {
+        const { data } = await axios.post(
+          `${BASE_URL}/customer/appleCustomerSignup`,
+          oauthSignUpData,
+        );
+        setSignInData((prev) => ({
+          ...prev,
+          loading: false,
+          user: data?.response,
+          success: true,
+          error: null,
+        }));
 
-            sendCustomerVerificationCodeFnc()
-        }
-    }, [email, phoneNumber, callingCode])
+        await AsyncStorage.setItem("isAuthenticated", JSON.stringify(true));
+        await AsyncStorage.setItem(
+          "LoggedInUser",
+          JSON.stringify(data?.response),
+        );
+        setAuthenticatedUser(data?.response);
+        setIsAuthenticated(true);
+        router.push("/home");
+      } else {
+        const { data } = await axios.post(
+          `${BASE_URL}/customer/signUp`,
+          signUpData,
+        );
 
-    const router = useRouter()
+        setSignInData((prev) => ({
+          ...prev,
+          loading: false,
+          user: data?.response,
+          success: true,
+          error: null,
+        }));
 
-    const [progressOne, setProgressOne] = useState(1)
-    const [progressTwo, setProgressTwo] = useState(1)
-    const [progressThree, setProgressThree] = useState(0.5)
+        await AsyncStorage.setItem("isAuthenticated", JSON.stringify(true));
+        await AsyncStorage.setItem(
+          "LoggedInUser",
+          JSON.stringify(data?.response),
+        );
+        setAuthenticatedUser(data?.response);
+        setIsAuthenticated(true);
+        router.push("/home");
+      }
+    } catch (error) {
+      console.log(error?.data);
+      setSignupLoading(false);
+      Toast.error(error?.response?.data?.message);
+    }
+  };
 
-    const { setIsAuthenticated, setAuthenticatedUser, setSignInData, signInData } = useAuth()
+  const [verificationTime, setVerificationTime] = useState(0); // countdown timer
+  const [isCooldown, setIsCooldown] = useState(false);
 
-    const signupHandler = async () => {
-        try {
-            if (!verificationCode) {
-                setVerificationCodeError("Verification code is required")
-                return;
-            } else if (Number(verificationCode) !== Number(currentVerificationOtp)) {
-                setVerificationCodeError("Verification code does not match")
-                return;
-            }
-
-            const signUpData = {
-                email,
-                name: fullName,
-                gender,
-                dateOfBirth: selectedDate ? selectedDate : "",
-                mobileCountryCode: callingCode,
-                mobileNumber: phoneNumber,
-                password
-            }
-
-            const oauthSignUpData = {
-                email,
-                name: fullName,
-                gender,
-                dateOfBirth: selectedDate ? selectedDate : "",
-                mobileCountryCode: callingCode,
-                mobileNumber: phoneNumber,
-            }
-
-
-            // console.log("Sign up data ", signUpData)
-
-            setSignupLoading(true)
-
-
-            if (authType === "google") {
-                const { data } = await axios.post(`${BASE_URL}/customer/googleCustomerSignup`, oauthSignUpData)
-                setSignInData((prev) => ({ ...prev, loading: false, user: data?.response, success: true, error: null }))
-
-                await AsyncStorage.setItem("isAuthenticated", JSON.stringify(true))
-                await AsyncStorage.setItem("LoggedInUser", JSON.stringify(data?.response))
-                setAuthenticatedUser(data?.response)
-                setIsAuthenticated(true)
-                router.push("/home")
-
-            } else if (authType === "apple") {
-                const { data } = await axios.post(`${BASE_URL}/customer/appleCustomerSignup`, oauthSignUpData)
-                setSignInData((prev) => ({ ...prev, loading: false, user: data?.response, success: true, error: null }))
-
-                await AsyncStorage.setItem("isAuthenticated", JSON.stringify(true))
-                await AsyncStorage.setItem("LoggedInUser", JSON.stringify(data?.response))
-                setAuthenticatedUser(data?.response)
-                setIsAuthenticated(true)
-                router.push("/home")
-            } else {
-
-                const { data } = await axios.post(`${BASE_URL}/customer/signUp`, signUpData)
-
-                setSignInData((prev) => ({ ...prev, loading: false, user: data?.response, success: true, error: null }))
-
-                await AsyncStorage.setItem("isAuthenticated", JSON.stringify(true))
-                await AsyncStorage.setItem("LoggedInUser", JSON.stringify(data?.response))
-                setAuthenticatedUser(data?.response)
-                setIsAuthenticated(true)
-                router.push("/home")
-            }
-
-        } catch (error) {
-            console.log(error?.data)
-            setSignupLoading(false)
-            Toast.error(error?.response?.data?.message)
-        }
+  useEffect(() => {
+    let interval;
+    if (isCooldown && verificationTime > 0) {
+      interval = setInterval(() => {
+        setVerificationTime((prev) => prev - 1);
+      }, 1000);
     }
 
-
-    const [verificationTime, setVerificationTime] = useState(0); // countdown timer
-    const [isCooldown, setIsCooldown] = useState(false);
-
-    useEffect(() => {
-        let interval;
-        if (isCooldown && verificationTime > 0) {
-            interval = setInterval(() => {
-                setVerificationTime(prev => prev - 1);
-            }, 1000);
-        }
-
-        if (verificationTime === 0) {
-            setIsCooldown(false);
-            clearInterval(interval);
-        }
-
-        return () => clearInterval(interval);
-    }, [isCooldown, verificationTime]);
-
-
-    const resendVerification = async () => {
-
-        if (isCooldown) {
-            Toast.error("Please wait before requesting another code.");
-            return;
-        }
-
-        try {
-            setVerificationCodeLoading(true)
-            const { data } = await axios.post(`${BASE_URL}/customer/sendCustomerVerificationCode`, {
-                email,
-                mobileCountryCode: callingCode,
-                mobileNumber: phoneNumber
-            })
-            setVerificationCodeLoading(false)
-            setCurrentVerificationOtp(data?.response)
-            console.log("Resend verification Code ", data?.response)
-
-            // ✅ Start cooldown here
-            setIsCooldown(true);
-            setVerificationTime(30);
-
-        } catch (error) {
-            setVerificationCodeLoading(false)
-            console.log("Verification Otp error ", error)
-            Toast.error(error?.response?.data?.message)
-        }
+    if (verificationTime === 0) {
+      setIsCooldown(false);
+      clearInterval(interval);
     }
 
-    return (
-        <TouchableWithoutFeedback onPress={() => {
-            Keyboard.dismiss();
-        }}>
-            <CustomView style={{ justifyContent: "space-between" }}>
-                <View style={{ gap: verticalScale(20) }}>
+    return () => clearInterval(interval);
+  }, [isCooldown, verificationTime]);
 
+  const resendVerification = async () => {
+    if (isCooldown) {
+      Toast.error("Please wait before requesting another code.");
+      return;
+    }
 
-                    {/* {authType === "google" ? (
+    try {
+      setVerificationCodeLoading(true);
+      const { data } = await axios.post(
+        `${BASE_URL}/customer/sendCustomerVerificationCode`,
+        {
+          email,
+          mobileCountryCode: callingCode,
+          mobileNumber: phoneNumber,
+        },
+      );
+      setVerificationCodeLoading(false);
+      setCurrentVerificationOtp(data?.response);
+      console.log("Resend verification Code ", data?.response);
+
+      // ✅ Start cooldown here
+      setIsCooldown(true);
+      setVerificationTime(30);
+    } catch (error) {
+      setVerificationCodeLoading(false);
+      console.log("Verification Otp error ", error);
+      Toast.error(error?.response?.data?.message);
+    }
+  };
+
+  return (
+    <TouchableWithoutFeedback
+      onPress={() => {
+        Keyboard.dismiss();
+      }}
+    >
+      <CustomView style={{ justifyContent: "space-between" }}>
+        <View style={{ gap: verticalScale(20) }}>
+          {/* {authType === "google" ? (
                         <ProgressHeader
                             progressOne={progressOne}
                             progressTwo={0.5}
@@ -212,76 +258,80 @@ const verification = () => {
                         />
                     )} */}
 
+          <ProgressHeader
+            progressOne={progressOne}
+            progressTwo={progressTwo}
+            progressThree={progressThree}
+          />
 
-                    <ProgressHeader
-                        progressOne={progressOne}
-                        progressTwo={progressTwo}
-                        progressThree={progressThree}
-                    />
+          <View>
+            <CustomText style={styles.heading}>You're all set!</CustomText>
 
+            <CustomSecondaryText>
+              Enter the 4 digit code sent to your mobile number and email
+            </CustomSecondaryText>
+          </View>
 
-                    <View>
-                        <CustomText style={styles.heading}>
-                            You're all set!
-                        </CustomText>
+          <View style={styles.inputWrapper}>
+            <CustomText>Verification Code</CustomText>
 
-                        <CustomSecondaryText>
-                            Enter the 4 digit code sent to your mobile number and email
-                        </CustomSecondaryText>
-                    </View>
+            <TextInput
+              editable
+              keyboardType="numeric"
+              placeholder="Enter your otp"
+              placeholderTextColor={colors.secondaryText}
+              style={[
+                false ? styles.inputFielderror : styles.inputField,
+                {
+                  fontFamily: "AirbnbCereal_W_Md",
+                  borderWidth: scale(1),
+                  borderColor: colors.queueBorder,
+                  backgroundColor: colors.cardColor,
+                  color: colors.text,
+                },
+              ]}
+              onChangeText={(text) => {
+                setVerificationCodeError("");
+                setVerificationCode(text);
+              }}
+              value={verificationCode}
+            />
 
-                    <View style={styles.inputWrapper}>
-                        <CustomText>Verification Code</CustomText>
+            {verificationCodeError && (
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: scale(5),
+                }}
+              >
+                <ErrorIcon color="red" size={scale(16)} />
+                <CustomText style={{ fontSize: scale(12), color: "red" }}>
+                  {verificationCodeError}
+                </CustomText>
+              </View>
+            )}
+          </View>
 
-                        <TextInput
-                            editable
-                            keyboardType="numeric"
-                            placeholder="Enter your otp"
-                            placeholderTextColor={colors.secondaryText}
-                            style={[false ? styles.inputFielderror : styles.inputField, {
-                                fontFamily: "AirbnbCereal_W_Md",
-                                borderWidth: scale(1),
-                                borderColor: colors.queueBorder,
-                                backgroundColor: colors.cardColor,
-                                color: colors.text
-                            }]}
-                            onChangeText={(text) => {
-                                setVerificationCodeError("")
-                                setVerificationCode(text)
-                            }}
-                            value={verificationCode}
-                        />
+          <TouchableOpacity
+            disabled={signupLoading}
+            onPress={() => signupHandler()}
+            style={[
+              styles.signinButton,
+              { backgroundColor: colors.accentColor },
+            ]}
+            activeOpacity={0.85}
+          >
+            {signupLoading ? (
+              <ActivityIndicator size="small" color="#fff" />
+            ) : (
+              <CustomText style={styles.signinButtonText}>
+                Verify & Create Account
+              </CustomText>
+            )}
+          </TouchableOpacity>
 
-
-                        {
-                            verificationCodeError && (
-                                <View style={{
-                                    flexDirection: "row",
-                                    alignItems: "center",
-                                    gap: scale(5),
-                                }}>
-                                    <ErrorIcon color='red' size={scale(16)} />
-                                    <CustomText style={{ fontSize: scale(12), color: "red" }}>{verificationCodeError}</CustomText>
-                                </View>
-                            )
-                        }
-
-                    </View>
-
-                    <TouchableOpacity
-                        disabled={signupLoading}
-                        onPress={() => signupHandler()}
-                        style={styles.signinButton} activeOpacity={0.85}>
-                        {
-                            signupLoading ? (
-                                <ActivityIndicator size="small" color="#fff" />
-                            ) : (
-                                <CustomText style={styles.signinButtonText}>Verify & Create Account</CustomText>
-                            )
-                        }
-                    </TouchableOpacity>
-
-                    {/* <Pressable
+          {/* <Pressable
                         onPress={resendVerification}
                         style={[
                             styles.btn,
@@ -305,35 +355,32 @@ const verification = () => {
                         }
                     </Pressable> */}
 
-                    <View
-                        style={{
-                            flexDirection: "row",
-                            alignItems: "center",
-                            justifyContent: "center", // centers the entire row
-                            marginHorizontal: "auto",
-                        }}
-                    >
-                        <CustomSecondaryText>Didn't receive the code? </CustomSecondaryText>
+          <View
+            style={{
+              flexDirection: "row",
+              alignItems: "center",
+              justifyContent: "center", // centers the entire row
+              marginHorizontal: "auto",
+            }}
+          >
+            <CustomSecondaryText>Didn't receive the code? </CustomSecondaryText>
 
-                        <Pressable
-                            onPress={resendVerification}
-                            disabled={verificationCodeLoading || isCooldown}
-                        >
-                            {verificationCodeLoading ? (
-                                <ActivityIndicator size="small" color="#14b8a6" />
-                            ) : (
-                                <CustomText style={{ color: '#14b8a6' }}>
-                                    {isCooldown ? `Wait ${verificationTime}s` : "Resend"}
-                                </CustomText>
-                            )}
-                        </Pressable>
-                    </View>
+            <Pressable
+              onPress={resendVerification}
+              disabled={verificationCodeLoading || isCooldown}
+            >
+              {verificationCodeLoading ? (
+                <ActivityIndicator size="small" color={colors.accentColor} />
+              ) : (
+                <CustomText style={{ color: colors.accentColor }}>
+                  {isCooldown ? `Wait ${verificationTime}s` : "Resend"}
+                </CustomText>
+              )}
+            </Pressable>
+          </View>
+        </View>
 
-
-
-                </View>
-
-                {/* <Pressable
+        {/* <Pressable
                     disabled={signupLoading}
                     onPress={() => signupHandler()}
                     style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode }]}>
@@ -345,54 +392,52 @@ const verification = () => {
                         )
                     }
                 </Pressable> */}
-            </CustomView>
-        </TouchableWithoutFeedback>
-    )
-}
+      </CustomView>
+    </TouchableWithoutFeedback>
+  );
+};
 
-export default verification
+export default verification;
 
 const styles = StyleSheet.create({
-    heading: {
-        fontFamily: "AirbnbCereal_W_XBd",
-        fontSize: moderateScale(22),
-        marginBottom: verticalScale(10)
-    },
+  heading: {
+    fontFamily: "AirbnbCereal_W_XBd",
+    fontSize: moderateScale(22),
+    marginBottom: verticalScale(10),
+  },
 
-    inputWrapper: {
-        gap: verticalScale(10),
-    },
+  inputWrapper: {
+    gap: verticalScale(10),
+  },
 
-    inputField: {
-        height: verticalScale(40),
-        borderRadius: scale(8),
-        paddingHorizontal: scale(10),
-        fontSize: moderateScale(14)
-    },
+  inputField: {
+    height: verticalScale(40),
+    borderRadius: scale(8),
+    paddingHorizontal: scale(10),
+    fontSize: moderateScale(14),
+  },
 
-    inputFielderror: {
+  inputFielderror: {},
 
-    },
+  btn: {
+    height: verticalScale(40),
+    borderRadius: scale(4),
+    alignItems: "center",
+    justifyContent: "center",
+    marginBlock: verticalScale(0),
+  },
 
-    btn: {
-        height: verticalScale(40),
-        borderRadius: scale(4),
-        alignItems: "center",
-        justifyContent: "center",
-        marginBlock: verticalScale(0)
-    },
-
-    signinButton: {
-        width: '100%',
-        backgroundColor: '#14b8a6', // bg-teal-500
-        paddingVertical: verticalScale(12), // py-4
-        borderRadius: scale(8), // rounded-xl
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    signinButtonText: {
-        color: '#fff', // text-white
-        fontFamily: "AirbnbCereal_W_XBd",
-        fontSize: scale(16),
-    },
-})
+  signinButton: {
+    width: "100%",
+    // bg-teal-500
+    paddingVertical: verticalScale(12), // py-4
+    borderRadius: scale(8), // rounded-xl
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  signinButtonText: {
+    color: "#fff", // text-white
+    fontFamily: "AirbnbCereal_W_XBd",
+    fontSize: scale(16),
+  },
+});

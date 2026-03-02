@@ -1,3 +1,10 @@
+import { BASE_URL } from "@/utils/api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { useTheme } from "@react-navigation/native";
+import { useStripe } from "@stripe/stripe-react-native";
+import axios from "axios";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
+import { useCallback, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -5,24 +12,15 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
-  Text,
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useCallback, useState } from "react";
-import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
-import { useTheme } from "@react-navigation/native";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
-import CustomText from "../../components/CustomText";
-import { useAuth } from "../../context/AuthContext";
-import { Toast } from "toastify-react-native";
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import axios from "axios";
-import { BASE_URL } from "@/utils/api";
-import { useGlobal } from "../../context/GlobalContext";
-import { CheckIcon } from "../../constants/icons";
-import { useStripe } from "@stripe/stripe-react-native";
 import CustomSecondaryText from "../../components/CustomSecondaryText";
+import CustomText from "../../components/CustomText";
+import { CheckIcon } from "../../constants/icons";
+import { useAuth } from "../../context/AuthContext";
+import { useGlobal } from "../../context/GlobalContext";
 
 const GroupJoinModal = () => {
   const {
@@ -70,11 +68,11 @@ const GroupJoinModal = () => {
 
       const subscription = BackHandler.addEventListener(
         "hardwareBackPress",
-        onBackPress
+        onBackPress,
       );
 
       return () => subscription.remove();
-    }, [groupJoinLoader])
+    }, [groupJoinLoader]),
   );
 
   const groupJoinPressed = async () => {
@@ -100,7 +98,7 @@ const GroupJoinModal = () => {
 
       const { data } = await axios.post(
         `${BASE_URL}/mobileRoutes/groupJoinQueue`,
-        groupJoinData
+        groupJoinData,
       );
 
       await AsyncStorage.setItem(
@@ -108,7 +106,7 @@ const GroupJoinModal = () => {
         JSON.stringify({
           email: authenticatedUser?.email,
           value: true,
-        })
+        }),
       );
 
       setNewNotification({
@@ -140,19 +138,19 @@ const GroupJoinModal = () => {
     (total, member) => {
       const memberTotal = member.selectedServices.reduce(
         (sum, service) => sum + Number(service.servicePrice || 0),
-        0
+        0,
       );
       return total + memberTotal;
     },
-    0
+    0,
   );
 
   const advancePaymentPercent = Number(
-    paymentSettingsDataParse?.advancePaymentPercent || 0
+    paymentSettingsDataParse?.advancePaymentPercent || 0,
   );
 
   const advanceAmount = Math.round(
-    (totalServicePriceAmount * advancePaymentPercent) / 100
+    (totalServicePriceAmount * advancePaymentPercent) / 100,
   );
 
   // const fetchPaymentSheetParams = async () => {
@@ -299,7 +297,7 @@ const GroupJoinModal = () => {
             })),
           },
         }),
-      }
+      },
     );
 
     const data = await response.json();
@@ -362,7 +360,7 @@ const GroupJoinModal = () => {
         JSON.stringify({
           email: authenticatedUser?.email,
           value: true,
-        })
+        }),
       );
 
       setNewNotification({
@@ -653,7 +651,7 @@ const GroupJoinModal = () => {
     //           style={[
     //             styles.button,
     //             {
-    //               backgroundColor: "#14b8a6",
+    //               backgroundColor: colors.accentColor,
     //             },
     //           ]}
     //         >
@@ -717,13 +715,13 @@ const GroupJoinModal = () => {
               width: scale(64),
               height: scale(64),
               borderRadius: moderateScale(32),
-              backgroundColor: "#14b8a610", // Teal tint to match group join theme
+              backgroundColor: `${colors.accentColor}1A`, // Teal tint to match group join theme
               justifyContent: "center",
               alignItems: "center",
               marginBottom: verticalScale(16),
             }}
           >
-            <CheckIcon size={moderateScale(28)} color="#14b8a6" />
+            <CheckIcon size={moderateScale(28)} color={colors.accentColor} />
           </View>
 
           <CustomText
@@ -902,7 +900,7 @@ const GroupJoinModal = () => {
                       <CustomText
                         style={{
                           fontFamily: "AirbnbCereal_W_Bd",
-                          color: "#2563eb",
+                          color: colors.accentColor,
                         }}
                       >
                         Pay Now
@@ -917,7 +915,7 @@ const GroupJoinModal = () => {
                     <CustomText
                       style={{
                         fontFamily: "AirbnbCereal_W_XBd",
-                        color: "#2563eb",
+                        color: colors.accentColor,
                         fontSize: moderateScale(18),
                       }}
                     >
@@ -967,11 +965,11 @@ const GroupJoinModal = () => {
               onPress={openPaymentSheet}
               disabled={loading}
               style={{
-                backgroundColor: loading ? "#94a3b8" : "#2563eb",
+                backgroundColor: loading ? "#94a3b8" : colors.accentColor,
                 paddingVertical: verticalScale(18),
                 borderRadius: moderateScale(16),
                 alignItems: "center",
-                shadowColor: "#2563eb",
+                shadowColor: colors.accentColor,
                 shadowOffset: { width: 0, height: verticalScale(4) },
                 shadowOpacity: 0.2,
                 shadowRadius: moderateScale(8),
@@ -996,7 +994,9 @@ const GroupJoinModal = () => {
               onPress={groupJoinPressed}
               disabled={groupJoinLoader}
               style={{
-                backgroundColor: groupJoinLoader ? "#94a3b8" : "#14b8a6",
+                backgroundColor: groupJoinLoader
+                  ? "#94a3b8"
+                  : colors.accentColor,
                 paddingVertical: verticalScale(18),
                 borderRadius: moderateScale(16),
                 alignItems: "center",

@@ -1,37 +1,35 @@
+import { BASE_URL } from "@/utils/api";
+import { useTheme } from "@react-navigation/native";
+import axios from "axios";
+import { Image } from "expo-image";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
 import {
   FlatList,
   Keyboard,
-  Platform,
   Pressable,
   StyleSheet,
-  Text,
   TextInput,
   TouchableOpacity,
   TouchableWithoutFeedback,
   useColorScheme,
   View,
 } from "react-native";
-import React, { useCallback, useEffect, useState } from "react";
-import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
-import { useTheme } from "@react-navigation/native";
-import { useAuth } from "../../context/AuthContext";
-import axios from "axios";
-import { BASE_URL } from "@/utils/api";
 import {
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
-import { moderateScale, scale, verticalScale } from "react-native-size-matters";
+import { scale, verticalScale } from "react-native-size-matters";
+import CustomSecondaryText from "../../components/CustomSecondaryText";
+import CustomText from "../../components/CustomText";
+import Skeleton from "../../components/Skeleton";
 import {
   AddIcon,
   ArrowLeftIcon,
   CheckIcon,
   SearchIcon,
 } from "../../constants/icons";
-import CustomText from "../../components/CustomText";
-import Skeleton from "../../components/Skeleton";
-import { Image } from "expo-image";
-import CustomSecondaryText from "../../components/CustomSecondaryText";
+import { useAuth } from "../../context/AuthContext";
 
 const singleJoinBarberServices = () => {
   // fetching payment settings
@@ -45,7 +43,7 @@ const singleJoinBarberServices = () => {
         try {
           setPaymentSettingsLoading(true);
           const { data } = await axios.get(
-            `${BASE_URL}/mobileRoutes/getPaymentSettings?salonId=${authenticatedUser?.salonId}`
+            `${BASE_URL}/mobileRoutes/getPaymentSettings?salonId=${authenticatedUser?.salonId}`,
           );
           setPaymentSettingsData(data?.response?.[0]);
         } catch (error) {
@@ -56,7 +54,7 @@ const singleJoinBarberServices = () => {
       };
 
       getSalonPaymentSettings();
-    }, [])
+    }, []),
   );
 
   const { selectBarber } = useLocalSearchParams();
@@ -89,7 +87,7 @@ const singleJoinBarberServices = () => {
           {
             salonId: 1,
             barberId: 1,
-          }
+          },
         );
 
         setServicesList((prev) => ({
@@ -134,7 +132,7 @@ const singleJoinBarberServices = () => {
       const filtered = servicesList?.data?.filter((item) =>
         item?.serviceName
           ?.toLowerCase()
-          .includes(searchServiceQuery.toLowerCase())
+          .includes(searchServiceQuery.toLowerCase()),
       );
 
       setServicesList((prev) => ({
@@ -168,7 +166,7 @@ const singleJoinBarberServices = () => {
 
   const removeServiceHandler = (service) => {
     setSelectedServices((prev) =>
-      prev.filter((s) => s.serviceId !== service.serviceId)
+      prev.filter((s) => s.serviceId !== service.serviceId),
     );
   };
 
@@ -178,7 +176,7 @@ const singleJoinBarberServices = () => {
     if (selectedCategory) {
       // Filter based on category
       const filteredServicesData = servicesList?.data?.filter(
-        (service) => service.serviceCategoryName === selectedCategory
+        (service) => service.serviceCategoryName === selectedCategory,
       );
 
       setServicesList((prev) => ({
@@ -196,11 +194,11 @@ const singleJoinBarberServices = () => {
 
   const totalPrice = selectedServices.reduce(
     (acc, service) => acc + service.servicePrice,
-    0
+    0,
   );
   const totalTime = selectedServices.reduce(
     (acc, service) => acc + service.barberServiceEWT,
-    0
+    0,
   );
   const totalServices = selectedServices.length;
 
@@ -229,7 +227,7 @@ const singleJoinBarberServices = () => {
           }}
         >
           <Pressable onPress={() => router.back()}>
-            <ArrowLeftIcon color={colors.text} size={scale(16)}/>
+            <ArrowLeftIcon color={colors.text} size={scale(16)} />
           </Pressable>
           <CustomText
             style={{
@@ -260,7 +258,7 @@ const singleJoinBarberServices = () => {
                 },
               ]}
             />
-            <Pressable style={styles.searchButton}>
+            <Pressable style={[styles.searchButton, {backgroundColor: colors.accentColor}]}>
               <SearchIcon size={scale(20)} color="white" />
             </Pressable>
           </View>
@@ -301,10 +299,10 @@ const singleJoinBarberServices = () => {
                   {
                     backgroundColor:
                       selectedCategory === item?.serviceCategoryName
-                        ? "#14b8a6"
+                        ? colors.accentColor
                         : colorScheme === "dark"
-                        ? "#3f3f46"
-                        : "#e4e4e7",
+                          ? "#3f3f46"
+                          : "#e4e4e7",
                     flexDirection: "row",
                     gap: scale(5),
                   },
@@ -329,8 +327,8 @@ const singleJoinBarberServices = () => {
                       selectedCategory === item?.serviceCategoryName
                         ? "#fff"
                         : colorScheme === "dark"
-                        ? "#fff"
-                        : "#000",
+                          ? "#fff"
+                          : "#000",
                     textAlign: "center",
                   }}
                 >
@@ -386,7 +384,7 @@ const singleJoinBarberServices = () => {
               data={servicesList?.filteredData}
               renderItem={({ item }) => {
                 const isSelected = selectedServices.find(
-                  (s) => s.serviceId === item.serviceId
+                  (s) => s.serviceId === item.serviceId,
                 );
                 return (
                   <Pressable
@@ -400,7 +398,7 @@ const singleJoinBarberServices = () => {
                       {
                         backgroundColor: colors.cardColor,
                         borderColor: isSelected
-                          ? "#14b8a6"
+                          ? colors.accentColor
                           : colors.queueBorder,
                         borderWidth: isSelected ? scale(2) : scale(1),
                       },
@@ -429,10 +427,10 @@ const singleJoinBarberServices = () => {
                           styles.selectIcon,
                           {
                             backgroundColor: isSelected
-                              ? "#14b8a6"
+                              ? colors.accentColor
                               : colorScheme === "dark"
-                              ? "#3f3f46"
-                              : "#e4e4e7",
+                                ? "#3f3f46"
+                                : "#e4e4e7",
                           },
                         ]}
                       >
@@ -522,7 +520,7 @@ const singleJoinBarberServices = () => {
                 },
               });
             }}
-            style={styles.queueButton}
+            style={[styles.queueButton, {backgroundColor: colors.accentColor}]}
             activeOpacity={0.85}
             disabled={paymentSettingsLoading}
           >
@@ -560,7 +558,7 @@ const styles = StyleSheet.create({
   searchButton: {
     position: "absolute",
     right: scale(4),
-    backgroundColor: "#14b8a6", // teal-500
+    // teal-500
     padding: scale(8),
     borderRadius: scale(6),
     justifyContent: "center",
@@ -603,7 +601,7 @@ const styles = StyleSheet.create({
 
   queueButton: {
     width: "40%",
-    backgroundColor: "#14b8a6", // bg-teal-500
+     // bg-teal-500
     paddingVertical: verticalScale(12), // py-4
     borderRadius: scale(8), // rounded-xl
     // marginBottom: verticalScale(15), // mb-6

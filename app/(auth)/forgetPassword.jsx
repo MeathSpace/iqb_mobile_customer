@@ -1,186 +1,189 @@
-import { ActivityIndicator, Keyboard, Pressable, StyleSheet, Text, TextInput, TouchableOpacity, TouchableWithoutFeedback, useColorScheme, View } from 'react-native'
-import React, { useState } from 'react'
-import CustomView from '../../components/CustomView';
-import CustomText from '../../components/CustomText';
-import * as Progress from 'react-native-progress';
-import { moderateScale, scale, verticalScale } from 'react-native-size-matters';
-import { useRouter } from 'expo-router';
-import CustomSecondaryText from '../../components/CustomSecondaryText';
-import { useTheme } from '@react-navigation/native';
-import { Colors } from '@/constants/Colors';
-import { ErrorIcon } from '../../constants/icons';
-import axios from 'axios';
-import { BASE_URL } from '@/utils/api';
-import { Toast } from 'toastify-react-native'
+import { BASE_URL } from "@/utils/api";
+import { useTheme } from "@react-navigation/native";
+import axios from "axios";
+import { useRouter } from "expo-router";
+import { useState } from "react";
+import {
+  ActivityIndicator,
+  Keyboard,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
+import { moderateScale, scale, verticalScale } from "react-native-size-matters";
+import { Toast } from "toastify-react-native";
+import CustomSecondaryText from "../../components/CustomSecondaryText";
+import CustomText from "../../components/CustomText";
+import CustomView from "../../components/CustomView";
+import { ErrorIcon } from "../../constants/icons";
 
 const forgetPassword = () => {
+  const { colors } = useTheme();
 
-    const { colors } = useTheme()
+  const router = useRouter();
 
-    const router = useRouter()
+  const [email, setEmail] = useState("");
+  const [emailError, setEmailError] = useState(false);
+  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
-    const [email, setEmail] = useState("")
-    const [emailError, setEmailError] = useState(false);
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  const [forgetLoader, setForgetLoader] = useState(false);
 
-    const [forgetLoader, setForgetLoader] = useState(false)
-
-    const forgetHandler = async () => {
-        if (!email) {
-            setEmailError("Email is required")
-            return;
-        } else if (!emailRegex.test(email)) {
-            return setEmailError("Invalid email format")
-        }
-
-        try {
-            setForgetLoader(true)
-
-            const { data } = await axios.post(`${BASE_URL}/customer/forgetPassword`, {
-                email,
-            })
-
-            router.push({
-                pathname: "/passwordVerification",
-                params: {
-                    email,
-                    verificationCodeValue: data?.response?.verificationCode
-                }
-            })
-
-            setForgetLoader(false)
-
-        } catch (error) {
-            Toast.error(error?.response?.data?.message)
-            console.log("Error in forget password ", error)
-
-            setForgetLoader(false)
-        }
-
+  const forgetHandler = async () => {
+    if (!email) {
+      setEmailError("Email is required");
+      return;
+    } else if (!emailRegex.test(email)) {
+      return setEmailError("Invalid email format");
     }
 
-    return (
-        <TouchableWithoutFeedback onPress={() => {
-            Keyboard.dismiss();
-        }}>
-            <CustomView style={{ justifyContent: "space-between" }}>
-                <View style={{ gap: verticalScale(20) }}>
-                    <View>
-                        <CustomText style={styles.heading}>
-                            What’s your email?
-                        </CustomText>
+    try {
+      setForgetLoader(true);
 
-                        <CustomSecondaryText>
-                            Enter your email address to reset your password.
-                        </CustomSecondaryText>
-                    </View>
+      const { data } = await axios.post(`${BASE_URL}/customer/forgetPassword`, {
+        email,
+      });
 
-                    <View style={styles.inputWrapper}>
-                        <CustomText>Email</CustomText>
+      router.push({
+        pathname: "/passwordVerification",
+        params: {
+          email,
+          verificationCodeValue: data?.response?.verificationCode,
+        },
+      });
 
-                        <TextInput
-                            editable
-                            placeholder="Enter your email"
-                            placeholderTextColor={colors.secondaryText}
-                            style={[false ? styles.inputFielderror : styles.inputField, {
-                                fontFamily: "AirbnbCereal_W_Md",
-                                borderWidth: scale(1),
-                                borderColor: colors.queueBorder,
-                                backgroundColor: colors.cardColor,
-                                color: colors.text
-                            }]}
-                            onChangeText={(text) => {
-                                setEmailError("")
-                                setEmail(text)
-                            }}
-                            value={email}
-                        />
+      setForgetLoader(false);
+    } catch (error) {
+      Toast.error(error?.response?.data?.message);
+      console.log("Error in forget password ", error);
 
-                        {
-                            emailError && (
-                                <View style={{
-                                    flexDirection: "row",
-                                    alignItems: "center",
-                                    gap: scale(5),
-                                }}>
-                                    <ErrorIcon color='red' size={scale(16)} />
-                                    <CustomText style={{ fontSize: scale(12), color: "red", }}>{emailError}</CustomText>
-                                </View>
-                            )
-                        }
+      setForgetLoader(false);
+    }
+  };
 
-                    </View>
+  return (
+    <TouchableWithoutFeedback
+      onPress={() => {
+        Keyboard.dismiss();
+      }}
+    >
+      <CustomView style={{ justifyContent: "space-between" }}>
+        <View style={{ gap: verticalScale(20) }}>
+          <View>
+            <CustomText style={styles.heading}>What’s your email?</CustomText>
 
-                </View>
+            <CustomSecondaryText>
+              Enter your email address to reset your password.
+            </CustomSecondaryText>
+          </View>
 
-                {/* <Pressable
+          <View style={styles.inputWrapper}>
+            <CustomText>Email</CustomText>
+
+            <TextInput
+              editable
+              placeholder="Enter your email"
+              placeholderTextColor={colors.secondaryText}
+              style={[
+                false ? styles.inputFielderror : styles.inputField,
+                {
+                  fontFamily: "AirbnbCereal_W_Md",
+                  borderWidth: scale(1),
+                  borderColor: colors.queueBorder,
+                  backgroundColor: colors.cardColor,
+                  color: colors.text,
+                },
+              ]}
+              onChangeText={(text) => {
+                setEmailError("");
+                setEmail(text);
+              }}
+              value={email}
+            />
+
+            {emailError && (
+              <View
+                style={{
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: scale(5),
+                }}
+              >
+                <ErrorIcon color="red" size={scale(16)} />
+                <CustomText style={{ fontSize: scale(12), color: "red" }}>
+                  {emailError}
+                </CustomText>
+              </View>
+            )}
+          </View>
+        </View>
+
+        {/* <Pressable
                     disabled={forgetLoader}
                     onPress={() => forgetHandler()}
                     style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode }]}>
                     <CustomText style={{ color: "#fff" }}>continue</CustomText>
                 </Pressable> */}
 
-                <TouchableOpacity
-                    onPress={() => forgetHandler()}
-                    disabled={forgetLoader}
-                    style={styles.signinButton} activeOpacity={0.85}>
-                    {
-                        forgetLoader ? (
-                            <ActivityIndicator size="small" color="#fff" />
-                        ) : (
-                            <CustomText style={styles.signinButtonText}>Continue</CustomText>
-                        )
-                    }
-                </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => forgetHandler()}
+          disabled={forgetLoader}
+          style={[styles.signinButton, {backgroundColor: colors.accentColor}]}
+          activeOpacity={0.85}
+        >
+          {forgetLoader ? (
+            <ActivityIndicator size="small" color="#fff" />
+          ) : (
+            <CustomText style={styles.signinButtonText}>Continue</CustomText>
+          )}
+        </TouchableOpacity>
+      </CustomView>
+    </TouchableWithoutFeedback>
+  );
+};
 
-            </CustomView>
-        </TouchableWithoutFeedback>
-    )
-}
-
-export default forgetPassword
+export default forgetPassword;
 
 const styles = StyleSheet.create({
-    heading: {
-        fontFamily: "AirbnbCereal_W_XBd",
-        fontSize: moderateScale(22),
-        marginBottom: verticalScale(10)
-    },
+  heading: {
+    fontFamily: "AirbnbCereal_W_XBd",
+    fontSize: moderateScale(22),
+    marginBottom: verticalScale(10),
+  },
 
-    inputWrapper: {
-        gap: verticalScale(10),
-    },
+  inputWrapper: {
+    gap: verticalScale(10),
+  },
 
-    inputField: {
-        height: verticalScale(40),
-        borderRadius: scale(8),
-        paddingHorizontal: scale(10),
-        fontSize: moderateScale(14)
-    },
+  inputField: {
+    height: verticalScale(40),
+    borderRadius: scale(8),
+    paddingHorizontal: scale(10),
+    fontSize: moderateScale(14),
+  },
 
-    inputFielderror: {
+  inputFielderror: {},
 
-    },
+  btn: {
+    height: verticalScale(40),
+    borderRadius: scale(4),
+    alignItems: "center",
+    justifyContent: "center",
+    marginBlock: verticalScale(0),
+  },
 
-    btn: {
-        height: verticalScale(40),
-        borderRadius: scale(4),
-        alignItems: "center",
-        justifyContent: "center",
-        marginBlock: verticalScale(0)
-    },
-
-    signinButton: {
-        width: '100%',
-        backgroundColor: '#14b8a6', // bg-teal-500
-        paddingVertical: verticalScale(12), // py-4
-        borderRadius: scale(8), // rounded-xl
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
-    signinButtonText: {
-        color: '#fff', // text-white
-        fontFamily: "AirbnbCereal_W_XBd",
-        fontSize: scale(16),
-    },
-})
+  signinButton: {
+    width: "100%",
+    // bg-teal-500
+    paddingVertical: verticalScale(12), // py-4
+    borderRadius: scale(8), // rounded-xl
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  signinButtonText: {
+    color: "#fff", // text-white
+    fontFamily: "AirbnbCereal_W_XBd",
+    fontSize: scale(16),
+  },
+});

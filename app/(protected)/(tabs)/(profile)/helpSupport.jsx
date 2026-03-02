@@ -56,7 +56,7 @@ const helpSupport = () => {
           email: authenticatedUser?.email,
           subject,
           text: body,
-        }
+        },
       );
 
       setSendMailLoading(false);
@@ -71,7 +71,7 @@ const helpSupport = () => {
             onPress: () => router.back(), // navigate back after user acknowledges
           },
         ],
-        { cancelable: false }
+        { cancelable: false },
       );
     } catch (error) {
       setSendMailLoading(false);
@@ -81,7 +81,7 @@ const helpSupport = () => {
       Alert.alert(
         "Error",
         error?.response?.data?.message ||
-          "Something went wrong. Please try again later."
+          "Something went wrong. Please try again later.",
       );
     }
   };
@@ -248,7 +248,7 @@ const helpSupport = () => {
 
           <TouchableOpacity
             onPress={sendCustomerSupportMail}
-            style={styles.queueButton}
+            style={[styles.queueButton, {backgroundColor: colors.accentColor}]}
             activeOpacity={0.85}
           >
             {sendMailLoading ? (
@@ -265,7 +265,7 @@ const helpSupport = () => {
           >
             <CustomText style={styles.contactText}>
               Email Us :{" "}
-              <CustomText style={styles.phoneNumber}>
+              <CustomText style={[styles.phoneNumber, { color: colors.accentColor}]}>
                 support@iqbook.io
               </CustomText>
             </CustomText>
@@ -324,7 +324,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   phoneNumber: {
-    color: Colors.modeColor.colorCode,
     fontSize: scale(14),
   },
   closeButton: {
@@ -341,7 +340,7 @@ const styles = StyleSheet.create({
 
   queueButton: {
     width: "100%",
-    backgroundColor: "#14b8a6", // bg-teal-500
+     // bg-teal-500
     paddingVertical: verticalScale(16), // py-4
     borderRadius: scale(12), // rounded-xl
     marginBottom: verticalScale(15), // mb-6
