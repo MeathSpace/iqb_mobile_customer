@@ -427,6 +427,9 @@ const Dashboard = () => {
       title: "header",
     },
     {
+      title: "advertise",
+    },
+    {
       title: "hero",
     },
 
@@ -629,15 +632,15 @@ const Dashboard = () => {
     <CustomTabView
       style={{
         paddingTop: verticalScale(0),
-        paddingBottom:
-          Platform.OS === "ios" ? verticalScale(70) : verticalScale(50),
+        // paddingBottom:
+        //   Platform.OS === "ios" ? verticalScale(70) : verticalScale(50),
       }}
     >
       <FlatList
         data={pageData}
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{
-          gap: verticalScale(20),
+          gap: verticalScale(15),
         }}
         renderItem={({ item }) => {
           switch (item.title) {
@@ -836,9 +839,9 @@ const Dashboard = () => {
                     >
                       <View style={styles.topRow}>
                         <View>
-                          <CustomText style={styles.title}>
+                          {/* <CustomText style={styles.title}>
                             Your Visit, Your Way
-                          </CustomText>
+                          </CustomText> */}
                           <CustomText style={styles.subtitle}>
                             Join the virtual queue or book an appointment.
                           </CustomText>
@@ -907,6 +910,94 @@ const Dashboard = () => {
                       </View>
                     </LinearGradient>
                   )}
+                </>
+              );
+            }
+
+            case "advertise": {
+              return (
+                <>
+                  <View
+                    style={{
+                      // position: "absolute",
+                      // bottom: Platform.OS === "ios" ? verticalScale(80) : verticalScale(0),
+                      // left: 0,
+                      // right: 0,
+                      // height: verticalScale(90),
+                    }}
+                  >
+                    {homeAdvertisementData?.loading ? (
+                      <FlatList
+                        style={{
+                          overflow: "visible",
+                        }}
+                        contentContainerStyle={{
+                          gap: scale(10),
+                        }}
+                        data={[0, 1, 2, 3]}
+                        renderItem={({ item }) => (
+                          <View>
+                            <Skeleton
+                              width={scale(350)}
+                              height={verticalScale(70)}
+                              borderRadius={scale(0)}
+                            />
+                          </View>
+                        )}
+                        keyExtractor={(item) => item.toString()}
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                      />
+                    ) : homeAdvertisementData?.advertisementData?.length > 0 ? (
+                      // Advertisement FlatList
+                      <FlatList
+                        style={{
+                          overflow: "visible",
+                        }}
+                        contentContainerStyle={{
+                          gap: scale(10),
+                        }}
+                        data={homeAdvertisementData?.advertisementData}
+                        renderItem={({ item }) => <AdvertiseCard item={item} />}
+                        keyExtractor={(item) => item._id}
+                        horizontal
+                        showsHorizontalScrollIndicator={false}
+                        // decelerationRate="fast"
+                        snapToInterval={scale(400)}
+                        pagingEnabled={true}
+                        onMomentumScrollEnd={(event) => {
+                          const offsetX = event.nativeEvent.contentOffset.x;
+                          const index = Math.round(offsetX / scale(400));
+                          setCurrentIndex(index);
+                        }}
+                        initialNumToRender={3}
+                        maxToRenderPerBatch={3}
+                        ref={flatlistRef}
+                      />
+                    ) : (
+                      // Fallback Dummy Image
+                      <View
+                        style={{
+                          width: "100%",
+                          height: verticalScale(70),
+                          backgroundColor: "#d3d3d3",
+                        }}
+                      >
+                        <Image
+                          style={{
+                            width: "100%",
+                            height: "100%",
+                            borderRadius: scale(0),
+                            borderWidth: scale(1),
+                            borderColor: "#d3d3d3",
+                          }}
+                          source={require("@/assets/images/dummygallery.jpg")}
+                          contentFit="cover"
+                          transition={300}
+                        />
+                      </View>
+                    )}
+                  </View>
                 </>
               );
             }
@@ -1346,88 +1437,6 @@ const Dashboard = () => {
           />
         }
       />
-
-      <View
-        style={{
-          position: "absolute",
-          bottom: Platform.OS === "ios" ? verticalScale(80) : verticalScale(0),
-          left: 0,
-          right: 0,
-          height: verticalScale(70),
-        }}
-      >
-        {homeAdvertisementData?.loading ? (
-          <FlatList
-            style={{
-              overflow: "visible",
-            }}
-            contentContainerStyle={{
-              gap: scale(10),
-            }}
-            data={[0, 1, 2, 3]}
-            renderItem={({ item }) => (
-              <View>
-                <Skeleton
-                  width={scale(350)}
-                  height={verticalScale(70)}
-                  borderRadius={scale(0)}
-                />
-              </View>
-            )}
-            keyExtractor={(item) => item.toString()}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-          />
-        ) : homeAdvertisementData?.advertisementData?.length > 0 ? (
-          // Advertisement FlatList
-          <FlatList
-            style={{
-              overflow: "visible",
-            }}
-            contentContainerStyle={{
-              gap: scale(10),
-            }}
-            data={homeAdvertisementData?.advertisementData}
-            renderItem={({ item }) => <AdvertiseCard item={item} />}
-            keyExtractor={(item) => item._id}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            // decelerationRate="fast"
-            snapToInterval={scale(400)}
-            pagingEnabled={true}
-            onMomentumScrollEnd={(event) => {
-              const offsetX = event.nativeEvent.contentOffset.x;
-              const index = Math.round(offsetX / scale(400));
-              setCurrentIndex(index);
-            }}
-            initialNumToRender={3}
-            maxToRenderPerBatch={3}
-            ref={flatlistRef}
-          />
-        ) : (
-          // Fallback Dummy Image
-          <View
-            style={{
-              width: "100%",
-              height: verticalScale(70),
-              backgroundColor: "#d3d3d3",
-            }}
-          >
-            <Image
-              style={{
-                width: "100%",
-                height: "100%",
-                borderRadius: scale(0),
-                borderWidth: scale(1),
-                borderColor: "#d3d3d3",
-              }}
-              source={require("@/assets/images/dummygallery.jpg")}
-              contentFit="cover"
-              transition={300}
-            />
-          </View>
-        )}
-      </View>
     </CustomTabView>
   );
 };

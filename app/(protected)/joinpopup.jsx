@@ -55,15 +55,13 @@ const joinpopup = () => {
           <CustomText
             style={{
               fontFamily: "AirbnbCereal_W_XBd",
-              fontSize: scale(18),
+              fontSize: scale(18)
             }}
           >
             Single Join
           </CustomText>
           <CustomSecondaryText
             style={{
-              // fontFamily: "AirbnbCereal_W_Md",
-              // color: colors.secondaryText,
               fontSize: scale(14),
             }}
           >
@@ -106,7 +104,6 @@ const joinpopup = () => {
           <CustomSecondaryText
             style={{
               fontFamily: "AirbnbCereal_W_Md",
-              color: colors.secondaryText,
               fontSize: scale(14),
             }}
           >

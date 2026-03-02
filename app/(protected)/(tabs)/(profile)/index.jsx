@@ -50,7 +50,7 @@ const index = () => {
   const profileOptions = [
     {
       label: "Favorites",
-      icon: <HeartOutlineIcon color={"#dc2626"} />,
+      icon: <HeartOutlineIcon color={"#fff"} />,
       lightBg: "#fee2e2",
       darkBg: "#7f1d1d33",
       lightColor: "#dc2626",
@@ -60,7 +60,7 @@ const index = () => {
     },
     {
       label: "Change Salon",
-      icon: <SalonIcon color={"#7c3aed"} />,
+      icon: <SalonIcon color={"#fff"} />,
       lightBg: "#ede9fe",
       darkBg: "#5b21b633",
       lightColor: "#7c3aed",
@@ -70,7 +70,7 @@ const index = () => {
     },
     {
       label: "Help & Support",
-      icon: <HelpIcon color={"#059669"} />,
+      icon: <HelpIcon color={"#fff"} />,
       lightBg: "#d1fae5",
       darkBg: "#065f4633",
       lightColor: "#059669",
@@ -80,7 +80,7 @@ const index = () => {
     },
     {
       label: "About",
-      icon: <AboutIcon color={"#0284c7"} />,
+      icon: <AboutIcon color={"#fff"} />,
       lightBg: "#e0f2fe",
       darkBg: "#1e3a8a33",
       lightColor: "#0284c7",
@@ -265,7 +265,10 @@ const index = () => {
                   <View
                     style={[
                       styles.optionIconWrapper,
-                      { backgroundColor: opt.lightBg },
+                      // { backgroundColor: opt.lightBg },
+                      {
+                        backgroundColor: colors.accentColor
+                      }
                     ]}
                   >
                     {/* <Feather name={opt?.icon} size={moderateScale(24)} color={opt.lightColor} /> */}
@@ -354,8 +357,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     height: verticalScale(40),
-    // paddingTop: verticalScale(5),
-    // paddingBottom: verticalScale(12),
   },
 
   bellWrapper: {

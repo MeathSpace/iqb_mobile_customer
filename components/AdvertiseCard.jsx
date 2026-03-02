@@ -37,7 +37,7 @@ export default AdvertiseCard
 const styles = StyleSheet.create({
     cardWrapper: {
         width: scale(350),
-        paddingHorizontal: scale(15),
+        // paddingHorizontal: scale(5),
         backgroundColor: "rgba(0,0,0,0.1)"
     },
     cardImage: {

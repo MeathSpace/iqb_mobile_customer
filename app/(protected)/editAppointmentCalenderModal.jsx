@@ -502,7 +502,7 @@ const editAppointmentCalenderModal = () => {
             <CustomText
               style={{
                 fontSize: moderateScale(12),
-                color: "#9f1239",
+                color: "#000",
                 lineHeight: verticalScale(18),
               }}
             >
