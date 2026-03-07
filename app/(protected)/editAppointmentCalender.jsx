@@ -495,7 +495,7 @@ const editAppointmentCalender = () => {
                 style={[
                   styles.label,
                   {
-                    color: colors.secondaryText,
+                    color: colors.accentColor,
                   },
                 ]}
               >
@@ -542,7 +542,7 @@ const editAppointmentCalender = () => {
                 style={[
                   styles.label,
                   {
-                    color: colors.secondaryText,
+                    color: colors.accentColor,
                   },
                 ]}
               >
@@ -572,7 +572,7 @@ const editAppointmentCalender = () => {
                   style={[
                     styles.label,
                     {
-                      color: colors.secondaryText,
+                      color: colors.accentColor,
                     },
                   ]}
                 >
@@ -595,7 +595,7 @@ const editAppointmentCalender = () => {
                   style={[
                     styles.label,
                     {
-                      color: colors.secondaryText,
+                      color: colors.accentColor,
                     },
                   ]}
                 >
@@ -997,7 +997,7 @@ const editAppointmentCalender = () => {
                 <Pressable
                   style={{
                     padding: scale(12),
-                    backgroundColor: colors.text,
+                    backgroundColor: colors.accentColor,
                     borderRadius: scale(50),
                   }}
                   onPress={() => {
@@ -1010,7 +1010,7 @@ const editAppointmentCalender = () => {
                   {/* <LeftIcon size={scale(12)} color="#fff" /> */}
                   <CustomText
                     style={{
-                      color: colors.background,
+                      color: "#fff",
                     }}
                   >
                     Prev
@@ -1021,7 +1021,7 @@ const editAppointmentCalender = () => {
               <Pressable
                 style={{
                   padding: scale(12),
-                  backgroundColor: colors.text,
+                  backgroundColor: colors.accentColor,
                   borderRadius: scale(50),
                 }}
                 onPress={() => {
@@ -1045,11 +1045,11 @@ const editAppointmentCalender = () => {
                 }}
               >
                 {activeSection === "appointmentnote" ? (
-                  <CustomText style={{ color: colors.background }}>Finish</CustomText>
+                  <CustomText style={{ color: "#fff" }}>Finish</CustomText>
                 ) : (
                   <CustomText
                     style={{
-                      color: colors.background,
+                      color: "#fff",
                     }}
                   >
                     Next

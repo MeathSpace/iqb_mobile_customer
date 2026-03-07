@@ -213,23 +213,26 @@ function AnimatedTabIcon({ focused, color, Icon }) {
       {/* Pill Background */}
       <Animated.View
         style={{
-          position: "absolute",
-          width: scale(50),
-          height: verticalScale(30),
-          borderRadius: 25,
-          backgroundColor: focused ? color : "transparent",
-          opacity: pillOpacity,
-          transform: [{ scale: pillScale }],
+          // position: "absolute",
+          // width: scale(50),
+          // height: verticalScale(30),
+          // borderRadius: 25,
+          // backgroundColor: focused ? color : "transparent",
+          // opacity: pillOpacity,
+          // transform: [{ scale: pillScale }],
         }}
       />
 
       {/* Icon */}
       <Animated.View
         style={{
-          transform: [{ scale: iconScale }],
+          // transform: [{ scale: iconScale }],
         }}
       >
-        <Icon color={focused ? "#FFFFFF" : colors.text} />
+        <Icon 
+        // color={focused ? "#FFFFFF" : colors.text} 
+        color={focused ? colors.accentColor : colors.text}
+        />
       </Animated.View>
     </View>
   );

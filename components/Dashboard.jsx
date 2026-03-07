@@ -551,15 +551,21 @@ const Dashboard = () => {
       label: "Next In",
       value: homeDashboardData?.dashboardData?.leastQueueCount + 1,
       icon: "user-check",
-      bgColor: "rgba(168, 85, 247, 0.1)", // purple-500/10
-      iconColor: "#a855f7",
+      // bgColor: "rgba(168, 85, 247, 0.1)", // purple-500/10
+      // iconColor: "#a855f7",
+
+      bgColor: `${colors.accentColor}1A`, // purple-500/10
+      iconColor: colors.accentColor,
     },
     {
       label: "On Duty",
       value: homeDashboardData?.dashboardData?.barberOnDuty,
       icon: "scissors",
-      bgColor: "rgba(56, 189, 248, 0.1)", // sky-500/10
-      iconColor: "#38bdf8",
+      // bgColor: "rgba(56, 189, 248, 0.1)", // sky-500/10
+      // iconColor: "#38bdf8",
+
+      bgColor: `${colors.accentColor}1A`, // purple-500/10
+      iconColor: colors.accentColor,
     },
     {
       label: "In Queue",
@@ -918,13 +924,15 @@ const Dashboard = () => {
               return (
                 <>
                   <View
-                    style={{
-                      // position: "absolute",
-                      // bottom: Platform.OS === "ios" ? verticalScale(80) : verticalScale(0),
-                      // left: 0,
-                      // right: 0,
-                      // height: verticalScale(90),
-                    }}
+                    style={
+                      {
+                        // position: "absolute",
+                        // bottom: Platform.OS === "ios" ? verticalScale(80) : verticalScale(0),
+                        // left: 0,
+                        // right: 0,
+                        // height: verticalScale(90),
+                      }
+                    }
                   >
                     {homeAdvertisementData?.loading ? (
                       <FlatList
@@ -1213,7 +1221,10 @@ const Dashboard = () => {
                     </View> */}
 
                     <View style={styles.hintTextWrapper}>
-                      <CustomText style={[styles.hintTitle, {}]}>
+                      <CustomText 
+                      style={[styles.hintTitle, {
+                        color: colors.accentColor
+                      }]}>
                         Salon Info
                       </CustomText>
 
@@ -1367,7 +1378,7 @@ const Dashboard = () => {
                         justifyContent: "center",
                         alignItems: "center",
                         marginTop: verticalScale(15),
-                        // marginBottom: verticalScale(20)
+                        marginBottom: verticalScale(20)
                       }}
                     >
                       <View

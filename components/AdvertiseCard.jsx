@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
         backgroundColor: "rgba(0,0,0,0.1)"
     },
     cardImage: {
-        height: verticalScale(70),
+        height: verticalScale(87.5),
         width: "100%",
         borderRadius: scale(0),
         borderWidth: scale(0)

@@ -6,6 +6,7 @@ import {
   ScrollView,
 } from "react-native";
 import React from "react";
+import Constants from "expo-constants";
 import { useRouter } from "expo-router";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import CustomText from "../../../../../components/CustomText";
@@ -27,29 +28,29 @@ const index = () => {
     {
       id: 1,
       name: "iqBook Website",
-      icon: <GlobalIcon color="#3b82f6" />, // blue-500
-      bgColor: "rgba(147, 197, 253, 0.2)", // bg-blue-100
+      icon: <GlobalIcon color={colors.accentColor} />, // blue-500
+      bgColor: `${colors.accentColor}1A`, // bg-blue-100
       url: "https://iqbook.io/", // Link 
     },
     {
       id: 2,
       name: "Terms of Services",
-      icon: <TermServiceIcon color="#10b981" />, // emerald-500
-      bgColor: "rgba(167, 243, 208, 0.2)", // bg-emerald-100
+      icon: <TermServiceIcon color={colors.accentColor} />, // emerald-500
+      bgColor: `${colors.accentColor}1A`, // bg-emerald-100
       url: "/termService",
     },
     {
       id: 3,
       name: "Privacy Policy",
-      icon: <PolicyIcon color="#f59e0b" />, // amber-500
-      bgColor: "rgba(253, 224, 71, 0.2)", // bg-amber-100
+      icon: <PolicyIcon color={colors.accentColor} />, // amber-500
+      bgColor: `${colors.accentColor}1A`, // bg-amber-100
       url: "/privacyPolicy",
     },
     {
       id: 4,
       name: "Licenses",
-      icon: <CertificateIcon color="#6366f1" />, // indigo-500
-      bgColor: "rgba(199, 210, 254, 0.2)", // bg-indigo-100
+      icon: <CertificateIcon color={colors.accentColor} />, // indigo-500
+      bgColor: `${colors.accentColor}1A`, // bg-indigo-100
       url: "/licenses",
     },
   ];
@@ -143,7 +144,7 @@ const index = () => {
       <View style={styles.versionWrapper}>
         <CustomText style={[styles.versionText, {
           color: colors.secondaryText
-        }]}>Version 1.0.0.20</CustomText>
+        }]}>Version {Constants?.expoConfig?.version}</CustomText>
       </View>
     </View>
   );

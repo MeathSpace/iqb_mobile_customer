@@ -546,12 +546,14 @@ const appointment = () => {
                         <CustomText
                           style={{
                             fontSize: scale(14),
-                            backgroundColor:
-                              item.status === "served"
-                                ? "rgba(34, 197, 94, 0.1)"
-                                : "rgba(239, 68, 68, 0.1)",
-                            color:
-                              item.status === "served" ? "#14b8a6" : "#ef4444",
+                            // backgroundColor:
+                            //   item.status === "served"
+                            //     ? "rgba(34, 197, 94, 0.1)"
+                            //     : "rgba(239, 68, 68, 0.1)",
+                            // color:
+                            //   item.status === "served" ? "#14b8a6" : "#ef4444",
+                            backgroundColor: `${colors.accentColor}1A`,
+                            color: colors.accentColor,
                             paddingHorizontal: scale(10),
                             paddingVertical: verticalScale(3),
                             borderRadius: scale(15),
@@ -581,11 +583,12 @@ const appointment = () => {
                             // router.push("/appointmentCalendar");
                           }}
                           style={[styles.rebookButton, {
-                            backgroundColor: `${colors.accentColor}1A`
+                            // backgroundColor: `${colors.accentColor}1A`
+                            backgroundColor: colors.background
                           }]}
                         >
                           <Text style={[styles.rebookText, {
-                            color: colors.accentColor
+                            color: colors.text
                           }]}>Book again</Text>
                         </TouchableOpacity>
                       )}

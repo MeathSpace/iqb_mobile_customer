@@ -786,7 +786,7 @@ const appointmentCalendar = () => {
                   style={[
                     styles.label,
                     {
-                      color: colors.secondaryText,
+                      color: colors.accentColor,
                     },
                   ]}
                 >
@@ -832,7 +832,7 @@ const appointmentCalendar = () => {
                   style={[
                     styles.label,
                     {
-                      color: colors.secondaryText,
+                      color: colors.accentColor,
                     },
                   ]}
                 >
@@ -883,7 +883,7 @@ const appointmentCalendar = () => {
                   style={[
                     styles.label,
                     {
-                      color: colors.secondaryText,
+                      color: colors.accentColor,
                     },
                   ]}
                 >
@@ -932,7 +932,7 @@ const appointmentCalendar = () => {
                 style={[
                   styles.label,
                   {
-                    color: colors.secondaryText,
+                    color: colors.accentColor,
                   },
                 ]}
               >
@@ -955,7 +955,7 @@ const appointmentCalendar = () => {
                 style={[
                   styles.label,
                   {
-                    color: colors.secondaryText,
+                    color: colors.accentColor,
                   },
                 ]}
               >
@@ -978,7 +978,7 @@ const appointmentCalendar = () => {
         <ScrollView
           style={{ flex: 1 }}
           contentContainerStyle={{
-            gap: verticalScale(15),
+            gap: verticalScale(10),
             paddingHorizontal: scale(10),
           }}
           keyboardShouldPersistTaps="handled"
@@ -1056,6 +1056,7 @@ const appointmentCalendar = () => {
                                       fontSize: moderateScale(11),
                                       fontFamily: "AirbnbCereal_W_Md",
                                       color: colors.accentColor,
+                                      // color: "#fff"
                                     }}
                                   >
                                     {item?.serviceCategoryName}
@@ -1067,7 +1068,7 @@ const appointmentCalendar = () => {
                                   style={{
                                     fontFamily: "AirbnbCereal_W_Blk",
                                     fontSize: scale(20),
-                                    color: colors.accentColor,
+                                    // color: colors.accentColor,
                                     marginTop: verticalScale(4),
                                   }}
                                 >
@@ -1102,7 +1103,8 @@ const appointmentCalendar = () => {
                                 style={{
                                   height: verticalScale(28),
                                   paddingHorizontal: scale(12),
-                                  backgroundColor: "#000",
+                                  // backgroundColor: "#000",
+                                  backgroundColor: colors.accentColor,
                                   borderRadius: scale(6),
                                   justifyContent: "center",
                                   alignItems: "center",
@@ -1811,7 +1813,7 @@ const appointmentCalendar = () => {
               <Pressable
                 style={{
                   padding: scale(12),
-                  backgroundColor: colors.text,
+                  backgroundColor: colors.accentColor,
                   borderRadius: scale(50),
                 }}
                 onPress={() => {
@@ -1846,7 +1848,8 @@ const appointmentCalendar = () => {
                 {/* <LeftIcon size={scale(12)} color="#fff" /> */}
                 <CustomText
                   style={{
-                    color: colors.background,
+                    // color: colors.background,
+                    color: "#fff"
                   }}
                 >
                   Prev
@@ -1857,7 +1860,7 @@ const appointmentCalendar = () => {
             <Pressable
               style={{
                 padding: scale(12),
-                backgroundColor: colors.text,
+                backgroundColor: colors.accentColor,
                 borderRadius: scale(50),
               }}
               onPress={() => {
@@ -1924,12 +1927,12 @@ const appointmentCalendar = () => {
               disabled={paymentSettingsLoading}
             >
               {activeSection === "appointmentnote" ? (
-                <CustomText style={{ color: colors.background }}>Finish</CustomText>
+                <CustomText style={{ color: "#fff" }}>Finish</CustomText>
               ) : (
                 // <RightIcon size={scale(12)} color="#fff" />
                 <CustomText
                   style={{
-                    color: colors.background,
+                    color: "#fff",
                   }}
                 >
                   Next

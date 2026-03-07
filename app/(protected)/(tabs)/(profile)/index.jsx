@@ -9,6 +9,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
 import {
   Alert,
+  Platform,
   Pressable,
   ScrollView,
   StyleSheet,
@@ -50,7 +51,7 @@ const index = () => {
   const profileOptions = [
     {
       label: "Favorites",
-      icon: <HeartOutlineIcon color={"#fff"} />,
+      icon: <HeartOutlineIcon color={colors.accentColor} />,
       lightBg: "#fee2e2",
       darkBg: "#7f1d1d33",
       lightColor: "#dc2626",
@@ -60,7 +61,7 @@ const index = () => {
     },
     {
       label: "Change Salon",
-      icon: <SalonIcon color={"#fff"} />,
+      icon: <SalonIcon color={colors.accentColor} />,
       lightBg: "#ede9fe",
       darkBg: "#5b21b633",
       lightColor: "#7c3aed",
@@ -70,7 +71,7 @@ const index = () => {
     },
     {
       label: "Help & Support",
-      icon: <HelpIcon color={"#fff"} />,
+      icon: <HelpIcon color={colors.accentColor} />,
       lightBg: "#d1fae5",
       darkBg: "#065f4633",
       lightColor: "#059669",
@@ -80,7 +81,7 @@ const index = () => {
     },
     {
       label: "About",
-      icon: <AboutIcon color={"#fff"} />,
+      icon: <AboutIcon color={colors.accentColor} />,
       lightBg: "#e0f2fe",
       darkBg: "#1e3a8a33",
       lightColor: "#0284c7",
@@ -208,7 +209,10 @@ const index = () => {
       </View>
 
       <ScrollView
-        contentContainerStyle={{ paddingBottom: 130 }}
+        contentContainerStyle={{
+          paddingBottom:
+            Platform.OS === "ios" ? verticalScale(120) : verticalScale(20),
+        }}
         showsVerticalScrollIndicator={false}
       >
         {/* User Info Card */}
@@ -267,8 +271,8 @@ const index = () => {
                       styles.optionIconWrapper,
                       // { backgroundColor: opt.lightBg },
                       {
-                        backgroundColor: colors.accentColor
-                      }
+                        backgroundColor: `${colors.accentColor}1A`,
+                      },
                     ]}
                   >
                     {/* <Feather name={opt?.icon} size={moderateScale(24)} color={opt.lightColor} /> */}
@@ -306,14 +310,10 @@ const index = () => {
               <View
                 style={[
                   styles.optionIconWrapper,
-                  { backgroundColor: "#fee2e2" }, // light red bg for delete
+                  { backgroundColor: "#DC26261A" }, // light red bg for delete
                 ]}
               >
-                <Feather
-                  name="trash-2"
-                  size={moderateScale(24)}
-                  color="#ef4444"
-                />
+                <Feather name="trash-2" size={moderateScale(24)} color="#DC2626" />
                 {/* trash icon + red color */}
               </View>
               <CustomText style={[styles.optionLabel]}>
@@ -336,11 +336,11 @@ const index = () => {
 
         {/* Log Out */}
         <TouchableOpacity
-          style={[styles.logoutButton, { backgroundColor: "#fee2e2" }]}
+          style={[styles.logoutButton, { backgroundColor: "#DC26261A" }]}
           onPress={logoutPressed}
         >
-          <Feather name="log-out" size={moderateScale(16)} color={"#dc2626"} />
-          <CustomText style={[styles.logoutText, { color: "#dc2626" }]}>
+          <Feather name="log-out" size={moderateScale(16)} color={"#DC2626"} />
+          <CustomText style={[styles.logoutText, { color: "#DC2626" }]}>
             Log Out
           </CustomText>
         </TouchableOpacity>
