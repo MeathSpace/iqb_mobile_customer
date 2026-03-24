@@ -117,13 +117,10 @@ const appointmentCalenderModal = () => {
         Calendar.EntityTypes.EVENT,
       );
 
-      // 🔥 3. PICK CORRECT GOOGLE CALENDAR (MAIN FIX)
-      const targetCalendar = calendars.find(
-        (cal) =>
-          cal.source?.type === "com.google" && // only Google
-          cal.title === cal.source?.name && // avoids "Holidays"
-          cal.title.includes("@gmail.com"), // ensures real user calendar
-      );
+      let targetCalendar =
+        calendars.find(
+          (cal) => cal.source?.type === "com.google" && cal.allowsModifications,
+        ) || calendars.find((cal) => cal.allowsModifications);
 
       if (!targetCalendar) {
         throw new Error("No valid Google calendar found.");
@@ -167,10 +164,7 @@ const appointmentCalenderModal = () => {
         },
       );
 
-      Alert.alert(
-        "Success",
-        "Appointment created! Check your Google Calendar.",
-      );
+      Alert.alert("Success", "Appointment created! Check your calendar.");
 
       setBookAppointmentLoader(false);
       router.replace({

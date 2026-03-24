@@ -71,9 +71,7 @@ const editAppointmentCalenderModal = () => {
     ? JSON.parse(params?.selectedBookAppointmentNote)
     : "";
 
-  const selectedcalenderEventIdParse = params?.calenderEventId
-    ? JSON.parse(params?.calenderEventId)
-    : "";
+  const selectedcalenderEventIdParse = params?.calenderEventId || "";
 
   const { newNotification, setNewNotification, appointmentPopupType } =
     useGlobal();
@@ -110,13 +108,10 @@ const editAppointmentCalenderModal = () => {
         Calendar.EntityTypes.EVENT,
       );
 
-      // 🔥 3. PICK CORRECT GOOGLE CALENDAR
-      const targetCalendar = calendars.find(
-        (cal) =>
-          cal.source?.type === "com.google" &&
-          cal.title === cal.source?.name &&
-          cal.title.includes("@gmail.com"),
-      );
+      let targetCalendar =
+        calendars.find(
+          (cal) => cal.source?.type === "com.google" && cal.allowsModifications,
+        ) || calendars.find((cal) => cal.allowsModifications);
 
       if (!targetCalendar) {
         throw new Error("No valid Google calendar found.");
@@ -154,7 +149,10 @@ const editAppointmentCalenderModal = () => {
       if (existingEvent) {
         await Calendar.updateEventAsync(testId, eventConfig);
 
-        Alert.alert("Success", "Appointment event updated successfully!");
+        Alert.alert(
+          "Success",
+          "Appointment updated! Please check your calendar.",
+        );
 
         router.replace({
           pathname: "/appointmentSuccessPage",
