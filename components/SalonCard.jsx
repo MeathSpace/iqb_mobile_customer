@@ -41,6 +41,9 @@ const SalonCard = ({
         },
       );
 
+      const address = `${item?.address}, ${item?.city}, ${item?.country}`;
+      await AsyncStorage.setItem("salonLocationAddress", address);
+
       // console.log(JSON.stringify(data, null, 2));
 
       setAuthenticatedUser(data?.response);

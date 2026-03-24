@@ -38,7 +38,6 @@ import {
   HeartIcon,
   InstagramIcon,
   MapIcon,
-  MapScissorIcon,
   TiktokIcon,
   WebIcon,
   WhatsappIcon,
@@ -62,34 +61,6 @@ const Map = () => {
 
   const [region, setRegion] = useState(null);
   const mapRef = useRef(null);
-
-  // useEffect(() => {
-  //     (async () => {
-  //         const { status } = await Location.requestForegroundPermissionsAsync();
-  //         if (status !== 'granted') {
-  //             Alert.alert('Permission denied', 'Location access is required to show your position.');
-  //             return;
-  //         }
-
-  //         const location = await Location.getCurrentPositionAsync({});
-  //         setRegion({
-  //             latitude: location.coords.latitude,
-  //             longitude: location.coords.longitude,
-  //             latitudeDelta: 0.015,
-  //             longitudeDelta: 0.0121,
-  //         });
-
-  //         const { data } = await axios.get(`${BASE_URL}/mobileRoutes/getSalonsByLocation`, {
-  //             params: {
-  //                 latitude: location.coords.latitude,
-  //                 longitude: location.coords.longitude,
-  //             }
-  //         })
-
-  //         setSearchCitySalons((prev) => ({ ...prev, loading: false, data: data?.response, success: true, error: null }))
-
-  //     })();
-  // }, []);
 
   useEffect(() => {
     let isMounted = true;
@@ -328,6 +299,9 @@ const Map = () => {
           email: authenticatedUser?.email,
         },
       );
+
+      const address = `${selectedCustomerSalon?.data?.address}, ${selectedCustomerSalon?.data?.city}, ${selectedCustomerSalon?.data?.country}`;
+      await AsyncStorage.setItem("salonLocationAddress", address);
 
       setAuthenticatedUser(data?.response);
       await AsyncStorage.setItem(
@@ -704,7 +678,12 @@ const Map = () => {
                 </CustomSecondaryText>
 
                 <TouchableOpacity
-                  style={styles.button2}
+                  style={[
+                    styles.button2,
+                    {
+                      backgroundColor: colors.accentColor,
+                    },
+                  ]}
                   onPress={async () => {
                     try {
                       setConnectSalonLoader(true);
@@ -715,6 +694,12 @@ const Map = () => {
                           salonId: selectedDemo?.salonId,
                           email: authenticatedUser?.email,
                         },
+                      );
+
+                      const address = `${selectedDemo?.address}, ${selectedDemo?.city}, ${selectedDemo?.country}`;
+                      await AsyncStorage.setItem(
+                        "salonLocationAddress",
+                        address,
                       );
 
                       setAuthenticatedUser(data?.response);
@@ -759,7 +744,16 @@ const Map = () => {
                   style={styles.closeButton2}
                   onPress={() => setSelectedDemo(null)}
                 >
-                  <Text style={styles.closeButtonText2}>Close</Text>
+                  <Text
+                    style={[
+                      styles.closeButtonText2,
+                      {
+                        color: colors.accentColor,
+                      },
+                    ]}
+                  >
+                    Close
+                  </Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -1652,7 +1646,10 @@ const Map = () => {
                                             }}
                                           >
                                             <CustomText
-                                              style={[styles.servicePrice, {color: colors.accentColor}]}
+                                              style={[
+                                                styles.servicePrice,
+                                                { color: colors.accentColor },
+                                              ]}
                                             >
                                               {
                                                 salonInfoData?.data?.salonInfo
@@ -1966,7 +1963,6 @@ const styles = StyleSheet.create({
   servicePrice: {
     fontSize: scale(14),
     fontFamily: "AirbnbCereal_W_Bd",
-    
   },
   serviceEWT: {
     fontSize: scale(12),
@@ -1974,7 +1970,6 @@ const styles = StyleSheet.create({
 
   /** Marker Design */
   marker2: {
-    backgroundColor: "#0BA3AD",
     padding: scale(8),
     borderRadius: scale(20),
     borderWidth: 2,
@@ -2025,7 +2020,6 @@ const styles = StyleSheet.create({
 
   /** Connect Button */
   button2: {
-    backgroundColor: "#0BA3AD",
     paddingVertical: scale(10),
     paddingHorizontal: scale(20),
     borderRadius: scale(8),
@@ -2052,46 +2046,45 @@ const styles = StyleSheet.create({
   },
 
   closeButtonText2: {
-    color: "#0BA3AD",
     fontWeight: "600",
     fontSize: scale(13),
   },
 });
 
-const MemoizedMarker = React.memo(({ salon, selectedMarker, onPress }) => (
-  <Marker
-    coordinate={{
-      latitude: salon?.location?.coordinates?.latitude,
-      longitude: salon?.location?.coordinates?.longitude,
-    }}
-    title={salon.salonName}
-    description={salon.address}
-    onPress={() => onPress(salon.salonId)}
-  >
-    <View
-      style={{
-        backgroundColor: colors.background,
-        padding: scale(2),
-        borderRadius: scale(8),
-        borderWidth: scale(1),
-        borderColor: colors.border,
-      }}
-    >
-      <View
-        style={{
-          padding: scale(8),
-          borderRadius: scale(6),
-          backgroundColor:
-            selectedMarker === salon.salonId ? "#0BA3AD" : "#efefef",
-        }}
-      >
-        <MapScissorIcon
-          color={selectedMarker === salon.salonId ? "#fff" : "#000"}
-        />
-      </View>
-    </View>
-  </Marker>
-));
+// const MemoizedMarker = React.memo(({ salon, selectedMarker, onPress }) => (
+//   <Marker
+//     coordinate={{
+//       latitude: salon?.location?.coordinates?.latitude,
+//       longitude: salon?.location?.coordinates?.longitude,
+//     }}
+//     title={salon.salonName}
+//     description={salon.address}
+//     onPress={() => onPress(salon.salonId)}
+//   >
+//     <View
+//       style={{
+//         backgroundColor: colors.background,
+//         padding: scale(2),
+//         borderRadius: scale(8),
+//         borderWidth: scale(1),
+//         borderColor: colors.border,
+//       }}
+//     >
+//       <View
+//         style={{
+//           padding: scale(8),
+//           borderRadius: scale(6),
+//           backgroundColor:
+//             selectedMarker === salon.salonId ? colors.accentColor : "#efefef",
+//         }}
+//       >
+//         <MapScissorIcon
+//           color={selectedMarker === salon.salonId ? "#fff" : "#000"}
+//         />
+//       </View>
+//     </View>
+//   </Marker>
+// ));
 
 {
   /* {

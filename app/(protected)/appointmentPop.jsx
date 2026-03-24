@@ -1,6 +1,7 @@
 import { BASE_URL } from "@/utils/api";
 import { useTheme } from "@react-navigation/native";
 import axios from "axios";
+import * as Calendar from "expo-calendar";
 import { Image } from "expo-image";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import moment from "moment";
@@ -43,7 +44,6 @@ const appointmentPop = () => {
     }, []),
   );
 
-  // console.log(paymentSettingsData?.enabled);
   const router = useRouter();
   const { colors } = useTheme();
   const params = useLocalSearchParams();
@@ -52,8 +52,6 @@ const appointmentPop = () => {
     ? JSON.parse(params?.selectedAppointment)
     : {};
   const { authenticatedUser } = useAuth();
-
-  // console.log("selectedAppointmentParse ", selectedAppointmentParse)
 
   const [deleteAppointmentLoader, setDeleteAppointmentLoader] = useState(false);
 
@@ -71,7 +69,9 @@ const appointmentPop = () => {
         {
           text: "Confirm",
           style: "destructive",
-          onPress: () => deleteHandler(),
+          onPress: () => {
+            deleteHandler();
+          },
         },
       ],
       { cancelable: true },
@@ -92,25 +92,12 @@ const appointmentPop = () => {
         },
       );
 
+      await deleteCalendarEvent(selectedAppointmentParse?.calenderEventId);
+
       setDeleteAppointmentLoader(false);
 
       router.back();
-
-      // Alert.alert(
-      //   "Appointment Deleted",
-      //   "The appointment was deleted successfully.",
-      //   [
-      //     {
-      //       text: "OK",
-      //       onPress: () => {
-      //         router.back();
-      //       },
-      //     },
-      //   ],
-      //   { cancelable: false }
-      // );
     } catch (error) {
-      // Toast.error(error?.response?.data?.message)
       Alert.alert(
         "Warning !",
         `${error?.response?.data?.message}`,
@@ -125,6 +112,29 @@ const appointmentPop = () => {
       console.log("Error deleting appointment ", error);
     } finally {
       setDeleteAppointmentLoader(false);
+    }
+  };
+
+  const deleteCalendarEvent = async (calenderEventId) => {
+    try {
+      if (!calenderEventId) return;
+
+      // ✅ Request permission again (important)
+      const { status } = await Calendar.requestCalendarPermissionsAsync();
+      if (status !== "granted") {
+        Alert.alert(
+          "Permission Denied",
+          "Please enable calendar access in settings.",
+        );
+        return;
+      }
+
+      // ✅ Delete event
+      await Calendar.deleteEventAsync(calenderEventId);
+
+      console.log("✅ Calendar event deleted successfully");
+    } catch (error) {
+      console.log("❌ Failed to delete calendar event:", error);
     }
   };
 
@@ -209,22 +219,6 @@ const appointmentPop = () => {
           </View>
         </View>
 
-        {/* <View
-          style={[
-            styles.card,
-            {
-              backgroundColor: colors.cardColor,
-              borderColor: colors.cardBorder,
-            },
-          ]}
-        >
-          <CustomSecondaryText>
-            {selectedAppointmentParse?.isPaid
-              ? "Payment Done"
-              : "Payment not done"}
-          </CustomSecondaryText>
-        </View> */}
-
         {selectedAppointmentParse?.isPaid && (
           <View
             style={{
@@ -295,16 +289,7 @@ const appointmentPop = () => {
           </Pressable>
           <Pressable
             onPress={() => {
-              // if (paymentSettingsData?.enabled) {
-              //   Alert.alert(
-              //     "Updation Not Allowed",
-              //     "This appointment cannot be updated because payment has already been enabled for it. Please contact the salon for assistance.",
-              //     [{ text: "OK" }],
-              //     { cancelable: true },
-              //   );
-              //   return;
-              // }
-
+              // console.log(selectedAppointmentParse);
               router.replace({
                 pathname: "/editAppointmentCalender",
                 params: {
@@ -312,14 +297,6 @@ const appointmentPop = () => {
                   is_editAppointment: true,
                 },
               });
-
-              // router.replace({
-              //   pathname: "/appointmentpopup",
-              //   params: {
-              //     selectedAppointment: JSON.stringify(selectedAppointmentParse),
-              //     is_editAppointment: true,
-              //   },
-              // });
             }}
             style={{
               height: verticalScale(35),

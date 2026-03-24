@@ -3,8 +3,9 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "@react-navigation/native";
 import { useStripe } from "@stripe/stripe-react-native";
 import axios from "axios";
-import { useLocalSearchParams, useRouter } from "expo-router";
-import { useEffect, useState } from "react";
+import * as Calendar from "expo-calendar";
+import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
+import { useCallback, useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
@@ -23,6 +24,31 @@ import { useGlobal } from "../../context/GlobalContext";
 import { ddmmformatDate } from "../../utils/ddmmformatDate";
 
 const appointmentCalenderModal = () => {
+  const [salonAddress, setSalonAddress] = useState("");
+
+  const getSalonLocationAddress = async () => {
+    try {
+      const address = await AsyncStorage.getItem("salonLocationAddress");
+      return address; // can be null if not found
+    } catch (error) {
+      console.log("Error fetching salon address:", error);
+      return null;
+    }
+  };
+
+  useFocusEffect(
+    useCallback(() => {
+      const fetchAddress = async () => {
+        const address = await getSalonLocationAddress();
+        if (address) {
+          setSalonAddress(address);
+        }
+      };
+
+      fetchAddress();
+    }, []),
+  );
+
   const {
     appointmentPopupType,
     setAppointmentPopupType,
@@ -63,6 +89,103 @@ const appointmentCalenderModal = () => {
     : "";
 
   const [bookAppointmentLoader, setBookAppointmentLoader] = useState(false);
+
+  // console.log("selectedCustomerBookAppointmentBarberParse ", selectedCustomerBookAppointmentBarberParse?.name)
+
+  const saveToCalender = async (
+    selectedBookCalenderDateParse,
+    selectedBookCalenderTimeslotParse,
+    selectedCustomerBookAppointmentServicesParse,
+    appointmentId,
+  ) => {
+    try {
+      setBookAppointmentLoader(true);
+
+      // ✅ 1. Request Permission
+      const { status } = await Calendar.requestCalendarPermissionsAsync();
+      if (status !== "granted") {
+        Alert.alert(
+          "Permission Denied",
+          "Please enable calendar access in settings.",
+        );
+        setBookAppointmentLoader(false);
+        return;
+      }
+
+      // ✅ 2. Get Calendars
+      const calendars = await Calendar.getCalendarsAsync(
+        Calendar.EntityTypes.EVENT,
+      );
+
+      // 🔥 3. PICK CORRECT GOOGLE CALENDAR (MAIN FIX)
+      const targetCalendar = calendars.find(
+        (cal) =>
+          cal.source?.type === "com.google" && // only Google
+          cal.title === cal.source?.name && // avoids "Holidays"
+          cal.title.includes("@gmail.com"), // ensures real user calendar
+      );
+
+      if (!targetCalendar) {
+        throw new Error("No valid Google calendar found.");
+      }
+
+      const calendarId = targetCalendar.id;
+
+      // ✅ 4. Parse Date & Time safely
+      const [year, month, day] = selectedBookCalenderDateParse
+        .split("-")
+        .map(Number);
+
+      const [hours, minutes] = selectedBookCalenderTimeslotParse
+        .split(":")
+        .map(Number);
+
+      const startDate = new Date(year, month - 1, day, hours, minutes);
+
+      const duration = 30; // you can replace with dynamic later
+      const endDate = new Date(startDate.getTime() + duration * 60 * 1000);
+
+      // ✅ 5. Event Config
+      const eventConfig = {
+        title: `Book Appointment (Created) - ${selectedCustomerBookAppointmentBarberParse?.name}`,
+        startDate,
+        endDate,
+        notes: selectedBookAppointmentNoteParse
+          ? selectedBookAppointmentNoteParse
+          : "Appointment booked via app",
+        location: salonAddress,
+      };
+
+      const newId = await Calendar.createEventAsync(calendarId, eventConfig);
+
+      const { data } = await axios.post(
+        `${BASE_URL}/mobileRoutes/updatecalenderEventId`,
+        {
+          salonId: authenticatedUser?.salonId,
+          appointmentId: appointmentId,
+          calenderEventId: newId,
+        },
+      );
+
+      Alert.alert(
+        "Success",
+        "Appointment created! Check your Google Calendar.",
+      );
+
+      setBookAppointmentLoader(false);
+      router.replace({
+        pathname: "/appointmentSuccessPage",
+        params: {
+          booked: true,
+          edit: false,
+        },
+      });
+    } catch (error) {
+      setBookAppointmentLoader(false);
+      console.error("❌ Calendar Error:", error);
+      Alert.alert("Error", error.message);
+    }
+  };
 
   const bookAppointmentPressed = async () => {
     const appData = {
@@ -107,15 +230,12 @@ const appointmentCalenderModal = () => {
         value: true,
       });
 
-      // router.dismissTo("/appointment")
-
-      router.replace({
-        pathname: "/appointmentSuccessPage",
-        params: {
-          booked: true,
-          edit: false,
-        },
-      });
+      saveToCalender(
+        selectedBookCalenderDateParse,
+        selectedBookCalenderTimeslotParse,
+        selectedCustomerBookAppointmentServicesParse,
+        data?.response?._id,
+      );
     } catch (error) {
       setBookAppointmentLoader(false);
       Alert.alert("Notice", error?.response?.data?.message, [{ text: "OK" }]);
@@ -220,19 +340,56 @@ const appointmentCalenderModal = () => {
         throw new Error(presentResult.error.message);
       }
 
-      router.replace({
-        pathname: "/appointmentSuccessPage",
-        params: {
-          booked: true,
-          edit: false,
-        },
-      });
+      // webhook may take little time to update so call this api atleast 5 times to get the apptID
+      // call another api with paymentIntentId map to => appointmentID
+      // I get appointment Id and then save it google calender
+
+      const appointmentId = await getAppointmentAfterDelay(paymentIntent);
+
+      console.log(appointmentId);
+
+      // router.replace({
+      //   pathname: "/appointmentSuccessPage",
+      //   params: {
+      //     booked: true,
+      //     edit: false,
+      //   },
+      // });
     } catch (err) {
       console.log("Stripe error:", err?.message);
 
       Alert.alert("Payment failed", err?.message || "Something went wrong");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const getAppointmentAfterDelay = async (paymentIntent) => {
+    try {
+      console.log("⏳ Waiting 15 seconds for webhook...");
+
+      // wait 15 seconds
+      await new Promise((res) => setTimeout(res, 15000));
+
+      // call API once
+      const { data } = await axios.post(
+        `${BASE_URL}/mobileRoutes/getAppointmentByPaymentIntentId`,
+        {
+          paymentIntentId: paymentIntent,
+        },
+      );
+
+      const appointmentId = data?.response?.appointmentId;
+
+      if (!appointmentId) {
+        throw new Error("Appointment not found after delay");
+      }
+
+      console.log("✅ Appointment found:", appointmentId);
+      return appointmentId;
+    } catch (err) {
+      console.log("❌ Error fetching appointment:", err?.message);
+      throw err;
     }
   };
 

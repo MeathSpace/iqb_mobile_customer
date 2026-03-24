@@ -350,7 +350,7 @@ const appointment = () => {
                 <View
                   style={[
                     styles.iconContainer,
-                    { backgroundColor: `${colors.accentColor}1A`},
+                    { backgroundColor: `${colors.accentColor}1A` },
                   ]}
                 >
                   <Feather
@@ -426,7 +426,6 @@ const appointment = () => {
                         }));
 
                         router.push("/appointmentpopup");
-                        // router.push("/appointmentCalendar");
                       }}
                       style={[
                         styles.bookButton,
@@ -480,11 +479,6 @@ const appointment = () => {
                           selectedAppointment: JSON.stringify(item),
                         },
                       });
-
-                      // router.push({
-                      //   pathname: "/appointmentPop",
-                      //   params: { selectedAppointment: JSON.stringify(item) },
-                      // });
                     } else {
                       Alert.alert(
                         "Warning",
@@ -580,16 +574,25 @@ const appointment = () => {
                             }));
 
                             router.push("/appointmentpopup");
-                            // router.push("/appointmentCalendar");
                           }}
-                          style={[styles.rebookButton, {
-                            // backgroundColor: `${colors.accentColor}1A`
-                            backgroundColor: colors.background
-                          }]}
+                          style={[
+                            styles.rebookButton,
+                            {
+                              // backgroundColor: `${colors.accentColor}1A`
+                              backgroundColor: colors.background,
+                            },
+                          ]}
                         >
-                          <Text style={[styles.rebookText, {
-                            color: colors.text
-                          }]}>Book again</Text>
+                          <Text
+                            style={[
+                              styles.rebookText,
+                              {
+                                color: colors.text,
+                              },
+                            ]}
+                          >
+                            Book again
+                          </Text>
                         </TouchableOpacity>
                       )}
                     </View>

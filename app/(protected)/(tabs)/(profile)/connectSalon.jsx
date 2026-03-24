@@ -40,6 +40,7 @@ const connectSalon = () => {
         "LoggedInUser",
         JSON.stringify({ ...authenticatedUser, salonId: 0 }),
       );
+      await AsyncStorage.removeItem("salonLocationAddress");
       // router.replace("/home")
 
       router.dismiss(); // this is alias for `router.back()` inside modal
@@ -133,7 +134,7 @@ const connectSalon = () => {
 
         <TouchableOpacity
           onPress={changeSalonPressed}
-          style={[styles.queueButton, {backgroundColor: colors.accentColor}]}
+          style={[styles.queueButton, { backgroundColor: colors.accentColor }]}
           activeOpacity={0.85}
         >
           {connectSalonLoader ? (

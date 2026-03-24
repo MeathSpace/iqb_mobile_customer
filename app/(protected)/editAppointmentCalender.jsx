@@ -319,6 +319,7 @@ const editAppointmentCalender = () => {
         editAppointment: true,
         isDateNotPresent: selectedEditAppointmentData?.appointmentDate,
         isTimeSlotNotPresent: selectedEditAppointmentData?.startTime,
+        calenderEventId: selectedEditAppointmentData?.calenderEventId
       },
     });
   };

@@ -1,5 +1,6 @@
 import { BASE_URL } from "@/utils/api";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "@react-navigation/native";
 import axios from "axios";
 import { Image } from "expo-image";
@@ -31,7 +32,6 @@ import CustomSecondaryText from "../../../components/CustomSecondaryText";
 import CustomTabView from "../../../components/CustomTabView";
 import CustomText from "../../../components/CustomText";
 import Skeleton from "../../../components/Skeleton";
-import { Colors } from "../../../constants/Colors";
 import {
   ContactIcon,
   EmailIcon,
@@ -85,6 +85,12 @@ const salon = () => {
               },
             },
           );
+
+          // ✅ Create formatted address
+          const address = `${data?.response?.salonInfo?.address}, ${data?.response?.salonInfo?.city}, ${data?.response?.salonInfo?.country}`;
+
+          // ✅ Save to AsyncStorage
+          await AsyncStorage.setItem("salonLocationAddress", address);
 
           setSalonInfoData((prev) => ({
             ...prev,
@@ -525,9 +531,7 @@ const salon = () => {
                         height: scale(10),
                         borderRadius: scale(30),
                         backgroundColor:
-                          index === currentIndex
-                            ? colors.accentColor
-                            : "#fff",
+                          index === currentIndex ? colors.accentColor : "#fff",
                       }}
                     ></Pressable>
                   );
