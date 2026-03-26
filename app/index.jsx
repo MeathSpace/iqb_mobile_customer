@@ -7,6 +7,7 @@ import CustomSecondaryText from "../components/CustomSecondaryText";
 import CustomText from "../components/CustomText";
 import CustomView from "../components/CustomView";
 import { useAuth } from "../context/AuthContext";
+import i18n from "../src/localization/i18n";
 
 const index = () => {
   const { colors } = useTheme();
@@ -57,8 +58,9 @@ const index = () => {
         <CustomSecondaryText
           style={[styles.sub_heading, { color: colors.secondaryText }]}
         >
-          Instantly book, style your hair and mustache the way you want by the
-          stylist of your choice.
+          {/* Instantly book, style your hair and mustache the way you want by the
+          stylist of your choice. */}
+          {i18n.t("welcome")} {i18n.t("name")}
         </CustomSecondaryText>
 
         {isAuthenticated ? (
