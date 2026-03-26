@@ -292,18 +292,25 @@ const appointmentCalenderModal = () => {
 
     const { paymentIntent, ephemeralKey, customer } = data;
 
+    console.log("book Appointment Data ", data?.tempAppointment?._id);
+
     if (!paymentIntent || !ephemeralKey || !customer) {
       throw new Error("Invalid Stripe response");
     }
 
-    return { paymentIntent, ephemeralKey, customer };
+    return {
+      paymentIntent,
+      ephemeralKey,
+      customer,
+      appointmentId: data?.tempAppointment?._id,
+    };
   };
 
   const openPaymentSheet = async () => {
     try {
       setLoading(true);
 
-      const { paymentIntent, ephemeralKey, customer } =
+      const { paymentIntent, ephemeralKey, customer, appointmentId } =
         await fetchPaymentSheetParams();
 
       const initResult = await initPaymentSheet({
@@ -334,56 +341,30 @@ const appointmentCalenderModal = () => {
         throw new Error(presentResult.error.message);
       }
 
-      // webhook may take little time to update so call this api atleast 5 times to get the apptID
-      // call another api with paymentIntentId map to => appointmentID
-      // I get appointment Id and then save it google calender
+      if (appointmentId) {
+        saveToCalender(
+          selectedBookCalenderDateParse,
+          selectedBookCalenderTimeslotParse,
+          selectedCustomerBookAppointmentServicesParse,
+          appointmentId,
+        );
+      } else {
+        console.warn("Appointment ID is missing. Cannot save to calendar.");
+      }
 
-      const appointmentId = await getAppointmentAfterDelay(paymentIntent);
-
-      console.log(appointmentId);
-
-      // router.replace({
-      //   pathname: "/appointmentSuccessPage",
-      //   params: {
-      //     booked: true,
-      //     edit: false,
-      //   },
-      // });
+      router.replace({
+        pathname: "/appointmentSuccessPage",
+        params: {
+          booked: true,
+          edit: false,
+        },
+      });
     } catch (err) {
       console.log("Stripe error:", err?.message);
 
       Alert.alert("Payment failed", err?.message || "Something went wrong");
     } finally {
       setLoading(false);
-    }
-  };
-
-  const getAppointmentAfterDelay = async (paymentIntent) => {
-    try {
-      console.log("⏳ Waiting 15 seconds for webhook...");
-
-      // wait 15 seconds
-      await new Promise((res) => setTimeout(res, 15000));
-
-      // call API once
-      const { data } = await axios.post(
-        `${BASE_URL}/mobileRoutes/getAppointmentByPaymentIntentId`,
-        {
-          paymentIntentId: paymentIntent,
-        },
-      );
-
-      const appointmentId = data?.response?.appointmentId;
-
-      if (!appointmentId) {
-        throw new Error("Appointment not found after delay");
-      }
-
-      console.log("✅ Appointment found:", appointmentId);
-      return appointmentId;
-    } catch (err) {
-      console.log("❌ Error fetching appointment:", err?.message);
-      throw err;
     }
   };
 
