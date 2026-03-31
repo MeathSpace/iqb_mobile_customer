@@ -54,13 +54,11 @@ const index = () => {
           resizeMode="cover"
         />
 
-        <CustomText style={styles.heading}>Welcome to iQBook</CustomText>
+        <CustomText style={styles.heading}>{i18n.t("index.header")}</CustomText>
         <CustomSecondaryText
           style={[styles.sub_heading, { color: colors.secondaryText }]}
         >
-          {/* Instantly book, style your hair and mustache the way you want by the
-          stylist of your choice. */}
-          {i18n.t("welcome")} {i18n.t("name")}
+          {i18n.t("index.subheader")}
         </CustomSecondaryText>
 
         {isAuthenticated ? (
@@ -75,7 +73,7 @@ const index = () => {
             ]}
             activeOpacity={0.85}
           >
-            <CustomText style={styles.authButtonText}>Register</CustomText>
+            <CustomText style={styles.authButtonText}>{i18n.t("index.registerButtonText")}</CustomText>
           </TouchableOpacity>
         ) : (
           <>
@@ -90,7 +88,7 @@ const index = () => {
               ]}
               activeOpacity={0.85}
             >
-              <CustomText style={styles.authButtonText}>Register</CustomText>
+              <CustomText style={styles.authButtonText}>{i18n.t("index.registerButtonText")}</CustomText>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -101,7 +99,7 @@ const index = () => {
               ]}
               activeOpacity={0.85}
             >
-              <CustomText style={styles.authButtonText}>Log In</CustomText>
+              <CustomText style={styles.authButtonText}>{i18n.t("index.loginButtonText")}</CustomText>
             </TouchableOpacity>
           </>
         )}

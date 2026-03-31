@@ -209,18 +209,6 @@ const forgetPasswordConfirmation = () => {
           </View>
         </View>
 
-        {/* <Pressable
-                    onPress={resetHandler}
-                    style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode }]}>
-                    {
-                        resetLoader ? (
-                            <ActivityIndicator size="small" color="#fff" />
-                        ) : (
-                            <CustomText style={{ color: "#fff" }}>Reset</CustomText>
-                        )
-                    }
-                </Pressable> */}
-
         <TouchableOpacity
           onPress={resetHandler}
           disabled={resetLoader}

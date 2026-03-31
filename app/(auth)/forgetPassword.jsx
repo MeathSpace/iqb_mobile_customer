@@ -18,6 +18,7 @@ import CustomSecondaryText from "../../components/CustomSecondaryText";
 import CustomText from "../../components/CustomText";
 import CustomView from "../../components/CustomView";
 import { ErrorIcon } from "../../constants/icons";
+import i18n from "../../src/localization/i18n"
 
 const forgetPassword = () => {
   const { colors } = useTheme();
@@ -71,19 +72,19 @@ const forgetPassword = () => {
       <CustomView style={{ justifyContent: "space-between" }}>
         <View style={{ gap: verticalScale(20) }}>
           <View>
-            <CustomText style={styles.heading}>What’s your email?</CustomText>
+            <CustomText style={styles.heading}>{i18n.t("auth.forgotPassword.header")}</CustomText>
 
             <CustomSecondaryText>
-              Enter your email address to reset your password.
+              {i18n.t("auth.forgotPassword.subHeader")}
             </CustomSecondaryText>
           </View>
 
           <View style={styles.inputWrapper}>
-            <CustomText>Email</CustomText>
+            <CustomText>{i18n.t("auth.forgotPassword.email.label")}</CustomText>
 
             <TextInput
               editable
-              placeholder="Enter your email"
+              placeholder={i18n.t("auth.forgotPassword.email.placeholder")}
               placeholderTextColor={colors.secondaryText}
               style={[
                 false ? styles.inputFielderror : styles.inputField,
@@ -119,13 +120,6 @@ const forgetPassword = () => {
           </View>
         </View>
 
-        {/* <Pressable
-                    disabled={forgetLoader}
-                    onPress={() => forgetHandler()}
-                    style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode }]}>
-                    <CustomText style={{ color: "#fff" }}>continue</CustomText>
-                </Pressable> */}
-
         <TouchableOpacity
           onPress={() => forgetHandler()}
           disabled={forgetLoader}
@@ -135,7 +129,7 @@ const forgetPassword = () => {
           {forgetLoader ? (
             <ActivityIndicator size="small" color="#fff" />
           ) : (
-            <CustomText style={styles.signinButtonText}>Continue</CustomText>
+            <CustomText style={styles.signinButtonText}>{i18n.t("auth.forgotPassword.continue")}</CustomText>
           )}
         </TouchableOpacity>
       </CustomView>

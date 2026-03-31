@@ -31,6 +31,7 @@ import * as WebBrowser from "expo-web-browser";
 import { jwtDecode } from "jwt-decode";
 import { Toast } from "toastify-react-native";
 import { ErrorIcon, EyeIcon, EyeOffIcon } from "../../constants/icons";
+import i18n from "../../src/localization/i18n";
 
 export const useWarmUpBrowser = () => {
   useEffect(() => {
@@ -377,10 +378,10 @@ const signin = () => {
                 gap: verticalScale(10),
               }}
             >
-              <CustomText>Email</CustomText>
+              <CustomText>{i18n.t("auth.signin.email.label")}</CustomText>
               <TextInput
                 editable
-                placeholder="Enter your email"
+                placeholder={i18n.t("auth.signin.email.placeholder")}
                 placeholderTextColor={colors.secondaryText}
                 style={[
                   false ? styles.inputFielderror : styles.inputField,
@@ -426,7 +427,7 @@ const signin = () => {
                 gap: verticalScale(10),
               }}
             >
-              <CustomText>Password</CustomText>
+              <CustomText>{i18n.t("auth.signin.password.label")}</CustomText>
               <View
                 style={[
                   styles.passwordInputContainer,
@@ -439,7 +440,7 @@ const signin = () => {
               >
                 <TextInput
                   editable
-                  placeholder="Enter your password"
+                  placeholder={i18n.t("auth.signin.password.placeholder")}
                   placeholderTextColor={colors.secondaryText}
                   style={[
                     styles.inputField,
@@ -508,12 +509,14 @@ const signin = () => {
                 onValueChange={setRememberMe}
                 color={rememberMe ? colors.accentColor : undefined}
               />
-              <CustomSecondaryText>Remember Me</CustomSecondaryText>
+              <CustomSecondaryText>
+                {i18n.t("auth.signin.rememberMe")}
+              </CustomSecondaryText>
             </View>
 
             <Pressable onPress={() => router.push("/forgetPassword")}>
               <CustomSecondaryText style={{ color: colors.accentColor }}>
-                Forgot Password ?
+                {i18n.t("auth.signin.forgotPassword")}
               </CustomSecondaryText>
             </Pressable>
           </View>
@@ -521,13 +524,18 @@ const signin = () => {
           <TouchableOpacity
             onPress={() => signinPressed()}
             disabled={signInData?.loading}
-            style={[styles.signinButton, {backgroundColor: colors.accentColor}]}
+            style={[
+              styles.signinButton,
+              { backgroundColor: colors.accentColor },
+            ]}
             activeOpacity={0.85}
           >
             {signInData?.loading ? (
               <ActivityIndicator size="small" color="#fff" />
             ) : (
-              <CustomText style={styles.signinButtonText}>Sign in</CustomText>
+              <CustomText style={styles.signinButtonText}>
+                {i18n.t("auth.signin.signIn")}
+              </CustomText>
             )}
           </TouchableOpacity>
 
@@ -541,7 +549,9 @@ const signin = () => {
             />
 
             <View style={{ paddingHorizontal: moderateScale(10) }}>
-              <CustomText style={{ color: colors.text }}>or</CustomText>
+              <CustomText style={{ color: colors.text }}>
+                {i18n.t("auth.signin.or")}
+              </CustomText>
             </View>
 
             <View
@@ -597,7 +607,9 @@ const signin = () => {
                     height={30}
                     width={30}
                   />
-                  <CustomText>Sign in with Google</CustomText>
+                  <CustomText>
+                    {i18n.t("auth.signin.signInWithGoogle")}
+                  </CustomText>
                 </>
               )}
             </Pressable>
@@ -607,10 +619,10 @@ const signin = () => {
             <CustomText
               style={[styles.subHeading, { color: colors.secondaryText }]}
             >
-              Don't have an account ?
+              {i18n.t("auth.signin.dontHaveAccount")}
               <CustomText style={{ color: colors.accentColor }}>
                 {" "}
-                Sign up
+                {i18n.t("auth.signin.signup")}
               </CustomText>
             </CustomText>
           </Pressable>
@@ -667,7 +679,7 @@ const styles = StyleSheet.create({
 
   signinButton: {
     width: "100%",
-     // bg-teal-500
+    // bg-teal-500
     paddingVertical: verticalScale(12), // py-4
     borderRadius: scale(8), // rounded-xl
     alignItems: "center",

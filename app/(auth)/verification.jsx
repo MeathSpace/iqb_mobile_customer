@@ -244,20 +244,6 @@ const verification = () => {
     >
       <CustomView style={{ justifyContent: "space-between" }}>
         <View style={{ gap: verticalScale(20) }}>
-          {/* {authType === "google" ? (
-                        <ProgressHeader
-                            progressOne={progressOne}
-                            progressTwo={0.5}
-                            authType={"google"}
-                        />
-                    ) : (
-                        <ProgressHeader
-                            progressOne={progressOne}
-                            progressTwo={progressTwo}
-                            progressThree={progressThree}
-                        />
-                    )} */}
-
           <ProgressHeader
             progressOne={progressOne}
             progressTwo={progressTwo}
@@ -331,30 +317,6 @@ const verification = () => {
             )}
           </TouchableOpacity>
 
-          {/* <Pressable
-                        onPress={resendVerification}
-                        style={[
-                            styles.btn,
-                            {
-                                width: scale(100),
-                                marginLeft: "auto",
-                                backgroundColor: (verificationCodeLoading || isCooldown)
-                                    ? "#999"
-                                    : Colors.modeColor.colorCode
-                            }
-                        ]}
-                    >
-                        {
-                            verificationCodeLoading ? (
-                                <ActivityIndicator size="small" color="#fff" />
-                            ) : (
-                                <CustomText style={{ color: "#fff" }}>
-                                    {isCooldown ? `Wait ${verificationTime}s` : "Resend"}
-                                </CustomText>
-                            )
-                        }
-                    </Pressable> */}
-
           <View
             style={{
               flexDirection: "row",
@@ -380,18 +342,6 @@ const verification = () => {
           </View>
         </View>
 
-        {/* <Pressable
-                    disabled={signupLoading}
-                    onPress={() => signupHandler()}
-                    style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode }]}>
-                    {
-                        signupLoading ? (
-                            <ActivityIndicator size="small" color="#fff" />
-                        ) : (
-                            <CustomText style={{ color: "#fff" }}>Done</CustomText>
-                        )
-                    }
-                </Pressable> */}
       </CustomView>
     </TouchableWithoutFeedback>
   );

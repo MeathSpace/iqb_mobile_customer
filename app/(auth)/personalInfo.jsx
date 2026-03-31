@@ -310,20 +310,6 @@ const personalInfo = () => {
               gap: verticalScale(20),
             }}
           >
-            {/* {authType === "google" ? (
-                            <ProgressHeader
-                                progressOne={0.5}
-                                progressTwo={progressTwo}
-                                authType={"google"}
-                            />
-                        ) : (
-                            <ProgressHeader
-                                progressOne={progressOne}
-                                progressTwo={progressTwo}
-                                progressThree={progressThree}
-                            />
-                        )} */}
-
             <ProgressHeader
               progressOne={progressOne}
               progressTwo={progressTwo}
@@ -689,12 +675,6 @@ const personalInfo = () => {
               )}
             </View>
           </View>
-
-          {/* <Pressable
-                        onPress={() => saveHandler()}
-                        style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode }]}>
-                        <CustomText style={{ color: "#fff" }}>Save & Next</CustomText>
-                    </Pressable> */}
 
           <TouchableOpacity
             onPress={() => saveHandler()}

@@ -19,6 +19,7 @@ import CustomSecondaryText from "../../components/CustomSecondaryText";
 import CustomText from "../../components/CustomText";
 import CustomView from "../../components/CustomView";
 import { ErrorIcon } from "../../constants/icons";
+import i18n from "../../src/localization/i18n";
 
 const passwordVerification = () => {
   const { colors } = useTheme();
@@ -106,20 +107,26 @@ const passwordVerification = () => {
       <CustomView style={{ justifyContent: "space-between" }}>
         <View style={{ gap: verticalScale(20) }}>
           <View>
-            <CustomText style={styles.heading}>You're all set!</CustomText>
+            <CustomText style={styles.heading}>
+              {i18n.t("auth.passwordVerification.header")}
+            </CustomText>
 
             <CustomSecondaryText>
-              Enter the 4 digit code sent to your mobile number and email
+              {i18n.t("auth.passwordVerification.subHeader")}
             </CustomSecondaryText>
           </View>
 
           <View style={styles.inputWrapper}>
-            <CustomText>Verification Code</CustomText>
+            <CustomText>
+              {i18n.t("auth.passwordVerification.verificationCode.label")}
+            </CustomText>
 
             <TextInput
               editable
               keyboardType="numeric"
-              placeholder="Enter your otp"
+              placeholder={i18n.t(
+                "auth.passwordVerification.verificationCode.placeholder",
+              )}
               placeholderTextColor={colors.secondaryText}
               style={[
                 false ? styles.inputFielderror : styles.inputField,
@@ -156,37 +163,16 @@ const passwordVerification = () => {
 
           <TouchableOpacity
             onPress={continueHandler}
-            style={[styles.signinButton, {backgroundColor: colors.accentColor}]}
+            style={[
+              styles.signinButton,
+              { backgroundColor: colors.accentColor },
+            ]}
             activeOpacity={0.85}
           >
             <CustomText style={styles.signinButtonText}>
-              Verify & Continue
+              {i18n.t("auth.passwordVerification.verifyAndContinue")}
             </CustomText>
           </TouchableOpacity>
-
-          {/* <Pressable
-                        onPress={resendVerification}
-                        style={[
-                            styles.btn,
-                            {
-                                width: scale(100),
-                                marginLeft: "auto",
-                                backgroundColor: (verificationCodeLoading || isCooldown)
-                                    ? "#999"
-                                    : Colors.modeColor.colorCode
-                            }
-                        ]}
-                    >
-                        {
-                            verificationCodeLoading ? (
-                                <ActivityIndicator size="small" color="#fff" />
-                            ) : (
-                                <CustomText style={{ color: "#fff" }}>
-                                    {isCooldown ? `Wait ${verificationTime}s` : "Resend"}
-                                </CustomText>
-                            )
-                        }
-                    </Pressable> */}
 
           <View
             style={{
@@ -196,7 +182,7 @@ const passwordVerification = () => {
               marginHorizontal: "auto",
             }}
           >
-            <CustomSecondaryText>Didn't receive the code? </CustomSecondaryText>
+            <CustomSecondaryText>{i18n.t("auth.passwordVerification.didntReceiveCode")} </CustomSecondaryText>
 
             <Pressable
               onPress={resendVerification}
@@ -206,19 +192,16 @@ const passwordVerification = () => {
                 <ActivityIndicator size="small" color={colors.accentColor} />
               ) : (
                 <CustomText style={{ color: colors.accentColor }}>
-                  {isCooldown ? `Wait ${verificationTime}s` : "Resend"}
+                  {isCooldown
+                    ? i18n.t("auth.passwordVerification.waitMessage", {
+                        time: verificationTime,
+                      })
+                    : i18n.t("auth.passwordVerification.resend")}
                 </CustomText>
               )}
             </Pressable>
           </View>
         </View>
-
-        {/* <Pressable
-                    onPress={continueHandler}
-                    style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode }]}
-                >
-                    <CustomText style={{ color: "#fff" }}>Continue</CustomText>
-                </Pressable> */}
       </CustomView>
     </TouchableWithoutFeedback>
   );
@@ -256,7 +239,7 @@ const styles = StyleSheet.create({
 
   signinButton: {
     width: "100%",
-     // bg-teal-500
+    // bg-teal-500
     paddingVertical: verticalScale(12), // py-4
     borderRadius: scale(8), // rounded-xl
     alignItems: "center",
