@@ -22,6 +22,7 @@ import CustomView from "../../components/CustomView";
 import ProgressHeader from "../../components/ProgressHeader";
 import { ErrorIcon } from "../../constants/icons";
 import { useAuth } from "../../context/AuthContext";
+import i18n from "../../src/localization/i18n";
 
 const verification = () => {
   const {
@@ -30,17 +31,12 @@ const verification = () => {
     gender,
     callingCode,
     phoneNumber,
-    // verificationOtp,
     selectedDate,
     authType,
     password,
   } = useLocalSearchParams();
 
   const { colors } = useTheme();
-
-  // console.log("Current Email ", email)
-  // console.log("Auth Type Verification ", authType ?? " none")
-
   const [verificationCode, setVerificationCode] = useState("");
   const [verificationCodeError, setVerificationCodeError] = useState("");
   const [currentVerificationOtp, setCurrentVerificationOtp] = useState("");
@@ -251,20 +247,26 @@ const verification = () => {
           />
 
           <View>
-            <CustomText style={styles.heading}>You're all set!</CustomText>
+            <CustomText style={styles.heading}>
+              {i18n.t("auth.verification.header")}
+            </CustomText>
 
             <CustomSecondaryText>
-              Enter the 4 digit code sent to your mobile number and email
+              {i18n.t("auth.verification.subHeader")}
             </CustomSecondaryText>
           </View>
 
           <View style={styles.inputWrapper}>
-            <CustomText>Verification Code</CustomText>
+            <CustomText>
+              {i18n.t("auth.verification.verificationCode.label")}
+            </CustomText>
 
             <TextInput
               editable
               keyboardType="numeric"
-              placeholder="Enter your otp"
+              placeholder={i18n.t(
+                "auth.verification.verificationCode.placeholder",
+              )}
               placeholderTextColor={colors.secondaryText}
               style={[
                 false ? styles.inputFielderror : styles.inputField,
@@ -312,7 +314,7 @@ const verification = () => {
               <ActivityIndicator size="small" color="#fff" />
             ) : (
               <CustomText style={styles.signinButtonText}>
-                Verify & Create Account
+                {i18n.t("auth.verification.verifyAndCreate")}
               </CustomText>
             )}
           </TouchableOpacity>
@@ -325,7 +327,9 @@ const verification = () => {
               marginHorizontal: "auto",
             }}
           >
-            <CustomSecondaryText>Didn't receive the code? </CustomSecondaryText>
+            <CustomSecondaryText>
+              {i18n.t("auth.verification.didntReceiveCode")}{" "}
+            </CustomSecondaryText>
 
             <Pressable
               onPress={resendVerification}
@@ -335,13 +339,16 @@ const verification = () => {
                 <ActivityIndicator size="small" color={colors.accentColor} />
               ) : (
                 <CustomText style={{ color: colors.accentColor }}>
-                  {isCooldown ? `Wait ${verificationTime}s` : "Resend"}
+                  {isCooldown
+                    ? i18n.t("auth.verification.waitMessage", {
+                        time: verificationTime,
+                      })
+                    : i18n.t("auth.verification.resend")}
                 </CustomText>
               )}
             </Pressable>
           </View>
         </View>
-
       </CustomView>
     </TouchableWithoutFeedback>
   );
@@ -379,7 +386,6 @@ const styles = StyleSheet.create({
 
   signinButton: {
     width: "100%",
-    // bg-teal-500
     paddingVertical: verticalScale(12), // py-4
     borderRadius: scale(8), // rounded-xl
     alignItems: "center",

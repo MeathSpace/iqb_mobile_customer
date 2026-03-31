@@ -45,6 +45,7 @@ import {
 } from "../constants/icons";
 import { useAuth } from "../context/AuthContext";
 import { useGlobal } from "../context/GlobalContext";
+import i18n from "../src/localization/i18n";
 import BarberCard from "./BarberCard";
 import CustomSecondaryText from "./CustomSecondaryText";
 import CustomText from "./CustomText";
@@ -626,29 +627,6 @@ const Map = () => {
                             }}
                             onLoad={() => setTracksViewChanges(false)}
                           />
-
-                          {/* <View style={{
-                                                            width: scale(25),
-                                                            height: scale(25),
-                                                            backgroundColor: "#fff",
-                                                            padding: scale(5),
-                                                            justifyContent: "center",
-                                                            alignItems: "center",
-                                                            borderRadius: scale(5),
-                                                            borderWidth: scale(1),
-                                                            borderColor: "#000",
-                                                        }}>
-                                                            <Image
-                                                                source={require("../assets/images/marker.png")}
-                                                                style={{
-                                                                    width: scale(15),
-                                                                    height: scale(15),
-                                                                    contentFit: "contain",
-                                                                    backgroundColor: "#fff"
-                                                                }}
-                                                                onLoad={() => setTracksViewChanges(false)}
-                                                            />
-                                                        </View> */}
                         </Marker>
                       );
                     }
@@ -733,7 +711,7 @@ const Map = () => {
                       }}
                     >
                       <CustomText style={styles.buttonText2}>
-                        Connect
+                        {i18n.t("protected.map.connect")}
                       </CustomText>
                       <AddIcon size={scale(14)} color="#fff" />
                     </View>
@@ -752,7 +730,7 @@ const Map = () => {
                       },
                     ]}
                   >
-                    Close
+                    {i18n.t("protected.map.close")}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -1115,7 +1093,7 @@ const Map = () => {
                                   }}
                                 >
                                   <CustomText style={styles.signinButtonText}>
-                                    Connect
+                                    {i18n.t("protected.map.connect")}
                                   </CustomText>
                                   <AddIcon size={scale(14)} color="#fff" />
                                 </View>
@@ -1200,7 +1178,7 @@ const Map = () => {
                                   fontFamily: "AirbnbCereal_W_XBd",
                                 }}
                               >
-                                Description
+                                {i18n.t("protected.map.description")}
                               </CustomText>
 
                               <CustomSecondaryText
@@ -1233,7 +1211,7 @@ const Map = () => {
                                     fontFamily: "AirbnbCereal_W_XBd",
                                   }}
                                 >
-                                  Contact Us
+                                  {i18n.t("protected.map.contactUs")}
                                 </CustomText>
 
                                 <CustomSecondaryText
@@ -1243,7 +1221,7 @@ const Map = () => {
                                     }
                                   }
                                 >
-                                  If you have any questions
+                                  {i18n.t("protected.map.anyQuestion")}
                                 </CustomSecondaryText>
                               </View>
 
@@ -1389,7 +1367,7 @@ const Map = () => {
                                       fontFamily: "AirbnbCereal_W_XBd",
                                     }}
                                   >
-                                    Location
+                                    {i18n.t("protected.map.location")}
                                   </CustomText>
 
                                   <CustomSecondaryText
@@ -1446,7 +1424,7 @@ const Map = () => {
                                       fontFamily: "AirbnbCereal_W_XBd",
                                     }}
                                   >
-                                    Follow us on
+                                    {i18n.t("protected.map.followUs")}
                                   </CustomText>
 
                                   <CustomSecondaryText
@@ -1456,7 +1434,7 @@ const Map = () => {
                                       }
                                     }
                                   >
-                                    Social links
+                                    {i18n.t("protected.map.socialLinks")}
                                   </CustomSecondaryText>
                                 </View>
 
@@ -1683,7 +1661,7 @@ const Map = () => {
                                 fontFamily: "AirbnbCereal_W_Blk",
                               }}
                             >
-                              Explore all {selectedTab}
+                              {i18n.t("protected.map.exploreAll")} {selectedTab}
                             </CustomText>
 
                             {salonInfoData?.data?.barbers?.length > 0 ? (
@@ -1714,7 +1692,10 @@ const Map = () => {
                                 }}
                               >
                                 <CustomText>
-                                  No {selectedTab} available
+                                  {/* No {selectedTab} available */}
+                                  {i18n.t("protected.map.NoTabAvailable", {
+                                    selectedTab: selectedTab,
+                                  })}
                                 </CustomText>
                               </View>
                             )}
@@ -1728,7 +1709,10 @@ const Map = () => {
                                 fontFamily: "AirbnbCereal_W_Blk",
                               }}
                             >
-                              Explore all {selectedTab}
+                              {/* Explore all {selectedTab} */}
+                              {i18n.t("protected.map.NoTabAvailable", {
+                                selectedTab: selectedTab,
+                              })}
                             </CustomText>
 
                             {salonInfoData?.data?.barbers?.length > 0 ? (
@@ -1759,25 +1743,16 @@ const Map = () => {
                                 }}
                               >
                                 <CustomText>
-                                  No {selectedTab} available
+                                  {/* No {selectedTab} available */}
+                                  {i18n.t("protected.map.NoTabAvailable", {
+                                    selectedTab: selectedTab,
+                                  })}
                                 </CustomText>
                               </View>
                             )}
                           </>
                         )}
 
-                        {/* <TouchableOpacity
-                                                            onPress={() => connectSalonPressed()}
-                                                            disabled={connectSalonLoader}
-                                                            style={styles.signinButton} activeOpacity={0.85}>
-                                                            {
-                                                                connectSalonLoader ? (
-                                                                    <ActivityIndicator size="small" color="#fff" />
-                                                                ) : (
-                                                                    <CustomText style={styles.signinButtonText}>Connect</CustomText>
-                                                                )
-                                                            }
-                                                        </TouchableOpacity> */}
                       </BottomSheetScrollView>
                     </>
                   )}
@@ -1814,12 +1789,10 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0,0,0,0.5)",
     justifyContent: "center",
     alignItems: "center",
-    // paddingHorizontal: scale(20),
   },
   modalContainer: {
     width: "100%",
     height: "90%",
-    // backgroundColor: 'white',
     borderRadius: moderateScale(12),
     padding: scale(15),
     alignItems: "center",
@@ -2051,184 +2024,8 @@ const styles = StyleSheet.create({
   },
 });
 
-// const MemoizedMarker = React.memo(({ salon, selectedMarker, onPress }) => (
-//   <Marker
-//     coordinate={{
-//       latitude: salon?.location?.coordinates?.latitude,
-//       longitude: salon?.location?.coordinates?.longitude,
-//     }}
-//     title={salon.salonName}
-//     description={salon.address}
-//     onPress={() => onPress(salon.salonId)}
-//   >
-//     <View
-//       style={{
-//         backgroundColor: colors.background,
-//         padding: scale(2),
-//         borderRadius: scale(8),
-//         borderWidth: scale(1),
-//         borderColor: colors.border,
-//       }}
-//     >
-//       <View
-//         style={{
-//           padding: scale(8),
-//           borderRadius: scale(6),
-//           backgroundColor:
-//             selectedMarker === salon.salonId ? colors.accentColor : "#efefef",
-//         }}
-//       >
-//         <MapScissorIcon
-//           color={selectedMarker === salon.salonId ? "#fff" : "#000"}
-//         />
-//       </View>
-//     </View>
-//   </Marker>
-// ));
 
-{
-  /* {
-                            selectedSalonLocation?.latitude && selectedSalonLocation?.longitude && (
-                                <Marker
-                                    coordinate={{
-                                        latitude: selectedSalonLocation.latitude,
-                                        longitude: selectedSalonLocation.longitude,
-                                    }}
-                                    title={selectedSalonLocation?.salonName}
-                                    description={selectedSalonLocation?.address}
-                                />
-                            )
-                        } */
-}
 
-// <Marker
-//     key={salon._id}
-//     coordinate={{
-//         latitude: salon?.location?.coordinates?.latitude,
-//         longitude: salon?.location?.coordinates?.longitude,
-//     }}
-//     title={salon.salonName}
-//     description={salon.address}
-//     tracksViewChanges={true}
-// // onPress={async () => {
-// //     console.log("Salon map ", salon)
-// //     setSelectedMarker(salon.salonId)
-// // }}
 
-// >
-//     <View
-//         style={{
-//             backgroundColor: colors.background,
-//             padding: scale(2),
-//             borderRadius: scale(8),
-//             borderWidth: scale(1),
-//             borderColor: colors.border,
-//         }}
-//     >
-//         <View
-//             style={{
-//                 padding: scale(8),
-//                 borderRadius: scale(6),
-//                 // backgroundColor:
-//                 //     selectedMarker === salon.salonId ? "#0BA3AD" : "#efefef",
-//             }}
-//         >
-//             <MapScissorIcon
-//             // color={selectedMarker === salon.salonId ? "#fff" : "#000"}
-//             />
-//         </View>
-//     </View>
 
-//     <Callout
-//         tooltip
-//         onPress={async () => {
-//             try {
-//                 setConnectSalonLoader(true);
 
-//                 const { data } = await axios.post(
-//                     `${BASE_URL}/customer/customerConnectSalon`,
-//                     {
-//                         salonId: salon?.salonId,
-//                         email: authenticatedUser?.email,
-//                     }
-//                 );
-
-//                 setAuthenticatedUser(data?.response);
-//                 await AsyncStorage.setItem(
-//                     "LoggedInUser",
-//                     JSON.stringify(data?.response)
-//                 );
-
-//                 setSearchCitySalons({
-//                     data: null,
-//                     loading: false,
-//                     error: null,
-//                     success: false,
-//                 });
-
-//                 setConnectSalonLoader(false);
-//             } catch (error) {
-//                 console.log("Error connecting salon ", error);
-//                 setConnectSalonLoader(false);
-//             }
-//         }}
-//     >
-//         <View
-//             style={{
-//                 backgroundColor: "#fff",
-//                 padding: scale(10),
-//                 borderRadius: scale(10),
-//                 borderWidth: 1,
-//                 borderColor: "#ccc",
-//                 width: 180,
-//                 alignItems: "center",
-//             }}
-//         >
-//             <CustomText
-//                 style={{
-//                     fontWeight: "600",
-//                     fontSize: scale(14),
-//                     marginBottom: scale(4),
-//                 }}
-//             >
-//                 {salon.salonName}
-//             </CustomText>
-
-//             <CustomText
-//                 style={{
-//                     fontSize: scale(12),
-//                     color: "#555",
-//                     marginBottom: scale(8),
-//                     textAlign: "center",
-//                 }}
-//             >
-//                 {salon.address}
-//             </CustomText>
-
-//             <View
-//                 style={{
-//                     backgroundColor: "#0BA3AD",
-//                     paddingVertical: scale(6),
-//                     paddingHorizontal: scale(15),
-//                     borderRadius: scale(6),
-//                 }}
-//             >
-//                 {
-//                     connectSalonLoader ? (
-//                         <ActivityIndicator size="small" color="#fff" />
-//                     ) : (
-//                         <View style={{
-//                             flexDirection: "row",
-//                             alignItems: "center",
-//                             gap: scale(2)
-//                         }}>
-//                             <CustomText style={styles.signinButtonText}>Connect</CustomText>
-//                             <AddIcon size={scale(14)} color='#fff' />
-//                         </View>
-//                     )
-//                 }
-//             </View>
-//         </View>
-//     </Callout>
-
-// </Marker>

@@ -21,17 +21,14 @@ import CustomSecondaryText from "../../components/CustomSecondaryText";
 import CustomText from "../../components/CustomText";
 import ProgressHeader from "../../components/ProgressHeader";
 import { ArrowDownIcon, CalendarIcon, ErrorIcon } from "../../constants/icons";
-
 import { useClerk, useUser } from "@clerk/clerk-expo";
 import { usePreventRemove, useTheme } from "@react-navigation/native";
 import CountryPicker, { DARK_THEME } from "react-native-country-picker-modal";
 import PhoneInput from "react-native-phone-input";
+import i18n from "../../src/localization/i18n"
 
 const personalInfo = () => {
   const { email, authType, password } = useLocalSearchParams();
-
-  // console.log("email ", email)
-  // console.log("authType ", authType ?? "none")
 
   const colorScheme = useColorScheme();
 
@@ -42,18 +39,14 @@ const personalInfo = () => {
   const [fullName, setFullName] = useState("");
   // const [lastName, setLastName] = useState("");
   const [genderOpen, setGenderOpen] = useState(false);
-  const [gender, setGender] = useState("Male");
+  const [gender, setGender] = useState(i18n.t("auth.personalInfo.gender.male"));
   const [date, setDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState("");
 
   const [calenderModal, setCalenderModal] = useState(false);
   // const [selectedCountry, setSelectedCountry] = useState({});
 
-  const [genderItems, setGenderItems] = useState([
-    { label: "Male", value: "Male" },
-    { label: "Female", value: "Female" },
-    { label: "Other", value: "Other" },
-  ]);
+
 
   // console.log("sdv", date)
 
@@ -140,17 +133,6 @@ const personalInfo = () => {
     }
   }, [selectedCountry]);
 
-  // const phoneNumberHandler = (phoneNumber) => {
-
-  //     const isValid = phoneRef.current?.isValidNumber();
-  //     if (isValid) {
-  //         setPhoneNumber(phoneNumber);
-  //         setPhoneNumberError("")
-  //     } else {
-  //         setPhoneNumberError("Invalid phone number");
-  //     }
-  // }
-
   const [inValid, setInValid] = useState(false);
 
   const phoneNumberHandler = (phoneNumber) => {
@@ -198,14 +180,6 @@ const personalInfo = () => {
       setPhoneNumberError("Invalid phone number");
       return;
     }
-
-    // if (!selectedDate) {
-    //     setDateOfBirthError("Date of birth is required");
-    //     return;
-    // }
-
-    // const mobileNumber = phoneNumber.replace("+", "")
-    // const updatedNumber = mobileNumber.startsWith(selectedCountry?.callingCode[0]) ? mobileNumber.slice(selectedCountry?.callingCode[0].length) : mobileNumber
 
     const currentCountryCode = phoneRef.current?.getCountryCode();
     const mobileNumber = phoneNumber.replace("+", "");
@@ -280,8 +254,6 @@ const personalInfo = () => {
     },
   );
 
-  // console.log("selected Date ", selectedDate)
-
   const ddmmformatDate = (dateString) => {
     const date = new Date(dateString);
     const day = String(date.getDate()).padStart(2, "0");
@@ -318,20 +290,20 @@ const personalInfo = () => {
 
             <View>
               <CustomText style={styles.heading}>
-                It's time to create a profile !
+                {i18n.t("auth.personalInfo.header")}
               </CustomText>
 
               <CustomSecondaryText>
-                Tell us little more about yourself
+                {i18n.t("auth.personalInfo.subHeader")}
               </CustomSecondaryText>
             </View>
 
             <View style={styles.inputWrapper}>
-              <CustomText>Full Name</CustomText>
+              <CustomText>{i18n.t("auth.personalInfo.fullname.label")}</CustomText>
 
               <TextInput
                 editable
-                placeholder="Enter your full name"
+                placeholder={i18n.t("auth.personalInfo.fullname.placeholder")}
                 placeholderTextColor={colors.secondaryText}
                 style={[
                   false ? styles.inputFielderror : styles.inputField,
@@ -374,7 +346,7 @@ const personalInfo = () => {
                 },
               ]}
             >
-              <CustomText>Gender</CustomText>
+              <CustomText>{i18n.t("auth.personalInfo.gender.label")}</CustomText>
 
               <Pressable
                 onPress={() => setOpenGenderDrop((prev) => !prev)}
@@ -422,7 +394,7 @@ const personalInfo = () => {
                       shadowRadius: 4,
                     }}
                   >
-                    {["Male", "Female", "Other"].map((item, index) => (
+                    {[i18n.t("auth.personalInfo.gender.male"), i18n.t("auth.personalInfo.gender.female"), i18n.t("auth.personalInfo.gender.other")].map((item, index) => (
                       <Pressable
                         key={index}
                         onPress={() => {
@@ -451,7 +423,7 @@ const personalInfo = () => {
             </View>
 
             <View style={styles.inputWrapper}>
-              <CustomText>Mobile Number</CustomText>
+              <CustomText>{i18n.t("auth.personalInfo.mobileNumber.label")}</CustomText>
               <PhoneInput
                 ref={phoneRef}
                 initialCountry={selectedCountry.cca2.toLowerCase()}
@@ -510,7 +482,7 @@ const personalInfo = () => {
             </View>
 
             <View style={[styles.inputWrapper, { position: "relative" }]}>
-              <CustomText>Date of Birth (Optional)</CustomText>
+              <CustomText>{i18n.t("auth.personalInfo.dateOfBirth.label")}</CustomText>
 
               <Pressable
                 style={[
@@ -537,7 +509,7 @@ const personalInfo = () => {
                       fontFamily: "AirbnbCereal_W_Md",
                     }}
                   >
-                    DD/MM/YYYY
+                    {i18n.t("auth.personalInfo.dateOfBirth.placeholder")}
                   </CustomText>
                 )}
                 {!calenderModal && selectedDate && (
@@ -648,7 +620,7 @@ const personalInfo = () => {
                           }}
                         >
                           <CustomText style={{ color: "#fff" }}>
-                            Close
+                            {i18n.t("auth.personalInfo.modal.closeText")}
                           </CustomText>
                         </Pressable>
 
@@ -665,7 +637,7 @@ const personalInfo = () => {
                           }}
                         >
                           <CustomText style={{ color: "#fff" }}>
-                            Done
+                            {i18n.t("auth.personalInfo.modal.openText")}
                           </CustomText>
                         </Pressable>
                       </View>
@@ -681,7 +653,7 @@ const personalInfo = () => {
             style={[styles.signinButton, {backgroundColor: colors.accentColor}]}
             activeOpacity={0.85}
           >
-            <CustomText style={styles.signinButtonText}>Save & Next</CustomText>
+            <CustomText style={styles.signinButtonText}>{i18n.t("auth.personalInfo.saveAndNext")}</CustomText>
           </TouchableOpacity>
         </View>
       </TouchableWithoutFeedback>
@@ -771,53 +743,4 @@ const styles = StyleSheet.create({
   },
 });
 
-{
-  /* <View style={styles.inputWrapper}>
-                        <CustomText>Select Gender</CustomText>
-                        <DropDownPicker
-                            listMode="SCROLLVIEW"
-                            // dropDownMaxHeight={240}
-                            open={genderOpen}
-                            value={gender}
-                            items={genderItems}
-                            setOpen={setGenderOpen}
-                            setValue={setGender}
-                            setItems={setGenderItems}
-                            itemSeparator={true}
-                            itemSeparatorStyle={{
-                                backgroundColor: "#0BA3AD1A"
-                            }}
-                            placeholder="Select a gender"
-                            style={[
-                                styles.dropdown,
-                                {
-                                    borderColor: "transparent",
-                                    backgroundColor: "#0BA3AD1A",
-                                },
-                            ]}
-                            dropDownContainerStyle={[
-                                styles.dropdownContainer,
-                                {
-                                    borderColor: "#0BA3AD1A",
-                                    backgroundColor: colors.card,
-                                }
-                            ]}
-                            textStyle={{
-                                fontSize: moderateScale(14),
-                                fontFamily: 'AirbnbCereal_W_Bk',
-                                color: colors.text
-                            }}
-                            listItemLabelStyle={{
-                                fontSize: moderateScale(14),
-                                fontFamily: 'AirbnbCereal_W_Bk',
-                                color: colors.text,
-                            }}
-                            arrowIconStyle={{
-                                tintColor: colors.text,
-                            }}
-                            tickIconStyle={{
-                                tintColor: "#00A36C"
-                            }}
-                        />
-                    </View> */
-}
+

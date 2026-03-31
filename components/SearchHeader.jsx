@@ -11,6 +11,7 @@ import { useGlobal } from '../context/GlobalContext';
 import { BASE_URL } from '@/utils/api'
 import axios from 'axios'
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import i18n from "../src/localization/i18n"
 
 const SearchHeader = () => {
 
@@ -86,7 +87,7 @@ const SearchHeader = () => {
             }]}>
                 <TextInput
                     style={[styles.input, { color: colors.text }]}
-                    placeholder="Search city or salon name"
+                    placeholder={i18n.t("protected.searchHeader.placeholder")}
                     placeholderTextColor={colors.secondaryText}
                     value={query}
                     onChangeText={handleTextChange}
@@ -101,7 +102,6 @@ const SearchHeader = () => {
                     height: scale(40),
                     width: scale(40),
                     borderRadius: scale(30),
-                    // backgroundColor: "#EAA82433",
                     justifyContent: "center",
                     alignItems: "center"
                 }}
@@ -126,29 +126,6 @@ const SearchHeader = () => {
             >
                 <NotificationIcon size={moderateScale(24)} color={colors.text} />
             </Pressable>
-
-            {/* {searchCityNameData?.data?.length > 0 && query.length > 0 && (
-                <FlatList
-                    data={searchCityNameData?.data}
-                    keyExtractor={(item) => item._id}
-                    renderItem={({ item }) => (
-                        <Pressable
-                            style={[styles.dropdownItem, {
-                                borderBottomColor: colors.border,
-                                borderBottomWidth: moderateScale(1),
-                            }]}
-                            onPress={() => handleSelect(item)}
-                        >
-                            <CustomText>{item.city}</CustomText>
-                        </Pressable>
-                    )}
-                    style={[styles.dropdown, {
-                        backgroundColor: colors.background,
-                        borderColor: colors.border,
-                        borderWidth: scale(1),
-                    }]}
-                />
-            )} */}
         </View>
     );
 };

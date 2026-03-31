@@ -43,18 +43,72 @@ export default {
       continue: "Continue",
     },
     passwordVerification: {
-        header: "You're all set!",
-        subHeader: "Enter the 4 digit code sent to your mobile number and email",
-        verificationCode: { label: "Verification Code", placeholder: "Enter your otp" },
-        verifyAndContinue: "Verify & Continue",
-        didntReceiveCode: "Didn't receive the code ?",
-        resend: "Resend",
-        waitMessage: "Wait {{time}}s"
+      header: "You're all set!",
+      subHeader: "Enter the 4 digit code sent to your mobile number and email",
+      verificationCode: {
+        label: "Verification Code",
+        placeholder: "Enter your otp",
+      },
+      verifyAndContinue: "Verify & Continue",
+      didntReceiveCode: "Didn't receive the code ?",
+      resend: "Resend",
+      waitMessage: "Wait {{time}}s",
     },
     personalInfo: {
-        
-    }   
+      header: "It's time to create a profile !",
+      subHeader: "Tell us little more about yourself",
+      fullname: {
+        label: "Full Name",
+        placeholder: "Enter your full name",
+      },
+      gender: {
+        label: "Gender",
+        male: "Male",
+        female: "Female",
+        other: "Other",
+      },
+      mobileNumber: {
+        label: "Mobile Number",
+      },
+      dateOfBirth: {
+        label: "Date of Birth (Optional)",
+        placeholder: "DD/MM/YY",
+      },
+      modal: {
+        closeText: "close",
+        openText: "open"
+      },
+      saveAndNext: "Save & Next"
+    },
+    verification: {
+      header: "You're all set!",
+      subHeader: "Enter the 4 digit code sent to your mobile number and email",
+      verificationCode: {
+        label: "Verification Code",
+        placeholder: "Enter your otp",
+      },
+      verifyAndCreate: "Verify & Create Account",
+      didntReceiveCode: "Didn't receive the code ?",
+      resend: "Resend",
+      waitMessage: "Wait {{time}}s",
+    },
   },
 
-  protected: {},
+  protected: {
+    searchHeader: {
+      placeholder: "Search city or salon name"
+    },
+    map: {
+      connect: "Connect",
+      close: "Close",
+      description: "Description",
+      contactUs: "Contact Us",
+      anyQuestion: "If you have any questions",
+      location: "Location",
+      followUs: "Follow us on",
+      socialLinks: "Social links",
+      exploreAll: "Explore all",
+      NoTabAvailable: "No {{selectedTab}} available",
+    }
+  },
 };
