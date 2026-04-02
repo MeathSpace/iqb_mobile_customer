@@ -23,6 +23,7 @@ import { BASE_URL } from '@/utils/api';
 import { Toast } from 'toastify-react-native'
 import Skeleton from '../../../../components/Skeleton';
 import CustomSecondaryText from '../../../../components/CustomSecondaryText';
+import i18n from "../../../../src/localization/i18n"
 
 const MyFavourites = () => {
 
@@ -60,37 +61,6 @@ const MyFavourites = () => {
         }, [authenticatedUser])
     )
 
-
-    const salonData = [
-        {
-            id: '1',
-            title: 'Glamour Grace Salon',
-            image:
-                'https://t4.ftcdn.net/jpg/01/81/61/29/360_F_181612908_uiOH8a4qWiNGuGS2Pg5dgwUIKJZ0C02w.jpg',
-            services: ['Haircuts', 'Coloring', 'Styling', 'Bridal Packages', 'Spa Treatments'],
-        },
-        {
-            id: '2',
-            title: 'Velvet & Ivy Spa',
-            image:
-                'https://img1.wsimg.com/isteam/ip/ecf2eb3f-f55b-4193-9e98-7c1b626bf779/Hero%20Picture.png',
-            services: ['Organic Facials', 'Aromatherapy Massages', 'Holistic Beauty Treatments'],
-        },
-        {
-            id: '4',
-            title: 'Blush & Blossom Beauty',
-            image:
-                'https://cdn.magicdecor.in/com/2024/10/21145259/Monochrome-Geometric-Mural-Wallpaper-M-710x448.jpg',
-            services: ['Makeup Artistry', 'Eyelash Extensions', 'Skincare Consultations'],
-        },
-        {
-            id: '5',
-            title: 'Opulence Oasis Salon',
-            image:
-                'https://images.fresha.com/locations/location-profile-images/1246855/3931181/4534bff8-c5eb-41f3-be34-8b9d5cdf85a3-RitualRetreat-GB-England-Birmingham-KingsNorton-Fresha.jpg?class=width-small',
-            services: ['Hair Spa Therapies', 'Color Correction', 'Personalized Styling Sessions'],
-        },
-    ];
 
     const router = useRouter()
 
@@ -141,7 +111,6 @@ const MyFavourites = () => {
     return (
         <View
             style={{
-                // backgroundColor: "#00B0901A",
                 backgroundColor: colors.background,
                 flex: 1,
                 paddingHorizontal: scale(10),
@@ -160,7 +129,7 @@ const MyFavourites = () => {
                     // textAlign: "center",
                     fontFamily: "AirbnbCereal_W_XBd",
                     fontSize: scale(18)
-                }}>My Favorites</CustomText>
+                }}>{i18n.t("protected.myFavourites.header")}</CustomText>
             </View>
 
             {
@@ -247,18 +216,6 @@ const MyFavourites = () => {
                                             </View>
                                         </View>
 
-
-                                        {/* <View style={{ flexDirection: "row", alignItems: "center", gap: scale(10) }}>
-                                    <CarIcon size={scale(16)} color={colors.text} />
-                                    <CustomText
-                                        style={{
-                                            // fontFamily: "AirbnbCereal_W_Bk"
-                                            color: "gray",
-                                            fontSize: scale(12),
-                                        }}
-                                    >2.1 miles away</CustomText>
-                                </View> */}
-
                                     </View>
 
                                 </View>
@@ -312,15 +269,12 @@ const MyFavourites = () => {
                                 fontFamily: "AirbnbCereal_W_XBd",
                                 fontSize: scale(18),
                                 textAlign: "center",
-                            }}>No Favourite</CustomText>
+                            }}>{i18n.t("protected.myFavourites.error.header")}</CustomText>
 
                             <CustomText style={{
-                                // fontFamily: "AirbnbCereal_W_Bd",
-                                // fontSize: scale(16),
                                 textAlign: "center",
-                                // color: colors.secondaryText,
                             }}>
-                                You don't have any favourite salon
+                                {i18n.t("protected.myFavourites.error.subHeader")}
                             </CustomText>
                         </View>
                     </View>
@@ -341,7 +295,6 @@ const styles = StyleSheet.create({
         fontFamily: "AirbnbCereal_W_XBd",
     },
     listContainer: {
-        // paddingHorizontal: scale(10),
         paddingVertical: verticalScale(10),
         gap: verticalScale(10),
     },

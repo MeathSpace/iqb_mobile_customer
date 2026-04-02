@@ -20,6 +20,7 @@ import CustomText from "../../../../components/CustomText";
 import { Colors } from "../../../../constants/Colors";
 import { CloseIcon, ErrorIcon } from "../../../../constants/icons";
 import { useAuth } from "../../../../context/AuthContext";
+import i18n from "../../../../src/localization/i18n"
 
 const helpSupport = () => {
   const router = useRouter();
@@ -122,24 +123,21 @@ const helpSupport = () => {
             },
           ]}
         >
-          <CustomText style={styles.title}>Help & Support</CustomText>
+          <CustomText style={styles.title}>{i18n.t("protected.helpAndSupport.header")}</CustomText>
 
           <CustomText
             style={[styles.description, { color: colors.secondaryText }]}
           >
-            If you are experiencing any issues, please let us know. We will try
-            to resolve them as soon as possible.
+            {i18n.t("protected.helpAndSupport.subHeader")}
           </CustomText>
 
           <TextInput
             editable
-            placeholder="Title"
+            placeholder={i18n.t("protected.helpAndSupport.title.placeholder")}
             placeholderTextColor="gray"
             style={[
               styles.inputField,
               {
-                // borderColor: "#DDDDDD",
-                // backgroundColor: "#00B0901A",
                 backgroundColor: colors.cardColor,
                 borderWidth: scale(1),
                 borderColor: colors.queueBorder,
@@ -148,10 +146,6 @@ const helpSupport = () => {
               },
             ]}
             value={subject}
-            // onChangeText={(text) => {
-            //     setSubjectError("")
-            //     setSubject(text)
-            // }}
             onChangeText={(text) => {
               setSubjectError("");
               setSubject(text);
@@ -187,8 +181,6 @@ const helpSupport = () => {
               {
                 minHeight: verticalScale(120),
                 textAlignVertical: "top",
-                // borderColor: "#DDDDDD",
-                // backgroundColor: "#00B0901A",
                 backgroundColor: colors.cardColor,
                 borderWidth: scale(1),
                 color: colors.text,
@@ -198,12 +190,8 @@ const helpSupport = () => {
             ]}
             multiline
             placeholderTextColor="gray"
-            placeholder="Explain the problem"
+            placeholder={i18n.t("protected.helpAndSupport.body.placeholder")}
             value={body}
-            // onChangeText={(text) => {
-            //     setBodyError("")
-            //     setBody(text)
-            // }}
 
             onChangeText={(text) => {
               setBodyError("");
@@ -234,18 +222,6 @@ const helpSupport = () => {
             </View>
           )}
 
-          {/* <Pressable
-                        onPress={sendCustomerSupportMail}
-                        style={styles.submitButton}>
-                        {
-                            sendMailLoading ? (
-                                <ActivityIndicator size="small" color="#fff" />
-                            ) : (
-                                <CustomText style={{ color: "#fff" }}>Submit</CustomText>
-                            )
-                        }
-                    </Pressable> */}
-
           <TouchableOpacity
             onPress={sendCustomerSupportMail}
             style={[styles.queueButton, {backgroundColor: colors.accentColor}]}
@@ -254,7 +230,7 @@ const helpSupport = () => {
             {sendMailLoading ? (
               <ActivityIndicator size="small" color="#fff" />
             ) : (
-              <CustomText style={styles.queueButtonText}>Submit</CustomText>
+              <CustomText style={styles.queueButtonText}>{i18n.t("protected.helpAndSupport.submit")}</CustomText>
             )}
           </TouchableOpacity>
 
@@ -264,9 +240,9 @@ const helpSupport = () => {
             }}
           >
             <CustomText style={styles.contactText}>
-              Email Us :{" "}
+              {i18n.t("protected.helpAndSupport.emailUs")}{" "}
               <CustomText style={[styles.phoneNumber, { color: colors.accentColor}]}>
-                support@iqbook.io
+                {i18n.t("protected.helpAndSupport.email")}
               </CustomText>
             </CustomText>
           </Pressable>

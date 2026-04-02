@@ -28,6 +28,7 @@ import {
 } from "../../../../constants/icons";
 import { useAuth } from "../../../../context/AuthContext";
 import { useGlobal } from "../../../../context/GlobalContext";
+import i18n from "../../../../src/localization/i18n"
 
 const index = () => {
   const { colors } = useTheme();
@@ -50,7 +51,7 @@ const index = () => {
 
   const profileOptions = [
     {
-      label: "Favorites",
+      label: i18n.t("protected.profile.options.favorites"),
       icon: <HeartOutlineIcon color={colors.accentColor} />,
       lightBg: "#fee2e2",
       darkBg: "#7f1d1d33",
@@ -60,7 +61,7 @@ const index = () => {
       display: true,
     },
     {
-      label: "Change Salon",
+      label: i18n.t("protected.profile.options.changeSalon"),
       icon: <SalonIcon color={colors.accentColor} />,
       lightBg: "#ede9fe",
       darkBg: "#5b21b633",
@@ -70,7 +71,7 @@ const index = () => {
       display: authenticatedUser?.salonId ? true : false,
     },
     {
-      label: "Help & Support",
+      label: i18n.t("protected.profile.options.helpAndSupport"),
       icon: <HelpIcon color={colors.accentColor} />,
       lightBg: "#d1fae5",
       darkBg: "#065f4633",
@@ -80,7 +81,7 @@ const index = () => {
       display: true,
     },
     {
-      label: "About",
+      label: i18n.t("protected.profile.options.about"),
       icon: <AboutIcon color={colors.accentColor} />,
       lightBg: "#e0f2fe",
       darkBg: "#1e3a8a33",
@@ -120,12 +121,12 @@ const index = () => {
 
   const deleteHandler = () => {
     Alert.alert(
-      "Delete Account",
-      "Are you sure you want to permanently delete your account?",
+      i18n.t("protected.profile.options.deleteAccount.alert.header"),
+      i18n.t("protected.profile.options.deleteAccount.alert.subHeader"),
       [
-        { text: "Cancel", style: "cancel" },
+        { text: i18n.t("protected.profile.options.deleteAccount.alert.cancel"), style: "cancel" },
         {
-          text: "Delete",
+          text: i18n.t("protected.profile.options.deleteAccount.alert.delete"),
           style: "destructive",
           onPress: handleDeleteConfirmed,
         },
@@ -171,7 +172,7 @@ const index = () => {
         <CustomText
           style={{ fontSize: scale(18), fontFamily: "AirbnbCereal_W_XBd" }}
         >
-          Profile
+          {i18n.t("protected.profile.heading")}
         </CustomText>
 
         {/* Right section - Notification bell */}
@@ -317,7 +318,7 @@ const index = () => {
                 {/* trash icon + red color */}
               </View>
               <CustomText style={[styles.optionLabel]}>
-                Delete Account
+                {i18n.t("protected.profile.options.deleteAccount.header")}
               </CustomText>
               <RightIcon
                 size={moderateScale(16)}
@@ -341,7 +342,7 @@ const index = () => {
         >
           <Feather name="log-out" size={moderateScale(16)} color={"#DC2626"} />
           <CustomText style={[styles.logoutText, { color: "#DC2626" }]}>
-            Log Out
+            {i18n.t("protected.profile.options.logout")}
           </CustomText>
         </TouchableOpacity>
       </ScrollView>

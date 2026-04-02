@@ -1,16 +1,21 @@
-import { Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native'
-import React from 'react'
-import CustomText from '../../../../../components/CustomText'
-import { scale, verticalScale } from 'react-native-size-matters'
-import { useRouter } from 'expo-router'
-import { Colors } from '@/constants/Colors';
-import { useTheme } from '@react-navigation/native'
-import { ArrowLeftIcon } from '../../../../../constants/icons'
+import { Colors } from "@/constants/Colors";
+import { useTheme } from "@react-navigation/native";
+import { useRouter } from "expo-router";
+import {
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  View,
+} from "react-native";
+import { scale, verticalScale } from "react-native-size-matters";
+import CustomText from "../../../../../components/CustomText";
+import { ArrowLeftIcon } from "../../../../../constants/icons";
+import i18n from "../../../../../src/localization/i18n";
 
 const termService = () => {
-
-  const router = useRouter()
-  const { colors } = useTheme()
+  const router = useRouter();
+  const { colors } = useTheme();
 
   return (
     <ScrollView
@@ -21,82 +26,167 @@ const termService = () => {
       }}
       contentContainerStyle={{
         paddingHorizontal: scale(10),
-        paddingBottom: Platform.OS === "ios" ? verticalScale(80) : verticalScale(20)
+        paddingBottom:
+          Platform.OS === "ios" ? verticalScale(80) : verticalScale(20),
       }}
       showsVerticalScrollIndicator={false}
     >
-
-      <View style={{
-        flexDirection: "row",
-        alignItems: "center",
-        gap: scale(10),
-        height: verticalScale(40),
-      }}>
-        <Pressable onPress={() => router.back()}><ArrowLeftIcon color={colors.text} /></Pressable>
-        <CustomText style={{
-          flex: 1,
-          fontSize: scale(18),
-          // textAlign: "center",
-          fontFamily: "AirbnbCereal_W_XBd",
-        }}>Terms of Services</CustomText>
-      </View>
-
-      <View style={{
-        backgroundColor: colors.cardColor,
-        borderWidth: scale(1),
-        borderColor: colors.queueBorder,
-        padding: scale(12),
-        borderRadius: scale(12),
-        // marginTop: verticalScale(20)
-      }}>
-        <CustomText style={styles.heading}>Welcome to our salon app!</CustomText>
-        <CustomText style={styles.paragraph}>
-          By using this app, you agree to the terms below.
-        </CustomText>
-
-        <CustomText style={styles.subHeading}>1. Using Our App</CustomText>
-        <CustomText style={styles.bullet}>• Book appointments in advance</CustomText>
-        <CustomText style={styles.bullet}>• Join the walk-in queue (single or group)</CustomText>
-        <CustomText style={styles.bullet}>• Track your booking or queue status in real time</CustomText>
-        <CustomText style={styles.paragraph}>
-          Use the app responsibly and follow all salon rules.
-        </CustomText>
-
-        <CustomText style={styles.subHeading}>2. Bookings & Queue</CustomText>
-        <CustomText style={styles.bullet}>• Choose your service, date, and time to book</CustomText>
-        <CustomText style={styles.bullet}>• Join the queue as a single customer or with a group</CustomText>
-        <CustomText style={styles.bullet}>• Estimated wait times may change based on salon flow</CustomText>
-
-        <CustomText style={styles.subHeading}>3. Your Responsibility</CustomText>
-        <CustomText style={styles.bullet}>• Provide correct info while booking or joining the queue</CustomText>
-        <CustomText style={styles.bullet}>• Show up on time for appointments or queue turn</CustomText>
-        <CustomText style={styles.bullet}>• Repeated no-shows may lead to restrictions</CustomText>
-
-        <CustomText style={styles.subHeading}>4. Cancellations</CustomText>
-        <CustomText style={styles.bullet}>• You can cancel or reschedule before your time</CustomText>
-        <CustomText style={styles.bullet}>• For groups, cancel if you're not coming to avoid delays</CustomText>
-
-        <CustomText style={styles.subHeading}>5. Your Privacy</CustomText>
-        <CustomText style={styles.paragraph}>
-          We protect your personal data and never share it without consent. See our <CustomText style={styles.italic}>Privacy Policy</CustomText> for more.
-        </CustomText>
-
-        <CustomText style={styles.subHeading}>6. Updates</CustomText>
-        <CustomText style={styles.paragraph}>
-          Terms may change. Keep using the app only if you agree with the latest version.
-        </CustomText>
-
-        <CustomText style={styles.subHeading}>7. Need Help?</CustomText>
-        <CustomText style={styles.paragraph}>
-          Contact us anytime from the app or at info@iqbook.io
+      <View
+        style={{
+          flexDirection: "row",
+          alignItems: "center",
+          gap: scale(10),
+          height: verticalScale(40),
+        }}
+      >
+        <Pressable onPress={() => router.back()}>
+          <ArrowLeftIcon color={colors.text} />
+        </Pressable>
+        <CustomText
+          style={{
+            flex: 1,
+            fontSize: scale(18),
+            // textAlign: "center",
+            fontFamily: "AirbnbCereal_W_XBd",
+          }}
+        >
+          {i18n.t("protected.about.termService.header")}
         </CustomText>
       </View>
 
+      <View
+        style={{
+          backgroundColor: colors.cardColor,
+          borderWidth: scale(1),
+          borderColor: colors.queueBorder,
+          padding: scale(12),
+          borderRadius: scale(12),
+          // marginTop: verticalScale(20)
+        }}
+      >
+        <CustomText style={styles.heading}>
+          {i18n.t("protected.about.termService.content.mainHeader")}
+        </CustomText>
+        <CustomText style={styles.paragraph}>
+          {i18n.t("protected.about.termService.content.intro")}
+        </CustomText>
+
+        <CustomText style={styles.subHeading}>
+          {i18n.t(
+            "protected.about.termService.content.sections.usingApp.title",
+          )}
+        </CustomText>
+        {i18n
+          .t("protected.about.termService.content.sections.usingApp.points", {
+            returnObjects: true,
+          })
+          .map((point, index) => (
+            <CustomText key={index} style={styles.bullet}>
+              • {point}
+            </CustomText>
+          ))}
+        <CustomText style={styles.paragraph}>
+          {i18n.t(
+            "protected.about.termService.content.sections.usingApp.footer",
+          )}
+        </CustomText>
+
+        <CustomText style={styles.subHeading}>
+          {i18n.t(
+            "protected.about.termService.content.sections.bookingsQueue.title",
+          )}
+        </CustomText>
+        {i18n
+          .t(
+            "protected.about.termService.content.sections.bookingsQueue.points",
+            {
+              returnObjects: true,
+            },
+          )
+          .map((point, index) => (
+            <CustomText key={index} style={styles.bullet}>
+              • {point}
+            </CustomText>
+          ))}
+
+        <CustomText style={styles.subHeading}>
+          {i18n.t(
+            "protected.about.termService.content.sections.responsibility.title",
+          )}
+        </CustomText>
+        {i18n
+          .t(
+            "protected.about.termService.content.sections.responsibility.points",
+            {
+              returnObjects: true,
+            },
+          )
+          .map((point, index) => (
+            <CustomText key={index} style={styles.bullet}>
+              • {point}
+            </CustomText>
+          ))}
+
+        <CustomText style={styles.subHeading}>
+          {i18n.t(
+            "protected.about.termService.content.sections.cancellations.title",
+          )}
+        </CustomText>
+        {i18n
+          .t(
+            "protected.about.termService.content.sections.cancellations.points",
+            {
+              returnObjects: true,
+            },
+          )
+          .map((point, index) => (
+            <CustomText key={index} style={styles.bullet}>
+              • {point}
+            </CustomText>
+          ))}
+
+        <CustomText style={styles.subHeading}>
+          {i18n.t("protected.about.termService.content.sections.privacy.title")}
+        </CustomText>
+        <CustomText style={styles.paragraph}>
+          {i18n.t(
+            "protected.about.termService.content.sections.privacy.descriptionBefore",
+          )}
+
+          <CustomText style={styles.italic}>
+            {i18n.t(
+              "protected.about.termService.content.sections.privacy.linkText",
+            )}
+          </CustomText>
+
+          {i18n.t(
+            "protected.about.termService.content.sections.privacy.descriptionAfter",
+          )}
+        </CustomText>
+
+        <CustomText style={styles.subHeading}>
+          {i18n.t("protected.about.termService.content.sections.updates.title")}
+        </CustomText>
+        <CustomText style={styles.paragraph}>
+          {i18n.t(
+            "protected.about.termService.content.sections.updates.description",
+          )}
+        </CustomText>
+
+        <CustomText style={styles.subHeading}>
+          {i18n.t("protected.about.termService.content.sections.help.title")}
+        </CustomText>
+        <CustomText style={styles.paragraph}>
+          {i18n.t(
+            "protected.about.termService.content.sections.help.description",
+          )}
+        </CustomText>
+      </View>
     </ScrollView>
-  )
-}
+  );
+};
 
-export default termService
+export default termService;
 
 const styles = StyleSheet.create({
   heading: {
@@ -121,12 +211,12 @@ const styles = StyleSheet.create({
     marginBottom: verticalScale(5),
   },
   italic: {
-    fontStyle: 'italic',
+    fontStyle: "italic",
   },
   agreeButton: {
     marginTop: verticalScale(20),
     backgroundColor: Colors.modeColor.colorCode,
     paddingVertical: verticalScale(12),
     borderRadius: scale(8),
-  }
-})
+  },
+});

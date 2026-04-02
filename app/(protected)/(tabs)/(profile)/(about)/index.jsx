@@ -19,6 +19,7 @@ import {
   ArrowLeftIcon,
 } from "../../../../../constants/icons";
 import { useTheme } from "@react-navigation/native";
+import i18n from "../../../../../src/localization/i18n"
 
 const index = () => {
   const router = useRouter();
@@ -27,28 +28,28 @@ const index = () => {
   const aboutData = [
     {
       id: 1,
-      name: "iqBook Website",
+      name: i18n.t("protected.about.index.options.iqbookWebsite"),
       icon: <GlobalIcon color={colors.accentColor} />, // blue-500
       bgColor: `${colors.accentColor}1A`, // bg-blue-100
       url: "https://iqbook.io/", // Link 
     },
     {
       id: 2,
-      name: "Terms of Services",
+      name: i18n.t("protected.about.index.options.termsOfService"),
       icon: <TermServiceIcon color={colors.accentColor} />, // emerald-500
       bgColor: `${colors.accentColor}1A`, // bg-emerald-100
       url: "/termService",
     },
     {
       id: 3,
-      name: "Privacy Policy",
+      name: i18n.t("protected.about.index.options.privacyPolicy"),
       icon: <PolicyIcon color={colors.accentColor} />, // amber-500
       bgColor: `${colors.accentColor}1A`, // bg-amber-100
       url: "/privacyPolicy",
     },
     {
       id: 4,
-      name: "Licenses",
+      name: i18n.t("protected.about.index.options.licenses"),
       icon: <CertificateIcon color={colors.accentColor} />, // indigo-500
       bgColor: `${colors.accentColor}1A`, // bg-indigo-100
       url: "/licenses",
@@ -75,7 +76,7 @@ const index = () => {
           // textAlign: "center",
           fontSize: scale(18),
           fontFamily: "AirbnbCereal_W_XBd",
-        }}>About</CustomText>
+        }}>{i18n.t("protected.about.index.header")}</CustomText>
       </View>
 
       {/* Main Box */}
@@ -144,7 +145,7 @@ const index = () => {
       <View style={styles.versionWrapper}>
         <CustomText style={[styles.versionText, {
           color: colors.secondaryText
-        }]}>Version {Constants?.expoConfig?.version}</CustomText>
+        }]}>{i18n.t("protected.about.index.version")} {Constants?.expoConfig?.version}</CustomText>
       </View>
     </View>
   );

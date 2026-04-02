@@ -1,16 +1,24 @@
-import { Platform, Pressable, ScrollView, StyleSheet, View } from 'react-native'
-import React from 'react'
-import CustomTabView from '../../../../../components/CustomTabView'
-import CustomText from '../../../../../components/CustomText'
-import { scale, verticalScale } from 'react-native-size-matters'
-import { ArrowLeftIcon } from '../../../../../constants/icons'
-import { useRouter } from 'expo-router'
-import { useTheme } from '@react-navigation/native'
+import { useTheme } from "@react-navigation/native";
+import { useRouter } from "expo-router";
+import {
+  Platform,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  View,
+} from "react-native";
+import { scale, verticalScale } from "react-native-size-matters";
+import CustomText from "../../../../../components/CustomText";
+import { ArrowLeftIcon } from "../../../../../constants/icons";
+import i18n from "../../../../../src/localization/i18n";
 
-const privacyPolicy = () => {
+const PrivacyPolicy = () => {
+  const router = useRouter();
+  const { colors } = useTheme();
 
-  const router = useRouter()
-  const { colors } = useTheme()
+  const content = i18n.t("protected.about.privacyPolicy.content", {
+    returnObjects: true,
+  });
 
   return (
     <View
@@ -18,143 +26,204 @@ const privacyPolicy = () => {
         backgroundColor: colors.background,
         flex: 1,
         paddingHorizontal: scale(10),
-        paddingBottom: Platform.OS === "ios" ? verticalScale(80) : verticalScale(20),
+        paddingBottom:
+          Platform.OS === "ios" ? verticalScale(80) : verticalScale(20),
       }}
     >
       <ScrollView
         showsVerticalScrollIndicator={false}
-        contentContainerStyle={styles.scrollContent}>
+        contentContainerStyle={styles.scrollContent}
+      >
+        {/* Header */}
+        <View style={styles.header}>
+          <Pressable onPress={() => router.back()}>
+            <ArrowLeftIcon color={colors.text} />
+          </Pressable>
 
-        <View style={{
-          flexDirection: "row",
-          alignItems: "center",
-          gap: scale(10),
-          height: verticalScale(40),
-        }}>
-          <Pressable onPress={() => router.back()}><ArrowLeftIcon color={colors.text} /></Pressable>
-          <CustomText style={{
-            flex: 1,
-            fontSize: scale(18),
-            // textAlign: "center",
-            fontFamily: "AirbnbCereal_W_XBd",
-          }}>Privacy Policy</CustomText>
+          <CustomText style={styles.title}>
+            {i18n.t("protected.about.privacyPolicy.header")}
+          </CustomText>
         </View>
 
-        <View style={{
-          backgroundColor: colors.cardColor,
-          borderWidth: scale(1),
-          borderColor: colors.queueBorder,
-          padding: scale(12),
-          borderRadius: scale(12),
-          // marginTop: verticalScale(20)
-        }}>
+        {/* Content */}
+        <View
+          style={[
+            styles.card,
+            {
+              backgroundColor: colors.cardColor,
+              borderColor: colors.queueBorder,
+            },
+          ]}
+        >
+          {/* Intro */}
+          <CustomText style={styles.paragraph}>{content.intro1}</CustomText>
+
           <CustomText style={styles.paragraph}>
-            Thank you for choosing to be part of our community at Iqbook. We are committed to protecting your personal information and your right to privacy.
+            {content.intro2_before}
+            <CustomText style={styles.italic}>
+              {content.intro2_highlight}
+            </CustomText>
+            {content.intro2_after}
+          </CustomText>
+
+          <CustomText style={styles.paragraph}>{content.intro3}</CustomText>
+
+          {/* 1. Information We Collect */}
+          <CustomText style={styles.subHeading}>
+            {content.sections.infoCollection.title}
           </CustomText>
 
           <CustomText style={styles.paragraph}>
-            This Privacy Policy explains how we collect, use, disclose, and safeguard your information when you use our <CustomText style={styles.italic}>salon mobile application</CustomText>, including features such as appointment booking, queue management (single or group), notifications, and user profile management.
+            {content.sections.infoCollection.description}
+          </CustomText>
+
+          {/* Personal */}
+          <CustomText style={styles.bold}>
+            {content.sections.infoCollection.personal.title}
+          </CustomText>
+
+          {content.sections.infoCollection.personal.points.map(
+            (item, index) => (
+              <CustomText key={index} style={styles.bullet}>
+                • {item}
+              </CustomText>
+            ),
+          )}
+
+          {/* Booking */}
+          <CustomText style={styles.bold}>
+            {content.sections.infoCollection.booking.title}
+          </CustomText>
+
+          {content.sections.infoCollection.booking.points.map((item, index) => (
+            <CustomText key={index} style={styles.bullet}>
+              • {item}
+            </CustomText>
+          ))}
+
+          {/* Device */}
+          <CustomText style={styles.bold}>
+            {content.sections.infoCollection.device.title}
+          </CustomText>
+
+          {content.sections.infoCollection.device.points.map((item, index) => (
+            <CustomText key={index} style={styles.bullet}>
+              • {item}
+            </CustomText>
+          ))}
+
+          {/* 2. Usage */}
+          <CustomText style={styles.subHeading}>
+            {content.sections.usage.title}
+          </CustomText>
+
+          {content.sections.usage.points.map((item, index) => (
+            <CustomText key={index} style={styles.bullet}>
+              • {item}
+            </CustomText>
+          ))}
+
+          <CustomText style={styles.paragraph}>
+            {content.sections.usage.note_before}
+            <CustomText style={styles.bold}>
+              {content.sections.usage.note_highlight}
+            </CustomText>
+            {content.sections.usage.note_after}
+          </CustomText>
+
+          {/* 3. Sharing */}
+          <CustomText style={styles.subHeading}>
+            {content.sections.sharing.title}
+          </CustomText>
+
+          {content.sections.sharing.points.map((item, index) => (
+            <CustomText key={index} style={styles.bullet}>
+              • <CustomText style={styles.bold}>{item.bold}</CustomText>
+              {item.text}
+            </CustomText>
+          ))}
+
+          <CustomText style={styles.paragraph}>
+            {content.sections.sharing.footer}
+          </CustomText>
+
+          {/* 4. Security */}
+          <CustomText style={styles.subHeading}>
+            {content.sections.security.title}
+          </CustomText>
+
+          {content.sections.security.points.map((item, index) => (
+            <CustomText key={index} style={styles.bullet}>
+              • {item}
+            </CustomText>
+          ))}
+
+          <CustomText style={styles.paragraph}>
+            {content.sections.security.footer}
+          </CustomText>
+
+          {/* 5. Rights */}
+          <CustomText style={styles.subHeading}>
+            {content.sections.rights.title}
+          </CustomText>
+
+          {content.sections.rights.points.map((item, index) => (
+            <CustomText key={index} style={styles.bullet}>
+              • {item}
+            </CustomText>
+          ))}
+
+          <CustomText style={styles.paragraph}>
+            {content.sections.rights.contact_before}
+            <CustomText style={styles.italic}>
+              {content.sections.rights.contact_highlight}
+            </CustomText>
+            {content.sections.rights.contact_after}
+          </CustomText>
+
+          {/* 6. Children */}
+          <CustomText style={styles.subHeading}>
+            {content.sections.children.title}
           </CustomText>
 
           <CustomText style={styles.paragraph}>
-            By using the app, you agree to the terms outlined in this policy.
+            {content.sections.children.description}
           </CustomText>
 
-          <CustomText style={styles.subHeading}>1. Information We Collect</CustomText>
-          <CustomText style={styles.paragraph}>We may collect the following information when you use our app:</CustomText>
-
-          <CustomText style={styles.bold}>a) Personal Information</CustomText>
-          <CustomText style={styles.bullet}>• Name</CustomText>
-          <CustomText style={styles.bullet}>• Phone number</CustomText>
-          <CustomText style={styles.bullet}>• Email address (optional)</CustomText>
-          <CustomText style={styles.bullet}>• Gender (optional for service personalization)</CustomText>
-          <CustomText style={styles.bullet}>• Profile photo (optional)</CustomText>
-
-          <CustomText style={styles.bold}>b) Booking and Queue Details</CustomText>
-          <CustomText style={styles.bullet}>• Services selected</CustomText>
-          <CustomText style={styles.bullet}>• Appointment date and time</CustomText>
-          <CustomText style={styles.bullet}>• Queue type (Single or Group)</CustomText>
-          <CustomText style={styles.bullet}>• Number of people in a group</CustomText>
-
-          <CustomText style={styles.bold}>c) Device & Usage Data</CustomText>
-          <CustomText style={styles.bullet}>• Device type (Android/iOS)</CustomText>
-          <CustomText style={styles.bullet}>• IP address and general location</CustomText>
-          <CustomText style={styles.bullet}>• App usage statistics</CustomText>
-          <CustomText style={styles.bullet}>• Crash and error logs</CustomText>
-
-          <CustomText style={styles.subHeading}>2. How We Use Your Information</CustomText>
-          <CustomText style={styles.bullet}>• Schedule and manage your appointments</CustomText>
-          <CustomText style={styles.bullet}>• Let you join the live queue (single/group)</CustomText>
-          <CustomText style={styles.bullet}>• Send real-time notifications and reminders</CustomText>
-          <CustomText style={styles.bullet}>• Provide estimated wait times and queue position</CustomText>
-          <CustomText style={styles.bullet}>• Improve app performance and user experience</CustomText>
-          <CustomText style={styles.bullet}>• Respond to support requests or inquiries</CustomText>
-
-          <CustomText style={styles.paragraph}>
-            We do <CustomText style={styles.bold}>not</CustomText> use your data for advertising purposes or sell your information to third parties.
+          {/* 7. Updates */}
+          <CustomText style={styles.subHeading}>
+            {content.sections.updates.title}
           </CustomText>
 
-          <CustomText style={styles.subHeading}>3. Sharing of Information</CustomText>
-          <CustomText style={styles.bullet}>• <CustomText style={styles.bold}>With salon staff</CustomText> for managing bookings and queues</CustomText>
-          <CustomText style={styles.bullet}>• <CustomText style={styles.bold}>With service providers</CustomText> (e.g., SMS providers) only to deliver messages or technical support</CustomText>
-          <CustomText style={styles.bullet}>• <CustomText style={styles.bold}>When required by law</CustomText> to comply with legal obligations or protect our users' rights</CustomText>
-
-          <CustomText style={styles.paragraph}>
-            We ensure all third parties follow strict confidentiality and data protection standards.
-          </CustomText>
-
-          <CustomText style={styles.subHeading}>4. Data Security</CustomText>
-          <CustomText style={styles.bullet}>• Secure servers and encrypted connections</CustomText>
-          <CustomText style={styles.bullet}>• Role-based access control for staff</CustomText>
-          <CustomText style={styles.bullet}>• Regular app updates to patch security vulnerabilities</CustomText>
-
-          <CustomText style={styles.paragraph}>
-            However, no mobile app is 100% secure. Use the app responsibly and update it regularly.
-          </CustomText>
-
-          <CustomText style={styles.subHeading}>5. Your Rights and Choices</CustomText>
-          <CustomText style={styles.bullet}>• View and update your profile information</CustomText>
-          <CustomText style={styles.bullet}>• Cancel your bookings or remove yourself from the queue</CustomText>
-          <CustomText style={styles.bullet}>• Request deletion of your account and personal data</CustomText>
-          <CustomText style={styles.bullet}>• Contact us if you believe your data has been misused</CustomText>
-
-          <CustomText style={styles.paragraph}>
-            To update or delete your data, please contact us at <CustomText style={styles.italic}>[Your Support Email]</CustomText> or use the profile settings in the app.
-          </CustomText>
-
-          <CustomText style={styles.subHeading}>6. Children's Privacy</CustomText>
-          <CustomText style={styles.paragraph}>
-            Our app is intended for users aged 13 and above. We do not knowingly collect data from children under 13. If you believe a child’s data has been submitted, contact us immediately for removal.
-          </CustomText>
-
-          <CustomText style={styles.subHeading}>7. Changes to This Policy</CustomText>
-          <CustomText style={styles.bullet}>• We may update this Privacy Policy from time to time to reflect changes in technology, law, or business operations.</CustomText>
-          <CustomText style={styles.bullet}>• We will notify users of significant changes via the app</CustomText>
-          <CustomText style={styles.bullet}>• Continued use of the app means you accept the updated policy</CustomText>
-
+          {content.sections.updates.points.map((item, index) => (
+            <CustomText key={index} style={styles.bullet}>
+              • {item}
+            </CustomText>
+          ))}
         </View>
-
-
       </ScrollView>
     </View>
-  )
-}
+  );
+};
 
-export default privacyPolicy
+export default PrivacyPolicy;
 
 const styles = StyleSheet.create({
-  scrollContent: {
-    // paddingHorizontal: scale(12),
-    // paddingBottom: verticalScale(20),
+  header: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: scale(10),
+    height: verticalScale(40),
   },
-  backButton: {
-    marginBottom: verticalScale(10),
-  },
-  heading: {
-    fontSize: scale(20),
+  title: {
+    flex: 1,
+    fontSize: scale(18),
     fontFamily: "AirbnbCereal_W_XBd",
-    marginBottom: verticalScale(10),
-    textAlign: "center"
+  },
+  card: {
+    borderWidth: scale(1),
+    padding: scale(12),
+    borderRadius: scale(12),
   },
   subHeading: {
     fontSize: scale(16),
@@ -163,19 +232,17 @@ const styles = StyleSheet.create({
     marginBottom: verticalScale(5),
   },
   paragraph: {
-    // fontSize: scale(13),
     lineHeight: scale(18),
     marginBottom: verticalScale(10),
   },
   bullet: {
-    // fontSize: scale(13),
     marginLeft: scale(10),
     marginBottom: verticalScale(5),
   },
   italic: {
-    fontStyle: 'italic',
+    fontStyle: "italic",
   },
   bold: {
-    fontWeight: 'bold',
-  }
-})
+    fontWeight: "bold",
+  },
+});

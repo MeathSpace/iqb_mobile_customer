@@ -5,7 +5,8 @@ import { ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 import { scale, verticalScale } from "react-native-size-matters";
 import { SalonIcon } from "../constants/icons";
 import { useAuth } from "../context/AuthContext";
-import CustomText from "./CustomText"; // Make sure this is imported
+import CustomText from "./CustomText"; 
+import i18n from "../src/localization/i18n"
 
 const CustomTabView = ({ style, children, scrollable = false, ...props }) => {
   const { colors } = useTheme();
@@ -39,21 +40,21 @@ const CustomTabView = ({ style, children, scrollable = false, ...props }) => {
         <View
           style={[
             styles.iconContainer,
-            { backgroundColor: "rgba(13, 148, 136, 0.1)" },
+            { backgroundColor: `${colors.accentColor}1A` },
           ]}
         >
           <SalonIcon color={colors.accentColor} size={scale(32)} />
         </View>
-        <CustomText style={styles.cardTitle}>Browse Salons</CustomText>
+        <CustomText style={styles.cardTitle}>{i18n.t("protected.customTabView.header")}</CustomText>
         <CustomText style={[styles.cardSubtitle, {}]}>
-          You're currently not connected to any salon
+          {i18n.t("protected.customTabView.subHeader")}
         </CustomText>
         <TouchableOpacity
           onPress={() => router.replace("/home")}
           style={[styles.bookButton, { backgroundColor: colors.accentColor }]}
           activeOpacity={0.85}
         >
-          <CustomText style={styles.bookButtonText}>Connect Now</CustomText>
+          <CustomText style={styles.bookButtonText}>{i18n.t("protected.customTabView.buttonText")}</CustomText>
         </TouchableOpacity>
       </View>
     </View>
@@ -63,11 +64,9 @@ const CustomTabView = ({ style, children, scrollable = false, ...props }) => {
 const styles = StyleSheet.create({
   centered: {
     flex: 1,
-    // justifyContent: 'center',
     alignItems: "center",
     justifyContent: "center",
     padding: scale(10),
-    // backgroundColor: "red"
   },
   btn: {
     paddingVertical: verticalScale(8),
@@ -79,15 +78,11 @@ const styles = StyleSheet.create({
   },
 
   upcomingCard: {
-    // backgroundColor: '#ffffff',
     borderRadius: scale(12),
     padding: scale(20),
-    // alignItems: 'center',
-    // borderColor: '#e5e7eb',
     borderWidth: scale(1),
     gap: verticalScale(15),
-    marginBottom: verticalScale(60),
-    // marginTop: verticalScale(40)
+    marginBottom: verticalScale(60)
   },
 
   iconContainer: {
@@ -102,17 +97,14 @@ const styles = StyleSheet.create({
     fontFamily: "AirbnbCereal_W_XBd",
     fontSize: scale(18),
     textAlign: "center",
-    // marginBottom: verticalScale(4),
   },
   cardSubtitle: {
-    textAlign: "center",
-    // marginBottom: verticalScale(20)
+    textAlign: "center"
   },
   bookButton: {
     // bg-teal-500
     paddingVertical: verticalScale(16), // py-4
     borderRadius: scale(12), // rounded-xl
-    // marginBottom: verticalScale(15), // mb-6
     alignItems: "center",
     justifyContent: "center",
   },
