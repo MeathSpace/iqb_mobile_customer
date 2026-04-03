@@ -44,6 +44,7 @@ import {
   XIcon,
 } from "../../../constants/icons";
 import { useAuth } from "../../../context/AuthContext";
+import i18n from "../../../src/localization/i18n";
 
 const SalonItem = ({ item }) => {
   const { colors } = useTheme();
@@ -61,6 +62,7 @@ const SalonItem = ({ item }) => {
 };
 
 const salon = () => {
+  const baseContent = i18n.t("protected.salon");
   const { authenticatedUser } = useAuth();
 
   const [salonInfoData, setSalonInfoData] = useState({
@@ -142,18 +144,30 @@ const salon = () => {
     [],
   );
 
-  const [tabData, setTabData] = useState(["Details", "Services", ""]);
+  const [tabData, setTabData] = useState([
+    baseContent.details,
+    baseContent.services,
+    "",
+  ]);
 
   useFocusEffect(
     useCallback(() => {
       if (authenticatedUser?.salonType === "Barber Shop") {
         setTabData((prev) => {
-          const modifiedArr = ["Details", "Services", "Barbers"];
+          const modifiedArr = [
+            baseContent.details,
+            baseContent.services,
+            baseContent.barbers,
+          ];
           return modifiedArr;
         });
       } else {
         setTabData((prev) => {
-          const modifiedArr = ["Details", "Services", "Stylists"];
+          const modifiedArr = [
+            baseContent.details,
+            baseContent.services,
+            baseContent.stylists,
+          ];
           return modifiedArr;
         });
       }
@@ -162,7 +176,7 @@ const salon = () => {
 
   // console.log(authenticatedUser?.salonType)
 
-  const [selectedTab, setSelectedTab] = useState("Details");
+  const [selectedTab, setSelectedTab] = useState(baseContent.details);
 
   const darkMapStyle = [
     {
@@ -677,7 +691,7 @@ const salon = () => {
                 contentContainerStyle={styles.contentContainer}
                 ref={scrollRef}
               >
-                {selectedTab === "Details" && (
+                {selectedTab === baseContent.details && (
                   <>
                     <View
                       style={{
@@ -694,7 +708,7 @@ const salon = () => {
                           fontFamily: "AirbnbCereal_W_XBd",
                         }}
                       >
-                        Description
+                        {baseContent.description}
                       </CustomText>
 
                       <CustomSecondaryText
@@ -727,7 +741,7 @@ const salon = () => {
                             fontFamily: "AirbnbCereal_W_XBd",
                           }}
                         >
-                          Contact Us
+                          {baseContent.contactUs}
                         </CustomText>
 
                         <CustomSecondaryText
@@ -737,7 +751,7 @@ const salon = () => {
                             }
                           }
                         >
-                          If you have any questions
+                          {baseContent.anyQuestionInfo}
                         </CustomSecondaryText>
                       </View>
 
@@ -865,7 +879,7 @@ const salon = () => {
                               fontFamily: "AirbnbCereal_W_XBd",
                             }}
                           >
-                            Location
+                            {baseContent.location}
                           </CustomText>
 
                           <CustomSecondaryText
@@ -922,7 +936,7 @@ const salon = () => {
                               fontFamily: "AirbnbCereal_W_XBd",
                             }}
                           >
-                            Follow us on
+                            {baseContent.followUsOn}
                           </CustomText>
 
                           <CustomSecondaryText
@@ -932,7 +946,7 @@ const salon = () => {
                               }
                             }
                           >
-                            Social links
+                            {baseContent.socialLinks}
                           </CustomSecondaryText>
                         </View>
 
@@ -1053,7 +1067,7 @@ const salon = () => {
                   </>
                 )}
 
-                {selectedTab === "Services" &&
+                {selectedTab === baseContent.services &&
                   (salonInfoData?.loading
                     ? [0, 1, 2, 3, 4, 5, 6, 7].map((_, index) => (
                         <Skeleton
@@ -1131,14 +1145,14 @@ const salon = () => {
                         ),
                       ))}
 
-                {selectedTab === "Stylists" && (
+                {selectedTab === baseContent.stylists && (
                   <>
                     <CustomText
                       style={{
                         fontFamily: "AirbnbCereal_W_Blk",
                       }}
                     >
-                      Explore all {selectedTab}
+                      {baseContent.exploreAll} {selectedTab}
                     </CustomText>
 
                     {salonInfoData?.data?.barbers?.length > 0 ? (
@@ -1163,20 +1177,22 @@ const salon = () => {
                           alignItems: "center",
                         }}
                       >
-                        <CustomText>No {selectedTab} available</CustomText>
+                        <CustomText>
+                          {baseContent.no} {selectedTab} {baseContent.available}
+                        </CustomText>
                       </View>
                     )}
                   </>
                 )}
 
-                {selectedTab === "Barbers" && (
+                {selectedTab === baseContent.barbers && (
                   <>
                     <CustomText
                       style={{
                         fontFamily: "AirbnbCereal_W_Blk",
                       }}
                     >
-                      Explore all {selectedTab}
+                      {baseContent.exploreAll} {selectedTab}
                     </CustomText>
 
                     {salonInfoData?.data?.barbers?.length > 0 ? (
@@ -1201,7 +1217,9 @@ const salon = () => {
                           alignItems: "center",
                         }}
                       >
-                        <CustomText>No {selectedTab} available</CustomText>
+                        <CustomText>
+                          {baseContent.no} {selectedTab} {baseContent.available}
+                        </CustomText>
                       </View>
                     )}
                   </>

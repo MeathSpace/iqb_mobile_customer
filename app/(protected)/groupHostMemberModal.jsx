@@ -1,18 +1,3 @@
-// import { StyleSheet, Text, View } from 'react-native'
-// import React from 'react'
-
-// const groupHostMemberModal = () => {
-//   return (
-//     <View>
-//       <Text>groupHostMemberModal</Text>
-//     </View>
-//   )
-// }
-
-// export default groupHostMemberModal
-
-// const styles = StyleSheet.create({})
-
 import { useTheme } from "@react-navigation/native";
 import { useRouter } from "expo-router";
 import { useState } from "react";
@@ -32,8 +17,12 @@ import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import CustomText from "../../components/CustomText";
 import { ErrorIcon } from "../../constants/icons";
 import { useGlobal } from "../../context/GlobalContext";
+import i18n from "../../src/localization/i18n"
 
 const groupHostMemberModal = () => {
+
+  const baseContent = i18n.t("protected.groupHostMemberModal")
+
   const router = useRouter();
   const { colors } = useTheme();
 
@@ -95,11 +84,11 @@ const groupHostMemberModal = () => {
                 textAlign: "center",
               }}
             >
-              Host Member
+              {baseContent.header}
             </CustomText>
 
             <TextInput
-              placeholder="Enter member's name"
+              placeholder={baseContent.memberInput.placeholder}
               placeholderTextColor={colors.secondaryText}
               style={[
                 false ? styles.inputFielderror : styles.inputField,
@@ -145,7 +134,7 @@ const groupHostMemberModal = () => {
                 ]}
               >
                 <CustomText style={{ fontFamily: "AirbnbCereal_W_Bd" }}>
-                  Cancel
+                  {baseContent.cancel}
                 </CustomText>
               </TouchableOpacity>
               <TouchableOpacity
@@ -165,7 +154,7 @@ const groupHostMemberModal = () => {
                   <CustomText
                     style={{ color: "#fff", fontFamily: "AirbnbCereal_W_Bd" }}
                   >
-                    Add
+                    {baseContent.add}
                   </CustomText>
                 )}
               </TouchableOpacity>

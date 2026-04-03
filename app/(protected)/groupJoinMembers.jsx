@@ -23,12 +23,14 @@ import CustomText from "../../components/CustomText";
 import { AddIcon, ArrowLeftIcon, ProfileIcon } from "../../constants/icons";
 import { useAuth } from "../../context/AuthContext";
 import { useGlobal } from "../../context/GlobalContext";
+import i18n from "../../src/localization/i18n";
+
 
 const GroupJoinMembers = () => {
+
+  const baseContent = i18n.t("protected.groupJoinMembers")
+
   const { authenticatedUser } = useAuth();
-
-  // fetching payment settings
-
   const [paymentSettingsLoading, setPaymentSettingsLoading] = useState(false);
   const [paymentSettingsData, setPaymentSettingsData] = useState(null);
 
@@ -222,7 +224,7 @@ const GroupJoinMembers = () => {
           <CustomText
             style={{ fontFamily: "AirbnbCereal_W_XBd", fontSize: scale(18) }}
           >
-            Group Members
+            {baseContent.header}
           </CustomText>
         </View>
 
@@ -270,7 +272,7 @@ const GroupJoinMembers = () => {
                       }}
                     >
                       {item?.memberName === authenticatedUser?.name
-                        ? "You"
+                        ? baseContent.you
                         : item?.memberName}{" "}
                       <CustomText
                         style={{
@@ -278,7 +280,7 @@ const GroupJoinMembers = () => {
                         }}
                       >
                         {item?.memberName === authenticatedUser?.name
-                          ? "(Host)"
+                          ? baseContent.host
                           : ""}
                       </CustomText>
                     </CustomText>
@@ -305,7 +307,7 @@ const GroupJoinMembers = () => {
                           color: colors.accentColor,
                         }}
                       >
-                        Ready
+                        {baseContent.ready}
                       </CustomText>
                     </View>
                   </View>
@@ -324,21 +326,21 @@ const GroupJoinMembers = () => {
                     }}
                   >
                     <CustomSecondaryText style={{ flexWrap: "wrap" }}>
-                      Services:{" "}
+                      {baseContent.services}{" "}
                       {item.selectedServices
                         ?.map((ser) => ser?.serviceName)
                         .join(" | ")}
                     </CustomSecondaryText>
 
                     <CustomSecondaryText>
-                      Stylist: {item?.selectedMemberBarber?.name}
+                      {baseContent.stylist} {item?.selectedMemberBarber?.name}
                     </CustomSecondaryText>
                     <CustomText
                       style={{
                         fontFamily: "AirbnbCereal_W_Bd",
                       }}
                     >
-                      Subtotal: {authenticatedUser?.currency}{" "}
+                      {baseContent.subtotal} {authenticatedUser?.currency}{" "}
                       {item?.selectedServices?.reduce(
                         (acc, service) => acc + service.servicePrice,
                         0,
@@ -411,7 +413,7 @@ const GroupJoinMembers = () => {
                 ]}
               >
                 <AddIcon color={colors.text} />
-                <CustomText>Add Member</CustomText>
+                <CustomText>{baseContent.addMember}</CustomText>
               </TouchableOpacity>
             )
           }
@@ -438,7 +440,7 @@ const GroupJoinMembers = () => {
             </CustomText>
             <CustomSecondaryText>
               {groupJoinMembers?.length}{" "}
-              {groupJoinMembers?.length === 1 ? "member" : "members"} |{" "}
+              {groupJoinMembers?.length === 1 ? baseContent.member : baseContent.members} |{" "}
               {formatMinutesToHrMin(totalServiceEwt)}
             </CustomSecondaryText>
           </View>
@@ -470,7 +472,7 @@ const GroupJoinMembers = () => {
             activeOpacity={0.85}
             disabled={paymentSettingsLoading}
           >
-            <CustomText style={styles.queueButtonText}>Join Queue</CustomText>
+            <CustomText style={styles.queueButtonText}>{baseContent.joinQueue}</CustomText>
           </TouchableOpacity>
         </View>
       ) : null}

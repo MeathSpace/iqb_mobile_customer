@@ -7,8 +7,12 @@ import { scale, verticalScale } from "react-native-size-matters";
 import CustomSecondaryText from "../../components/CustomSecondaryText";
 import CustomText from "../../components/CustomText";
 import { CheckIcon } from "../../constants/icons";
+import i18n from "../../src/localization/i18n"
 
 const GroupJoinSuccessPage = () => {
+
+  const baseContent = i18n.t("protected.groupJoinSuccessPage")
+
   const router = useRouter();
   const { colors } = useTheme();
 
@@ -47,9 +51,9 @@ const GroupJoinSuccessPage = () => {
         >
           <CheckIcon size={scale(32)} color={colors.accentColor} />
         </View>
-        <CustomText style={styles.cardTitle}>Queue Joined!</CustomText>
+        <CustomText style={styles.cardTitle}>{baseContent.header}</CustomText>
         <CustomSecondaryText style={[styles.cardSubtitle, {}]}>
-          Your group has successfully joined the queue.
+          {baseContent.subHeader}
         </CustomSecondaryText>
         <TouchableOpacity
           onPress={() => {
@@ -61,7 +65,7 @@ const GroupJoinSuccessPage = () => {
           activeOpacity={0.85}
         >
           <CustomText style={styles.bookButtonText}>
-            Go to Live Queue
+            {baseContent.goToLiveQueue}
           </CustomText>
         </TouchableOpacity>
 
@@ -79,7 +83,7 @@ const GroupJoinSuccessPage = () => {
               fontFamily: "AirbnbCereal_W_XBd",
             }}
           >
-            Go back to home
+            {baseContent.goBackToHome}
           </CustomText>
         </TouchableOpacity>
       </View>

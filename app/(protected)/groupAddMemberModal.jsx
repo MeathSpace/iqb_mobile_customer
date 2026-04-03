@@ -17,8 +17,12 @@ import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import CustomText from "../../components/CustomText";
 import { ErrorIcon } from "../../constants/icons";
 import { useGlobal } from "../../context/GlobalContext";
+import i18n from "../../src/localization/i18n"
 
 const groupAddMemberModal = () => {
+
+  const baseContent = i18n.t("protected.groupAddMemberModal")
+
   const router = useRouter();
   const { colors } = useTheme();
 
@@ -80,12 +84,12 @@ const groupAddMemberModal = () => {
                 textAlign: "center",
               }}
             >
-              Add New Member
+              {baseContent.header}
             </CustomText>
 
             <TextInput
               editable
-              placeholder="Enter member's name"
+              placeholder={baseContent.memberInput.placeholder}
               placeholderTextColor={colors.secondaryText}
               style={[
                 false ? styles.inputFielderror : styles.inputField,
@@ -129,7 +133,7 @@ const groupAddMemberModal = () => {
                 ]}
               >
                 <CustomText style={{ fontFamily: "AirbnbCereal_W_Bd" }}>
-                  Cancel
+                  {baseContent.cancel}
                 </CustomText>
               </TouchableOpacity>
               <TouchableOpacity
@@ -149,7 +153,7 @@ const groupAddMemberModal = () => {
                   <CustomText
                     style={{ color: "#fff", fontFamily: "AirbnbCereal_W_Bd" }}
                   >
-                    Add
+                    {baseContent.add}
                   </CustomText>
                 )}
               </TouchableOpacity>

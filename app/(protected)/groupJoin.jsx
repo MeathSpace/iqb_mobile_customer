@@ -32,8 +32,12 @@ import {
 } from "../../constants/icons";
 import { useAuth } from "../../context/AuthContext";
 import { useGlobal } from "../../context/GlobalContext";
+import i18n from "../../src/localization/i18n"
 
 const GroupJoin = () => {
+
+  const baseContent = i18n.t("protected.groupJoin")
+
   const router = useRouter();
   const { colors } = useTheme();
   const colorScheme = useColorScheme();
@@ -273,7 +277,7 @@ const GroupJoin = () => {
               fontSize: scale(18),
             }}
           >
-            Group Join (Services)
+            {baseContent.header}
           </CustomText>
         </View>
 
@@ -281,7 +285,7 @@ const GroupJoin = () => {
           {/* Search Input */}
           <View style={styles.inputContainer}>
             <TextInput
-              placeholder="Search services by category"
+              placeholder={baseContent.searchInput.placeholder}
               placeholderTextColor={colors.secondaryText}
               value={searchServiceQuery}
               onChangeText={handleChange}
@@ -532,7 +536,7 @@ const GroupJoin = () => {
               {authenticatedUser?.currency} {totalPrice.toFixed(2)}
             </CustomText>
             <CustomSecondaryText>
-              {totalServices} {totalServices === 1 ? "service" : "services"} |{" "}
+              {totalServices} {totalServices === 1 ? baseContent.service : baseContent.services} |{" "}
               {formatMinutesToHrMin(totalTime)}
             </CustomSecondaryText>
           </View>
@@ -551,7 +555,7 @@ const GroupJoin = () => {
             style={[styles.queueButton, {backgroundColor: colors.accentColor}]}
             activeOpacity={0.85}
           >
-            <CustomText style={styles.queueButtonText}>Continue</CustomText>
+            <CustomText style={styles.queueButtonText}>{baseContent.continue}</CustomText>
           </TouchableOpacity>
         </View>
       ) : null}

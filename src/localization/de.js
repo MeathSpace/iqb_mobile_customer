@@ -674,5 +674,100 @@ export default {
       goToLive: "Zur Live-Warteschlange",
       goBackHome: "Zurück zur Startseite",
     },
+    groupHostMemberModal: {
+      header: "Hauptmitglied",
+
+      memberInput: {
+        placeholder: "Name des Mitglieds eingeben",
+      },
+
+      cancel: "Abbrechen",
+      add: "Hinzufügen",
+    },
+    groupJoin: {
+      header: "Gruppe beitreten (Services)",
+      searchInput: {
+        placeholder: "Services nach Kategorie suchen",
+      },
+      service: "Service",
+      services: "Services",
+      continue: "Weiter",
+    },
+
+    groupJoinBarber: {
+      header: "Gruppe beitreten (Stylisten)",
+      empty: {
+        header: "Keine Stylisten",
+        subHeader:
+          "Derzeit sind keine Stylisten für die ausgewählten Services verfügbar.",
+        chooseServicesAgain: "Services erneut wählen",
+      },
+      service: "Service",
+      services: "Services",
+      continue: "Weiter",
+    },
+
+    groupJoinMembers: {
+      header: "Gruppenmitglieder",
+      you: "Du",
+      host: "(Host)",
+      ready: "Bereit",
+      services: "Services:",
+      stylist: "Stylist:",
+      subtotal: "Zwischensumme:",
+      addMember: "Mitglied hinzufügen",
+      member: "Mitglied",
+      members: "Mitglieder",
+      joinQueue: "Zur Warteschlange",
+    },
+
+    groupAddMemberModal: {
+      header: "Neues Mitglied",
+      memberInput: {
+        placeholder: "Name eingeben",
+      },
+      cancel: "Abbrechen",
+      add: "Hinzufügen",
+    },
+
+    groupJoinModal: {
+      header: "Gruppenbuchung",
+      subHeader: "Bitte überprüfe deine Gruppendaten",
+      members: "Mitglieder",
+      services: "Services",
+      time: "Zeit",
+      paymentBreakdown: "Zahlungsübersicht",
+      pricingSummary: "Preisübersicht",
+      totalAmount: "Gesamtbetrag",
+      payNow: "Jetzt bezahlen",
+      deposit: "Anzahlung",
+      remainingBalance: "Restbetrag",
+      proceedToPayment: "Zur Zahlung",
+      confirmGroupBooking: "Buchung bestätigen",
+      goBack: "Zurück",
+    },
+
+    groupJoinSuccessPage: {
+      header: "Warteschlange beigetreten!",
+      subHeader: "Deine Gruppe ist der Warteschlange beigetreten.",
+      goToLiveQueue: "Zur Live-Warteschlange",
+      goBackToHome: "Zur Startseite",
+    },
+
+    salon: {
+      details: "Details",
+      services: "Services",
+      barbers: "Barbiere",
+      stylists: "Stylisten",
+      description: "Beschreibung",
+      contactUs: "Kontakt",
+      anyQuestionInfo: "Bei Fragen",
+      location: "Standort",
+      followUsOn: "Folge uns auf",
+      socialLinks: "Social Media",
+      exploreAll: "Alle ansehen",
+      no: "Keine",
+      available: "verfügbar",
+    },
   },
 };

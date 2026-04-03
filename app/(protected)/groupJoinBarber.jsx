@@ -23,11 +23,10 @@ import Skeleton from "../../components/Skeleton";
 import { ArrowLeftIcon, ProfileIcon } from "../../constants/icons";
 import { useAuth } from "../../context/AuthContext";
 import { useGlobal } from "../../context/GlobalContext";
+import i18n from "../../src/localization/i18n";
 
 const GroupJoinBarber = () => {
-  // const { data } = useLocalSearchParams();
-
-  // const selectedMemberServices = JSON.parse(data)
+  const baseContent = i18n.t("protected.groupJoinBarber");
 
   const {
     setSelectedMemberBarber,
@@ -138,7 +137,7 @@ const GroupJoinBarber = () => {
               fontSize: scale(18),
             }}
           >
-            Group Join (Stylists)
+            {baseContent.header}
           </CustomText>
         </View>
 
@@ -247,20 +246,24 @@ const GroupJoinBarber = () => {
             >
               <ProfileIcon size={scale(32)} color={colors.accentColor} />
             </View>
-            <CustomText style={styles.cardTitle}>No Stylists</CustomText>
+            <CustomText style={styles.cardTitle}>
+              {baseContent.empty.header}
+            </CustomText>
             <CustomText
               style={[styles.cardSubtitle, { color: colors.secondaryText }]}
             >
-              Unfortunately, there are no available stylists for the selected
-              services at the moment.
+              {baseContent.empty.subHeader}
             </CustomText>
             <TouchableOpacity
               onPress={() => router.back()}
-              style={[styles.bookButton, {backgroundColor: colors.accentColor}]}
+              style={[
+                styles.bookButton,
+                { backgroundColor: colors.accentColor },
+              ]}
               activeOpacity={0.85}
             >
               <CustomText style={styles.bookButtonText}>
-                Choose Services Again
+                {baseContent.empty.chooseServicesAgain}
               </CustomText>
             </TouchableOpacity>
           </View>
@@ -286,8 +289,9 @@ const GroupJoinBarber = () => {
               {authenticatedUser?.currency} {totalPrice.toFixed(2)}
             </CustomText>
             <CustomSecondaryText>
-              {totalServices} {totalServices === 1 ? "service" : "services"} |{" "}
-              {formatMinutesToHrMin(totalTime)}
+              {totalServices}{" "}
+              {totalServices === 1 ? baseContent.service : baseContent.services}{" "}
+              | {formatMinutesToHrMin(totalTime)}
             </CustomSecondaryText>
           </View>
 
@@ -301,13 +305,6 @@ const GroupJoinBarber = () => {
                 Toast.error("Please select a service");
                 return;
               }
-              // setGroupJoinMembers((prev) => [...prev, {
-              //     id: Date.now(),
-              //     memberName,
-              //     selectedServices: selectedMemberServices,
-              //     selectedMemberBarber
-              // }])
-
               setGroupJoinMembers((prev) => {
                 const newMember = {
                   id: Date.now(),
@@ -331,10 +328,15 @@ const GroupJoinBarber = () => {
               setSelectedMemberServices([]);
               setMemberName("");
             }}
-            style={[styles.queueButton, {backgroundColor: colors.accentColor}]}
+            style={[
+              styles.queueButton,
+              { backgroundColor: colors.accentColor },
+            ]}
             activeOpacity={0.85}
           >
-            <CustomText style={styles.queueButtonText}>Continue</CustomText>
+            <CustomText style={styles.queueButtonText}>
+              {baseContent.continue}
+            </CustomText>
           </TouchableOpacity>
         </View>
       ) : null}
@@ -346,9 +348,7 @@ export default GroupJoinBarber;
 
 const styles = StyleSheet.create({
   barberCard: {
-    // width: scale(103), for 3 cards
     width: scale(160),
-    // height: verticalScale(150),
     borderRadius: scale(8),
     justifyContent: "center",
     alignItems: "center",
@@ -385,7 +385,6 @@ const styles = StyleSheet.create({
     fontFamily: "AirbnbCereal_W_XBd",
     fontSize: scale(20),
     textAlign: "center",
-    // marginBottom: verticalScale(4),
   },
   cardSubtitle: {
     fontFamily: "AirbnbCereal_W_Bd",
@@ -395,7 +394,7 @@ const styles = StyleSheet.create({
   },
   bookButton: {
     width: "100%",
-     // bg-teal-500
+    // bg-teal-500
     paddingVertical: verticalScale(16), // py-4
     borderRadius: scale(12), // rounded-xl
     // marginBottom: verticalScale(15), // mb-6

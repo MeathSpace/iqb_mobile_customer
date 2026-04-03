@@ -610,6 +610,92 @@ export default {
       subHeader: "You have successfully joined the queue. You will be notified when it's your turn.",
       goToLive: "Go to Live Queue",
       goBackHome: "Go back to home"
+    },
+    groupHostMemberModal: {
+      header: "Host Member",
+      memberInput: {
+        placeholder: "Enter member's name"
+      },
+      cancel: "Cancel",
+      add: "Add"
+    },
+    groupJoin: {
+      header: "Group Join (Services)",
+      searchInput: {
+        placeholder: "Search services by category"
+      },
+      service: "service",
+      services: "services",
+      continue: "Continue"
+    },
+    groupJoinBarber: {
+      header: "Group Join (Stylists)",
+      empty: {
+        header: "No Stylists",
+        subHeader: "Unfortunately, there are no available stylists for the selected services at the moment.",
+        chooseServicesAgain: "Choose Services Again"
+      },
+      service: "service",
+      services: "services",
+      continue: "Continue"
+    },
+    groupJoinMembers: {
+      header: "Group Members",
+      you: "You",
+      host: "(Host)",
+      ready: "Ready",
+      services: "Services:",
+      stylist: "Stylist:",
+      subtotal: "Subtotal:",
+      addMember: "Add Member",
+      member: "member",
+      members: "members",
+      joinQueue: "Join Queue"
+    },
+    groupAddMemberModal:{
+      header: "Add New Member",
+      memberInput: {
+        placeholder: "Enter member's name"
+      },
+      cancel: "Cancel",
+      add: "Add"
+    },
+    groupJoinModal: {
+      header: "Group Booking",
+      subHeader: "Please review your group details",
+      members: "Members",
+      services: "Services",
+      time: "Time",
+      paymentBreakdown: "Payment Breakdown",
+      pricingSummary: "Pricing Summary",
+      totalAmount: "Total Amount",
+      payNow: "Pay Now",
+      deposit: "Deposit",
+      remainingBalance: "Remaining Balance",
+      proceedToPayment: "Proceed to Payment",
+      confirmGroupBooking: "Confirm Group Booking",
+      goBack: "Go Back"
+    },
+    groupJoinSuccessPage: {
+      header: "Queue Joined!",
+      subHeader: "Your group has successfully joined the queue.",
+      goToLiveQueue: "Go to Live Queue",
+      goBackToHome: "Go back to home"
+    },
+    salon: {
+      details: "Details",
+      services: "Services",
+      barbers: "Barbers",
+      stylists: "Stylists",
+      description: "Description",
+      contactUs: "Contact Us",
+      anyQuestionInfo: "If you have any questions",
+      location: "Location",
+      followUsOn: "Follow us on",
+      socialLinks: "Social links",
+      exploreAll: "Explore all",
+      no: "No",
+      available: "available",
     }
   },
 };
