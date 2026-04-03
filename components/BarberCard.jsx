@@ -4,6 +4,7 @@ import { StyleSheet, View } from "react-native";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import CustomSecondaryText from "./CustomSecondaryText";
 import CustomText from "./CustomText";
+import i18n from "../src/localization/i18n";
 
 const BarberCard = ({ item }) => {
   const { colors } = useTheme();
@@ -46,7 +47,7 @@ const BarberCard = ({ item }) => {
             ]}
           >
             <CustomText style={styles.statusText}>
-              {item?.isOnline ? "Online" : "Offline"}
+              {item?.isOnline ? i18n.t("protected.dashboard.barber.online") : i18n.t("protected.dashboard.barber.offline")}
             </CustomText>
           </View>
         </View>

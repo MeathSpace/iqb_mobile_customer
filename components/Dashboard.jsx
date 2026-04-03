@@ -35,6 +35,7 @@ import { Feather } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { Toast } from "toastify-react-native";
 import Header from "./Header";
+import i18n from "../src/localization/i18n";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -132,6 +133,8 @@ const Dashboard = () => {
   //     return () => {};
   //   }, []),
   // );
+
+  const baseContent = i18n.t("protected.dashboard")
 
   const [apiVersionData, setApiVersionData] = useState(null);
 
@@ -526,11 +529,11 @@ const Dashboard = () => {
 
   const statusData = [
     {
-      label: "System",
+      label: baseContent.status.system,
       value: homeDashboardData?.dashboardData?.salonInfo
         ?.mobileBookingAvailability
-        ? "Online"
-        : "Offline",
+        ? baseContent.status.online
+        : baseContent.status.offline,
       icon: "power",
       bgColor: homeDashboardData?.dashboardData?.salonInfo
         ?.mobileBookingAvailability
@@ -548,7 +551,7 @@ const Dashboard = () => {
     },
 
     {
-      label: "Next In",
+      label: baseContent.status.nextIn,
       value: homeDashboardData?.dashboardData?.leastQueueCount + 1,
       icon: "user-check",
       // bgColor: "rgba(168, 85, 247, 0.1)", // purple-500/10
@@ -558,7 +561,7 @@ const Dashboard = () => {
       iconColor: colors.accentColor,
     },
     {
-      label: "On Duty",
+      label: baseContent.status.onDuty,
       value: homeDashboardData?.dashboardData?.barberOnDuty,
       icon: "scissors",
       // bgColor: "rgba(56, 189, 248, 0.1)", // sky-500/10
@@ -568,7 +571,7 @@ const Dashboard = () => {
       iconColor: colors.accentColor,
     },
     {
-      label: "In Queue",
+      label: baseContent.status.inQueue,
       value: homeDashboardData?.dashboardData?.totalQueueCount || 0,
       icon: "users",
       bgColor: `${colors.accentColor}1A`, // teal-500/10
@@ -796,7 +799,7 @@ const Dashboard = () => {
                             <ActivityIndicator size="small" color="#000" />
                           ) : (
                             <CustomText style={styles.joinQueueText}>
-                              Cancel
+                              {baseContent.card.cancel}
                             </CustomText>
                           )}
                         </TouchableOpacity>
@@ -828,7 +831,7 @@ const Dashboard = () => {
                           activeOpacity={0.85}
                         >
                           <CustomText style={styles.bookAheadText}>
-                            Book
+                            {baseContent.card.book}
                           </CustomText>
                         </TouchableOpacity>
                       </View>
@@ -849,7 +852,7 @@ const Dashboard = () => {
                             Your Visit, Your Way
                           </CustomText> */}
                           <CustomText style={styles.subtitle}>
-                            Join the virtual queue or book an appointment.
+                            {baseContent.card.title}
                           </CustomText>
                         </View>
                         <CalendarIcon color="white" style={styles.icon} />
@@ -877,7 +880,7 @@ const Dashboard = () => {
                           activeOpacity={0.85}
                         >
                           <CustomText style={styles.joinQueueText}>
-                            Join Queue
+                            {baseContent.card.joinQueue}
                           </CustomText>
                         </TouchableOpacity>
 
@@ -910,7 +913,7 @@ const Dashboard = () => {
                           activeOpacity={0.85}
                         >
                           <CustomText style={styles.bookAheadText}>
-                            Book
+                            {baseContent.card.book}
                           </CustomText>
                         </TouchableOpacity>
                       </View>
@@ -1014,7 +1017,7 @@ const Dashboard = () => {
               return homeDashboardData?.loading ? (
                 <View>
                   <CustomText style={styles.heading}>
-                    Live Queue Status
+                    {baseContent.status.label}
                   </CustomText>
                   <View style={styles.grid}>
                     {statusData.map((item, index) => (
@@ -1034,7 +1037,7 @@ const Dashboard = () => {
               ) : (
                 <View>
                   <CustomText style={styles.heading}>
-                    Live Queue Status
+                    {baseContent.status.label}
                   </CustomText>
                   <View style={styles.grid}>
                     {statusData.map((item, index) => (
@@ -1134,10 +1137,10 @@ const Dashboard = () => {
                         </View>
                         <View>
                           <CustomText style={[styles.hintTitle, {}]}>
-                            New update
+                            {baseContent.hint.label}
                           </CustomText>
                           <CustomSecondaryText>
-                            Lastest: {apiVersionData?.version}
+                            {baseContent.hint.latest} {apiVersionData?.version}
                           </CustomSecondaryText>
                         </View>
                       </View>
@@ -1188,7 +1191,7 @@ const Dashboard = () => {
                             fontSize: moderateScale(12),
                           }}
                         >
-                          Update
+                          {baseContent.hint.update}
                         </CustomText>
                       </TouchableOpacity>
                     </View>
@@ -1225,7 +1228,7 @@ const Dashboard = () => {
                       style={[styles.hintTitle, {
                         color: colors.accentColor
                       }]}>
-                        Salon Info
+                        {baseContent.hint.label}
                       </CustomText>
 
                       <CustomSecondaryText
@@ -1247,7 +1250,7 @@ const Dashboard = () => {
                             fontSize: scale(14),
                           }}
                         >
-                          {textShown ? "Read less..." : "Read more..."}
+                          {textShown ? `${baseContent.hint.readLess}...` : `${baseContent.hint.readMore}...`}
                         </CustomText>
                       ) : null}
                     </View>
@@ -1268,9 +1271,9 @@ const Dashboard = () => {
                   >
                     <CustomText style={styles.heading}>
                       {authenticatedUser?.salonType === "Barber Shop"
-                        ? "Barbers"
-                        : "Stylists"}{" "}
-                      On Duty
+                        ? baseContent.barber.barbers
+                        : baseContent.barber.stylists}{" "}
+                      {baseContent.barber.onDuty}
                       {/* <CustomText style={[styles.heading, { color: Colors.modeColor.colorCode }]}>{homeDashboardData?.dashboardData?.barberOnDuty}</CustomText> */}
                     </CustomText>
 
@@ -1352,11 +1355,11 @@ const Dashboard = () => {
                       }}
                     >
                       <CustomText>
-                        No{" "}
+                        {baseContent.barber.no}{" "}
                         {authenticatedUser?.salonType === "Barber Shop"
-                          ? "barbers"
-                          : "stylists"}{" "}
-                        available
+                          ? baseContent.barber.barbers
+                          : baseContent.barber.stylists}{" "}
+                        {baseContent.barber.available}
                       </CustomText>
                     </View>
                   )}
@@ -1426,10 +1429,10 @@ const Dashboard = () => {
                           }}
                         >
                           <CustomText style={{ color: "#fff" }}>
-                            See all{" "}
+                            {baseContent.barber.seeAll}{" "}
                             {authenticatedUser?.salonType === "Barber Shop"
-                              ? "barbers"
-                              : "stylists"}
+                              ? baseContent.barber.barbers
+                              : baseContent.barber.stylists}
                           </CustomText>
                           <RightIcon size={scale(14)} color={"#fff"} />
                         </View>

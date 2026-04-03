@@ -24,8 +24,12 @@ import Skeleton from "../../components/Skeleton";
 import { ArrowLeftIcon, ProfileIcon } from "../../constants/icons";
 import { useAuth } from "../../context/AuthContext";
 import { useGlobal } from "../../context/GlobalContext";
+import i18n from "../../src/localization/i18n"
 
 const singleJoinServicesBarber = () => {
+
+  const baseContent = i18n.t("protected.singleJoinServicesBarber")
+
   const router = useRouter();
   const { colors } = useTheme();
   const insets = useSafeAreaInsets();
@@ -157,10 +161,10 @@ const singleJoinServicesBarber = () => {
               fontSize: scale(18),
             }}
           >
-            Single Join (
+            {baseContent.header} (
             {authenticatedUser?.salonType === "Barber Shop"
-              ? "Barbers"
-              : "Stylists"}{" "}
+              ? baseContent.barbers
+              : baseContent.stylists}{" "}
             )
           </CustomText>
         </View>
@@ -271,19 +275,19 @@ const singleJoinServicesBarber = () => {
               <ProfileIcon size={scale(32)} color={colors.accentColor} />
             </View>
             <CustomText style={styles.cardTitle}>
-              No{" "}
+              {baseContent.no}{" "}
               {authenticatedUser?.salonType === "Barber Shop"
-                ? "Barbers"
-                : "Stylists"}{" "}
+                ? baseContent.barbers
+                : baseContent.stylists}{" "}
             </CustomText>
             <CustomText
               style={[styles.cardSubtitle, { color: colors.secondaryText }]}
             >
-              Unfortunately, there are no available{" "}
+              {baseContent.info1}{" "}
               {authenticatedUser?.salonType === "Barber Shop"
-                ? "barbers"
-                : "stylists"}{" "}
-              for the selected services at the moment.
+                ? baseContent.barbers
+                : baseContent.stylists}{" "}
+              {baseContent.info2}
             </CustomText>
             <TouchableOpacity
               onPress={() => router.back()}
@@ -291,7 +295,7 @@ const singleJoinServicesBarber = () => {
               activeOpacity={0.85}
             >
               <CustomText style={styles.bookButtonText}>
-                Choose Services Again
+                {baseContent.chooseServicesAgain}
               </CustomText>
             </TouchableOpacity>
           </View>
@@ -329,7 +333,7 @@ const singleJoinServicesBarber = () => {
             style={[styles.queueButton, {backgroundColor: colors.accentColor}]}
             activeOpacity={0.85}
           >
-            <CustomText style={styles.queueButtonText}>Continue</CustomText>
+            <CustomText style={styles.queueButtonText}>{baseContent.continue}</CustomText>
           </TouchableOpacity>
         </View>
       ) : null}

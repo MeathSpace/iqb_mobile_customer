@@ -32,8 +32,12 @@ import {
 } from "../../constants/icons";
 import { useAuth } from "../../context/AuthContext";
 import { useGlobal } from "../../context/GlobalContext";
+import i18n from "../../src/localization/i18n"
 
 const SingleJoin = () => {
+
+  const baseContent = i18n.t("protected.singleJoin")
+
   const router = useRouter();
   const { colors } = useTheme();
   const colorScheme = useColorScheme();
@@ -265,7 +269,7 @@ const SingleJoin = () => {
               fontSize: scale(18),
             }}
           >
-            Single Join (Services)
+            {baseContent.header}
           </CustomText>
         </View>
 
@@ -273,7 +277,7 @@ const SingleJoin = () => {
           {/* Search Input */}
           <View style={styles.inputContainer}>
             <TextInput
-              placeholder="Search services by category"
+              placeholder={baseContent.searchInput.placeholder}
               placeholderTextColor={colors.secondaryText}
               value={searchServiceQuery}
               onChangeText={handleChange}
@@ -527,7 +531,7 @@ const SingleJoin = () => {
               {authenticatedUser?.currency} {totalPrice.toFixed(2)}
             </CustomText>
             <CustomSecondaryText>
-              {totalServices} {totalServices === 1 ? "service" : "services"} |{" "}
+              {totalServices} {totalServices === 1 ? baseContent.service : baseContent.services} |{" "}
               {formatMinutesToHrMin(totalTime)}
             </CustomSecondaryText>
           </View>
@@ -544,7 +548,7 @@ const SingleJoin = () => {
             style={[styles.queueButton, {backgroundColor: colors.accentColor}]}
             activeOpacity={0.85}
           >
-            <CustomText style={styles.queueButtonText}>Continue</CustomText>
+            <CustomText style={styles.queueButtonText}>{baseContent.continue}</CustomText>
           </TouchableOpacity>
         </View>
       ) : null}

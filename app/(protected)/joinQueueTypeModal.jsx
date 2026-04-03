@@ -6,8 +6,12 @@ import { scale, verticalScale } from "react-native-size-matters";
 import CustomText from "../../components/CustomText";
 import { CuttingIcon, PeopleIcon, RightIcon } from "../../constants/icons";
 import { useGlobal } from "../../context/GlobalContext";
+import i18n from "../../src/localization/i18n";
 
 const joinQueueTypeModal = () => {
+
+  const baseContent = i18n.t("protected.joinQueueTypeModal")
+
   const router = useRouter();
   const { colors } = useTheme();
   const { type } = useLocalSearchParams();
@@ -62,7 +66,7 @@ const joinQueueTypeModal = () => {
             fontSize: scale(22),
           }}
         >
-          Select Option
+          {baseContent.header}
         </CustomText>
 
         <Pressable
@@ -93,7 +97,7 @@ const joinQueueTypeModal = () => {
             <View>
               <PeopleIcon size={scale(18)} color="#fff" />
             </View>
-            <CustomText style={{ color: "#fff" }}>Barber</CustomText>
+            <CustomText style={{ color: "#fff" }}>{baseContent.barber}</CustomText>
           </View>
 
           <View>
@@ -125,7 +129,7 @@ const joinQueueTypeModal = () => {
             <View>
               <CuttingIcon size={scale(18)} color="#fff" />
             </View>
-            <CustomText style={{ color: "#fff" }}>Services</CustomText>
+            <CustomText style={{ color: "#fff" }}>{baseContent.services}</CustomText>
           </View>
 
           <View>

@@ -6,8 +6,12 @@ import CustomSecondaryText from "../../components/CustomSecondaryText";
 import CustomText from "../../components/CustomText";
 import { useAuth } from "../../context/AuthContext";
 import { useGlobal } from "../../context/GlobalContext";
+import i18n from "../../src/localization/i18n"
 
 const joinpopup = () => {
+
+  const baseContent = i18n.t("protected.joinpopup")
+
   const router = useRouter();
   const { colors } = useTheme();
   const { authenticatedUser } = useAuth();
@@ -44,7 +48,7 @@ const joinpopup = () => {
             fontSize: scale(22),
           }}
         >
-          Join Queue
+          {baseContent.header}
         </CustomText>
 
         <View
@@ -58,15 +62,14 @@ const joinpopup = () => {
               fontSize: scale(18)
             }}
           >
-            Single Join
+            {baseContent.singleJoin.label}
           </CustomText>
           <CustomSecondaryText
             style={{
               fontSize: scale(14),
             }}
           >
-            Join the queue as a single customer. This option is for individuals
-            waiting alone for salon services.
+            {baseContent.singleJoin.subHeader}
           </CustomSecondaryText>
 
           <TouchableOpacity
@@ -84,7 +87,7 @@ const joinpopup = () => {
             ]}
             activeOpacity={0.85}
           >
-            <CustomText style={styles.queueButtonText}>Single Join</CustomText>
+            <CustomText style={styles.queueButtonText}>{baseContent.singleJoin.buttonText}</CustomText>
           </TouchableOpacity>
         </View>
 
@@ -99,7 +102,7 @@ const joinpopup = () => {
               fontSize: scale(18),
             }}
           >
-            Group Join
+            {baseContent.groupJoin.label}
           </CustomText>
           <CustomSecondaryText
             style={{
@@ -107,8 +110,7 @@ const joinpopup = () => {
               fontSize: scale(14),
             }}
           >
-            Join the queue with multiple people at once. Ideal for friends or
-            family members visiting the salon together.
+            {baseContent.groupJoin.subHeader}
           </CustomSecondaryText>
 
           <TouchableOpacity
@@ -125,7 +127,7 @@ const joinpopup = () => {
             ]}
             activeOpacity={0.85}
           >
-            <CustomText style={styles.queueButtonText}>Group Join</CustomText>
+            <CustomText style={styles.queueButtonText}>{baseContent.groupJoin.buttonText}</CustomText>
           </TouchableOpacity>
         </View>
       </Pressable>

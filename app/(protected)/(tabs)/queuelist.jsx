@@ -24,8 +24,12 @@ import Skeleton from "../../../components/Skeleton";
 import { NotificationIcon } from "../../../constants/icons";
 import { useAuth } from "../../../context/AuthContext";
 import { useGlobal } from "../../../context/GlobalContext";
+import i18n from "../../../src/localization/i18n";
 
 const QueueList = () => {
+
+  const baseContent = i18n.t("protected.queuelist")
+
   const { authenticatedUser } = useAuth();
   const { homeDashboardData } = useGlobal();
 
@@ -246,7 +250,7 @@ const QueueList = () => {
         <CustomText
           style={{ fontSize: scale(18), fontFamily: "AirbnbCereal_W_XBd" }}
         >
-          Live Queue
+          {baseContent.header}
         </CustomText>
 
         {/* Right section - Notification bell */}
@@ -275,11 +279,6 @@ const QueueList = () => {
             size={moderateScale(24)}
             color={colors.notificationBellColor}
           />
-          {/* {
-                        newNotification.value && (
-                            <View style={styles.badge} />
-                        )
-                    } */}
         </Pressable>
       </View>
 
@@ -328,7 +327,7 @@ const QueueList = () => {
               ]}
               activeOpacity={0.85}
             >
-              <CustomText style={styles.queueButtonText}>Join Queue</CustomText>
+              <CustomText style={styles.queueButtonText}>{baseContent.joinQueue}</CustomText>
             </TouchableOpacity>
           </View>
         ) : null}
@@ -356,8 +355,8 @@ const QueueList = () => {
                 ]}
               >
                 {authenticatedUser?.salonType === "Barber Shop"
-                  ? "BARBER"
-                  : "STYLIST"}
+                  ? baseContent.barber
+                  : baseContent.stylist}
               </CustomText>
               <CustomText
                 style={[
@@ -369,7 +368,7 @@ const QueueList = () => {
                   },
                 ]}
               >
-                CUSTOMER
+                {baseContent.customer}
               </CustomText>
               <CustomText
                 style={[
@@ -381,7 +380,7 @@ const QueueList = () => {
                   },
                 ]}
               >
-                POS / WAIT
+                {baseContent.posWait}
               </CustomText>
             </View>
             <FlatList
@@ -423,8 +422,8 @@ const QueueList = () => {
                 ]}
               >
                 {authenticatedUser?.salonType === "Barber Shop"
-                  ? "BARBER"
-                  : "STYLIST"}
+                  ? baseContent.barber
+                  : baseContent.stylist}
               </CustomText>
               <CustomText
                 style={[
@@ -436,7 +435,7 @@ const QueueList = () => {
                   },
                 ]}
               >
-                CUSTOMER
+                {baseContent.customer}
               </CustomText>
               <CustomText
                 style={[
@@ -448,7 +447,7 @@ const QueueList = () => {
                   },
                 ]}
               >
-                POS / WAIT
+                {baseContent.posWait}
               </CustomText>
             </View>
             <FlatList
@@ -510,7 +509,7 @@ const QueueList = () => {
                   textAlign: "center",
                 }}
               >
-                The queue is empty
+                {baseContent.empty.heading}
               </CustomText>
 
               <CustomText
@@ -519,7 +518,7 @@ const QueueList = () => {
                   marginBottom: verticalScale(10),
                 }}
               >
-                There's no one in the queue right now. Be the first to join!
+                {baseContent.empty.subHeading}
               </CustomText>
 
               <TouchableOpacity
@@ -545,7 +544,7 @@ const QueueList = () => {
                 activeOpacity={0.85}
               >
                 <CustomText style={styles.queueButtonText}>
-                  Join Queue
+                  {baseContent.empty.joinQueue}
                 </CustomText>
               </TouchableOpacity>
             </View>

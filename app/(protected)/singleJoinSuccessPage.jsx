@@ -7,8 +7,11 @@ import { scale, verticalScale } from "react-native-size-matters";
 import CustomSecondaryText from "../../components/CustomSecondaryText";
 import CustomText from "../../components/CustomText";
 import { CheckIcon } from "../../constants/icons";
+import i18n from "../../src/localization/i18n";
 
 const SingleJoinSuccessPage = () => {
+  const baseContent = i18n.t("protected.singleJoinSuccessPage");
+
   const router = useRouter();
   const { colors } = useTheme();
 
@@ -47,10 +50,9 @@ const SingleJoinSuccessPage = () => {
         >
           <CheckIcon size={scale(32)} color={colors.accentColor} />
         </View>
-        <CustomText style={styles.cardTitle}>Queue Joined!</CustomText>
+        <CustomText style={styles.cardTitle}>{baseContent.header}</CustomText>
         <CustomSecondaryText style={[styles.cardSubtitle, {}]}>
-          You have successfully joined the queue. You will be notified when it's
-          your turn.
+          {baseContent.subHeader}
         </CustomSecondaryText>
         <TouchableOpacity
           onPress={() => {
@@ -58,11 +60,11 @@ const SingleJoinSuccessPage = () => {
             homeNavigationRef.current = false;
             router.back();
           }}
-          style={[styles.bookButton, {backgroundColor: colors.accentColor}]}
+          style={[styles.bookButton, { backgroundColor: colors.accentColor }]}
           activeOpacity={0.85}
         >
           <CustomText style={styles.bookButtonText}>
-            Go to Live Queue
+            {baseContent.goToLive}
           </CustomText>
         </TouchableOpacity>
 
@@ -80,7 +82,7 @@ const SingleJoinSuccessPage = () => {
               fontFamily: "AirbnbCereal_W_XBd",
             }}
           >
-            Go back to home
+            {baseContent.goBackHome}
           </CustomText>
         </TouchableOpacity>
       </View>
@@ -124,7 +126,7 @@ const styles = StyleSheet.create({
   },
   bookButton: {
     width: "100%",
-     // bg-teal-500
+    // bg-teal-500
     paddingVertical: verticalScale(16), // py-4
     borderRadius: scale(12), // rounded-xl
     // marginBottom: verticalScale(15), // mb-6

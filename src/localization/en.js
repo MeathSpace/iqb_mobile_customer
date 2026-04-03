@@ -452,6 +452,164 @@ export default {
           },
         },
       },
+      editProfile: {
+        header: "Manage Account",
+        fullname: {
+          label: "Full Name",
+          placeholder: "Enter your full name",
+        },
+        gender: {
+          label: "Gender",
+          male: "Male",
+          female: "Female",
+          other: "Other",
+        },
+        mobileNumber: {
+          label: "Mobile Number",
+        },
+        dateOfBirth: {
+          label: "Date of Birth (Optional)",
+          placeholder: "DD/MM/YY",
+        },
+        modal: {
+          closeText: "close",
+          openText: "open",
+        },
+        editAndSave: "Edit & Save",
+      },
     },
+    notification: {
+      header: "Notification",
+    },
+    dashboard: {
+      card: {
+        title: "Join the virtual queue or book an appointment.",
+        joinQueue: "Join Queue",
+        book: "Book",
+        cancel: "Cancel",
+      },
+      hint: {
+        label: "Salon Info",
+        readMore: "Read more",
+        readLess: "Read less",
+        newUpdate: "New update",
+        latest: "Lastest:",
+        update: "Update",
+      },
+      status: {
+        label: "Live Queue Status",
+        system: "System",
+        nextIn: "Next In",
+        onDuty: "On Duty",
+        inQueue: "In Queue",
+        online: "Online",
+        offline: "Offline",
+      },
+      barber: {
+        barbers: "Barbers",
+        stylists: "Stylists",
+        onDuty: "On Duty",
+        no: "No",
+        available: "available",
+        seeAll: "See all",
+        online: "Online",
+        offline: "Offline",
+      },
+    },
+    queuelist: {
+      header: "Live Queue",
+      barber: "BARBER",
+      stylist: "STYLIST",
+      customer: "CUSTOMER",
+      posWait: "POS / WAIT",
+      joinQueue: "Join Queue",
+      empty: {
+        heading: "The queue is empty",
+        subHeading:
+          "There's no one in the queue right now. Be the first to join!",
+        joinQueue: "Join Queue",
+      },
+    },
+    joinpopup: {
+      header: "Join Queue",
+      singleJoin: {
+        label: "Single Join",
+        subHeader:
+          "Join the queue as a single customer. This option is for individuals waiting alone for salon services.",
+        buttonText: "Single Join",
+      },
+      groupJoin: {
+        label: "Group Join",
+        subHeader:
+          "Join the queue with multiple people at once. Ideal for friends or family members visiting the salon together.",
+        buttonText: "Group Join",
+      },
+    },
+    joinQueueTypeModal: {
+      header: "Select Option",
+      barber: "Barber",
+      services: "Services",
+    },
+    singleJoinServicesBarber: {
+      header: "Single Join",
+      barbers: "Barbers",
+      stylists: "Stylists",
+      no: "No",
+      info1: "Unfortunately, there are no available",
+      info2: "for the selected services at the moment.",
+      chooseServicesAgain: "Choose Services Again",
+      continue: "Continue"
+    },
+    singleJoinBarberServices:{
+      header: "Single Join (Services)",
+      searchInput: {
+        placeholder: "Search services by category"
+      },
+      service: "service",
+      services: "services",
+      continue: "Continue"
+    },
+    singleJoin:{
+      header: "Single Join (Services)",
+      searchInput: {
+        placeholder: "Search services by category"
+      },
+      service: "service",
+      services: "services",
+      continue: "Continue"
+    },
+    singleJoinBarber:{
+      header: "Single Join",
+      barbers: "Barbers",
+      stylists: "Stylists",
+      no: "No",
+      info1: "Unfortunately, there are no available",
+      info2: "for the selected services at the moment.",
+      chooseServiceAgain: "Choose Services Again",
+      service: "service",
+      services: "services",
+      continue: "Continue"
+    },
+    singleJoinModal: {
+      header: "Confirm Selection",
+      subHeader: "Are you sure you want to proceed ?",
+      selectedBarber: "Selected Barber",
+      service: "service",
+      services: "services",
+      paymentBreakdown: "Payment Breakdown",
+      totalAmount: "Total Amount",
+      payNow: "Pay Now",
+      deposit: "Deposit",
+      payAtSalon: "Pay at Salon",
+      proceedToPayment: "Proceed to Payment",
+      confirmBooking: "Confirm Booking",
+      goBack: "Go Back"
+    },
+    singleJoinSuccessPage: {
+      header: "Queue Joined!",
+      subHeader: "You have successfully joined the queue. You will be notified when it's your turn.",
+      goToLive: "Go to Live Queue",
+      goBackHome: "Go back to home"
+    }
   },
 };

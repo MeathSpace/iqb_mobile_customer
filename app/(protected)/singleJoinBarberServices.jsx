@@ -30,9 +30,10 @@ import {
   SearchIcon,
 } from "../../constants/icons";
 import { useAuth } from "../../context/AuthContext";
+import i18n from "../../src/localization/i18n"
 
 const singleJoinBarberServices = () => {
-  // fetching payment settings
+  const baseContent = i18n.t("protected.singleJoinBarberServices")
 
   const [paymentSettingsLoading, setPaymentSettingsLoading] = useState(false);
   const [paymentSettingsData, setPaymentSettingsData] = useState(null);
@@ -236,7 +237,7 @@ const singleJoinBarberServices = () => {
               fontSize: scale(18),
             }}
           >
-            Single Join (Services)
+            {baseContent.header}
           </CustomText>
         </View>
 
@@ -244,7 +245,7 @@ const singleJoinBarberServices = () => {
           {/* Search Input */}
           <View style={styles.inputContainer}>
             <TextInput
-              placeholder="Search services by category"
+              placeholder={baseContent.searchInput.placeholder}
               placeholderTextColor={colors.secondaryText}
               value={searchServiceQuery}
               onChangeText={handleChange}
@@ -497,20 +498,13 @@ const singleJoinBarberServices = () => {
               {authenticatedUser?.currency} {totalPrice.toFixed(2)}
             </CustomText>
             <CustomSecondaryText>
-              {totalServices} {totalServices === 1 ? "service" : "services"} |{" "}
+              {totalServices} {totalServices === 1 ? baseContent.service : baseContent.services} |{" "}
               {formatMinutesToHrMin(totalTime)}
             </CustomSecondaryText>
           </View>
 
           <TouchableOpacity
             onPress={() => {
-              // router.push({
-              //     pathname: "/singleJoinBarber",
-              //     params: {
-              //         data: JSON.stringify(selectedServices),
-              //     },
-              // });
-
               router.push({
                 pathname: "/singleJoinModal",
                 params: {
@@ -524,7 +518,7 @@ const singleJoinBarberServices = () => {
             activeOpacity={0.85}
             disabled={paymentSettingsLoading}
           >
-            <CustomText style={styles.queueButtonText}>Continue</CustomText>
+            <CustomText style={styles.queueButtonText}>{baseContent.continue}</CustomText>
           </TouchableOpacity>
         </View>
       ) : null}

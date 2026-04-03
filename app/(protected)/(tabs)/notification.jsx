@@ -21,6 +21,7 @@ import Skeleton from "../../../components/Skeleton";
 import { ArrowLeftIcon, NotificationOffIcon } from "../../../constants/icons";
 import { useAuth } from "../../../context/AuthContext";
 import { useGlobal } from "../../../context/GlobalContext";
+import i18n from "../../../src/localization/i18n"
 
 const notification = () => {
   const router = useRouter();
@@ -28,87 +29,6 @@ const notification = () => {
 
   const { notificationListData, setNotificationListData } = useGlobal();
   const { authenticatedUser } = useAuth();
-
-  // useEffect(() => {
-  //     const fetchNotifications = async () => {
-  //         try {
-
-  //             setNotificationListData((prev) => ({ ...prev, loading: true }))
-
-  //             const { data } = await axios.post(`${BASE_URL}/mobileRoutes/getAllNotificationsByCustomerEmail`, {
-  //                 email: authenticatedUser?.email
-  //             })
-
-  //             // console.log(JSON.stringify(data?.response, null, 2));
-
-  //             setNotificationListData((prev) => ({ ...prev, loading: false, notificationData: data?.response, success: true, error: null }))
-
-  //         } catch (error) {
-  //             setNotificationListData((prev) => ({ ...prev, loading: false, notificationData: null, success: false, error: error }))
-  //             console.log("Error fetching notifications ", error)
-  //         }
-  //     }
-
-  //     fetchNotifications()
-
-  // }, [])
-
-  // console.log("notificationListData ", notificationListData)
-
-  // const socket = io("https://iqb-final.onrender.com", {
-  //     transports: ['websocket'],
-  // });
-
-  // const fetchNotifications = async () => {
-  //     try {
-
-  //         setNotificationListData((prev) => ({ ...prev, loading: true }))
-
-  //         const { data } = await axios.post(`${BASE_URL}/mobileRoutes/getAllNotificationsByCustomerEmail`, {
-  //             email: authenticatedUser?.email
-  //         });
-
-  //         // console.log("Data ",data)
-
-  //         setNotificationListData((prev) => ({
-  //             ...prev,
-  //             loading: false,
-  //             notificationData: data?.response || [],
-  //             success: true,
-  //             error: null
-  //         }));
-  //     } catch (error) {
-  //         setNotificationListData((prev) => ({
-  //             ...prev,
-  //             loading: false,
-  //             notificationData: [],
-  //             success: false,
-  //             error: error
-  //         }));
-  //         console.log("Error fetching notifications ", error);
-  //     }
-  // };
-
-  // useFocusEffect(
-  //     useCallback(() => {
-
-  //         fetchNotifications();
-
-  //         socket.emit("joinCustomerforNotifications", { salonId: authenticatedUser?.salonId, customerEmail: authenticatedUser?.email });
-
-  //         socket.on("receiveNotifications", (notificationData) => {
-
-  //             setNotificationListData((prev) => ({
-  //                 ...prev,
-  //                 loading: false,
-  //                 notificationData: notificationData,
-  //                 success: true,
-  //                 error: null
-  //             }));
-  //         })
-
-  //     }, [authenticatedUser])
-  // )
 
   useFocusEffect(
     useCallback(() => {
@@ -245,7 +165,7 @@ const notification = () => {
             fontFamily: "AirbnbCereal_W_XBd",
           }}
         >
-          Notification
+          {i18n.t("protected.notification.header")}
         </CustomText>
       </View>
 

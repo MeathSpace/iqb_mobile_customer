@@ -21,8 +21,11 @@ import CustomText from "../../components/CustomText";
 import { CheckIcon } from "../../constants/icons";
 import { useAuth } from "../../context/AuthContext";
 import { useGlobal } from "../../context/GlobalContext";
+import i18n from "../../src/localization/i18n";
 
 const singleJoinModal = () => {
+  const baseContent = i18n.t("protected.singleJoinModal");
+
   const { selectedServices, selectBarber, paymentSettingsData } =
     useLocalSearchParams();
 
@@ -157,133 +160,6 @@ const singleJoinModal = () => {
     (totalServicePriceAmount * advancePaymentPercent) / 100,
   );
 
-  // const fetchPaymentSheetParams = async () => {
-  //   const response = await fetch(
-  //     `${BASE_URL}/mobileRoutes/singleJoinQueuePaymentApi`,
-  //     {
-  //       method: "POST",
-  //       headers: {
-  //         "Content-Type": "application/json",
-  //       },
-  //       body: JSON.stringify({
-  //         //stripe forces minimum amount to be 50 less than that will cause payment failed error
-  //         totalAmount: advanceAmount,
-  //         currency: authenticatedUser?.isoCurrencyCode,
-  //         queueJoinData: {
-  //           salonId: authenticatedUser?.salonId,
-  //           name: authenticatedUser?.name,
-  //           customerEmail: authenticatedUser?.email,
-  //           singleJoinedQType: "Single-Join",
-  //           methodUsed: "App",
-  //           mobileCountryCode: authenticatedUser?.mobileCountryCode,
-  //           mobileNumber: authenticatedUser?.mobileNumber.toString(),
-  //           barberName: parsedSelectBarber?.name,
-  //           barberId: parsedSelectBarber?.barberId,
-  //           services: parsedSelectedServices,
-  //         },
-  //       }),
-  //     }
-  //   );
-
-  //   if (!response.ok) {
-  //     throw new Error("Failed to fetch payment params");
-  //   }
-
-  //   const data = await response.json();
-  //   const { paymentIntent, ephemeralKey, customer } = data;
-
-  //   if (!paymentIntent || !ephemeralKey || !customer) {
-  //     throw new Error("Invalid Stripe response");
-  //   }
-
-  //   return { paymentIntent, ephemeralKey, customer };
-  // };
-
-  // const openPaymentSheet = async () => {
-  //   try {
-  //     setLoading(true);
-
-  //     // 1️⃣ Fetch fresh Stripe params (NEW PaymentIntent every time)
-  //     const { paymentIntent, ephemeralKey, customer } =
-  //       await fetchPaymentSheetParams();
-
-  //     // 2️⃣ Initialize Payment Sheet
-  //     const initResult = await initPaymentSheet({
-  //       merchantDisplayName: authenticatedUser?.salonName || "IQBook",
-  //       customerId: customer,
-  //       customerEphemeralKeySecret: ephemeralKey,
-  //       paymentIntentClientSecret: paymentIntent,
-  //       allowsDelayedPaymentMethods: true,
-  //       defaultBillingDetails: {
-  //         name: authenticatedUser?.name,
-  //         email: authenticatedUser?.email,
-  //         phone:
-  //           authenticatedUser?.mobileCountryCode &&
-  //           authenticatedUser?.mobileNumber
-  //             ? `+${authenticatedUser.mobileCountryCode}${authenticatedUser.mobileNumber}`
-  //             : undefined,
-  //       },
-  //       returnURL: "iqbmobilecustomer://stripe-redirect",
-  //     });
-
-  //     if (initResult.error) {
-  //       throw initResult.error;
-  //     }
-
-  //     // 3️⃣ Present Payment Sheet
-  //     const presentResult = await presentPaymentSheet();
-
-  //     if (presentResult.error) {
-  //       Alert.alert(
-  //         presentResult.error.code || "Payment error",
-  //         presentResult.error.message
-  //       );
-  //       return;
-  //     }
-
-  //     await AsyncStorage.setItem(
-  //       "newNotification",
-  //       JSON.stringify({
-  //         email: authenticatedUser?.email,
-  //         value: true,
-  //       })
-  //     );
-
-  //     setNewNotification({
-  //       email: authenticatedUser?.email,
-  //       value: true,
-  //     });
-
-  //     setQueueJoinType({
-  //       single: false,
-  //       group: false,
-  //     });
-
-  //     setJoinPopupType({
-  //       barberSelect: false,
-  //       serviceSelect: false,
-  //     });
-
-  //     router.replace("/singleJoinSuccessPage");
-
-  //     //   router.replace({
-  //     //     pathname: "/appointmentSuccessPage",
-  //     //     params: {
-  //     //       booked: true,
-  //     //       edit: false,
-  //     //     },
-  //     //   });
-  //   } catch (err) {
-  //     console.log("Stripe error:", err);
-  //     Alert.alert(
-  //       "Payment failed",
-  //       err && err.message ? err.message : "Something went wrong"
-  //     );
-  //   } finally {
-  //     setLoading(false);
-  //   }
-  // };
-
   const fetchPaymentSheetParams = async () => {
     const response = await fetch(
       `${BASE_URL}/mobileRoutes/singleJoinQueuePaymentApi`,
@@ -400,275 +276,6 @@ const singleJoinModal = () => {
   };
 
   return (
-    // <Pressable
-    //   onPress={() => {
-    //     if (!singleJoinLoader) {
-    //       router.back();
-    //     }
-    //   }}
-    //   style={{
-    //     flex: 1,
-    //     backgroundColor: "rgba(0,0,0,0.5)",
-    //     justifyContent: "center",
-    //     alignItems: "center",
-    //   }}
-    // >
-    //   <Pressable
-    //     onPress={() => {}}
-    //     style={[
-    //       styles.modalContainer,
-    //       {
-    //         backgroundColor: colors.cardColor,
-    //         borderColor: colors.queueBorder,
-    //       },
-    //     ]}
-    //   >
-    //     <View style={styles.iconContainer}>
-    //       <CheckIcon
-    //         style={{
-    //           backgroundColor: colors.tabBackground,
-    //           padding: scale(3),
-    //           borderRadius: scale(50),
-    //         }}
-    //         size={scale(16)}
-    //         color={colors.text}
-    //       />
-    //       <CustomText style={styles.titleText}>Please Confirm</CustomText>
-    //     </View>
-
-    //     <View style={{ gap: verticalScale(5) }}>
-    //       <CustomSecondaryText style={styles.confirmText}>
-    //         Are you sure you want to proceed?
-    //       </CustomSecondaryText>
-
-    //       {/* Group barber name and pricing together in a styled container */}
-    //       <View
-    //         style={{
-    //           marginTop: verticalScale(5),
-    //           backgroundColor: colors.tabBackground, // Optional: subtle background to group
-    //           padding: scale(8),
-    //           borderRadius: scale(6),
-    //           gap: verticalScale(4),
-    //         }}
-    //       >
-    //         <CustomText
-    //           style={{
-    //             fontFamily: "AirbnbCereal_W_XBd",
-    //             fontSize: scale(14),
-    //           }}
-    //         >
-    //           {parsedSelectBarber?.name}
-    //         </CustomText>
-
-    //         <View
-    //           style={{
-    //             flexDirection: "row",
-    //             alignItems: "center",
-    //             gap: scale(6),
-    //           }}
-    //         >
-    //           <CustomText style={{ fontFamily: "AirbnbCereal_W_XBd" }}>
-    //             {authenticatedUser?.currency} {totalPrice.toFixed(2)}
-    //           </CustomText>
-    //           <CustomSecondaryText>
-    //             ( {totalServices} {totalServices === 1 ? "service" : "services"}{" "}
-    //             | {formatMinutesToHrMin(totalTime)} )
-    //           </CustomSecondaryText>
-    //         </View>
-    //       </View>
-
-    //       {paymentSettingsDataParse?.enabled ? (
-    //         <View
-    //           style={{
-    //             marginVertical: verticalScale(10),
-    //             backgroundColor: colors.background,
-    //             borderRadius: scale(8),
-    //             borderWidth: scale(1),
-    //             borderColor: "#2563eb",
-    //             padding: scale(12),
-    //             gap: verticalScale(8),
-    //           }}
-    //         >
-    //           <CustomText
-    //             style={{
-    //               fontFamily: "AirbnbCereal_W_Bd",
-    //               fontSize: scale(14),
-    //               color: "#2563eb",
-    //             }}
-    //           >
-    //             Payment Summary
-    //           </CustomText>
-
-    //           {/* Pay Now */}
-    //           <View
-    //             style={{
-    //               flexDirection: "row",
-    //               justifyContent: "space-between",
-    //               alignItems: "center",
-    //             }}
-    //           >
-    //             {/* Left */}
-    //             <View style={{ flex: 1, paddingRight: scale(8) }}>
-    //               <CustomText
-    //                 style={{
-    //                   fontFamily: "AirbnbCereal_W_Bd",
-    //                   fontSize: scale(14),
-    //                 }}
-    //               >
-    //                 Pay Now
-    //               </CustomText>
-    //               <CustomSecondaryText numberOfLines={2}>
-    //                 Advance payment to confirm booking
-    //               </CustomSecondaryText>
-    //             </View>
-
-    //             {/* Right */}
-    //             <CustomText
-    //               numberOfLines={1}
-    //               adjustsFontSizeToFit
-    //               style={{
-    //                 fontFamily: "AirbnbCereal_W_XBd",
-    //                 fontSize: scale(14),
-    //                 color: "#2563eb",
-    //                 flexShrink: 1,
-    //                 textAlign: "right",
-    //                 maxWidth: "45%",
-    //               }}
-    //             >
-    //               {authenticatedUser?.currency} {advanceAmount.toFixed(2)}
-    //             </CustomText>
-    //           </View>
-
-    //           {/* Divider */}
-    //           {paymentSettingsDataParse?.enabled && (
-    //             <View
-    //               style={{
-    //                 height: 1,
-    //                 backgroundColor: colors.cardBorder,
-    //               }}
-    //             />
-    //           )}
-
-    //           {/* Breakdown */}
-    //           {paymentSettingsDataParse?.enabled && (
-    //             <>
-    //               <View
-    //                 style={{
-    //                   flexDirection: "row",
-    //                   justifyContent: "space-between",
-    //                 }}
-    //               >
-    //                 <CustomSecondaryText>
-    //                   Advance ({paymentSettingsDataParse?.advancePaymentPercent}
-    //                   %)
-    //                 </CustomSecondaryText>
-    //                 <CustomSecondaryText>
-    //                   {authenticatedUser?.currency} {advanceAmount.toFixed(2)}
-    //                 </CustomSecondaryText>
-    //               </View>
-
-    //               <View
-    //                 style={{
-    //                   flexDirection: "row",
-    //                   justifyContent: "space-between",
-    //                 }}
-    //               >
-    //                 <CustomSecondaryText>
-    //                   Total service amount
-    //                 </CustomSecondaryText>
-    //                 <CustomSecondaryText>
-    //                   {authenticatedUser?.currency} {totalPrice.toFixed(2)}
-    //                 </CustomSecondaryText>
-    //               </View>
-
-    //               <View
-    //                 style={{
-    //                   flexDirection: "row",
-    //                   justifyContent: "space-between",
-    //                 }}
-    //               >
-    //                 <CustomSecondaryText>Pay at salon</CustomSecondaryText>
-    //                 <CustomSecondaryText>
-    //                   {authenticatedUser?.currency}{" "}
-    //                   {(totalPrice - advanceAmount).toFixed(2)}
-    //                 </CustomSecondaryText>
-    //               </View>
-    //             </>
-    //           )}
-    //         </View>
-    //       ) : null}
-    //     </View>
-
-    //     <View style={styles.buttonRow}>
-    //       <TouchableOpacity
-    //         onPress={() => {
-    //           if (!singleJoinLoader) {
-    //             router.back();
-    //           }
-    //         }}
-    //         style={[
-    //           styles.button,
-    //           {
-    //             // backgroundColor: '#ef4444'
-    //           },
-    //         ]}
-    //       >
-    //         <CustomText style={{ fontFamily: "AirbnbCereal_W_Bd" }}>
-    //           No
-    //         </CustomText>
-    //       </TouchableOpacity>
-    //       {paymentSettingsDataParse?.enabled ? (
-    //         <TouchableOpacity
-    //           onPress={openPaymentSheet}
-    //           disabled={loading}
-    //           style={[
-    //             styles.button,
-    //             {
-    //               backgroundColor: loading ? "#9ca3af" : "#2563eb",
-    //               opacity: loading ? 0.7 : 1,
-    //             },
-    //           ]}
-    //         >
-    //           {loading ? (
-    //             <ActivityIndicator color="#fff" />
-    //           ) : (
-    //             <CustomText
-    //               style={{
-    //                 color: "#fff",
-    //                 fontFamily: "AirbnbCereal_W_Bd",
-    //               }}
-    //             >
-    //               Checkout
-    //             </CustomText>
-    //           )}
-    //         </TouchableOpacity>
-    //       ) : (
-    //         <TouchableOpacity
-    //           // onPress={}
-    //           disabled={singleJoinLoader}
-    //           onPress={singleJoinPressed}
-    //           style={[
-    //             styles.button,
-    //             {
-    //               backgroundColor: colors.accentColor,
-    //             },
-    //           ]}
-    //         >
-    //           {singleJoinLoader ? (
-    //             <ActivityIndicator color={"#fff"} />
-    //           ) : (
-    //             <CustomText
-    //               style={{ color: "#fff", fontFamily: "AirbnbCereal_W_Bd" }}
-    //             >
-    //               Yes
-    //             </CustomText>
-    //           )}
-    //         </TouchableOpacity>
-    //       )}
-    //     </View>
-    //   </Pressable>
-    // </Pressable>
-
     <Pressable
       onPress={() => !singleJoinLoader && router.back()}
       style={{
@@ -726,7 +333,7 @@ const singleJoinModal = () => {
               textAlign: "center",
             }}
           >
-            Confirm Selection
+            {baseContent.header}
           </CustomText>
 
           <CustomSecondaryText
@@ -737,7 +344,7 @@ const singleJoinModal = () => {
               color: "#64748b",
             }}
           >
-            Are you sure you want to proceed?
+            {baseContent.subHeader}
           </CustomSecondaryText>
         </View>
 
@@ -760,7 +367,7 @@ const singleJoinModal = () => {
                 color: "#94a3b8",
               }}
             >
-              Selected Barber
+              {baseContent.selectedBarber}
             </CustomSecondaryText>
             <View
               style={{
@@ -779,7 +386,10 @@ const singleJoinModal = () => {
                   {parsedSelectBarber?.name}
                 </CustomText>
                 <CustomSecondaryText style={{ marginTop: verticalScale(2) }}>
-                  {totalServices} {totalServices === 1 ? "service" : "services"}{" "}
+                  {totalServices}{" "}
+                  {totalServices === 1
+                    ? baseContent.service
+                    : baseContent.services}{" "}
                   • {formatMinutesToHrMin(totalTime)}
                 </CustomSecondaryText>
               </View>
@@ -817,7 +427,7 @@ const singleJoinModal = () => {
                   marginBottom: verticalScale(16),
                 }}
               >
-                Payment Breakdown
+                {baseContent.paymentBreakdown}
               </CustomText>
 
               <View style={{ gap: verticalScale(10) }}>
@@ -828,7 +438,7 @@ const singleJoinModal = () => {
                   }}
                 >
                   <CustomSecondaryText style={{ fontSize: moderateScale(14) }}>
-                    Total Amount
+                    {baseContent.totalAmount}
                   </CustomSecondaryText>
                   <CustomText
                     style={{
@@ -858,12 +468,13 @@ const singleJoinModal = () => {
                         color: colors.accentColor,
                       }}
                     >
-                      Pay Now
+                      {baseContent.payNow}
                     </CustomText>
                     <CustomSecondaryText
                       style={{ fontSize: moderateScale(12) }}
                     >
-                      Deposit ({paymentSettingsDataParse?.advancePaymentPercent}
+                      {baseContent.deposit} (
+                      {paymentSettingsDataParse?.advancePaymentPercent}
                       %)
                     </CustomSecondaryText>
                   </View>
@@ -885,7 +496,7 @@ const singleJoinModal = () => {
                   }}
                 >
                   <CustomSecondaryText style={{ fontSize: moderateScale(14) }}>
-                    Pay at Salon
+                    {baseContent.payAtSalon}
                   </CustomSecondaryText>
                   <CustomText
                     style={{
@@ -937,7 +548,7 @@ const singleJoinModal = () => {
                     fontSize: moderateScale(16),
                   }}
                 >
-                  Proceed to Payment
+                  {baseContent.proceedToPayment}
                 </CustomText>
               )}
             </TouchableOpacity>
@@ -964,7 +575,7 @@ const singleJoinModal = () => {
                     fontSize: moderateScale(16),
                   }}
                 >
-                  Confirm Booking
+                  {baseContent.confirmBooking}
                 </CustomText>
               )}
             </TouchableOpacity>
@@ -985,7 +596,7 @@ const singleJoinModal = () => {
                 fontSize: moderateScale(15),
               }}
             >
-              Go Back
+              {baseContent.goBack}
             </CustomText>
           </TouchableOpacity>
         </View>

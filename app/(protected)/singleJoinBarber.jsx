@@ -22,8 +22,12 @@ import CustomText from "../../components/CustomText";
 import Skeleton from "../../components/Skeleton";
 import { ArrowLeftIcon, ProfileIcon } from "../../constants/icons";
 import { useAuth } from "../../context/AuthContext";
+import i18n from "../../src/localization/i18n"
 
 const SingleJoinBarber = () => {
+
+  const baseContent = i18n.t("protected.singleJoinBarber")
+
   // fetching payment settings
 
   const [paymentSettingsLoading, setPaymentSettingsLoading] = useState(false);
@@ -155,10 +159,10 @@ const SingleJoinBarber = () => {
               fontSize: scale(18),
             }}
           >
-            Single Join (
+            {baseContent.header} (
             {authenticatedUser?.salonType === "Barber Shop"
-              ? "Barbers"
-              : "Stylists"}{" "}
+              ? baseContent.barbers
+              : baseContent.stylists}{" "}
             )
           </CustomText>
         </View>
@@ -269,7 +273,7 @@ const SingleJoinBarber = () => {
               <ProfileIcon size={scale(32)} color={colors.accentColor} />
             </View>
             <CustomText style={styles.cardTitle}>
-              No{" "}
+              {baseContent.no}{" "}
               {authenticatedUser?.salonType === "Barber Shop"
                 ? "Barbers"
                 : "Stylists"}{" "}
@@ -277,11 +281,11 @@ const SingleJoinBarber = () => {
             <CustomText
               style={[styles.cardSubtitle, { color: colors.secondaryText }]}
             >
-              Unfortunately, there are no available{" "}
+              {baseContent.info1}{" "}
               {authenticatedUser?.salonType === "Barber Shop"
-                ? "barbers"
-                : "stylists"}{" "}
-              for the selected services at the moment.
+                ? baseContent.barbers
+                : baseContent.stylists}{" "}
+              {baseContent.info2}
             </CustomText>
             <TouchableOpacity
               onPress={() => router.back()}
@@ -292,7 +296,7 @@ const SingleJoinBarber = () => {
               activeOpacity={0.85}
             >
               <CustomText style={styles.bookButtonText}>
-                Choose Services Again
+                {baseContent.chooseServiceAgain}
               </CustomText>
             </TouchableOpacity>
           </View>
@@ -318,7 +322,7 @@ const SingleJoinBarber = () => {
               {authenticatedUser?.currency} {totalPrice.toFixed(2)}
             </CustomText>
             <CustomSecondaryText>
-              {totalServices} {totalServices === 1 ? "service" : "services"} |{" "}
+              {totalServices} {totalServices === 1 ? baseContent.service : baseContent.services} |{" "}
               {formatMinutesToHrMin(totalTime)}
             </CustomSecondaryText>
           </View>
@@ -346,7 +350,7 @@ const SingleJoinBarber = () => {
             style={[styles.queueButton, {backgroundColor: colors.accentColor }]}
             activeOpacity={0.85}
           >
-            <CustomText style={styles.queueButtonText}>Continue</CustomText>
+            <CustomText style={styles.queueButtonText}>{baseContent.continue}</CustomText>
           </TouchableOpacity>
         </View>
       ) : null}

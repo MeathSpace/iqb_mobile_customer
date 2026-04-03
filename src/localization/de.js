@@ -479,6 +479,200 @@ export default {
           },
         },
       },
+      editProfile: {
+        header: "Konto verwalten",
+
+        fullname: {
+          label: "Vollständiger Name",
+          placeholder: "Geben Sie Ihren vollständigen Namen ein",
+        },
+
+        gender: {
+          label: "Geschlecht",
+          male: "Männlich",
+          female: "Weiblich",
+          other: "Andere",
+        },
+
+        mobileNumber: {
+          label: "Mobilnummer",
+        },
+
+        dateOfBirth: {
+          label: "Geburtsdatum (optional)",
+          placeholder: "TT/MM/JJ",
+        },
+
+        modal: {
+          closeText: "Schließen",
+          openText: "Öffnen",
+        },
+
+        editAndSave: "Bearbeiten & Speichern",
+      },
+    },
+    notification: {
+      header: "Benachrichtigungen",
+    },
+    dashboard: {
+      card: {
+        title:
+          "Treten Sie der virtuellen Warteschlange bei oder buchen Sie einen Termin.",
+        joinQueue: "Warteschlange beitreten",
+        book: "Buchen",
+        cancel: "Abbrechen",
+      },
+
+      hint: {
+        label: "Saloninformationen",
+        readMore: "Mehr lesen",
+        readLess: "Weniger anzeigen",
+        newUpdate: "Neue Aktualisierung",
+        latest: "Neueste:",
+        update: "Aktualisierung",
+      },
+
+      status: {
+        label: "Live-Warteschlangenstatus",
+        system: "System",
+        nextIn: "Als Nächstes",
+        onDuty: "Im Dienst",
+        inQueue: "In der Warteschlange",
+        online: "Online",
+        offline: "Offline",
+      },
+
+      barber: {
+        barbers: "Barbiere",
+        stylists: "Stylisten",
+        onDuty: "Im Dienst",
+        no: "Keine",
+        available: "verfügbar",
+        seeAll: "Alle anzeigen",
+        online: "Online",
+        offline: "Offline",
+      },
+    },
+    queuelist: {
+      header: "Live-Warteschlange",
+      barber: "FRISEUR",
+      stylist: "STYLIST",
+      customer: "KUNDE",
+      posWait: "POS / WARTEZEIT",
+
+      joinQueue: "Warteschlange beitreten",
+
+      empty: {
+        heading: "Die Warteschlange ist leer",
+        subHeading:
+          "Derzeit befindet sich niemand in der Warteschlange. Seien Sie der Erste!",
+        joinQueue: "Warteschlange beitreten",
+      },
+    },
+    joinpopup: {
+      header: "Warteschlange beitreten",
+
+      singleJoin: {
+        label: "Einzeln beitreten",
+        subHeader:
+          "Treten Sie der Warteschlange als einzelne Person bei. Diese Option ist für Personen gedacht, die alleine auf Salonservices warten.",
+        buttonText: "Einzeln beitreten",
+      },
+
+      groupJoin: {
+        label: "Gruppe beitreten",
+        subHeader:
+          "Treten Sie der Warteschlange mit mehreren Personen gleichzeitig bei. Ideal für Freunde oder Familienmitglieder, die den Salon gemeinsam besuchen.",
+        buttonText: "Gruppe beitreten",
+      },
+    },
+    joinQueueTypeModal: {
+      header: "Option auswählen",
+      barber: "Friseur",
+      services: "Dienstleistungen",
+    },
+    singleJoinServicesBarber: {
+      header: "Einzeln beitreten",
+
+      barbers: "Barbiere",
+      stylists: "Stylisten",
+
+      no: "Keine",
+
+      info1: "Leider sind derzeit keine",
+      info2: "für die ausgewählten Dienstleistungen verfügbar.",
+
+      chooseServicesAgain: "Dienstleistungen erneut auswählen",
+      continue: "Weiter",
+    },
+    singleJoinBarberServices: {
+      header: "Einzeln beitreten (Dienstleistungen)",
+
+      searchInput: {
+        placeholder: "Dienstleistungen nach Kategorie suchen",
+      },
+
+      service: "Dienstleistung",
+      services: "Dienstleistungen",
+
+      continue: "Weiter",
+    },
+
+    singleJoin: {
+      header: "Einzeln beitreten (Dienstleistungen)",
+
+      searchInput: {
+        placeholder: "Dienstleistungen nach Kategorie suchen",
+      },
+
+      service: "Dienstleistung",
+      services: "Dienstleistungen",
+
+      continue: "Weiter",
+    },
+    singleJoinBarber: {
+      header: "Einzeln beitreten",
+
+      barbers: "Barbiere",
+      stylists: "Stylisten",
+
+      no: "Keine",
+
+      info1: "Leider sind derzeit keine",
+      info2: "für die ausgewählten Dienstleistungen verfügbar.",
+
+      chooseServiceAgain: "Dienstleistungen erneut auswählen",
+      continue: "Weiter",
+      service: "Dienstleistung",
+      services: "Dienstleistungen",
+    },
+    singleJoinModal: {
+      header: "Auswahl bestätigen",
+      subHeader: "Möchten Sie wirklich fortfahren?",
+
+      selectedBarber: "Ausgewählter Friseur",
+
+      service: "Dienstleistung",
+      services: "Dienstleistungen",
+
+      paymentBreakdown: "Zahlungsübersicht",
+      totalAmount: "Gesamtbetrag",
+
+      payNow: "Jetzt bezahlen",
+      deposit: "Anzahlung",
+      payAtSalon: "Im Salon bezahlen",
+
+      proceedToPayment: "Zur Zahlung fortfahren",
+      confirmBooking: "Buchung bestätigen",
+      goBack: "Zurück",
+    },
+    singleJoinSuccessPage: {
+      header: "Zur Warteschlange hinzugefügt!",
+      subHeader:
+        "Sie haben sich erfolgreich in die Warteschlange eingereiht. Sie werden benachrichtigt, wenn Sie an der Reihe sind.",
+
+      goToLive: "Zur Live-Warteschlange",
+      goBackHome: "Zurück zur Startseite",
     },
   },
 };
