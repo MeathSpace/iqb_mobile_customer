@@ -22,6 +22,9 @@ import { ErrorIcon } from "../../constants/icons";
 import i18n from "../../src/localization/i18n";
 
 const passwordVerification = () => {
+
+  const baseContent = i18n.t("auth.passwordVerification")
+
   const { colors } = useTheme();
   const { email, verificationCodeValue } = useLocalSearchParams();
 
@@ -31,10 +34,6 @@ const passwordVerification = () => {
     verificationCodeValue,
   );
   const [verificationCodeLoading, setVerificationCodeLoading] = useState(false);
-
-  // console.log("Email ", email)
-  // console.log("currentVerificationOtp Code ", currentVerificationOtp)
-
   const [verificationTime, setVerificationTime] = useState(0);
   const [isCooldown, setIsCooldown] = useState(false);
   const router = useRouter();
@@ -57,7 +56,7 @@ const passwordVerification = () => {
 
   const resendVerification = async () => {
     if (isCooldown) {
-      Toast.error("Please wait before requesting another code.");
+      Toast.error(baseContent.errorStatesAndApi.waitRequestCode);
       return;
     }
 
@@ -69,24 +68,24 @@ const passwordVerification = () => {
 
       setVerificationCodeLoading(false);
       setCurrentVerificationOtp(data?.response?.verificationCode);
-      console.log("Resend verification Code ", data?.response);
+      console.log(baseContent.errorStatesAndApi.resendVerifyCode, data?.response);
 
       // ✅ Start cooldown here
       setIsCooldown(true);
       setVerificationTime(30);
     } catch (error) {
       setVerificationCodeLoading(false);
-      console.log("Verification Otp error ", error);
+      console.log(baseContent.errorStatesAndApi.verificationOtpError, error);
       Toast.error(error?.response?.data?.message);
     }
   };
 
   const continueHandler = () => {
     if (!verificationCode) {
-      setVerificationCodeError("Verification code is required");
+      setVerificationCodeError(baseContent.errorStatesAndApi.verificationCodeRequired);
       return;
     } else if (Number(verificationCode) !== Number(currentVerificationOtp)) {
-      setVerificationCodeError("Verification code does not match");
+      setVerificationCodeError(baseContent.errorStatesAndApi.verificationCodeNotMatched);
       return;
     }
 
@@ -108,25 +107,23 @@ const passwordVerification = () => {
         <View style={{ gap: verticalScale(20) }}>
           <View>
             <CustomText style={styles.heading}>
-              {i18n.t("auth.passwordVerification.header")}
+              {baseContent.header}
             </CustomText>
 
             <CustomSecondaryText>
-              {i18n.t("auth.passwordVerification.subHeader")}
+              {baseContent.subHeader}
             </CustomSecondaryText>
           </View>
 
           <View style={styles.inputWrapper}>
             <CustomText>
-              {i18n.t("auth.passwordVerification.verificationCode.label")}
+              {baseContent.verificationCode.label}
             </CustomText>
 
             <TextInput
               editable
               keyboardType="numeric"
-              placeholder={i18n.t(
-                "auth.passwordVerification.verificationCode.placeholder",
-              )}
+              placeholder={baseContent.verificationCode.placeholder}
               placeholderTextColor={colors.secondaryText}
               style={[
                 false ? styles.inputFielderror : styles.inputField,
@@ -170,7 +167,7 @@ const passwordVerification = () => {
             activeOpacity={0.85}
           >
             <CustomText style={styles.signinButtonText}>
-              {i18n.t("auth.passwordVerification.verifyAndContinue")}
+              {baseContent.verifyAndContinue}
             </CustomText>
           </TouchableOpacity>
 
@@ -182,7 +179,7 @@ const passwordVerification = () => {
               marginHorizontal: "auto",
             }}
           >
-            <CustomSecondaryText>{i18n.t("auth.passwordVerification.didntReceiveCode")} </CustomSecondaryText>
+            <CustomSecondaryText>{baseContent.didntReceiveCode} </CustomSecondaryText>
 
             <Pressable
               onPress={resendVerification}
@@ -196,7 +193,7 @@ const passwordVerification = () => {
                     ? i18n.t("auth.passwordVerification.waitMessage", {
                         time: verificationTime,
                       })
-                    : i18n.t("auth.passwordVerification.resend")}
+                    : baseContent.resend}
                 </CustomText>
               )}
             </Pressable>

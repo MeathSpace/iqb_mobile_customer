@@ -25,6 +25,8 @@ import { useAuth } from "../../context/AuthContext";
 import i18n from "../../src/localization/i18n";
 
 const verification = () => {
+  const baseContent = i18n.t("auth.verification");
+
   const {
     email,
     fullName,
@@ -81,10 +83,10 @@ const verification = () => {
   const signupHandler = async () => {
     try {
       if (!verificationCode) {
-        setVerificationCodeError("Verification code is required");
+        setVerificationCodeError(baseContent.errorStatesAndApi.verificationCodeRequired);
         return;
       } else if (Number(verificationCode) !== Number(currentVerificationOtp)) {
-        setVerificationCodeError("Verification code does not match");
+        setVerificationCodeError(baseContent.errorStatesAndApi.verificationCodeNotMatch);
         return;
       }
 
@@ -204,7 +206,7 @@ const verification = () => {
 
   const resendVerification = async () => {
     if (isCooldown) {
-      Toast.error("Please wait before requesting another code.");
+      Toast.error(baseContent.errorStatesAndApi.coolDownRequired);
       return;
     }
 
@@ -220,14 +222,14 @@ const verification = () => {
       );
       setVerificationCodeLoading(false);
       setCurrentVerificationOtp(data?.response);
-      console.log("Resend verification Code ", data?.response);
+      console.log(baseContent.errorStatesAndApi.resendVerificationCode, data?.response);
 
       // ✅ Start cooldown here
       setIsCooldown(true);
       setVerificationTime(30);
     } catch (error) {
       setVerificationCodeLoading(false);
-      console.log("Verification Otp error ", error);
+      console.log(baseContent.errorStatesAndApi.verificationOtpError, error);
       Toast.error(error?.response?.data?.message);
     }
   };
@@ -247,26 +249,18 @@ const verification = () => {
           />
 
           <View>
-            <CustomText style={styles.heading}>
-              {i18n.t("auth.verification.header")}
-            </CustomText>
+            <CustomText style={styles.heading}>{baseContent.header}</CustomText>
 
-            <CustomSecondaryText>
-              {i18n.t("auth.verification.subHeader")}
-            </CustomSecondaryText>
+            <CustomSecondaryText>{baseContent.subHeader}</CustomSecondaryText>
           </View>
 
           <View style={styles.inputWrapper}>
-            <CustomText>
-              {i18n.t("auth.verification.verificationCode.label")}
-            </CustomText>
+            <CustomText>{baseContent.verificationCode.label}</CustomText>
 
             <TextInput
               editable
               keyboardType="numeric"
-              placeholder={i18n.t(
-                "auth.verification.verificationCode.placeholder",
-              )}
+              placeholder={baseContent.verificationCode.placeholder}
               placeholderTextColor={colors.secondaryText}
               style={[
                 false ? styles.inputFielderror : styles.inputField,
@@ -314,7 +308,7 @@ const verification = () => {
               <ActivityIndicator size="small" color="#fff" />
             ) : (
               <CustomText style={styles.signinButtonText}>
-                {i18n.t("auth.verification.verifyAndCreate")}
+                {baseContent.verifyAndCreate}
               </CustomText>
             )}
           </TouchableOpacity>
@@ -328,7 +322,7 @@ const verification = () => {
             }}
           >
             <CustomSecondaryText>
-              {i18n.t("auth.verification.didntReceiveCode")}{" "}
+              {baseContent.didntReceiveCode}{" "}
             </CustomSecondaryText>
 
             <Pressable
@@ -343,7 +337,7 @@ const verification = () => {
                     ? i18n.t("auth.verification.waitMessage", {
                         time: verificationTime,
                       })
-                    : i18n.t("auth.verification.resend")}
+                    : baseContent.resend}
                 </CustomText>
               )}
             </Pressable>

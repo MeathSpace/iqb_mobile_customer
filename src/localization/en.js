@@ -25,6 +25,15 @@ export default {
       dontHaveAccount: "Don't have an account ?",
       or: "or",
       signup: "Sign up",
+
+      errorStatesAndApi: {
+        emailRequired: "Email is required",
+        invalidEmailFormat: "Invalid email format",
+        passwordRequired: "Password is required",
+        passwordLeastCharecter: "Password must be at least 8 characters",
+        passwordMostCharecter: "Password must be at most 20 characters",
+        appleSigninFailed: "Apple Signin failed, try again.",
+      },
     },
     signup: {
       email: { label: "Email", placeholder: "Enter your email" },
@@ -35,12 +44,27 @@ export default {
       alreadyMember: "Already a member ?",
       or: "or",
       logIn: "Log In",
+
+      errorStatesAndApi: {
+        emailRequired: "Email is required",
+        invalidEmailFormat: "Invalid email format",
+        passwordRequired: "Password is required",
+        passwordLeastCharecter: "Password must be at least 8 characters",
+        passwordMostCharecter: "Password must be at most 20 characters",
+        retreiveEmailError: "We couldn't retrieve your email from Apple",
+      },
     },
     forgotPassword: {
       header: "What's your email ?",
       subHeader: "Enter your email address to reset your password.",
       email: { label: "Email", placeholder: "Enter your email" },
       continue: "Continue",
+
+      errorStatesAndApi: {
+        emailRequired: "Email is required",
+        invalidEmailFormat: "Invalid email format",
+        forgetPasswordError: "Error in forget password ",
+      },
     },
     passwordVerification: {
       header: "You're all set!",
@@ -53,7 +77,38 @@ export default {
       didntReceiveCode: "Didn't receive the code ?",
       resend: "Resend",
       waitMessage: "Wait {{time}}s",
+
+      errorStatesAndApi: {
+        waitRequestCode: "Please wait before requesting another code.",
+        resendVerifyCode: "Resend verification Code ",
+        verificationOtpError: "Verification Otp error ",
+        verificationCodeRequired: "Verification code is required",
+        verificationCodeNotMatched: "Verification code does not match",
+      },
     },
+
+    // I forget to do this page
+    forgetPasswordConfirmation: {
+      header: "You're all set!",
+      subHeader: "Set your password for log in.",
+      passwordInput: {
+        label: "Password",
+        placeholder: "Enter your password",
+      },
+      confirmPasswordInput: {
+        label: "Confirm password",
+        placeholder: "Enter your confirm password",
+      },
+      reset: "Reset",
+      errorStatesAndApi: {
+        passwordRequired: "Password is required",
+        passwordLeastCharecter: "Password must be at least 8 characters",
+        passwordMostCharecter: "Password must be at most 20 characters",
+        confirmPasswordRequired: "Confirm password is required",
+        passwordsNotMatch: "Passwords do not match",
+      },
+    },
+
     personalInfo: {
       header: "It's time to create a profile !",
       subHeader: "Tell us little more about yourself",
@@ -79,6 +134,24 @@ export default {
         openText: "open",
       },
       saveAndNext: "Save & Next",
+
+      errorStatesAndApi: {
+        invalidPhoneNumber: "Invalid phone number",
+        fullNameRequired: "Full name is required",
+        fullNameLeastCharecter: "Full name must be at least 2 characters",
+        fullNameMostCharecter: "Full name must be at most 20 characters",
+        phoneNumberRequired: "Phone number is required",
+      },
+
+      alertBox: {
+        alertOne: {
+          header: "Confirm",
+          subHeader:
+            "If you go back now, your signup progress will be lost. Are you sure you want to exit ?",
+          cancel: "Cancel",
+          ok: "Ok",
+        },
+      },
     },
     verification: {
       header: "You're all set!",
@@ -91,6 +164,13 @@ export default {
       didntReceiveCode: "Didn't receive the code ?",
       resend: "Resend",
       waitMessage: "Wait {{time}}s",
+      errorStatesAndApi: {
+        verificationCodeRequired: "Verification code is required",
+        verificationCodeNotMatch: "Verification code does not match",
+        coolDownRequired: "Please wait before requesting another code.",
+        resendVerificationCode: "Resend verification Code ",
+        verificationOtpError: "Verification Otp error ",
+      },
     },
   },
 
@@ -109,6 +189,26 @@ export default {
       socialLinks: "Social links",
       exploreAll: "Explore all",
       NoTabAvailable: "No {{selectedTab}} available",
+      details: "Details",
+      services: "Services",
+      barbers: "Barbers",
+      stylists: "Stylists",
+      permissionDeniedError: "Permission denied",
+
+      alertBox: {
+        alertOne: {
+          header: "Permission Denied",
+          subHeader: "Location access is required to show your position.",
+        },
+        alertTwo: {
+          header: "Success",
+          subHeader: "Successfully added to favourites",
+          error: {
+            header: "Error",
+            subHeader: "Something went wrong",
+          },
+        },
+      },
     },
     customTabView: {
       header: "Browse Salons",
@@ -135,12 +235,67 @@ export default {
         logout: "Log Out",
       },
     },
+    editProfile: {
+      header: "Manage Account",
+      fullname: {
+        label: "Full Name",
+        placeholder: "Enter your full name",
+      },
+      gender: {
+        label: "Gender",
+        male: "Male",
+        female: "Female",
+        other: "Other",
+      },
+      mobileNumber: {
+        label: "Mobile Number",
+      },
+      dateOfBirth: {
+        label: "Date of Birth (Optional)",
+        placeholder: "DD/MM/YY",
+      },
+      modal: {
+        closeText: "close",
+        openText: "open",
+      },
+      editAndSave: "Edit & Save",
+
+      errorStatesAndApi: {
+        invalidPhoneNumber: "Invalid phone number",
+        fullNameRequired: "Full name is required",
+        fullNameLeastCharecter: "Full name must be at least 2 characters",
+        fullNameMostCharecter: "Full name must be at most 20 characters",
+        phoneNumberRequired: "Phone number is required",
+        dateOfBirthRequired: "Date of birth is required"
+      },
+
+      profileUpdateSuccess: "Profile updated successfully",
+      pickImageAlertGranted: "Sorry, we need media library permissions to make this work!",
+      mimeNotInclude: "Invalid File Type. Only Webp, JPEG, JPG, and PNG images are allowed",
+      imageUploadSuccess: "Image uploaded successfully",
+
+    },
+    connectSalon: {
+      header: "Are you sure you want to disconnect ?",
+      changeSalon: "Change Salon",
+      alertBox: {
+        header: "Warning",
+        ok: "OK",
+      },
+    },
     myFavourites: {
       header: "My Favorites",
       error: {
         header: "No Favourite",
         subHeader: "You don't have any favourite salon",
       },
+      alertBox: {
+        header: "Remove Favourite Salon",
+        subHeader: "Are you sure you want to remove this salon from your favourites ?",
+        cancel: "Cancel",
+        remove: "Yes, Remove"
+      },
+      somethingWentWrong: "Something went wrong"
     },
     helpAndSupport: {
       header: "Help & Support",
@@ -155,6 +310,21 @@ export default {
       submit: "Submit",
       emailUs: "Email Us :",
       email: "support@iqbook.io",
+
+      errorStatesAndApi: {
+        subjectRequired: "Subject is required",
+        bodyRequired: "Body is required"
+      },
+
+      alertBox: {
+        header: "Success",
+        subHeader: "Email has been sent successfully to admin.",
+        ok: "Ok",
+        error: {
+          header: "Error",
+          subHeader: "Something went wrong. Please try again later."
+        }
+      }
     },
     about: {
       index: {
@@ -452,31 +622,6 @@ export default {
           },
         },
       },
-      editProfile: {
-        header: "Manage Account",
-        fullname: {
-          label: "Full Name",
-          placeholder: "Enter your full name",
-        },
-        gender: {
-          label: "Gender",
-          male: "Male",
-          female: "Female",
-          other: "Other",
-        },
-        mobileNumber: {
-          label: "Mobile Number",
-        },
-        dateOfBirth: {
-          label: "Date of Birth (Optional)",
-          placeholder: "DD/MM/YY",
-        },
-        modal: {
-          closeText: "close",
-          openText: "open",
-        },
-        editAndSave: "Edit & Save",
-      },
     },
     notification: {
       header: "Notification",
@@ -710,7 +855,7 @@ export default {
       services: "services",
       service: "service",
       upcoming: "Upcoming",
-      past: "Past"
+      past: "Past",
     },
     appointmentCalender: {
       header: "Book Appointment",

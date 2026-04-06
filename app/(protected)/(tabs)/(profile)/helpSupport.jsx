@@ -23,6 +23,9 @@ import { useAuth } from "../../../../context/AuthContext";
 import i18n from "../../../../src/localization/i18n"
 
 const helpSupport = () => {
+
+  const baseContent = i18n.t("protected.helpAndSupport")
+
   const router = useRouter();
   const { colors } = useTheme();
 
@@ -39,12 +42,12 @@ const helpSupport = () => {
   const sendCustomerSupportMail = async () => {
     try {
       if (!subject) {
-        setSubjectError("Subject is required");
+        setSubjectError(baseContent.errorStatesAndApi.subjectRequired);
         return;
       }
 
       if (!body) {
-        setBodyError("Body is required");
+        setBodyError(baseContent.errorStatesAndApi.bodyRequired);
         return;
       }
 
@@ -64,11 +67,11 @@ const helpSupport = () => {
 
       // Show success Alert
       Alert.alert(
-        "Success",
-        "Email has been sent successfully to admin.",
+        baseContent.alertBox.header,
+        baseContent.alertBox.subHeader,
         [
           {
-            text: "OK",
+            text: baseContent.alertBox.ok,
             onPress: () => router.back(), // navigate back after user acknowledges
           },
         ],
@@ -80,9 +83,9 @@ const helpSupport = () => {
 
       // Show error Alert
       Alert.alert(
-        "Error",
+        baseContent.alertBox.error.header,
         error?.response?.data?.message ||
-          "Something went wrong. Please try again later.",
+          baseContent.alertBox.error.subHeader,
       );
     }
   };
@@ -123,17 +126,17 @@ const helpSupport = () => {
             },
           ]}
         >
-          <CustomText style={styles.title}>{i18n.t("protected.helpAndSupport.header")}</CustomText>
+          <CustomText style={styles.title}>{baseContent.header}</CustomText>
 
           <CustomText
             style={[styles.description, { color: colors.secondaryText }]}
           >
-            {i18n.t("protected.helpAndSupport.subHeader")}
+            {baseContent.subHeader}
           </CustomText>
 
           <TextInput
             editable
-            placeholder={i18n.t("protected.helpAndSupport.title.placeholder")}
+            placeholder={baseContent.title.placeholder}
             placeholderTextColor="gray"
             style={[
               styles.inputField,
@@ -190,7 +193,7 @@ const helpSupport = () => {
             ]}
             multiline
             placeholderTextColor="gray"
-            placeholder={i18n.t("protected.helpAndSupport.body.placeholder")}
+            placeholder={baseContent.body.placeholder}
             value={body}
 
             onChangeText={(text) => {
@@ -230,7 +233,7 @@ const helpSupport = () => {
             {sendMailLoading ? (
               <ActivityIndicator size="small" color="#fff" />
             ) : (
-              <CustomText style={styles.queueButtonText}>{i18n.t("protected.helpAndSupport.submit")}</CustomText>
+              <CustomText style={styles.queueButtonText}>{baseContent.submit}</CustomText>
             )}
           </TouchableOpacity>
 
@@ -240,9 +243,9 @@ const helpSupport = () => {
             }}
           >
             <CustomText style={styles.contactText}>
-              {i18n.t("protected.helpAndSupport.emailUs")}{" "}
+              {baseContent.emailUs}{" "}
               <CustomText style={[styles.phoneNumber, { color: colors.accentColor}]}>
-                {i18n.t("protected.helpAndSupport.email")}
+                {baseContent.email}
               </CustomText>
             </CustomText>
           </Pressable>

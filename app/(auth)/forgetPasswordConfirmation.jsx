@@ -19,8 +19,11 @@ import CustomSecondaryText from "../../components/CustomSecondaryText";
 import CustomText from "../../components/CustomText";
 import CustomView from "../../components/CustomView";
 import { ErrorIcon, EyeIcon, EyeOffIcon } from "../../constants/icons";
+import i18n from "../../src/localization/i18n";
 
 const forgetPasswordConfirmation = () => {
+  const baseContent = i18n.t("auth.forgetPasswordConfirmation");
+
   const { colors } = useTheme();
   const { email } = useLocalSearchParams();
 
@@ -36,21 +39,25 @@ const forgetPasswordConfirmation = () => {
   const resetHandler = async () => {
     try {
       if (!password) {
-        setPasswordError("Password is required");
+        setPasswordError(baseContent.errorStatesAndApi.passwordRequired);
         return;
       } else if (password.length < 8) {
-        setPasswordError("Password must be at least 8 characters");
+        setPasswordError(baseContent.errorStatesAndApi.passwordLeastCharecter);
         return;
       } else if (password.length > 20) {
-        setPasswordError("Password must be at most 20 characters");
+        setPasswordError(baseContent.errorStatesAndApi.passwordMostCharecter);
         return;
       }
 
       if (!confirmPassword) {
-        setConfirmPasswordError("Confirm password is required");
+        setConfirmPasswordError(
+          baseContent.errorStatesAndApi.confirmPasswordRequired,
+        );
         return;
       } else if (password !== confirmPassword) {
-        setConfirmPasswordError("Passwords do not match");
+        setConfirmPasswordError(
+          baseContent.errorStatesAndApi.passwordsNotMatch,
+        );
         return;
       }
 
@@ -81,15 +88,13 @@ const forgetPasswordConfirmation = () => {
       <CustomView style={{ justifyContent: "space-between" }}>
         <View style={{ gap: verticalScale(20) }}>
           <View>
-            <CustomText style={styles.heading}>You're all set!</CustomText>
+            <CustomText style={styles.heading}>{baseContent.header}</CustomText>
 
-            <CustomSecondaryText>
-              Set your password for log in.
-            </CustomSecondaryText>
+            <CustomSecondaryText>{baseContent.subHeader}</CustomSecondaryText>
           </View>
 
           <View style={styles.inputWrapper}>
-            <CustomText>Password</CustomText>
+            <CustomText>{baseContent.passwordInput.label}</CustomText>
 
             <View
               style={[
@@ -103,7 +108,7 @@ const forgetPasswordConfirmation = () => {
             >
               <TextInput
                 editable
-                placeholder="Enter your password"
+                placeholder={baseContent.passwordInput.placeholder}
                 placeholderTextColor={colors.secondaryText}
                 style={[
                   false ? styles.inputFielderror : styles.inputField,
@@ -149,7 +154,7 @@ const forgetPasswordConfirmation = () => {
           </View>
 
           <View style={styles.inputWrapper}>
-            <CustomText>Confirm password</CustomText>
+            <CustomText>{baseContent.confirmPasswordInput.label}</CustomText>
 
             <View
               style={[
@@ -163,7 +168,7 @@ const forgetPasswordConfirmation = () => {
             >
               <TextInput
                 editable
-                placeholder="Enter your confirm password"
+                placeholder={baseContent.confirmPasswordInput.placeholder}
                 placeholderTextColor={colors.secondaryText}
                 style={[
                   false ? styles.inputFielderror : styles.inputField,
@@ -218,7 +223,9 @@ const forgetPasswordConfirmation = () => {
           {resetLoader ? (
             <ActivityIndicator size="small" color="#fff" />
           ) : (
-            <CustomText style={styles.signupButtonText}>Reset</CustomText>
+            <CustomText style={styles.signupButtonText}>
+              {baseContent.reset}
+            </CustomText>
           )}
         </TouchableOpacity>
       </CustomView>

@@ -31,6 +31,9 @@ import { useGlobal } from "../../../../context/GlobalContext";
 import i18n from "../../../../src/localization/i18n"
 
 const index = () => {
+
+  const baseContent = i18n.t("protected.profile")
+
   const { colors } = useTheme();
   const { signOut } = useClerk();
   const { isSignedIn } = useUser();
@@ -51,7 +54,7 @@ const index = () => {
 
   const profileOptions = [
     {
-      label: i18n.t("protected.profile.options.favorites"),
+      label: baseContent.options.favorites,
       icon: <HeartOutlineIcon color={colors.accentColor} />,
       lightBg: "#fee2e2",
       darkBg: "#7f1d1d33",
@@ -61,7 +64,7 @@ const index = () => {
       display: true,
     },
     {
-      label: i18n.t("protected.profile.options.changeSalon"),
+      label: baseContent.options.changeSalon,
       icon: <SalonIcon color={colors.accentColor} />,
       lightBg: "#ede9fe",
       darkBg: "#5b21b633",
@@ -71,7 +74,7 @@ const index = () => {
       display: authenticatedUser?.salonId ? true : false,
     },
     {
-      label: i18n.t("protected.profile.options.helpAndSupport"),
+      label: baseContent.options.helpAndSupport,
       icon: <HelpIcon color={colors.accentColor} />,
       lightBg: "#d1fae5",
       darkBg: "#065f4633",
@@ -81,7 +84,7 @@ const index = () => {
       display: true,
     },
     {
-      label: i18n.t("protected.profile.options.about"),
+      label: baseContent.options.about,
       icon: <AboutIcon color={colors.accentColor} />,
       lightBg: "#e0f2fe",
       darkBg: "#1e3a8a33",
@@ -121,12 +124,12 @@ const index = () => {
 
   const deleteHandler = () => {
     Alert.alert(
-      i18n.t("protected.profile.options.deleteAccount.alert.header"),
-      i18n.t("protected.profile.options.deleteAccount.alert.subHeader"),
+      baseContent.options.deleteAccount.alert.header,
+      baseContent.options.deleteAccount.alert.subHeader,
       [
-        { text: i18n.t("protected.profile.options.deleteAccount.alert.cancel"), style: "cancel" },
+        { text: baseContent.options.deleteAccount.alert.cancel, style: "cancel" },
         {
-          text: i18n.t("protected.profile.options.deleteAccount.alert.delete"),
+          text: baseContent.options.deleteAccount.alert.delete,
           style: "destructive",
           onPress: handleDeleteConfirmed,
         },
@@ -172,7 +175,7 @@ const index = () => {
         <CustomText
           style={{ fontSize: scale(18), fontFamily: "AirbnbCereal_W_XBd" }}
         >
-          {i18n.t("protected.profile.heading")}
+          {baseContent.heading}
         </CustomText>
 
         {/* Right section - Notification bell */}
@@ -201,11 +204,6 @@ const index = () => {
             size={moderateScale(24)}
             color={colors.notificationBellColor}
           />
-          {/* {
-            newNotification.value && (
-              <View style={styles.badge} />
-            )
-          } */}
         </Pressable>
       </View>
 
@@ -288,9 +286,6 @@ const index = () => {
                     style={{ marginLeft: "auto" }}
                   />
                 </TouchableOpacity>
-                {/* {idx !== profileOptions.length - 1 && (
-                  <View style={[styles.separator, { backgroundColor: colors.queueBorder }]} />
-                )} */}
                 <View
                   style={[
                     styles.separator,
@@ -318,7 +313,7 @@ const index = () => {
                 {/* trash icon + red color */}
               </View>
               <CustomText style={[styles.optionLabel]}>
-                {i18n.t("protected.profile.options.deleteAccount.header")}
+                {baseContent.options.deleteAccount.header}
               </CustomText>
               <RightIcon
                 size={moderateScale(16)}
@@ -327,11 +322,6 @@ const index = () => {
               />
             </TouchableOpacity>
 
-            {/* <View
-              style={[
-                styles.separator,
-                { backgroundColor: colors.queueBorder }]}
-            /> */}
           </View>
         </View>
 
@@ -342,7 +332,7 @@ const index = () => {
         >
           <Feather name="log-out" size={moderateScale(16)} color={"#DC2626"} />
           <CustomText style={[styles.logoutText, { color: "#DC2626" }]}>
-            {i18n.t("protected.profile.options.logout")}
+            {baseContent.options.logout}
           </CustomText>
         </TouchableOpacity>
       </ScrollView>

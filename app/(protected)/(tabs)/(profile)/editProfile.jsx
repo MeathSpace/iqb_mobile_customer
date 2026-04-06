@@ -41,7 +41,7 @@ import { useAuth } from "../../../../context/AuthContext";
 import i18n from "../../../../src/localization/i18n";
 
 const editProfile = () => {
-  const baseContent = i18n.t("protected.about.editProfile");
+  const baseContent = i18n.t("protected.editProfile");
   const colorScheme = useColorScheme();
 
   const { colors } = useTheme();
@@ -54,8 +54,6 @@ const editProfile = () => {
   useFocusEffect(
     useCallback(() => {
       if (authenticatedUser) {
-        // setFirstName(authenticatedUser?.name?.split(" ")[0])
-        // setLastName(authenticatedUser?.name?.trim()?.split(" ")?.slice(1).join(" "))
         setFullName(authenticatedUser?.name);
         setSelectedCountry({
           cca2: authenticatedUser?.countryCca2,
@@ -77,8 +75,6 @@ const editProfile = () => {
     }, [authenticatedUser]),
   );
 
-  // const [firstName, setFirstName] = useState("");
-  // const [lastName, setLastName] = useState("");
   const [fullName, setFullName] = useState("");
   const [genderOpen, setGenderOpen] = useState(false);
   const [gender, setGender] = useState("");
@@ -88,9 +84,6 @@ const editProfile = () => {
   const [calenderModal, setCalenderModal] = useState(false);
 
   //Error States
-
-  // const [firstNameError, setFirstNameError] = useState("");
-  // const [lastNameError, setLastNameError] = useState("");
   const [fullNameError, setFullNameError] = useState("");
   const [phoneNumberError, setPhoneNumberError] = useState("");
   const [dateOfBirthError, setDateOfBirthError] = useState("");
@@ -98,7 +91,6 @@ const editProfile = () => {
   const [tempDate, setTempDate] = useState(new Date());
 
   const onChange = (event, selectedDate) => {
-    // setCalenderModal(false);
     if (Platform.OS === "android") {
       if (event.type === "set" && selectedDate) {
         setDate(new Date(selectedDate));
@@ -184,7 +176,7 @@ const editProfile = () => {
       setInValid(false);
     } else {
       setPhoneNumber(phoneNumber); // still keep the input
-      setPhoneNumberError("Invalid phone number");
+      setPhoneNumberError(baseContent.errorStatesAndApi.invalidPhoneNumber);
       setInValid(true);
     }
   };
@@ -193,63 +185,31 @@ const editProfile = () => {
 
   const saveHandler = async () => {
     try {
-      // if (!firstName) {
-      //     setFirstNameError("First name is required");
-      //     return;
-      // } else if (firstName.length < 2) {
-      //     setFirstNameError("First name must be at least 2 characters");
-      //     return;
-      // } else if (firstName.length > 20) {
-      //     setFirstNameError("First name must be at most 20 characters");
-      //     return;
-      // }
-
-      // if (!lastName) {
-      //     setLastNameError("Last name is required");
-      //     return;
-      // } else if (lastName.length < 2) {
-      //     setLastNameError("Last name must be at least 2 characters");
-      //     return;
-      // } else if (lastName.length > 20) {
-      //     setLastNameError("Last name must be at most 20 characters");
-      //     return;
-      // }
-
       if (!fullName) {
-        setFullNameError("Full name is required");
+        setFullNameError(baseContent.errorStatesAndApi.fullNameRequired);
         return;
       } else if (fullName.length < 2) {
-        setFullNameError("Full name must be at least 2 characters");
+        setFullNameError(baseContent.errorStatesAndApi.fullNameLeastCharecter);
         return;
       } else if (fullName.length > 20) {
-        setFullNameError("Full name must be at most 20 characters");
+        setFullNameError(baseContent.errorStatesAndApi.fullNameMostCharecter);
         return;
       }
 
       if (!phoneNumber) {
-        setPhoneNumberError("Phone number is required");
+        setPhoneNumberError(baseContent.errorStatesAndApi.phoneNumberRequired);
         return;
       }
 
       if (inValid) {
-        setPhoneNumberError("Invalid phone number");
+        setPhoneNumberError(baseContent.errorStatesAndApi.invalidPhoneNumber);
         return;
       }
 
       if (!selectedDate) {
-        setDateOfBirthError("Date of birth is required");
+        setDateOfBirthError(baseContent.errorStatesAndApi.dateOfBirthRequired);
         return;
       }
-
-      // const updatedCallingCode = Number(selectedCountry?.callingCode?.[0]);
-      // let sanitizedPhoneNumber = phoneNumber.replace(/\D/g, ''); // Remove all non-digit characters
-
-      // const callingCodeStr = updatedCallingCode.toString();
-
-      // // Keep removing the calling code prefix as long as it repeats at the start
-      // while (sanitizedPhoneNumber.startsWith(callingCodeStr)) {
-      //     sanitizedPhoneNumber = sanitizedPhoneNumber.slice(callingCodeStr.length);
-      // }
 
       const currentCountryCode = phoneRef.current?.getCountryCode();
       const mobileNumber = phoneNumber.replace("+", "");
@@ -306,7 +266,7 @@ const editProfile = () => {
         countryCca2: editProfileData?.countryCca2,
       });
 
-      Toast.success("Profile updated successfully");
+      Toast.success(baseContent.profileUpdateSuccess);
 
       router.back();
     } catch (error) {
@@ -322,7 +282,7 @@ const editProfile = () => {
   const pickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
     if (status !== "granted") {
-      alert("Sorry, we need media library permissions to make this work!");
+      alert(baseContent.pickImageAlertGranted);
       return;
     }
 
@@ -344,7 +304,7 @@ const editProfile = () => {
 
       if (!allowedMimeTypes.includes(mimeType)) {
         Toast.error(
-          "Invalid File Type. Only Webp, JPEG, JPG, and PNG images are allowed",
+          baseContent.mimeNotInclude
         );
         return;
       }
@@ -380,7 +340,7 @@ const editProfile = () => {
         },
       );
 
-      Toast.success("Image uploaded successfully");
+      Toast.success(baseContent.imageUploadSuccess);
 
       await AsyncStorage.setItem(
         "LoggedInUser",

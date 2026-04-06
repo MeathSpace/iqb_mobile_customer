@@ -28,6 +28,9 @@ import PhoneInput from "react-native-phone-input";
 import i18n from "../../src/localization/i18n"
 
 const personalInfo = () => {
+
+  const baseContent = i18n.t("auth.personalInfo")
+
   const { email, authType, password } = useLocalSearchParams();
 
   const colorScheme = useColorScheme();
@@ -39,7 +42,7 @@ const personalInfo = () => {
   const [fullName, setFullName] = useState("");
   // const [lastName, setLastName] = useState("");
   const [genderOpen, setGenderOpen] = useState(false);
-  const [gender, setGender] = useState(i18n.t("auth.personalInfo.gender.male"));
+  const [gender, setGender] = useState(baseContent.gender.male);
   const [date, setDate] = useState(new Date());
   const [selectedDate, setSelectedDate] = useState("");
 
@@ -154,30 +157,30 @@ const personalInfo = () => {
       setInValid(false);
     } else {
       setPhoneNumber(phoneNumber); // still keep the input
-      setPhoneNumberError("Invalid phone number");
+      setPhoneNumberError(baseContent.errorStatesAndApi.invalidPhoneNumber);
       setInValid(true);
     }
   };
 
   const saveHandler = () => {
     if (!fullName) {
-      setFullNameError("full name is required");
+      setFullNameError(baseContent.errorStatesAndApi.fullNameRequired);
       return;
     } else if (fullName.length < 2) {
-      setFullNameError("Full name must be at least 2 characters");
+      setFullNameError(baseContent.errorStatesAndApi.fullNameLeastCharecter);
       return;
     } else if (fullName.length > 20) {
-      setFullNameError("Full name must be at most 20 characters");
+      setFullNameError(baseContent.errorStatesAndApi.fullNameMostCharecter);
       return;
     }
 
     if (!phoneNumber) {
-      setPhoneNumberError("Phone number is required");
+      setPhoneNumberError(baseContent.errorStatesAndApi.phoneNumberRequired);
       return;
     }
 
     if (inValid) {
-      setPhoneNumberError("Invalid phone number");
+      setPhoneNumberError(baseContent.errorStatesAndApi.invalidPhoneNumber);
       return;
     }
 
@@ -232,16 +235,16 @@ const personalInfo = () => {
       // The action is still passed, but we're choosing not to dispatch it,
       // effectively making "going back" impossible through these means.
       Alert.alert(
-        "Confirm",
-        "If you go back now, your signup progress will be lost. Are you sure you want to exit?",
+        baseContent.alertBox.alertOne.header,
+        baseContent.alertBox.alertOne.subHeader,
         [
           {
-            text: "Cancel",
+            text: baseContent.alertBox.alertOne.cancel,
             style: "cancel",
             onPress: () => null, // Do nothing, stay on screen
           },
           {
-            text: "OK",
+            text: baseContent.alertBox.alertOne.ok,
             onPress: async () => {
               if (isSignedIn) {
                 await signOut();
@@ -290,20 +293,20 @@ const personalInfo = () => {
 
             <View>
               <CustomText style={styles.heading}>
-                {i18n.t("auth.personalInfo.header")}
+                {baseContent.header}
               </CustomText>
 
               <CustomSecondaryText>
-                {i18n.t("auth.personalInfo.subHeader")}
+                {baseContent.subHeader}
               </CustomSecondaryText>
             </View>
 
             <View style={styles.inputWrapper}>
-              <CustomText>{i18n.t("auth.personalInfo.fullname.label")}</CustomText>
+              <CustomText>{baseContent.fullname.label}</CustomText>
 
               <TextInput
                 editable
-                placeholder={i18n.t("auth.personalInfo.fullname.placeholder")}
+                placeholder={baseContent.fullname.placeholder}
                 placeholderTextColor={colors.secondaryText}
                 style={[
                   false ? styles.inputFielderror : styles.inputField,
@@ -346,7 +349,7 @@ const personalInfo = () => {
                 },
               ]}
             >
-              <CustomText>{i18n.t("auth.personalInfo.gender.label")}</CustomText>
+              <CustomText>{baseContent.gender.label}</CustomText>
 
               <Pressable
                 onPress={() => setOpenGenderDrop((prev) => !prev)}
@@ -394,7 +397,7 @@ const personalInfo = () => {
                       shadowRadius: 4,
                     }}
                   >
-                    {[i18n.t("auth.personalInfo.gender.male"), i18n.t("auth.personalInfo.gender.female"), i18n.t("auth.personalInfo.gender.other")].map((item, index) => (
+                    {[baseContent.gender.male, baseContent.gender.female, baseContent.gender.other].map((item, index) => (
                       <Pressable
                         key={index}
                         onPress={() => {
@@ -423,7 +426,7 @@ const personalInfo = () => {
             </View>
 
             <View style={styles.inputWrapper}>
-              <CustomText>{i18n.t("auth.personalInfo.mobileNumber.label")}</CustomText>
+              <CustomText>{baseContent.mobileNumber.label}</CustomText>
               <PhoneInput
                 ref={phoneRef}
                 initialCountry={selectedCountry.cca2.toLowerCase()}
@@ -482,7 +485,7 @@ const personalInfo = () => {
             </View>
 
             <View style={[styles.inputWrapper, { position: "relative" }]}>
-              <CustomText>{i18n.t("auth.personalInfo.dateOfBirth.label")}</CustomText>
+              <CustomText>{baseContent.dateOfBirth.label}</CustomText>
 
               <Pressable
                 style={[
@@ -509,7 +512,7 @@ const personalInfo = () => {
                       fontFamily: "AirbnbCereal_W_Md",
                     }}
                   >
-                    {i18n.t("auth.personalInfo.dateOfBirth.placeholder")}
+                    {baseContent.dateOfBirth.placeholder}
                   </CustomText>
                 )}
                 {!calenderModal && selectedDate && (
@@ -620,7 +623,7 @@ const personalInfo = () => {
                           }}
                         >
                           <CustomText style={{ color: "#fff" }}>
-                            {i18n.t("auth.personalInfo.modal.closeText")}
+                            {baseContent.modal.closeText}
                           </CustomText>
                         </Pressable>
 
@@ -637,7 +640,7 @@ const personalInfo = () => {
                           }}
                         >
                           <CustomText style={{ color: "#fff" }}>
-                            {i18n.t("auth.personalInfo.modal.openText")}
+                            {baseContent.modal.openText}
                           </CustomText>
                         </Pressable>
                       </View>
@@ -653,7 +656,7 @@ const personalInfo = () => {
             style={[styles.signinButton, {backgroundColor: colors.accentColor}]}
             activeOpacity={0.85}
           >
-            <CustomText style={styles.signinButtonText}>{i18n.t("auth.personalInfo.saveAndNext")}</CustomText>
+            <CustomText style={styles.signinButtonText}>{baseContent.saveAndNext}</CustomText>
           </TouchableOpacity>
         </View>
       </TouchableWithoutFeedback>

@@ -27,6 +27,8 @@ import i18n from "../../../../src/localization/i18n"
 
 const MyFavourites = () => {
 
+    const baseContent = i18n.t("protected.myFavourites")
+
     const { authenticatedUser } = useAuth()
 
     const [favouriteSalonData, setFavouriteSalonData] = useState({
@@ -69,7 +71,7 @@ const MyFavourites = () => {
     const confirmAndDeleteFavouriteSalon = (item) => {
         Alert.alert(
             "Remove Favourite Salon",
-            "Are you sure you want to remove this salon from your favourites?",
+            "Are you sure you want to remove this salon from your favourites ?",
             [
                 {
                     text: "Cancel",
@@ -129,7 +131,7 @@ const MyFavourites = () => {
                     // textAlign: "center",
                     fontFamily: "AirbnbCereal_W_XBd",
                     fontSize: scale(18)
-                }}>{i18n.t("protected.myFavourites.header")}</CustomText>
+                }}>{baseContent.header}</CustomText>
             </View>
 
             {
@@ -269,12 +271,12 @@ const MyFavourites = () => {
                                 fontFamily: "AirbnbCereal_W_XBd",
                                 fontSize: scale(18),
                                 textAlign: "center",
-                            }}>{i18n.t("protected.myFavourites.error.header")}</CustomText>
+                            }}>{baseContent.error.header}</CustomText>
 
                             <CustomText style={{
                                 textAlign: "center",
                             }}>
-                                {i18n.t("protected.myFavourites.error.subHeader")}
+                                {baseContent.error.subHeader}
                             </CustomText>
                         </View>
                     </View>

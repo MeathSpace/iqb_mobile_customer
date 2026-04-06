@@ -16,8 +16,12 @@ import { scale, verticalScale } from "react-native-size-matters";
 import CustomText from "../../../../components/CustomText";
 import { CloseIcon, ErrorIcon } from "../../../../constants/icons";
 import { useAuth } from "../../../../context/AuthContext";
+import i18n from  "../../../../src/localization/i18n"
 
 const connectSalon = () => {
+
+  const baseContent = i18n.t("protected.connectSalon")
+
   const router = useRouter();
   const { colors } = useTheme();
   const { setAuthenticatedUser, authenticatedUser } = useAuth();
@@ -50,9 +54,9 @@ const connectSalon = () => {
     } catch (error) {
       setConnectSalonLoader(false);
       Alert.alert(
-        "Warning",
+        baseContent.alertBox.header,
         error?.response?.data?.message,
-        [{ text: "OK", onPress: () => {} }],
+        [{ text: baseContent.alertBox.ok, onPress: () => {} }],
         { cancelable: true },
       );
       console.log("Error connecting to salon ", error?.response?.data?.message);
@@ -85,7 +89,6 @@ const connectSalon = () => {
         }}
       >
         <View style={{ gap: verticalScale(25) }}>
-          {/* <ErrorIcon size={scale(45)} color={"#FF6961"} style={{ textAlign: "center" }} /> */}
           <View
             style={[
               styles.iconContainer,
@@ -103,34 +106,12 @@ const connectSalon = () => {
             style={{
               fontFamily: "AirbnbCereal_W_Bd",
               fontSize: scale(16),
-              textAlign: "center",
-              // color: colors.secondaryText,
+              textAlign: "center"
             }}
           >
-            Are you sure you want to disconnect?
+            {baseContent.header}
           </CustomText>
         </View>
-
-        {/* <Pressable
-                    onPress={changeSalonPressed}
-                    style={{
-                        height: verticalScale(44),
-                        width: scale(180),
-                        borderRadius: scale(40),
-                        backgroundColor: Colors.modeColor.colorCode,
-                        justifyContent: "center",
-                        alignItems: "center",
-                        marginHorizontal: "auto"
-                    }}
-                >
-                    {
-                        connectSalonLoader ? (
-                            <ActivityIndicator size="small" color="#fff" />
-                        ) : (
-                            <CustomText style={{ color: "#fff" }}>Change Salon</CustomText>
-                        )
-                    }
-                </Pressable> */}
 
         <TouchableOpacity
           onPress={changeSalonPressed}
@@ -140,7 +121,7 @@ const connectSalon = () => {
           {connectSalonLoader ? (
             <ActivityIndicator size="small" color="#fff" />
           ) : (
-            <CustomText style={styles.queueButtonText}>Change Salon</CustomText>
+            <CustomText style={styles.queueButtonText}>{baseContent.changeSalon}</CustomText>
           )}
         </TouchableOpacity>
 

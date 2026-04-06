@@ -21,6 +21,9 @@ import { ErrorIcon } from "../../constants/icons";
 import i18n from "../../src/localization/i18n"
 
 const forgetPassword = () => {
+
+  const baseContent = i18n.t("auth.forgotPassword")
+
   const { colors } = useTheme();
 
   const router = useRouter();
@@ -33,10 +36,10 @@ const forgetPassword = () => {
 
   const forgetHandler = async () => {
     if (!email) {
-      setEmailError("Email is required");
+      setEmailError(baseContent.errorStatesAndApi.emailRequired);
       return;
     } else if (!emailRegex.test(email)) {
-      return setEmailError("Invalid email format");
+      return setEmailError(baseContent.errorStatesAndApi.invalidEmailFormat);
     }
 
     try {
@@ -57,7 +60,7 @@ const forgetPassword = () => {
       setForgetLoader(false);
     } catch (error) {
       Toast.error(error?.response?.data?.message);
-      console.log("Error in forget password ", error);
+      console.log(baseContent.errorStatesAndApi.forgetPasswordError, error);
 
       setForgetLoader(false);
     }
@@ -72,19 +75,19 @@ const forgetPassword = () => {
       <CustomView style={{ justifyContent: "space-between" }}>
         <View style={{ gap: verticalScale(20) }}>
           <View>
-            <CustomText style={styles.heading}>{i18n.t("auth.forgotPassword.header")}</CustomText>
+            <CustomText style={styles.heading}>{baseContent.header}</CustomText>
 
             <CustomSecondaryText>
-              {i18n.t("auth.forgotPassword.subHeader")}
+              {baseContent.subHeader}
             </CustomSecondaryText>
           </View>
 
           <View style={styles.inputWrapper}>
-            <CustomText>{i18n.t("auth.forgotPassword.email.label")}</CustomText>
+            <CustomText>{baseContent.email.label}</CustomText>
 
             <TextInput
               editable
-              placeholder={i18n.t("auth.forgotPassword.email.placeholder")}
+              placeholder={baseContent.email.placeholder}
               placeholderTextColor={colors.secondaryText}
               style={[
                 false ? styles.inputFielderror : styles.inputField,
@@ -129,7 +132,7 @@ const forgetPassword = () => {
           {forgetLoader ? (
             <ActivityIndicator size="small" color="#fff" />
           ) : (
-            <CustomText style={styles.signinButtonText}>{i18n.t("auth.forgotPassword.continue")}</CustomText>
+            <CustomText style={styles.signinButtonText}>{baseContent.continue}</CustomText>
           )}
         </TouchableOpacity>
       </CustomView>

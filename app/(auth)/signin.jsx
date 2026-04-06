@@ -49,6 +49,8 @@ export const useWarmUpBrowser = () => {
 WebBrowser.maybeCompleteAuthSession();
 
 const signin = () => {
+  const baseContent = i18n.t("auth.signin");
+
   useEffect(() => {
     const fetchRememberMeData = async () => {
       const data = await AsyncStorage.getItem("LoggedInUser");
@@ -95,18 +97,18 @@ const signin = () => {
   const signinPressed = async () => {
     try {
       if (!email) {
-        setEmailError("Email is required");
+        setEmailError(baseContent.errorStatesAndApi.emailRequired);
         return;
       } else if (!emailRegex.test(email)) {
-        return setEmailError("Invalid email format");
+        return setEmailError(baseContent.errorStatesAndApi.invalidEmailFormat);
       } else if (!password) {
-        setPasswordError("Password is required");
+        setPasswordError(baseContent.errorStatesAndApi.passwordRequired);
         return;
       } else if (password.length < 8) {
-        setPasswordError("Password must be at least 8 characters");
+        setPasswordError(baseContent.errorStatesAndApi.passwordLeastCharecter);
         return;
       } else if (password.length > 20) {
-        setPasswordError("Password must be at most 20 characters");
+        setPasswordError(baseContent.errorStatesAndApi.passwordMostCharecter);
         return;
       }
 
@@ -291,7 +293,7 @@ const signin = () => {
       const decodedUser = jwtDecode(credential.identityToken);
 
       if (!decodedUser?.email) {
-        return Toast.error("Apple Signin failed, try again.");
+        return Toast.error(baseContent.errorStatesAndApi.appleSigninFailed);
       }
 
       setAppleSigninLoader(true);
@@ -378,10 +380,10 @@ const signin = () => {
                 gap: verticalScale(10),
               }}
             >
-              <CustomText>{i18n.t("auth.signin.email.label")}</CustomText>
+              <CustomText>{baseContent.email.label}</CustomText>
               <TextInput
                 editable
-                placeholder={i18n.t("auth.signin.email.placeholder")}
+                placeholder={baseContent.email.placeholder}
                 placeholderTextColor={colors.secondaryText}
                 style={[
                   false ? styles.inputFielderror : styles.inputField,
@@ -427,7 +429,7 @@ const signin = () => {
                 gap: verticalScale(10),
               }}
             >
-              <CustomText>{i18n.t("auth.signin.password.label")}</CustomText>
+              <CustomText>{baseContent.password.label}</CustomText>
               <View
                 style={[
                   styles.passwordInputContainer,
@@ -440,7 +442,7 @@ const signin = () => {
               >
                 <TextInput
                   editable
-                  placeholder={i18n.t("auth.signin.password.placeholder")}
+                  placeholder={baseContent.password.placeholder}
                   placeholderTextColor={colors.secondaryText}
                   style={[
                     styles.inputField,
@@ -510,13 +512,13 @@ const signin = () => {
                 color={rememberMe ? colors.accentColor : undefined}
               />
               <CustomSecondaryText>
-                {i18n.t("auth.signin.rememberMe")}
+                {baseContent.rememberMe}
               </CustomSecondaryText>
             </View>
 
             <Pressable onPress={() => router.push("/forgetPassword")}>
               <CustomSecondaryText style={{ color: colors.accentColor }}>
-                {i18n.t("auth.signin.forgotPassword")}
+                {baseContent.forgotPassword}
               </CustomSecondaryText>
             </Pressable>
           </View>
@@ -534,7 +536,7 @@ const signin = () => {
               <ActivityIndicator size="small" color="#fff" />
             ) : (
               <CustomText style={styles.signinButtonText}>
-                {i18n.t("auth.signin.signIn")}
+                {baseContent.signIn}
               </CustomText>
             )}
           </TouchableOpacity>
@@ -550,7 +552,7 @@ const signin = () => {
 
             <View style={{ paddingHorizontal: moderateScale(10) }}>
               <CustomText style={{ color: colors.text }}>
-                {i18n.t("auth.signin.or")}
+                {baseContent.or}
               </CustomText>
             </View>
 
@@ -607,9 +609,7 @@ const signin = () => {
                     height={30}
                     width={30}
                   />
-                  <CustomText>
-                    {i18n.t("auth.signin.signInWithGoogle")}
-                  </CustomText>
+                  <CustomText>{baseContent.signInWithGoogle}</CustomText>
                 </>
               )}
             </Pressable>
@@ -619,10 +619,10 @@ const signin = () => {
             <CustomText
               style={[styles.subHeading, { color: colors.secondaryText }]}
             >
-              {i18n.t("auth.signin.dontHaveAccount")}
+              {baseContent.dontHaveAccount}
               <CustomText style={{ color: colors.accentColor }}>
                 {" "}
-                {i18n.t("auth.signin.signup")}
+                {baseContent.signup}
               </CustomText>
             </CustomText>
           </Pressable>

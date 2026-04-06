@@ -53,6 +53,9 @@ import SalonCard from "./SalonCard";
 import Skeleton from "./Skeleton";
 
 const Map = () => {
+
+  const baseContent = i18n.t("protected.map")
+
   const colorScheme = useColorScheme();
 
   const { colors } = useTheme();
@@ -73,8 +76,8 @@ const Map = () => {
         if (status !== "granted") {
           if (isMounted) {
             Alert.alert(
-              "Permission Denied",
-              "Location access is required to show your position.",
+              baseContent.alertBox.alertOne.header,
+              baseContent.alertBox.alertOne.subHeader,
             );
             setSearchCitySalons((prev) => ({
               ...prev,
@@ -382,25 +385,25 @@ const Map = () => {
   // hooks
   const sheetRef = useRef(null);
 
-  const [tabData, setTabData] = useState(["Details", "Services", ""]);
+  const [tabData, setTabData] = useState([baseContent.details, baseContent.services, ""]);
 
   useFocusEffect(
     useCallback(() => {
       if (salonInfoData?.data?.salonInfo?.salonType === "Barber Shop") {
         setTabData((prev) => {
-          const modifiedArr = ["Details", "Services", "Barbers"];
+          const modifiedArr = [baseContent.details, baseContent.services, baseContent.barbers];
           return modifiedArr;
         });
       } else {
         setTabData((prev) => {
-          const modifiedArr = ["Details", "Services", "Stylists"];
+          const modifiedArr = [baseContent.details, baseContent.services, baseContent.stylists];
           return modifiedArr;
         });
       }
     }, [salonInfoData?.data?.salonInfo?.salonType]),
   );
 
-  const [selectedTab, setSelectedTab] = useState("Details");
+  const [selectedTab, setSelectedTab] = useState(baseContent.details);
 
   const latitude =
     salonInfoData?.data?.salonInfo?.location?.coordinates?.latitude;
@@ -541,12 +544,12 @@ const Map = () => {
         },
       });
 
-      Alert.alert("Success", "Successfully added to favourites");
+      Alert.alert(baseContent.alertBox.alertTwo.header, baseContent.alertBox.alertTwo.subHeader);
     } catch (error) {
       setFavouriteLoader(false);
       Alert.alert(
-        "Error",
-        error?.response?.data?.message || "Something went wrong",
+        baseContent.alertBox.alertTwo.error.header,
+        error?.response?.data?.message || baseContent.alertBox.alertTwo.error.subHeader,
       );
       console.log("Error in favourite salon ", error?.response?.data);
     }
@@ -711,7 +714,7 @@ const Map = () => {
                       }}
                     >
                       <CustomText style={styles.buttonText2}>
-                        {i18n.t("protected.map.connect")}
+                        {baseContent.connect}
                       </CustomText>
                       <AddIcon size={scale(14)} color="#fff" />
                     </View>
@@ -730,7 +733,7 @@ const Map = () => {
                       },
                     ]}
                   >
-                    {i18n.t("protected.map.close")}
+                    {baseContent.close}
                   </Text>
                 </TouchableOpacity>
               </View>
@@ -1093,7 +1096,7 @@ const Map = () => {
                                   }}
                                 >
                                   <CustomText style={styles.signinButtonText}>
-                                    {i18n.t("protected.map.connect")}
+                                    {baseContent.connect}
                                   </CustomText>
                                   <AddIcon size={scale(14)} color="#fff" />
                                 </View>
@@ -1178,7 +1181,7 @@ const Map = () => {
                                   fontFamily: "AirbnbCereal_W_XBd",
                                 }}
                               >
-                                {i18n.t("protected.map.description")}
+                                {baseContent.description}
                               </CustomText>
 
                               <CustomSecondaryText
@@ -1211,7 +1214,7 @@ const Map = () => {
                                     fontFamily: "AirbnbCereal_W_XBd",
                                   }}
                                 >
-                                  {i18n.t("protected.map.contactUs")}
+                                  {baseContent.contactUs}
                                 </CustomText>
 
                                 <CustomSecondaryText
@@ -1221,7 +1224,7 @@ const Map = () => {
                                     }
                                   }
                                 >
-                                  {i18n.t("protected.map.anyQuestion")}
+                                  {baseContent.anyQuestion}
                                 </CustomSecondaryText>
                               </View>
 
@@ -1367,7 +1370,7 @@ const Map = () => {
                                       fontFamily: "AirbnbCereal_W_XBd",
                                     }}
                                   >
-                                    {i18n.t("protected.map.location")}
+                                    {baseContent.location}
                                   </CustomText>
 
                                   <CustomSecondaryText
@@ -1424,7 +1427,7 @@ const Map = () => {
                                       fontFamily: "AirbnbCereal_W_XBd",
                                     }}
                                   >
-                                    {i18n.t("protected.map.followUs")}
+                                    {baseContent.followUs}
                                   </CustomText>
 
                                   <CustomSecondaryText
@@ -1434,7 +1437,7 @@ const Map = () => {
                                       }
                                     }
                                   >
-                                    {i18n.t("protected.map.socialLinks")}
+                                    {baseContent.socialLinks}
                                   </CustomSecondaryText>
                                 </View>
 
@@ -1661,7 +1664,7 @@ const Map = () => {
                                 fontFamily: "AirbnbCereal_W_Blk",
                               }}
                             >
-                              {i18n.t("protected.map.exploreAll")} {selectedTab}
+                              {baseContent.exploreAll} {selectedTab}
                             </CustomText>
 
                             {salonInfoData?.data?.barbers?.length > 0 ? (

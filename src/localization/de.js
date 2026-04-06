@@ -25,6 +25,18 @@ export default {
       dontHaveAccount: "Haben Sie noch kein Konto?",
       or: "oder",
       signup: "Registrieren",
+
+      errorStatesAndApi: {
+        emailRequired: "E-Mail ist erforderlich",
+        invalidEmailFormat: "Ungültiges E-Mail-Format",
+        passwordRequired: "Passwort ist erforderlich",
+        passwordLeastCharecter:
+          "Das Passwort muss mindestens 8 Zeichen lang sein",
+        passwordMostCharecter:
+          "Das Passwort darf höchstens 20 Zeichen lang sein",
+        appleSigninFailed:
+          "Apple-Anmeldung fehlgeschlagen, bitte versuchen Sie es erneut.",
+      },
     },
 
     signup: {
@@ -42,6 +54,17 @@ export default {
       alreadyMember: "Bereits Mitglied?",
       or: "oder",
       logIn: "Anmelden",
+      errorStatesAndApi: {
+        emailRequired: "E-Mail ist erforderlich",
+        invalidEmailFormat: "Ungültiges E-Mail-Format",
+        passwordRequired: "Passwort ist erforderlich",
+        passwordLeastCharecter:
+          "Das Passwort muss mindestens 8 Zeichen lang sein",
+        passwordMostCharecter:
+          "Das Passwort darf höchstens 20 Zeichen lang sein",
+        retreiveEmailError:
+          "Wir konnten Ihre E-Mail-Adresse von Apple nicht abrufen",
+      },
     },
 
     forgotPassword: {
@@ -53,6 +76,12 @@ export default {
         placeholder: "Geben Sie Ihre E-Mail ein",
       },
       continue: "Weiter",
+
+      errorStatesAndApi: {
+        emailRequired: "E-Mail ist erforderlich",
+        invalidEmailFormat: "Ungültiges E-Mail-Format",
+        forgetPasswordError: "Fehler beim Zurücksetzen des Passworts ",
+      },
     },
 
     passwordVerification: {
@@ -67,6 +96,38 @@ export default {
       didntReceiveCode: "Code nicht erhalten?",
       resend: "Erneut senden",
       waitMessage: "Warten Sie {{time}} Sekunden",
+
+      errorStatesAndApi: {
+        waitRequestCode:
+          "Bitte warten Sie, bevor Sie einen neuen Code anfordern.",
+        resendVerifyCode: "Bestätigungscode erneut senden",
+        verificationOtpError: "Fehler beim Verifizierungscode",
+        verificationCodeRequired: "Verifizierungscode ist erforderlich",
+        verificationCodeNotMatched: "Verifizierungscode stimmt nicht überein",
+      },
+    },
+
+    forgetPasswordConfirmation: {
+      header: "Alles ist bereit!",
+      subHeader: "Legen Sie Ihr Passwort für die Anmeldung fest.",
+      passwordInput: {
+        label: "Passwort",
+        placeholder: "Geben Sie Ihr Passwort ein",
+      },
+      confirmPasswordInput: {
+        label: "Passwort bestätigen",
+        placeholder: "Bestätigen Sie Ihr Passwort",
+      },
+      reset: "Zurücksetzen",
+      errorStatesAndApi: {
+        passwordRequired: "Passwort ist erforderlich",
+        passwordLeastCharecter:
+          "Das Passwort muss mindestens 8 Zeichen lang sein",
+        passwordMostCharecter:
+          "Das Passwort darf höchstens 20 Zeichen lang sein",
+        confirmPasswordRequired: "Passwortbestätigung ist erforderlich",
+        passwordsNotMatch: "Passwörter stimmen nicht überein",
+      },
     },
 
     personalInfo: {
@@ -94,6 +155,26 @@ export default {
         openText: "Öffnen",
       },
       saveAndNext: "Speichern & Weiter",
+
+      errorStatesAndApi: {
+        invalidPhoneNumber: "Ungültige Telefonnummer",
+        fullNameRequired: "Vollständiger Name ist erforderlich",
+        fullNameLeastCharecter:
+          "Der vollständige Name muss mindestens 2 Zeichen lang sein",
+        fullNameMostCharecter:
+          "Der vollständige Name darf höchstens 20 Zeichen lang sein",
+        phoneNumberRequired: "Telefonnummer ist erforderlich",
+      },
+
+      alertBox: {
+        alertOne: {
+          header: "Bestätigen",
+          subHeader:
+            "Wenn Sie jetzt zurückgehen, geht Ihr Registrierungsfortschritt verloren. Möchten Sie wirklich beenden?",
+          cancel: "Abbrechen",
+          ok: "OK",
+        },
+      },
     },
 
     verification: {
@@ -108,6 +189,14 @@ export default {
       didntReceiveCode: "Code nicht erhalten?",
       resend: "Erneut senden",
       waitMessage: "Warten Sie {{time}} Sekunden",
+      errorStatesAndApi: {
+        verificationCodeRequired: "Verifizierungscode ist erforderlich",
+        verificationCodeNotMatch: "Verifizierungscode stimmt nicht überein",
+        coolDownRequired:
+          "Bitte warten Sie, bevor Sie einen neuen Code anfordern.",
+        resendVerificationCode: "Verifizierungscode erneut senden",
+        verificationOtpError: "Fehler beim Verifizierungscode",
+      },
     },
   },
 
@@ -124,9 +213,30 @@ export default {
       anyQuestion: "Wenn Sie Fragen haben",
       location: "Standort",
       followUs: "Folgen Sie uns auf",
-      socialLinks: "Soziale Netzwerke",
+      socialLinks: "Social-Media-Links",
       exploreAll: "Alle erkunden",
       NoTabAvailable: "Keine {{selectedTab}} verfügbar",
+      details: "Details",
+      services: "Services",
+      barbers: "Barbiere",
+      stylists: "Stylisten",
+      permissionDeniedError: "Zugriff verweigert",
+
+      alertBox: {
+        alertOne: {
+          header: "Zugriff verweigert",
+          subHeader:
+            "Der Zugriff auf den Standort ist erforderlich, um Ihre Position anzuzeigen.",
+        },
+        alertTwo: {
+          header: "Erfolg",
+          subHeader: "Erfolgreich zu den Favoriten hinzugefügt",
+          error: {
+            header: "Fehler",
+            subHeader: "Etwas ist schiefgelaufen",
+          },
+        },
+      },
     },
 
     customTabView: {
@@ -156,12 +266,79 @@ export default {
       },
     },
 
+    editProfile: {
+      header: "Konto verwalten",
+
+      fullname: {
+        label: "Vollständiger Name",
+        placeholder: "Geben Sie Ihren vollständigen Namen ein",
+      },
+
+      gender: {
+        label: "Geschlecht",
+        male: "Männlich",
+        female: "Weiblich",
+        other: "Andere",
+      },
+
+      mobileNumber: {
+        label: "Mobilnummer",
+      },
+
+      dateOfBirth: {
+        label: "Geburtsdatum (optional)",
+        placeholder: "TT/MM/JJ",
+      },
+
+      modal: {
+        closeText: "Schließen",
+        openText: "Öffnen",
+      },
+
+      editAndSave: "Bearbeiten & Speichern",
+
+      errorStatesAndApi: {
+        invalidPhoneNumber: "Ungültige Telefonnummer",
+        fullNameRequired: "Vollständiger Name ist erforderlich",
+        fullNameLeastCharecter:
+          "Der vollständige Name muss mindestens 2 Zeichen lang sein",
+        fullNameMostCharecter:
+          "Der vollständige Name darf höchstens 20 Zeichen lang sein",
+        phoneNumberRequired: "Telefonnummer ist erforderlich",
+        dateOfBirthRequired: "Geburtsdatum ist erforderlich",
+      },
+
+      profileUpdateSuccess: "Profil erfolgreich aktualisiert",
+      pickImageAlertGranted:
+        "Entschuldigung, wir benötigen Zugriff auf die Mediathek, damit dies funktioniert!",
+      mimeNotInclude:
+        "Ungültiger Dateityp. Nur WebP-, JPEG-, JPG- und PNG-Bilder sind erlaubt",
+      imageUploadSuccess: "Bild erfolgreich hochgeladen",
+    },
+
+    connectSalon: {
+      header: "Möchten Sie die Verbindung wirklich trennen?",
+      changeSalon: "Salon wechseln",
+      alertBox: {
+        header: "Warnung",
+        ok: "OK",
+      },
+    },
+
     myFavourites: {
       header: "Meine Favoriten",
       error: {
         header: "Keine Favoriten",
         subHeader: "Sie haben keinen favorisierten Salon",
       },
+      alertBox: {
+        header: "Favoriten-Salon entfernen",
+        subHeader:
+          "Möchten Sie diesen Salon wirklich aus Ihren Favoriten entfernen?",
+        cancel: "Abbrechen",
+        remove: "Ja, entfernen",
+      },
+      somethingWentWrong: "Etwas ist schiefgelaufen",
     },
 
     helpAndSupport: {
@@ -177,6 +354,23 @@ export default {
       submit: "Absenden",
       emailUs: "E-Mail an uns:",
       email: "support@iqbook.io",
+
+      errorStatesAndApi: {
+        subjectRequired: "Betreff ist erforderlich",
+        bodyRequired: "Nachricht ist erforderlich",
+      },
+
+      alertBox: {
+        header: "Erfolg",
+        subHeader:
+          "Die E-Mail wurde erfolgreich an den Administrator gesendet.",
+        ok: "OK",
+        error: {
+          header: "Fehler",
+          subHeader:
+            "Etwas ist schiefgelaufen. Bitte versuchen Sie es später erneut.",
+        },
+      },
     },
 
     about: {
@@ -478,37 +672,6 @@ export default {
             },
           },
         },
-      },
-      editProfile: {
-        header: "Konto verwalten",
-
-        fullname: {
-          label: "Vollständiger Name",
-          placeholder: "Geben Sie Ihren vollständigen Namen ein",
-        },
-
-        gender: {
-          label: "Geschlecht",
-          male: "Männlich",
-          female: "Weiblich",
-          other: "Andere",
-        },
-
-        mobileNumber: {
-          label: "Mobilnummer",
-        },
-
-        dateOfBirth: {
-          label: "Geburtsdatum (optional)",
-          placeholder: "TT/MM/JJ",
-        },
-
-        modal: {
-          closeText: "Schließen",
-          openText: "Öffnen",
-        },
-
-        editAndSave: "Bearbeiten & Speichern",
       },
     },
     notification: {

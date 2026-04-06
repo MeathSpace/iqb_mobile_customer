@@ -47,6 +47,8 @@ WebBrowser.maybeCompleteAuthSession();
 const signup = () => {
   useWarmUpBrowser();
 
+  const baseContent = i18n.t("auth.signup");
+
   const { colors } = useTheme();
 
   const router = useRouter();
@@ -72,19 +74,19 @@ const signup = () => {
   const signupPressed = async () => {
     try {
       if (!email) {
-        return setEmailError("Email is required");
+        return setEmailError(baseContent.errorStatesAndApi.emailRequired);
       } else if (!emailRegex.test(email)) {
-        return setEmailError("Invalid email format");
+        return setEmailError(baseContent.errorStatesAndApi.invalidEmailFormat);
       }
 
       if (!password) {
-        setPasswordError("Password is required");
+        setPasswordError(baseContent.errorStatesAndApi.passwordRequired);
         return;
       } else if (password.length < 8) {
-        setPasswordError("Password must be at least 8 characters");
+        setPasswordError(baseContent.errorStatesAndApi.passwordLeastCharecter);
         return;
       } else if (password.length > 20) {
-        setPasswordError("Password must be at most 20 characters");
+        setPasswordError(baseContent.errorStatesAndApi.passwordMostCharecter);
         return;
       }
 
@@ -266,7 +268,7 @@ const signup = () => {
       const decodedUser = jwtDecode(credential.identityToken);
 
       if (!decodedUser?.email) {
-        return Toast.error("We couldn't retrieve your email from Apple");
+        return Toast.error(baseContent.errorStatesAndApi.retreiveEmailError);
       }
 
       setAppleSignupLoader(true);
@@ -316,10 +318,10 @@ const signup = () => {
                 gap: verticalScale(10),
               }}
             >
-              <CustomText>{i18n.t("auth.signup.email.label")}</CustomText>
+              <CustomText>{baseContent.email.label}</CustomText>
               <TextInput
                 editable
-                placeholder={i18n.t("auth.signup.email.placeholder")}
+                placeholder={baseContent.email.placeholder}
                 placeholderTextColor={colors.secondaryText}
                 style={[
                   false ? styles.inputFielderror : styles.inputField,
@@ -360,7 +362,7 @@ const signup = () => {
               gap: verticalScale(10),
             }}
           >
-            <CustomText>{i18n.t("auth.signup.password.label")}</CustomText>
+            <CustomText>{baseContent.password.label}</CustomText>
             <View
               style={[
                 styles.passwordInputContainer,
@@ -373,7 +375,7 @@ const signup = () => {
             >
               <TextInput
                 editable
-                placeholder={i18n.t("auth.signup.password.placeholder")}
+                placeholder={baseContent.password.placeholder}
                 placeholderTextColor={colors.secondaryText}
                 style={[
                   false ? styles.inputFielderror : styles.inputField,
@@ -421,13 +423,18 @@ const signup = () => {
           <TouchableOpacity
             onPress={signupPressed}
             disabled={checkEmailLoading}
-            style={[styles.signupButton, {backgroundColor: colors.accentColor}]}
+            style={[
+              styles.signupButton,
+              { backgroundColor: colors.accentColor },
+            ]}
             activeOpacity={0.85}
           >
             {checkEmailLoading ? (
               <ActivityIndicator size="small" color="#fff" />
             ) : (
-              <CustomText style={styles.signupButtonText}>{i18n.t("auth.signup.signUp")}</CustomText>
+              <CustomText style={styles.signupButtonText}>
+                {baseContent.signUp}
+              </CustomText>
             )}
           </TouchableOpacity>
 
@@ -441,7 +448,9 @@ const signup = () => {
             />
 
             <View style={{ paddingHorizontal: moderateScale(10) }}>
-              <CustomText style={{ color: colors.text }}>{i18n.t("auth.signup.or")}</CustomText>
+              <CustomText style={{ color: colors.text }}>
+                {baseContent.or}
+              </CustomText>
             </View>
 
             <View
@@ -504,7 +513,7 @@ const signup = () => {
                     height={30}
                     width={30}
                   />
-                  <CustomText>{i18n.t("auth.signup.signUpWithGoogle")}</CustomText>
+                  <CustomText>{baseContent.signUpWithGoogle}</CustomText>
                 </>
               )}
             </Pressable>
@@ -519,10 +528,10 @@ const signup = () => {
             <CustomText
               style={[styles.subHeading, { color: colors.secondaryText }]}
             >
-              {i18n.t("auth.signup.alreadyMember")}{" "}
+              {baseContent.alreadyMember}{" "}
               <CustomText style={{ color: colors.accentColor }}>
                 {" "}
-                {i18n.t("auth.signup.logIn")}
+                {baseContent.logIn}
               </CustomText>
             </CustomText>
           </Pressable>
@@ -574,7 +583,7 @@ const styles = StyleSheet.create({
 
   signupButton: {
     width: "100%",
-     // bg-teal-500
+    // bg-teal-500
     paddingVertical: verticalScale(12), // py-4
     borderRadius: scale(8), // rounded-xl
     alignItems: "center",
