@@ -6,8 +6,12 @@ import { SafeAreaView } from "react-native-safe-area-context";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import CustomText from "../../components/CustomText";
 import { CheckIcon } from "../../constants/icons";
+import i18n from "../../src/localization/i18n";
 
 const AppointmentSuccessPage = () => {
+
+  const baseContent = i18n.t("protected.appointmentSuccessPage")
+
   const router = useRouter();
   const { colors } = useTheme();
   const params = useLocalSearchParams();
@@ -49,15 +53,15 @@ const AppointmentSuccessPage = () => {
         </View>
         <CustomText style={styles.cardTitle}>
           {params.booked === "true"
-            ? "Appointment Booked !"
-            : "Appointment Updated !"}
+            ? baseContent.appointmentBooked
+            : baseContent.appointmentUpdated}
         </CustomText>
         <CustomText
           style={[styles.cardSubtitle, { color: colors.secondaryText }]}
         >
           {params.booked === "true"
-            ? "You have successfully booked the appointment. You will be notified when it's your turn."
-            : "You have successfully updated the appointment. You will be notified when it's your turn."}
+            ? baseContent.bookedInfo
+            : baseContent.updatedInfo}
         </CustomText>
         {/* {params.booked === "true" && ( */}
         <View
@@ -78,10 +82,9 @@ const AppointmentSuccessPage = () => {
                 fontSize: moderateScale(14),
               }}
             >
-              Reminder:{" "}
+              {baseContent.reminder}{" "}
             </CustomText>
-            edits or cancellations made less than 24 hours before your
-            appointment will be subject to a 50% fee.
+            {baseContent.cancelationReminder}
           </CustomText>
           <View
             style={{
@@ -93,7 +96,7 @@ const AppointmentSuccessPage = () => {
               fontSize: moderateScale(14),
             }}
           >
-            Kindly reach 5 minutes early for a seamless service.
+            {baseContent.reachInfo}
           </CustomText>
         </View>
         {/* )} */}
@@ -107,7 +110,7 @@ const AppointmentSuccessPage = () => {
           activeOpacity={0.85}
         >
           <CustomText style={styles.bookButtonText}>
-            Go to Appointments
+            {baseContent.goToAppointments}
           </CustomText>
         </TouchableOpacity>
 
@@ -125,7 +128,7 @@ const AppointmentSuccessPage = () => {
               fontFamily: "AirbnbCereal_W_XBd",
             }}
           >
-            Go back to home
+            {baseContent.goBackToHome}
           </CustomText>
         </TouchableOpacity>
       </View>

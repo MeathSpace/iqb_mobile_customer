@@ -24,16 +24,18 @@ import Skeleton from "../../components/Skeleton";
 import { ArrowLeftIcon, LeftIcon, RightIcon } from "../../constants/icons";
 import { useAuth } from "../../context/AuthContext";
 import { useGlobal } from "../../context/GlobalContext";
+import i18n from "../../src/localization/i18n"
 
 const editAppointmentCalender = () => {
+
+  const baseContent = i18n.t("protected.editAppointmentCalender")
+
   const { appointmentPopupType, setAppointmentPopupType } = useGlobal();
 
   const params = useLocalSearchParams();
   const selectedEditAppointmentData = params?.selectedAppointment
     ? JSON.parse(params?.selectedAppointment)
     : {};
-
-  // console.log(selectedEditAppointmentData?.bookDateObject)
 
   const { authenticatedUser } = useAuth();
 
@@ -477,7 +479,7 @@ const editAppointmentCalender = () => {
                 fontSize: scale(18),
               }}
             >
-              Edit Appointment
+              {baseContent.header}
             </CustomText>
           </View>
 
@@ -500,7 +502,7 @@ const editAppointmentCalender = () => {
                   },
                 ]}
               >
-                Services
+                {baseContent.services}
               </CustomText>
 
               <CustomText
@@ -519,7 +521,7 @@ const editAppointmentCalender = () => {
                         .map((s) => s?.serviceName)
                         .join(
                           ", ",
-                        )} + ${selectedEditAppointmentData?.services?.length - 3} more`
+                        )} + ${selectedEditAppointmentData?.services?.length - 3} ${baseContent.more}`
                     : selectedEditAppointmentData?.services
                         .map((s) => s?.serviceName)
                         .join(", ")
@@ -548,8 +550,8 @@ const editAppointmentCalender = () => {
                 ]}
               >
                 {authenticatedUser?.salonType === "Barber Shop"
-                  ? "Barber"
-                  : "Stylist"}
+                  ? baseContent.barber
+                  : baseContent.stylist}
               </CustomText>
               <CustomText style={styles.value}>
                 {selectedEditAppointmentData?.barbername || "-"}
@@ -577,7 +579,7 @@ const editAppointmentCalender = () => {
                     },
                   ]}
                 >
-                  Date
+                  {baseContent.date}
                 </CustomText>
                 <CustomText
                   style={[
@@ -600,7 +602,7 @@ const editAppointmentCalender = () => {
                     },
                   ]}
                 >
-                  Time
+                  {baseContent.time}
                 </CustomText>
                 <CustomText
                   style={[
@@ -784,7 +786,7 @@ const editAppointmentCalender = () => {
                         }}
                       />
                       <CustomText style={{ fontSize: scale(14) }}>
-                        Notify me when there is a cancellation
+                        {baseContent.notifyCancelation}
                       </CustomText>
                     </View>
                   )}
@@ -806,7 +808,7 @@ const editAppointmentCalender = () => {
                         alignItems: "center",
                       }}
                     >
-                      <CustomText>Please select date</CustomText>
+                      <CustomText>{baseContent.selectDate}</CustomText>
                     </View>
                   ) : engageTimeslotsData?.loading ? (
                     <>
@@ -885,7 +887,7 @@ const editAppointmentCalender = () => {
                         alignItems: "center",
                       }}
                     >
-                      <CustomText>The salon is closed on this day.</CustomText>
+                      <CustomText>{baseContent.salonClosed}</CustomText>
                     </View>
                   ) : disableAppointmentDates?.includes(
                       selectedCalenderDay?.fullDate,
@@ -899,7 +901,7 @@ const editAppointmentCalender = () => {
                       }}
                     >
                       <CustomText style={{ textAlign: "center" }}>
-                        The selected stylist/barber is unavailable on this day.
+                        {baseContent.selectedStylistOrBarberUnavailable}
                       </CustomText>
                     </View>
                   ) : (
@@ -962,7 +964,7 @@ const editAppointmentCalender = () => {
                   }}
                   multiline
                   placeholderTextColor={"gray"}
-                  placeholder="Enter your appointment note"
+                  placeholder={baseContent.appointmentNote.placeholder}
                   value={appointmentNote}
                   onChangeText={(text) => setAppointmentNote(text)}
                 />
@@ -984,7 +986,7 @@ const editAppointmentCalender = () => {
 
           {/* ================= FOOTER ================= */}
           <View style={styles.footer}>
-            <CustomText>Step {step} of 2</CustomText>
+            <CustomText>{baseContent.step} {step} {baseContent.of} 2</CustomText>
             <View
               style={{
                 flexDirection: "row",
@@ -1014,7 +1016,7 @@ const editAppointmentCalender = () => {
                       color: "#fff",
                     }}
                   >
-                    Prev
+                    {baseContent.prev}
                   </CustomText>
                 </Pressable>
               )}
@@ -1046,14 +1048,14 @@ const editAppointmentCalender = () => {
                 }}
               >
                 {activeSection === "appointmentnote" ? (
-                  <CustomText style={{ color: "#fff" }}>Finish</CustomText>
+                  <CustomText style={{ color: "#fff" }}>{baseContent.finish}</CustomText>
                 ) : (
                   <CustomText
                     style={{
                       color: "#fff",
                     }}
                   >
-                    Next
+                    {baseContent.next}
                   </CustomText>
                 )}
               </Pressable>

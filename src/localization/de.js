@@ -769,5 +769,172 @@ export default {
       no: "Keine",
       available: "verfügbar",
     },
+    appointment: {
+      header: "Termine",
+      noAppointment: {
+        header: "Keine Termine",
+        subHeader: "Sie haben keine Termine zum Anzeigen.",
+        buttonText: "Termin buchen",
+      },
+      bookAgain: "Erneut buchen",
+      services: "Services",
+      service: "Service",
+      upcoming: "Bevorstehend",
+      past: "Vergangen",
+    },
+
+    appointmentCalender: {
+      header: "Termin buchen",
+      services: "Services",
+      more: "mehr",
+      barber: "Barbier",
+      stylist: "Stylist",
+      date: "Datum",
+      time: "Uhrzeit",
+      remove: "Entfernen",
+      add: "Hinzufügen",
+      no: "Nein",
+      available: "verfügbar",
+      noServicesAvailable: "Keine Services verfügbar",
+      notifyCancelation: "Benachrichtige mich bei einer Stornierung",
+      selectBarberOrStylist: "Bitte wählen Sie einen Barbier/Stylisten",
+      selectDate: "Bitte wählen Sie ein Datum",
+      salonClosed: "Der Salon ist an diesem Tag geschlossen.",
+      selectedStylistOrBarberUnavailable:
+        "Der gewählte Stylist/Barbier ist an diesem Tag nicht verfügbar.",
+      appointmentNote: {
+        placeholder: "Geben Sie Ihre Notiz ein",
+      },
+      step: "Schritt",
+      of: "von",
+      stepNumber: 4,
+      prev: "Zurück",
+      finish: "Fertig",
+      next: "Weiter",
+    },
+
+    appointmentCalenderModal: {
+      header: "Termin bestätigen",
+      subHeader: "Bitte überprüfen Sie Ihre Buchungsdetails",
+      serviceProvider: "Dienstleister",
+      service: "Service",
+      services: "Services",
+      date: "Datum",
+      time: "Uhrzeit",
+      paymentBreakdown: "Kostenübersicht",
+      totalAmount: "Gesamtbetrag",
+      payNow: "Jetzt bezahlen",
+      deposit: "Anzahlung",
+      remainingBalance: "Restbetrag",
+      yourNote: "Ihre Notiz",
+      cancellationPolicy: {
+        header: "Stornierungsrichtlinie",
+        subHeader:
+          "Stornierungen innerhalb von 24 Stunden verursachen eine Gebühr von 50 %. Bitte erscheinen Sie 5 Minuten früher.",
+      },
+      proceedToPayment: "Zur Zahlung fortfahren",
+      confirmBooking: "Buchung bestätigen",
+      goBack: "Zurück",
+    },
+
+    appointmentSuccessPage: {
+      appointmentBooked: "Termin gebucht!",
+      appointmentUpdated: "Termin aktualisiert!",
+      bookedInfo:
+        "Sie haben den Termin erfolgreich gebucht. Sie werden benachrichtigt, wenn Sie an der Reihe sind.",
+      updatedInfo:
+        "Sie haben den Termin erfolgreich aktualisiert. Sie werden benachrichtigt, wenn Sie an der Reihe sind.",
+      reminder: "Erinnerung:",
+      cancelationReminder:
+        "Änderungen oder Stornierungen weniger als 24 Stunden vor dem Termin führen zu einer Gebühr von 50 %.",
+      reachInfo:
+        "Bitte erscheinen Sie 5 Minuten früher für einen reibungslosen Ablauf.",
+      goToAppointments: "Zu den Terminen",
+      goBackToHome: "Zurück zur Startseite",
+    },
+
+    appointmentPop: {
+      header: "Termin verwalten",
+      service: "Service",
+      services: "Services",
+      cancellation: {
+        header: "Stornierungsrichtlinie",
+        subHeader:
+          "Stornierungen innerhalb von 24 Stunden verursachen eine Gebühr von 50 %. Bitte erscheinen Sie 5 Minuten früher.",
+      },
+      cancel: "Stornieren",
+      edit: "Bearbeiten",
+    },
+
+    appointmentpopup: {
+      header: "Buchungsoptionen",
+      selectServices: {
+        header: "Zuerst Services auswählen",
+        subHeader:
+          "Wählen Sie zuerst die gewünschten Services. Danach sehen Sie eine Liste von Barbieren, die diese Services anbieten.",
+        selectServices: "Services auswählen",
+      },
+      selectBarber: {
+        header: "Zuerst Barbier auswählen",
+        subHeader:
+          "Wählen Sie zuerst einen Barbier. Danach sehen Sie die angebotenen Services und können auswählen.",
+        selectBarber: "Barbier auswählen",
+      },
+    },
+
+    editAppointmentCalender: {
+      header: "Termin bearbeiten",
+      services: "Services",
+      more: "mehr",
+      barber: "Barbier",
+      stylist: "Stylist",
+      date: "Datum",
+      time: "Uhrzeit",
+      remove: "Entfernen",
+      add: "Hinzufügen",
+      no: "Nein",
+      available: "verfügbar",
+      noServicesAvailable: "Keine Services verfügbar",
+      notifyCancelation: "Benachrichtige mich bei einer Stornierung",
+      selectBarberOrStylist: "Bitte wählen Sie einen Barbier/Stylisten",
+      selectDate: "Bitte wählen Sie ein Datum",
+      salonClosed: "Der Salon ist an diesem Tag geschlossen.",
+      selectedStylistOrBarberUnavailable:
+        "Der gewählte Stylist/Barbier ist an diesem Tag nicht verfügbar.",
+      appointmentNote: {
+        placeholder: "Geben Sie Ihre Notiz ein",
+      },
+      step: "Schritt",
+      of: "von",
+      stepNumber: 2,
+      prev: "Zurück",
+      finish: "Fertig",
+      next: "Weiter",
+    },
+
+    editAppointmentCalenderModal: {
+      header: "Termin bestätigen",
+      subHeader: "Bitte überprüfen Sie Ihre Buchungsdetails",
+      serviceProvider: "Dienstleister",
+      service: "Service",
+      services: "Services",
+      date: "Datum",
+      time: "Uhrzeit",
+      paymentBreakdown: "Kostenübersicht",
+      totalAmount: "Gesamtbetrag",
+      payNow: "Jetzt bezahlen",
+      deposit: "Anzahlung",
+      remainingBalance: "Restbetrag",
+      yourNote: "Ihre Notiz",
+      cancellationPolicy: {
+        header: "Stornierungsrichtlinie",
+        subHeader:
+          "Stornierungen innerhalb von 24 Stunden verursachen eine Gebühr von 50 %. Bitte erscheinen Sie 5 Minuten früher.",
+      },
+      proceedToPayment: "Zur Zahlung fortfahren",
+      saveBooking: "Buchung speichern",
+      confirmBooking: "Buchung bestätigen",
+      goBack: "Zurück",
+    },
   },
 };

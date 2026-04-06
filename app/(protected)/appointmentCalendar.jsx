@@ -25,12 +25,13 @@ import Skeleton from "../../components/Skeleton";
 import { ArrowLeftIcon, LeftIcon, RightIcon } from "../../constants/icons";
 import { useAuth } from "../../context/AuthContext";
 import { useGlobal } from "../../context/GlobalContext";
+import i18n from "../../src/localization/i18n"
 
 const appointmentCalendar = () => {
+
+  const baseContent = i18n.t("protected.appointmentCalender")
+
   const { appointmentPopupType, setAppointmentPopupType } = useGlobal();
-
-  // console.log(appointmentPopupType?.selectServices);
-
   const [paymentSettingsLoading, setPaymentSettingsLoading] = useState(false);
   const [paymentSettingsData, setPaymentSettingsData] = useState(null);
 
@@ -762,7 +763,7 @@ const appointmentCalendar = () => {
               fontSize: scale(18),
             }}
           >
-            Book Appointment
+            {baseContent.header}
           </CustomText>
         </View>
 
@@ -790,7 +791,7 @@ const appointmentCalendar = () => {
                     },
                   ]}
                 >
-                  Services
+                  {baseContent.services}
                 </CustomText>
 
                 <CustomText
@@ -808,7 +809,7 @@ const appointmentCalendar = () => {
                           .map((s) => s?.serviceName)
                           .join(
                             ", ",
-                          )} + ${selectCustomerServices.length - 3} more`
+                          )} + ${selectCustomerServices.length - 3} ${baseContent.more}`
                       : selectCustomerServices
                           .map((s) => s?.serviceName)
                           .join(", ")
@@ -837,8 +838,8 @@ const appointmentCalendar = () => {
                   ]}
                 >
                   {authenticatedUser?.salonType === "Barber Shop"
-                    ? "Barber"
-                    : "Stylist"}
+                    ? baseContent.barber
+                    : baseContent.stylist}
                 </CustomText>
                 <CustomText style={styles.value}>
                   {selectedCustomerBarber?.name || "-"}
@@ -858,8 +859,8 @@ const appointmentCalendar = () => {
                   ]}
                 >
                   {authenticatedUser?.salonType === "Barber Shop"
-                    ? "Barber"
-                    : "Stylist"}
+                    ? baseContent.barber
+                    : baseContent.stylist}
                 </CustomText>
                 <CustomText style={styles.value}>
                   {selectedCustomerBarber?.name || "-"}
@@ -887,7 +888,7 @@ const appointmentCalendar = () => {
                     },
                   ]}
                 >
-                  Services
+                  {baseContent.services}
                 </CustomText>
 
                 <CustomText
@@ -905,7 +906,7 @@ const appointmentCalendar = () => {
                           .map((s) => s?.serviceName)
                           .join(
                             ", ",
-                          )} + ${selectCustomerServices.length - 3} more`
+                          )} + ${selectCustomerServices.length - 3} ${baseContent.more}`
                       : selectCustomerServices
                           .map((s) => s?.serviceName)
                           .join(", ")
@@ -936,7 +937,7 @@ const appointmentCalendar = () => {
                   },
                 ]}
               >
-                Date
+                {baseContent.date}
               </CustomText>
               <CustomText
                 style={[
@@ -959,7 +960,7 @@ const appointmentCalendar = () => {
                   },
                 ]}
               >
-                Time
+                {baseContent.time}
               </CustomText>
               <CustomText
                 style={[
@@ -1094,7 +1095,7 @@ const appointmentCalendar = () => {
                                 <CustomText
                                   style={{ fontSize: scale(12), color: "#fff" }}
                                 >
-                                  Remove
+                                  {baseContent.remove}
                                 </CustomText>
                               </Pressable>
                             ) : (
@@ -1113,7 +1114,7 @@ const appointmentCalendar = () => {
                                 <CustomText
                                   style={{ fontSize: scale(12), color: "#fff" }}
                                 >
-                                  Add
+                                  {baseContent.add}
                                 </CustomText>
                               </Pressable>
                             )}
@@ -1200,11 +1201,11 @@ const appointmentCalendar = () => {
                     }}
                   >
                     <CustomText>
-                      No{" "}
+                      {baseContent.no}{" "}
                       {authenticatedUser?.salonType === "Barber Shop"
-                        ? "barbers"
-                        : "stylists"}{" "}
-                      available
+                        ? baseContent.barber
+                        : baseContent.stylist}{" "}
+                      {baseContent.available}
                     </CustomText>
                   </View>
                 ))}
@@ -1292,11 +1293,11 @@ const appointmentCalendar = () => {
                     }}
                   >
                     <CustomText>
-                      No{" "}
+                      {baseContent.no}{" "}
                       {authenticatedUser?.salonType === "Barber Shop"
-                        ? "barbers"
-                        : "stylists"}{" "}
-                      available
+                        ? baseContent.barber
+                        : baseContent.stylist}{" "}
+                      {baseContent.available}
                     </CustomText>
                   </View>
                 ))}
@@ -1408,7 +1409,7 @@ const appointmentCalendar = () => {
                               <CustomText
                                 style={{ fontSize: scale(12), color: "#fff" }}
                               >
-                                Remove
+                                {baseContent.remove}
                               </CustomText>
                             </Pressable>
                           ) : (
@@ -1426,7 +1427,7 @@ const appointmentCalendar = () => {
                               <CustomText
                                 style={{ fontSize: scale(12), color: "#fff" }}
                               >
-                                Add
+                                {baseContent.add}
                               </CustomText>
                             </Pressable>
                           )}
@@ -1440,7 +1441,7 @@ const appointmentCalendar = () => {
                       paddingTop: verticalScale(20),
                     }}
                   >
-                    <CustomText>No services available</CustomText>
+                    <CustomText>{baseContent.noServicesAvailable}</CustomText>
                   </View>
                 ))}
             </>
@@ -1598,7 +1599,7 @@ const appointmentCalendar = () => {
                       }}
                     />
                     <CustomText style={{ fontSize: scale(14) }}>
-                      Notify me when there is a cancellation
+                      {baseContent.notifyCancelation}
                     </CustomText>
                   </View>
                 )}
@@ -1620,7 +1621,7 @@ const appointmentCalendar = () => {
                       alignItems: "center",
                     }}
                   >
-                    <CustomText>Please select barber/stylist</CustomText>
+                    <CustomText>{baseContent.selectBarberOrStylist}</CustomText>
                   </View>
                 ) : !selectedCalenderDate ? (
                   <View
@@ -1631,7 +1632,7 @@ const appointmentCalendar = () => {
                       alignItems: "center",
                     }}
                   >
-                    <CustomText>Please select date</CustomText>
+                    <CustomText>{baseContent.selectDate}</CustomText>
                   </View>
                 ) : engageTimeslotsData?.loading ? (
                   <>
@@ -1710,7 +1711,7 @@ const appointmentCalendar = () => {
                       alignItems: "center",
                     }}
                   >
-                    <CustomText>The salon is closed on this day.</CustomText>
+                    <CustomText>{baseContent.salonClosed}</CustomText>
                   </View>
                 ) : disableAppointmentDates?.includes(
                     selectedCalenderDay?.fullDate,
@@ -1724,7 +1725,7 @@ const appointmentCalendar = () => {
                     }}
                   >
                     <CustomText style={{ textAlign: "center" }}>
-                      The selected stylist/barber is unavailable on this day.
+                      {baseContent.selectedStylistOrBarberUnavailable}
                     </CustomText>
                   </View>
                 ) : (
@@ -1788,7 +1789,7 @@ const appointmentCalendar = () => {
                 }}
                 multiline
                 placeholderTextColor={"gray"}
-                placeholder="Enter your appointment note"
+                placeholder={baseContent.appointmentNote.placeholder}
                 value={appointmentNote}
                 onChangeText={(text) => setAppointmentNote(text)}
               />
@@ -1798,7 +1799,7 @@ const appointmentCalendar = () => {
 
         {/* ================= FOOTER ================= */}
         <View style={styles.footer}>
-          <CustomText>Step {step} of 4</CustomText>
+          <CustomText>{baseContent.step} {step} {baseContent.of} {baseContent.stepNumber}</CustomText>
           <View
             style={{
               flexDirection: "row",
@@ -1852,7 +1853,7 @@ const appointmentCalendar = () => {
                     color: "#fff"
                   }}
                 >
-                  Prev
+                  {baseContent.prev}
                 </CustomText>
               </Pressable>
             )}
@@ -1927,7 +1928,7 @@ const appointmentCalendar = () => {
               disabled={paymentSettingsLoading}
             >
               {activeSection === "appointmentnote" ? (
-                <CustomText style={{ color: "#fff" }}>Finish</CustomText>
+                <CustomText style={{ color: "#fff" }}>{baseContent.finish}</CustomText>
               ) : (
                 // <RightIcon size={scale(12)} color="#fff" />
                 <CustomText
@@ -1935,7 +1936,7 @@ const appointmentCalendar = () => {
                     color: "#fff",
                   }}
                 >
-                  Next
+                  {baseContent.next}
                 </CustomText>
               )}
             </Pressable>

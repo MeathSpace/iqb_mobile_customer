@@ -28,9 +28,12 @@ import Skeleton from "../../../components/Skeleton";
 import { NotificationIcon } from "../../../constants/icons";
 import { useAuth } from "../../../context/AuthContext";
 import { useGlobal } from "../../../context/GlobalContext";
+import i18n from "../../../src/localization/i18n";
 import { ddmmformatDate } from "../../../utils/ddmmformatDate";
 
 const appointment = () => {
+  const baseContent = i18n.t("protected.appointment");
+
   const customPageData = ["header", "list"];
 
   const [selectedTab, setSelectedTab] = useState("All");
@@ -220,7 +223,7 @@ const appointment = () => {
         <CustomText
           style={{ fontSize: scale(18), fontFamily: "AirbnbCereal_W_XBd" }}
         >
-          Appointments
+          {baseContent.header}
         </CustomText>
 
         {/* Right section - Notification bell */}
@@ -297,14 +300,16 @@ const appointment = () => {
                   color={colors.accentColor}
                 />
               </View>
-              <CustomText style={styles.cardTitle}>No Appointments</CustomText>
+              <CustomText style={styles.cardTitle}>
+                {baseContent.noAppointment.header}
+              </CustomText>
               <CustomSecondaryText
                 style={[
                   styles.cardSubtitle,
                   { marginBottom: verticalScale(10) },
                 ]}
               >
-                You have no appointments to show.
+                {baseContent.noAppointment.subHeader}
               </CustomSecondaryText>
               <TouchableOpacity
                 onPress={() => {
@@ -330,7 +335,7 @@ const appointment = () => {
                 activeOpacity={0.85}
               >
                 <CustomText style={styles.bookButtonText}>
-                  Book Appointment
+                  {baseContent.noAppointment.buttonText}
                 </CustomText>
               </TouchableOpacity>
             </View>
@@ -360,7 +365,7 @@ const appointment = () => {
                   />
                 </View>
                 <CustomText style={styles.cardTitle}>
-                  No Appointments
+                  {baseContent.noAppointment.header}
                 </CustomText>
                 <CustomSecondaryText
                   style={[
@@ -368,7 +373,7 @@ const appointment = () => {
                     { marginBottom: verticalScale(10) },
                   ]}
                 >
-                  You have no appointments to show.
+                  {baseContent.noAppointment.subHeader}
                 </CustomSecondaryText>
                 <TouchableOpacity
                   onPress={() => {
@@ -393,7 +398,7 @@ const appointment = () => {
                   activeOpacity={0.85}
                 >
                   <CustomText style={styles.bookButtonText}>
-                    Book Appointment
+                    {baseContent.noAppointment.buttonText}
                   </CustomText>
                 </TouchableOpacity>
               </View>
@@ -437,13 +442,15 @@ const appointment = () => {
                       activeOpacity={0.85}
                     >
                       <CustomText style={styles.bookButtonText}>
-                        Book Appointment
+                        {baseContent.noAppointment.buttonText}
                       </CustomText>
                     </TouchableOpacity>
                   ) : null}
 
                   <View style={{ flexDirection: "row", alignItems: "center" }}>
-                    <CustomText style={styles.Listheader}>{title}</CustomText>
+                    <CustomText style={styles.Listheader}>
+                      {title === "Upcoming" ? baseContent.upcoming : baseContent.past}
+                    </CustomText>
                     {title === "Past" && (
                       <View
                         style={{
@@ -531,8 +538,8 @@ const appointment = () => {
                         (sum, service) => sum + (service?.servicePrice || 0),
                         0,
                       )}{" "}
-                      • {item?.services.length} service
-                      {item?.services.length > 1 ? "s" : ""}
+                      • {item?.services.length}{" "}
+                      {item?.services.length > 1 ? baseContent.services : baseContent.service}
                     </CustomSecondaryText>
 
                     <View style={styles.footer}>
@@ -591,7 +598,7 @@ const appointment = () => {
                               },
                             ]}
                           >
-                            Book again
+                            {baseContent.bookAgain}
                           </Text>
                         </TouchableOpacity>
                       )}
@@ -621,9 +628,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    height: verticalScale(40),
-    // paddingTop: verticalScale(5),
-    // paddingBottom: verticalScale(12),
+    height: verticalScale(40)
   },
 
   bellWrapper: {
@@ -644,15 +649,12 @@ const styles = StyleSheet.create({
   Listheader: {
     fontSize: moderateScale(18),
     fontFamily: "AirbnbCereal_W_XBd",
-    // marginBottom: verticalScale(10),
   },
 
   upcomingCard: {
-    // backgroundColor: '#ffffff',
     borderRadius: scale(12),
     padding: scale(20),
     alignItems: "center",
-    // borderColor: '#e5e7eb',
     borderWidth: scale(1),
     gap: verticalScale(10),
     marginBottom: verticalScale(10),
@@ -670,7 +672,6 @@ const styles = StyleSheet.create({
     fontFamily: "AirbnbCereal_W_XBd",
     fontSize: scale(18),
     textAlign: "center",
-    // marginBottom: verticalScale(4),
   },
   cardSubtitle: {
     fontSize: scale(16),

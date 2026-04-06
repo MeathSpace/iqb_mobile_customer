@@ -21,8 +21,12 @@ import { CheckIcon } from "../../constants/icons";
 import { useAuth } from "../../context/AuthContext";
 import { useGlobal } from "../../context/GlobalContext";
 import { ddmmformatDate } from "../../utils/ddmmformatDate";
+import i18n from "../../src/localization/i18n"
 
 const editAppointmentCalenderModal = () => {
+
+  const baseContent = i18n.t("protected.editAppointmentCalenderModal")
+
   const [salonAddress, setSalonAddress] = useState("");
 
   const getSalonLocationAddress = async () => {
@@ -319,7 +323,7 @@ const editAppointmentCalenderModal = () => {
               textAlign: "center",
             }}
           >
-            Confirm Appointment
+            {baseContent.header}
           </CustomText>
 
           <CustomSecondaryText
@@ -330,7 +334,7 @@ const editAppointmentCalenderModal = () => {
               color: "#64748b",
             }}
           >
-            Please review your booking details
+            {baseContent.subHeader}
           </CustomSecondaryText>
         </View>
 
@@ -354,7 +358,7 @@ const editAppointmentCalenderModal = () => {
                 color: "#94a3b8",
               }}
             >
-              Service Provider
+              {baseContent.serviceProvider}
             </CustomSecondaryText>
             <View
               style={{
@@ -373,7 +377,7 @@ const editAppointmentCalenderModal = () => {
                   {selectedCustomerBookAppointmentBarberParse?.name}
                 </CustomText>
                 <CustomSecondaryText style={{ marginTop: verticalScale(2) }}>
-                  {totalServices} {totalServices === 1 ? "service" : "services"}{" "}
+                  {totalServices} {totalServices === 1 ? baseContent.service : baseContent.services}{" "}
                   • {formatMinutesToHrMin(totalTime)}
                 </CustomSecondaryText>
               </View>
@@ -419,7 +423,7 @@ const editAppointmentCalenderModal = () => {
                   marginBottom: verticalScale(4),
                 }}
               >
-                Date
+                {baseContent.date}
               </CustomSecondaryText>
               <CustomText
                 style={{
@@ -442,7 +446,7 @@ const editAppointmentCalenderModal = () => {
                   marginBottom: verticalScale(4),
                 }}
               >
-                Time
+                {baseContent.time}
               </CustomSecondaryText>
               <CustomText
                 style={{
@@ -571,7 +575,7 @@ const editAppointmentCalenderModal = () => {
                   marginBottom: verticalScale(8),
                 }}
               >
-                Your Note
+                {baseContent.yourNote}
               </CustomSecondaryText>
               <View
                 style={{
@@ -617,7 +621,7 @@ const editAppointmentCalenderModal = () => {
                   fontSize: moderateScale(13),
                 }}
               >
-                Cancellation Policy
+                {baseContent.cancellationPolicy.header}
               </CustomText>
             </View>
             <CustomText
@@ -627,8 +631,7 @@ const editAppointmentCalenderModal = () => {
                 lineHeight: verticalScale(18),
               }}
             >
-              Cancellations within 24 hours incur a 50% fee. Please arrive 5
-              minutes early.
+              {baseContent.cancellationPolicy.subHeader}
             </CustomText>
           </View>
         </ScrollView>
@@ -694,7 +697,7 @@ const editAppointmentCalenderModal = () => {
                     fontSize: moderateScale(16),
                   }}
                 >
-                  Save Booking
+                  {baseContent.saveBooking}
                 </CustomText>
               )}
             </TouchableOpacity>
@@ -715,7 +718,7 @@ const editAppointmentCalenderModal = () => {
                 fontSize: moderateScale(15),
               }}
             >
-              Go Back
+              {baseContent.goBack}
             </CustomText>
           </TouchableOpacity>
         </View>

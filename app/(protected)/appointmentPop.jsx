@@ -18,9 +18,12 @@ import CustomSecondaryText from "../../components/CustomSecondaryText";
 import CustomText from "../../components/CustomText";
 import { useAuth } from "../../context/AuthContext";
 import { useGlobal } from "../../context/GlobalContext";
+import i18n from "../../src/localization/i18n";
 import { ddmmformatDate } from "../../utils/ddmmformatDate";
 
 const appointmentPop = () => {
+  const baseContent = i18n.t("protected.appointmentPop");
+
   const [paymentSettingsLoading, setPaymentSettingsLoading] = useState(false);
   const [paymentSettingsData, setPaymentSettingsData] = useState(null);
 
@@ -167,7 +170,7 @@ const appointmentPop = () => {
             textAlign: "center",
           }}
         >
-          Manage Appointment
+          {baseContent.header}
         </CustomText>
 
         <View
@@ -213,8 +216,10 @@ const appointmentPop = () => {
                 (sum, service) => sum + (service?.servicePrice || 0),
                 0,
               )}{" "}
-              • {selectedAppointmentParse?.services.length} service
-              {selectedAppointmentParse?.services.length > 1 ? "s" : ""}
+              • {selectedAppointmentParse?.services.length}{" "}
+              {selectedAppointmentParse?.services.length === 1
+                ? baseContent.service
+                : baseContent.services}
             </CustomSecondaryText>
           </View>
         </View>
@@ -244,7 +249,7 @@ const appointmentPop = () => {
                   fontSize: moderateScale(13),
                 }}
               >
-                Cancellation Policy
+                {baseContent.cancellation.header}
               </CustomText>
             </View>
             <CustomText
@@ -254,8 +259,7 @@ const appointmentPop = () => {
                 lineHeight: verticalScale(18),
               }}
             >
-              Cancellations within 24 hours incur a 50% fee. Please arrive 5
-              minutes early.
+              {baseContent.cancellation.subHeader}
             </CustomText>
           </View>
         )}
@@ -284,7 +288,9 @@ const appointmentPop = () => {
             {deleteAppointmentLoader ? (
               <ActivityIndicator size="small" color="#fff" />
             ) : (
-              <CustomText style={{ color: "#fff" }}>Cancel</CustomText>
+              <CustomText style={{ color: "#fff" }}>
+                {baseContent.cancel}
+              </CustomText>
             )}
           </Pressable>
           <Pressable
@@ -307,7 +313,9 @@ const appointmentPop = () => {
               alignItems: "center",
             }}
           >
-            <CustomText style={{ color: "#fff" }}>Edit</CustomText>
+            <CustomText style={{ color: "#fff" }}>
+              {baseContent.edit}
+            </CustomText>
           </Pressable>
         </View>
       </Pressable>

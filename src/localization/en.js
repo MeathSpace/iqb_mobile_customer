@@ -558,27 +558,27 @@ export default {
       info1: "Unfortunately, there are no available",
       info2: "for the selected services at the moment.",
       chooseServicesAgain: "Choose Services Again",
-      continue: "Continue"
+      continue: "Continue",
     },
-    singleJoinBarberServices:{
+    singleJoinBarberServices: {
       header: "Single Join (Services)",
       searchInput: {
-        placeholder: "Search services by category"
+        placeholder: "Search services by category",
       },
       service: "service",
       services: "services",
-      continue: "Continue"
+      continue: "Continue",
     },
-    singleJoin:{
+    singleJoin: {
       header: "Single Join (Services)",
       searchInput: {
-        placeholder: "Search services by category"
+        placeholder: "Search services by category",
       },
       service: "service",
       services: "services",
-      continue: "Continue"
+      continue: "Continue",
     },
-    singleJoinBarber:{
+    singleJoinBarber: {
       header: "Single Join",
       barbers: "Barbers",
       stylists: "Stylists",
@@ -588,7 +588,7 @@ export default {
       chooseServiceAgain: "Choose Services Again",
       service: "service",
       services: "services",
-      continue: "Continue"
+      continue: "Continue",
     },
     singleJoinModal: {
       header: "Confirm Selection",
@@ -603,41 +603,43 @@ export default {
       payAtSalon: "Pay at Salon",
       proceedToPayment: "Proceed to Payment",
       confirmBooking: "Confirm Booking",
-      goBack: "Go Back"
+      goBack: "Go Back",
     },
     singleJoinSuccessPage: {
       header: "Queue Joined!",
-      subHeader: "You have successfully joined the queue. You will be notified when it's your turn.",
+      subHeader:
+        "You have successfully joined the queue. You will be notified when it's your turn.",
       goToLive: "Go to Live Queue",
-      goBackHome: "Go back to home"
+      goBackHome: "Go back to home",
     },
     groupHostMemberModal: {
       header: "Host Member",
       memberInput: {
-        placeholder: "Enter member's name"
+        placeholder: "Enter member's name",
       },
       cancel: "Cancel",
-      add: "Add"
+      add: "Add",
     },
     groupJoin: {
       header: "Group Join (Services)",
       searchInput: {
-        placeholder: "Search services by category"
+        placeholder: "Search services by category",
       },
       service: "service",
       services: "services",
-      continue: "Continue"
+      continue: "Continue",
     },
     groupJoinBarber: {
       header: "Group Join (Stylists)",
       empty: {
         header: "No Stylists",
-        subHeader: "Unfortunately, there are no available stylists for the selected services at the moment.",
-        chooseServicesAgain: "Choose Services Again"
+        subHeader:
+          "Unfortunately, there are no available stylists for the selected services at the moment.",
+        chooseServicesAgain: "Choose Services Again",
       },
       service: "service",
       services: "services",
-      continue: "Continue"
+      continue: "Continue",
     },
     groupJoinMembers: {
       header: "Group Members",
@@ -650,15 +652,15 @@ export default {
       addMember: "Add Member",
       member: "member",
       members: "members",
-      joinQueue: "Join Queue"
+      joinQueue: "Join Queue",
     },
-    groupAddMemberModal:{
+    groupAddMemberModal: {
       header: "Add New Member",
       memberInput: {
-        placeholder: "Enter member's name"
+        placeholder: "Enter member's name",
       },
       cancel: "Cancel",
-      add: "Add"
+      add: "Add",
     },
     groupJoinModal: {
       header: "Group Booking",
@@ -674,13 +676,13 @@ export default {
       remainingBalance: "Remaining Balance",
       proceedToPayment: "Proceed to Payment",
       confirmGroupBooking: "Confirm Group Booking",
-      goBack: "Go Back"
+      goBack: "Go Back",
     },
     groupJoinSuccessPage: {
       header: "Queue Joined!",
       subHeader: "Your group has successfully joined the queue.",
       goToLiveQueue: "Go to Live Queue",
-      goBackToHome: "Go back to home"
+      goBackToHome: "Go back to home",
     },
     salon: {
       details: "Details",
@@ -696,6 +698,167 @@ export default {
       exploreAll: "Explore all",
       no: "No",
       available: "available",
-    }
+    },
+    appointment: {
+      header: "Appointments",
+      noAppointment: {
+        header: "No Appointments",
+        subHeader: "You have no appointments to show.",
+        buttonText: "Book Appointment",
+      },
+      bookAgain: "Book again",
+      services: "services",
+      service: "service",
+      upcoming: "Upcoming",
+      past: "Past"
+    },
+    appointmentCalender: {
+      header: "Book Appointment",
+      services: "Services",
+      more: "more",
+      barber: "Barber",
+      stylist: "Stylist",
+      services: "Services",
+      date: "Date",
+      time: "Time",
+      remove: "Remove",
+      add: "Add",
+      no: "No",
+      available: "available",
+      noServicesAvailable: "No services available",
+      notifyCancelation: "Notify me when there is a cancellation",
+      selectBarberOrStylist: "Please select barber/stylist",
+      selectDate: "Please select date",
+      salonClosed: "The salon is closed on this day.",
+      selectedStylistOrBarberUnavailable:
+        "The selected stylist/barber is unavailable on this day.",
+      appointmentNote: {
+        placeholder: "Enter your appointment note",
+      },
+      step: "Step",
+      of: "of",
+      stepNumber: 4,
+      prev: "Prev",
+      finish: "Finish",
+      next: "Next",
+    },
+    appointmentCalenderModal: {
+      header: "Confirm Appointment",
+      subHeader: "Please review your booking details",
+      serviceProvider: "Service Provider",
+      service: "service",
+      services: "services",
+      date: "Date",
+      time: "Time",
+      paymentBreakdown: "Payment Breakdown",
+      totalAmount: "Total Amount",
+      payNow: "Pay Now",
+      deposit: "Deposit",
+      remainingBalance: "Remaining Balance",
+      yourNote: "Your Note",
+      cancellationPolicy: {
+        header: "Cancellation Policy",
+        subHeader:
+          "Cancellations within 24 hours incur a 50% fee. Please arrive 5 minutes early.",
+      },
+      proceedToPayment: "Proceed to Payment",
+      confirmBooking: "Confirm Booking",
+      goBack: "Go Back",
+    },
+    appointmentSuccessPage: {
+      appointmentBooked: "Appointment Booked !",
+      appointmentUpdated: "Appointment Updated !",
+      bookedInfo:
+        "You have successfully booked the appointment. You will be notified when it's your turn.",
+      updatedInfo:
+        "You have successfully updated the appointment. You will be notified when it's your turn.",
+      reminder: "Reminder:",
+      cancelationReminder:
+        "edits or cancellations made less than 24 hours before your appointment will be subject to a 50% fee.",
+      reachInfo: "Kindly reach 5 minutes early for a seamless service.",
+      goToAppointments: "Go to Appointments",
+      goBackToHome: "Go back to home",
+    },
+    appointmentPop: {
+      header: "Manage Appointment",
+      service: "service",
+      services: "services",
+      cancellation: {
+        header: "Cancellation Policy",
+        subHeader:
+          "Cancellations within 24 hours incur a 50% fee. Please arrive 5 minutes early.",
+      },
+      cancel: "Cancel",
+      edit: "Edit",
+    },
+    appointmentpopup: {
+      header: "Booking options",
+      selectServices: {
+        header: "Select Services First",
+        subHeader:
+          "Choose the services you need first. After selecting services, you'll see a list of barbers who provide those services.",
+        selectServices: "Select Services",
+      },
+      selectBarber: {
+        header: "Select Barber First",
+        subHeader:
+          "Choose a barber first. You'll then see the list of services offered by that barber and can select what you want.",
+        selectBarber: "Select Barber",
+      },
+    },
+    editAppointmentCalender: {
+      header: "Edit Appointment",
+      services: "Services",
+      more: "more",
+      barber: "Barber",
+      stylist: "Stylist",
+      services: "Services",
+      date: "Date",
+      time: "Time",
+      remove: "Remove",
+      add: "Add",
+      no: "No",
+      available: "available",
+      noServicesAvailable: "No services available",
+      notifyCancelation: "Notify me when there is a cancellation",
+      selectBarberOrStylist: "Please select barber/stylist",
+      selectDate: "Please select date",
+      salonClosed: "The salon is closed on this day.",
+      selectedStylistOrBarberUnavailable:
+        "The selected stylist/barber is unavailable on this day.",
+      appointmentNote: {
+        placeholder: "Enter your appointment note",
+      },
+      step: "Step",
+      of: "of",
+      stepNumber: 2,
+      prev: "Prev",
+      finish: "Finish",
+      next: "Next",
+    },
+    editAppointmentCalenderModal: {
+      header: "Confirm Appointment",
+      subHeader: "Please review your booking details",
+      serviceProvider: "Service Provider",
+      service: "service",
+      services: "services",
+      date: "Date",
+      time: "Time",
+      paymentBreakdown: "Payment Breakdown",
+      totalAmount: "Total Amount",
+      payNow: "Pay Now",
+      deposit: "Deposit",
+      remainingBalance: "Remaining Balance",
+      yourNote: "Your Note",
+      cancellationPolicy: {
+        header: "Cancellation Policy",
+        subHeader:
+          "Cancellations within 24 hours incur a 50% fee. Please arrive 5 minutes early.",
+      },
+      proceedToPayment: "Proceed to Payment",
+      saveBooking: "Save Booking",
+      confirmBooking: "Confirm Booking",
+      goBack: "Go Back",
+    },
   },
 };

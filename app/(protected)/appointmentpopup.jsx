@@ -6,8 +6,12 @@ import CustomSecondaryText from "../../components/CustomSecondaryText";
 import CustomText from "../../components/CustomText";
 import { useAuth } from "../../context/AuthContext";
 import { useGlobal } from "../../context/GlobalContext";
+import i18n from "../../src/localization/i18n"
 
 const appointmentpopup = () => {
+
+  const baseContent = i18n.t("protected.appointmentpopup")
+
   const router = useRouter();
   const params = useLocalSearchParams();
 
@@ -53,7 +57,7 @@ const appointmentpopup = () => {
             fontSize: scale(22),
           }}
         >
-          Booking options
+          {baseContent.header}
         </CustomText>
 
         <View
@@ -67,15 +71,14 @@ const appointmentpopup = () => {
               fontSize: scale(18),
             }}
           >
-            Select Services First
+            {baseContent.selectServices.header}
           </CustomText>
           <CustomSecondaryText
             style={{
               fontSize: scale(14),
             }}
           >
-            Choose the services you need first. After selecting services, you’ll
-            see a list of barbers who provide those services.
+            {baseContent.selectServices.subHeader}
           </CustomSecondaryText>
 
           <TouchableOpacity
@@ -106,7 +109,7 @@ const appointmentpopup = () => {
             activeOpacity={0.85}
           >
             <CustomText style={styles.queueButtonText}>
-              Select Services
+              {baseContent.selectServices.selectServices}
             </CustomText>
           </TouchableOpacity>
         </View>
@@ -122,7 +125,7 @@ const appointmentpopup = () => {
               fontSize: scale(18),
             }}
           >
-            Select Barber First
+            {baseContent.selectBarber.header}
           </CustomText>
           <CustomSecondaryText
             style={{
@@ -131,8 +134,7 @@ const appointmentpopup = () => {
               fontSize: scale(14),
             }}
           >
-            Choose a barber first. You'll then see the list of services offered
-            by that barber and can select what you want.
+            {baseContent.selectBarber.subHeader}
           </CustomSecondaryText>
 
           <TouchableOpacity
@@ -163,7 +165,7 @@ const appointmentpopup = () => {
             activeOpacity={0.85}
           >
             <CustomText style={styles.queueButtonText}>
-              Select Barber
+              {baseContent.selectBarber.selectBarber}
             </CustomText>
           </TouchableOpacity>
         </View>
