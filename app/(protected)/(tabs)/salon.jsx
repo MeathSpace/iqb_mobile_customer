@@ -174,8 +174,6 @@ const salon = () => {
     }, [authenticatedUser?.salonType]),
   );
 
-  // console.log(authenticatedUser?.salonType)
-
   const [selectedTab, setSelectedTab] = useState(baseContent.details);
 
   const darkMapStyle = [
@@ -241,22 +239,11 @@ const salon = () => {
   const { colors } = useTheme();
   const colorScheme = useColorScheme();
 
-  // console.log(salonInfoData?.data?.salonInfo?.location?.coordinates?.latitude)
 
   const latitude =
     salonInfoData?.data?.salonInfo?.location?.coordinates?.latitude;
   const longitude =
     salonInfoData?.data?.salonInfo?.location?.coordinates?.longitude;
-
-  // const openLink = async (url) => {
-
-  //     const supported = await Linking.canOpenURL(url);
-  //     if (supported) {
-  //         await Linking.openURL(url);
-  //     } else {
-  //         console.warn("Can't open URL:", url);
-  //     }
-  // };
 
   const openLink = async (url) => {
     if (url) {
@@ -433,28 +420,18 @@ const salon = () => {
         },
       });
 
-      Toast.success("Successfully added to favourites");
+      Toast.success(baseContent.favouriteToastSuccess);
     } catch (error) {
       setFavouriteLoader(false);
       Toast.show({
         type: "error",
-        text1: error?.response?.data?.message || "Something went wrong",
+        text1: error?.response?.data?.message || baseContent.favouriteToastError,
       });
       console.log("Error in favourite salon ", error);
     }
   };
 
-  const handleCall = async () => {
-    const phoneNumber = "+919876543210"; // Include country code if needed
-    const url = `tel:${phoneNumber}`;
 
-    const supported = await Linking.canOpenURL(url);
-    if (supported) {
-      await Linking.openURL(url);
-    } else {
-      Alert.alert("Can't open dialer");
-    }
-  };
 
   function formatMinutesToHrMin(totalMinutes) {
     const hours = Math.floor(totalMinutes / 60);
@@ -465,7 +442,6 @@ const salon = () => {
     return `${mins}m`;
   }
 
-  // console.log("categorizedSalonServices ", JSON.stringify(salonInfoData?.data?.categorizedSalonServices, null, 2));
 
   const scrollRef = useRef(null);
 

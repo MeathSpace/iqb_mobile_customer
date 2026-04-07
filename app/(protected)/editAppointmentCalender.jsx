@@ -433,16 +433,16 @@ const editAppointmentCalender = () => {
 
   usePreventRemove(hasUnsavedChanges, ({ data }) => {
     Alert.alert(
-      "Confirm",
-      "If you go back now, your edit appointment progress will be lost. Are you sure you want to exit?",
+      baseContent.alertBox.alertOne.header,
+      baseContent.alertBox.alertOne.subHeader,
       [
         {
-          text: "Cancel",
+          text: baseContent.alertBox.alertOne.cancel,
           style: "cancel",
           onPress: () => null,
         },
         {
-          text: "OK",
+          text: baseContent.alertBox.alertOne.ok,
           onPress: async () => {
             router.push("/appointment");
           },
@@ -1035,12 +1035,12 @@ const editAppointmentCalender = () => {
 
                   if (activeSection === "appointmentnote") {
                     if (!selectedCalenderDate) {
-                      Toast.error("Please select a date");
+                      Toast.error(baseContent.errorStatesAndApi.selectDate);
                       return;
                     }
 
                     if (!selectedEngageTimeSlot) {
-                      Toast.error("Please select a timeslot");
+                      Toast.error(baseContent.errorStatesAndApi.selectTimeslot);
                       return;
                     }
                     continueHandler();

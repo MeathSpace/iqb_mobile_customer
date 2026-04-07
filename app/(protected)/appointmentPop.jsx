@@ -62,15 +62,15 @@ const appointmentPop = () => {
 
   const confirmDeleteHandler = () => {
     Alert.alert(
-      "Delete Appointment",
-      "Are you sure you want to delete this appointment?",
+      baseContent.alertBox.alertOne.header,
+      baseContent.alertBox.alertOne.subHeader,
       [
         {
-          text: "Cancel",
+          text: baseContent.alertBox.alertOne.cancel,
           style: "cancel",
         },
         {
-          text: "Confirm",
+          text: baseContent.alertBox.alertOne.confirm,
           style: "destructive",
           onPress: () => {
             deleteHandler();
@@ -102,11 +102,11 @@ const appointmentPop = () => {
       router.back();
     } catch (error) {
       Alert.alert(
-        "Warning !",
+        baseContent.alertBox.alertTwo.header,
         `${error?.response?.data?.message}`,
         [
           {
-            text: "OK",
+            text: baseContent.alertBox.alertTwo.ok,
             onPress: () => {},
           },
         ],
@@ -126,8 +126,8 @@ const appointmentPop = () => {
       const { status } = await Calendar.requestCalendarPermissionsAsync();
       if (status !== "granted") {
         Alert.alert(
-          "Permission Denied",
-          "Please enable calendar access in settings.",
+          baseContent.alertBox.alertThree.header,
+          baseContent.alertBox.alertThree.subHeader,
         );
         return;
       }

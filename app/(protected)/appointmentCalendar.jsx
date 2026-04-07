@@ -214,8 +214,6 @@ const appointmentCalendar = () => {
     }
   }, [appointmentPopupType?.selectBarber]);
 
-  // console.log("Customer Barber ", selectedCustomerBarber)
-
   useEffect(() => {
     if (appointmentPopupType?.selectBarber && selectedCustomerBarber) {
       const fetchServiceByBarberId = async () => {
@@ -573,16 +571,16 @@ const appointmentCalendar = () => {
 
   const continueHandler = () => {
     if (selectCustomerServices.length === 0) {
-      Toast.error("Please select a service");
+      Toast.error(baseContent.errorStatesAndApi.selectService);
       return;
     } else if (!selectedCustomerBarber) {
-      Toast.error("Please select a stylist");
+      Toast.error(baseContent.errorStatesAndApi.selectStylist);
       return;
     } else if (!selectedEngageTimeSlot) {
-      Toast.error("Please select a timeslot");
+      Toast.error(baseContent.errorStatesAndApi.selectTimeslot);
       return;
     } else if (!selectedCalenderDate) {
-      Toast.error("Please select a date");
+      Toast.error(baseContent.errorStatesAndApi.selectDate);
       return;
     }
 
@@ -709,16 +707,16 @@ const appointmentCalendar = () => {
 
   usePreventRemove(hasUnsavedChanges, ({ data }) => {
     Alert.alert(
-      "Confirm",
-      "If you go back now, your booking appointment progress will be lost. Are you sure you want to exit?",
+      baseContent.alertBox.header,
+      baseContent.alertBox.subHeader,
       [
         {
-          text: "Cancel",
+          text: baseContent.alertBox.cancel,
           style: "cancel",
           onPress: () => null,
         },
         {
-          text: "OK",
+          text: baseContent.alertBox.ok,
           onPress: async () => {
             setAppointmentPopupType({
               selectServices: false,
@@ -1868,7 +1866,7 @@ const appointmentCalendar = () => {
                 if (appointmentPopupType?.selectServices) {
                   if (activeSection === "servicesFirst") {
                     if (selectCustomerServices.length === 0) {
-                      Toast.error("Please select a service");
+                      Toast.error(baseContent.errorStatesAndApi.selectService);
                       return;
                     }
                     setStep(2);
@@ -1877,7 +1875,7 @@ const appointmentCalendar = () => {
 
                   if (activeSection === "barberSecond") {
                     if (!selectedCustomerBarber) {
-                      Toast.error("Please select a barber");
+                      Toast.error(baseContent.errorStatesAndApi.selectBarber);
                       return;
                     }
 
@@ -1887,7 +1885,7 @@ const appointmentCalendar = () => {
                 } else {
                   if (activeSection === "barberFirst") {
                     if (!selectedCustomerBarber) {
-                      Toast.error("Please select a barber");
+                      Toast.error(baseContent.errorStatesAndApi.selectBarber);
                       return;
                     }
 
@@ -1897,7 +1895,7 @@ const appointmentCalendar = () => {
 
                   if (activeSection === "servicesSecond") {
                     if (selectCustomerServices.length === 0) {
-                      Toast.error("Please select a service");
+                      Toast.error(baseContent.errorStatesAndApi.selectService);
                       return;
                     }
 
@@ -1908,12 +1906,12 @@ const appointmentCalendar = () => {
 
                 if (activeSection === "calendar") {
                   if (!selectedCalenderDay && !selectedCalenderDate) {
-                    Toast.error("Please select a date");
+                    Toast.error(baseContent.errorStatesAndApi.selectDate);
                     return;
                   }
 
                   if (!selectedEngageTimeSlot) {
-                    Toast.error("Please select a timeslot");
+                    Toast.error(baseContent.errorStatesAndApi.selectTimeslot);
                     return;
                   }
 

@@ -660,6 +660,12 @@ export default {
         online: "Online",
         offline: "Offline",
       },
+
+      errorStatesAndApi: {
+        permissionNotGranted: "Permission not granted to get push token for push notification!",
+        projectIDNotFound: "Project ID not found",
+        physicalDevicePushNotification: "Must use physical device for push notifications",
+      }
     },
     queuelist: {
       header: "Live Queue",
@@ -704,6 +710,15 @@ export default {
       info2: "for the selected services at the moment.",
       chooseServicesAgain: "Choose Services Again",
       continue: "Continue",
+
+      alertBox: {
+        alertOne: {
+          header: "Confirm",
+          subHeader: "If you go back now, your queue will be reset",
+          cancel: "Cancel",
+          ok: "Ok"
+        }
+      }
     },
     singleJoinBarberServices: {
       header: "Single Join (Services)",
@@ -722,6 +737,15 @@ export default {
       service: "service",
       services: "services",
       continue: "Continue",
+
+      alertBox: {
+        alertOne: {
+          header: "Confirm",
+          subHeader: "If you go back now, your queue will be reset",
+          cancel: "Cancel",
+          ok: "OK"
+        }
+      }
     },
     singleJoinBarber: {
       header: "Single Join",
@@ -749,6 +773,22 @@ export default {
       proceedToPayment: "Proceed to Payment",
       confirmBooking: "Confirm Booking",
       goBack: "Go Back",
+
+      alertBox: {
+        alertOne: {
+          header: "Notice",
+          ok: "OK"
+        },
+        alertTwo: {
+          header: "Payment failed",
+          subHeader: "Something went wrong"
+        }
+      },
+
+      errorStatesAndApi: {
+        paymentInitializationFailed: "Payment initialization failed",
+        invalidStripeError: "Invalid Stripe response",
+      }
     },
     singleJoinSuccessPage: {
       header: "Queue Joined!",
@@ -764,6 +804,12 @@ export default {
       },
       cancel: "Cancel",
       add: "Add",
+
+      errorStatesAndApi: {
+        memberRequired: "Member name is required",
+        memberLeastCharecters: "Member name must be at least 2 characters",
+        memberMostCharecters: "Member name must be at most 20 characters"
+      }
     },
     groupJoin: {
       header: "Group Join (Services)",
@@ -773,6 +819,13 @@ export default {
       service: "service",
       services: "services",
       continue: "Continue",
+
+      alertBox: {
+        header: "Discard group join data ?",
+        subHeader: "All selected members will be cleared, and the group join information will be reset.",
+        cancel: "Cancel",
+        ok: "OK"
+      }
     },
     groupJoinBarber: {
       header: "Group Join (Stylists)",
@@ -798,6 +851,15 @@ export default {
       member: "member",
       members: "members",
       joinQueue: "Join Queue",
+
+      alertBox: {
+        alertOne: {
+          header: "Discard group join data ?",
+          subHeader: "All selected members will be cleared, and the group join information will be reset.",
+          cancel: "Cancel",
+          ok: "OK"
+        }
+      }
     },
     groupAddMemberModal: {
       header: "Add New Member",
@@ -806,6 +868,12 @@ export default {
       },
       cancel: "Cancel",
       add: "Add",
+
+      errorStatesAndApi: {
+        memberRequired: "Member name is required",
+        memberLeastCharecters: "Member name must be at least 2 characters",
+        memberMostCharecters: "Member name must be at most 20 characters"
+      }
     },
     groupJoinModal: {
       header: "Group Booking",
@@ -822,6 +890,22 @@ export default {
       proceedToPayment: "Proceed to Payment",
       confirmGroupBooking: "Confirm Group Booking",
       goBack: "Go Back",
+
+      errorStatesAndApi: {
+        paymentInitializationFailed: "Payment initialization failed",
+        invalidStripeError: "Invalid Stripe response",
+      },
+
+      alertBox: {
+        alertOne: {
+          header: "Notice",
+          ok: "OK"
+        },
+        alertTwo: {
+          header: "Payment failed",
+          subHeader: "Something went wrong"
+        }
+      }
     },
     groupJoinSuccessPage: {
       header: "Queue Joined!",
@@ -843,6 +927,9 @@ export default {
       exploreAll: "Explore all",
       no: "No",
       available: "available",
+
+      favouriteToastSuccess: "Successfully added to favourites",
+      favouriteToastError: "Something went wrong",
     },
     appointment: {
       header: "Appointments",
@@ -886,6 +973,21 @@ export default {
       prev: "Prev",
       finish: "Finish",
       next: "Next",
+
+      errorStatesAndApi: {
+        selectService: "Please select a service",
+        selectStylist: "Please select a stylist",
+        selectBarber: "Please select a barber",
+        selectTimeslot: "Please select a timeslot",
+        selectDate: "Please select a date"
+      },
+
+      alertBox: {
+        header: "Confirm",
+        subHeader: "If you go back now, your booking appointment progress will be lost. Are you sure you want to exit ?",
+        cancel: "Cancel",
+        ok: "OK"
+      }
     },
     appointmentCalenderModal: {
       header: "Confirm Appointment",
@@ -909,6 +1011,34 @@ export default {
       proceedToPayment: "Proceed to Payment",
       confirmBooking: "Confirm Booking",
       goBack: "Go Back",
+
+      errorStatesAndApi: {
+        noGoogleCalender: "No valid Google calendar found.",
+        paymentInitializationFailed: "Payment initialization failed",
+        invalidStripeError: "Invalid Stripe response"
+      },
+
+      alertBox: {
+        alertOne: {
+          header: "Permission Denied",
+          subHeader: "Please enable calendar access in settings."
+        },
+        alertTwo: {
+          header: "Success",
+          subHeader: "Appointment created! Check your calendar."
+        },
+        alertThree: {
+          header: "Error"
+        },
+        alertFour: {
+          header: "Notice",
+          ok: "OK",
+        },
+        alertFive: {
+          header: "Payment failed",
+          subHeader: "Something went wrong"
+        }
+      }
     },
     appointmentSuccessPage: {
       appointmentBooked: "Appointment Booked !",
@@ -935,6 +1065,23 @@ export default {
       },
       cancel: "Cancel",
       edit: "Edit",
+
+      alertBox: {
+        alertOne: {
+          header: "Delete Appointment",
+          subHeader: "Are you sure you want to delete this appointment ?",
+          cancel: "Cancel",
+          confirm: "Confirm"
+        },
+        alertTwo: {
+          header: "Warning !",
+          ok: "OK"
+        },
+        alertThree: {
+          header: "Permission Denied",
+          subHeader: "Please enable calendar access in settings."
+        }
+      }
     },
     appointmentpopup: {
       header: "Booking options",
@@ -980,6 +1127,20 @@ export default {
       prev: "Prev",
       finish: "Finish",
       next: "Next",
+
+      errorStatesAndApi: {
+        selectDate: "Please select a date",
+        selectTimeslot: "Please select a timeslot"
+      },
+
+      alertBox: {
+        alertOne: {
+          header: "Confirm",
+          subHeader: "If you go back now, your edit appointment progress will be lost. Are you sure you want to exit ?",
+          cancel: "Cancel",
+          ok: "OK"
+        }
+      }
     },
     editAppointmentCalenderModal: {
       header: "Confirm Appointment",
@@ -1004,6 +1165,32 @@ export default {
       saveBooking: "Save Booking",
       confirmBooking: "Confirm Booking",
       goBack: "Go Back",
+
+      errorStatesAndApi: {
+        googleCalenderNotFound: "No valid Google calendar found.",
+      },
+
+      alertBox: {
+        alertOne: {
+          header: "Permission Denied",
+          subHeader: "Please enable calendar access in settings."
+        },
+        alertTwo: {
+          header: "Success",
+          subHeader: "Appointment updated! Please check your calendar."
+        },
+        alertThree: {
+          header: "Error",
+          subHeader: "Appointment event not found !"
+        },
+        alertFour: {
+          header: "Error"
+        },
+        alertFive: {
+          header: "Notice",
+          ok: "OK"
+        }
+      }
     },
   },
 };

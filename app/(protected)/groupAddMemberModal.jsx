@@ -36,13 +36,13 @@ const groupAddMemberModal = () => {
 
   const addMemberPressed = () => {
     if (!memberName) {
-      setMemberNameError("Member name is required");
+      setMemberNameError(baseContent.errorStatesAndApi.memberRequired);
       return;
     } else if (memberName.length < 2) {
-      setMemberNameError("Member name must be at least 2 characters");
+      setMemberNameError(baseContent.errorStatesAndApi.memberLeastCharecters);
       return;
     } else if (memberName.length > 20) {
-      setMemberNameError("Member name must be at most 20 characters");
+      setMemberNameError(baseContent.errorStatesAndApi.memberMostCharecters);
       return;
     }
     setSelectedMemberServices([]);

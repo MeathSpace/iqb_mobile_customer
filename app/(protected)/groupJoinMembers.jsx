@@ -137,11 +137,11 @@ const GroupJoinMembers = () => {
     } else {
       // Show confirmation alert
       Alert.alert(
-        "Discard group join data?",
-        "All selected members will be cleared, and the group join information will be reset.",
+        baseContent.alertBox.alertOne.header,
+        baseContent.alertBox.alertOne.subHeader,
         [
           {
-            text: "Cancel",
+            text: baseContent.alertBox.alertOne.cancel,
             style: "destructive",
             // style: 'cancel',
             onPress: () => {
@@ -149,7 +149,7 @@ const GroupJoinMembers = () => {
             },
           },
           {
-            text: "OK",
+            text: baseContent.alertBox.alertOne.ok,
             // style: 'destructive',
             onPress: () => {
               // editNavigationAllowRef.current = true; // temporarily allow

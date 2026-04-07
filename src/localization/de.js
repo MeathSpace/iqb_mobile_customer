@@ -767,6 +767,16 @@ export default {
 
       chooseServicesAgain: "Dienstleistungen erneut auswählen",
       continue: "Weiter",
+
+      alertBox: {
+        alertOne: {
+          header: "Bestätigen",
+          subHeader:
+            "Wenn Sie jetzt zurückgehen, wird Ihre Warteschlange zurückgesetzt",
+          cancel: "Abbrechen",
+          ok: "OK",
+        },
+      },
     },
     singleJoinBarberServices: {
       header: "Einzeln beitreten (Dienstleistungen)",
@@ -792,6 +802,16 @@ export default {
       services: "Dienstleistungen",
 
       continue: "Weiter",
+
+      alertBox: {
+        alertOne: {
+          header: "Bestätigen",
+          subHeader:
+            "Wenn Sie jetzt zurückgehen, wird Ihre Warteschlange zurückgesetzt",
+          cancel: "Abbrechen",
+          ok: "OK",
+        },
+      },
     },
     singleJoinBarber: {
       header: "Einzeln beitreten",
@@ -828,6 +848,22 @@ export default {
       proceedToPayment: "Zur Zahlung fortfahren",
       confirmBooking: "Buchung bestätigen",
       goBack: "Zurück",
+
+      alertBox: {
+        alertOne: {
+          header: "Hinweis",
+          ok: "OK",
+        },
+        alertTwo: {
+          header: "Zahlung fehlgeschlagen",
+          subHeader: "Etwas ist schiefgelaufen",
+        },
+      },
+
+      errorStatesAndApi: {
+        paymentInitializationFailed: "Zahlungsinitialisierung fehlgeschlagen",
+        invalidStripeError: "Ungültige Stripe-Antwort",
+      },
     },
     singleJoinSuccessPage: {
       header: "Zur Warteschlange hinzugefügt!",
@@ -846,6 +882,14 @@ export default {
 
       cancel: "Abbrechen",
       add: "Hinzufügen",
+
+      errorStatesAndApi: {
+        memberRequired: "Der Name des Mitglieds ist erforderlich",
+        memberLeastCharecters:
+          "Der Name des Mitglieds muss mindestens 2 Zeichen lang sein",
+        memberMostCharecters:
+          "Der Name des Mitglieds darf höchstens 20 Zeichen lang sein",
+      },
     },
     groupJoin: {
       header: "Gruppe beitreten (Services)",
@@ -855,6 +899,14 @@ export default {
       service: "Service",
       services: "Services",
       continue: "Weiter",
+
+      alertBox: {
+        header: "Gruppenbeitrittsdaten verwerfen?",
+        subHeader:
+          "Alle ausgewählten Mitglieder werden entfernt und die Gruppenbeitrittsinformationen werden zurückgesetzt.",
+        cancel: "Abbrechen",
+        ok: "OK",
+      },
     },
 
     groupJoinBarber: {
@@ -882,6 +934,16 @@ export default {
       member: "Mitglied",
       members: "Mitglieder",
       joinQueue: "Zur Warteschlange",
+
+      alertBox: {
+        alertOne: {
+          header: "Gruppenbeitrittsdaten verwerfen?",
+          subHeader:
+            "Alle ausgewählten Mitglieder werden entfernt und die Gruppenbeitrittsinformationen werden zurückgesetzt.",
+          cancel: "Abbrechen",
+          ok: "OK",
+        },
+      },
     },
 
     groupAddMemberModal: {
@@ -891,6 +953,14 @@ export default {
       },
       cancel: "Abbrechen",
       add: "Hinzufügen",
+
+      errorStatesAndApi: {
+        memberRequired: "Der Name des Mitglieds ist erforderlich",
+        memberLeastCharecters:
+          "Der Name des Mitglieds muss mindestens 2 Zeichen lang sein",
+        memberMostCharecters:
+          "Der Name des Mitglieds darf höchstens 20 Zeichen lang sein",
+      },
     },
 
     groupJoinModal: {
@@ -908,6 +978,22 @@ export default {
       proceedToPayment: "Zur Zahlung",
       confirmGroupBooking: "Buchung bestätigen",
       goBack: "Zurück",
+
+      errorStatesAndApi: {
+        paymentInitializationFailed: "Zahlungsinitialisierung fehlgeschlagen",
+        invalidStripeError: "Ungültige Stripe-Antwort",
+      },
+
+      alertBox: {
+        alertOne: {
+          header: "Hinweis",
+          ok: "OK",
+        },
+        alertTwo: {
+          header: "Zahlung fehlgeschlagen",
+          subHeader: "Etwas ist schiefgelaufen",
+        },
+      },
     },
 
     groupJoinSuccessPage: {
@@ -931,6 +1017,9 @@ export default {
       exploreAll: "Alle ansehen",
       no: "Keine",
       available: "verfügbar",
+
+      favouriteToastSuccess: "Erfolgreich zu den Favoriten hinzugefügt",
+      favouriteToastError: "Etwas ist schiefgelaufen",
     },
     appointment: {
       header: "Termine",
@@ -974,6 +1063,22 @@ export default {
       prev: "Zurück",
       finish: "Fertig",
       next: "Weiter",
+
+      errorStatesAndApi: {
+        selectService: "Bitte wählen Sie einen Service",
+        selectStylist: "Bitte wählen Sie einen Stylisten",
+        selectBarber: "Bitte wählen Sie einen Barbier",
+        selectTimeslot: "Bitte wählen Sie ein Zeitfenster",
+        selectDate: "Bitte wählen Sie ein Datum",
+      },
+
+      alertBox: {
+        header: "Bestätigen",
+        subHeader:
+          "Wenn Sie jetzt zurückgehen, geht Ihr Buchungsfortschritt verloren. Möchten Sie wirklich beenden?",
+        cancel: "Abbrechen",
+        ok: "OK",
+      },
     },
 
     appointmentCalenderModal: {
@@ -998,6 +1103,35 @@ export default {
       proceedToPayment: "Zur Zahlung fortfahren",
       confirmBooking: "Buchung bestätigen",
       goBack: "Zurück",
+
+      errorStatesAndApi: {
+        noGoogleCalender: "Kein gültiger Google-Kalender gefunden.",
+        paymentInitializationFailed: "Zahlungsinitialisierung fehlgeschlagen",
+        invalidStripeError: "Ungültige Stripe-Antwort",
+      },
+
+      alertBox: {
+        alertOne: {
+          header: "Zugriff verweigert",
+          subHeader:
+            "Bitte aktivieren Sie den Kalenderzugriff in den Einstellungen.",
+        },
+        alertTwo: {
+          header: "Erfolg",
+          subHeader: "Termin erstellt! Überprüfen Sie Ihren Kalender.",
+        },
+        alertThree: {
+          header: "Fehler",
+        },
+        alertFour: {
+          header: "Hinweis",
+          ok: "OK",
+        },
+        alertFive: {
+          header: "Zahlung fehlgeschlagen",
+          subHeader: "Etwas ist schiefgelaufen",
+        },
+      },
     },
 
     appointmentSuccessPage: {
@@ -1027,6 +1161,24 @@ export default {
       },
       cancel: "Stornieren",
       edit: "Bearbeiten",
+
+      alertBox: {
+        alertOne: {
+          header: "Termin löschen",
+          subHeader: "Möchten Sie diesen Termin wirklich löschen?",
+          cancel: "Abbrechen",
+          confirm: "Bestätigen",
+        },
+        alertTwo: {
+          header: "Warnung!",
+          ok: "OK",
+        },
+        alertThree: {
+          header: "Zugriff verweigert",
+          subHeader:
+            "Bitte aktivieren Sie den Kalenderzugriff in den Einstellungen.",
+        },
+      },
     },
 
     appointmentpopup: {
@@ -1073,6 +1225,21 @@ export default {
       prev: "Zurück",
       finish: "Fertig",
       next: "Weiter",
+
+      errorStatesAndApi: {
+        selectDate: "Bitte wählen Sie ein Datum",
+        selectTimeslot: "Bitte wählen Sie ein Zeitfenster",
+      },
+
+      alertBox: {
+        alertOne: {
+          header: "Bestätigen",
+          subHeader:
+            "Wenn Sie jetzt zurückgehen, geht Ihr Fortschritt bei der Terminbearbeitung verloren. Möchten Sie wirklich beenden?",
+          cancel: "Abbrechen",
+          ok: "OK",
+        },
+      },
     },
 
     editAppointmentCalenderModal: {
@@ -1098,6 +1265,34 @@ export default {
       saveBooking: "Buchung speichern",
       confirmBooking: "Buchung bestätigen",
       goBack: "Zurück",
+
+      errorStatesAndApi: {
+        googleCalenderNotFound: "Kein gültiger Google-Kalender gefunden.",
+      },
+
+      alertBox: {
+        alertOne: {
+          header: "Zugriff verweigert",
+          subHeader:
+            "Bitte aktivieren Sie den Kalenderzugriff in den Einstellungen.",
+        },
+        alertTwo: {
+          header: "Erfolg",
+          subHeader:
+            "Termin aktualisiert! Bitte überprüfen Sie Ihren Kalender.",
+        },
+        alertThree: {
+          header: "Fehler",
+          subHeader: "Terminereignis nicht gefunden!",
+        },
+        alertFour: {
+          header: "Fehler",
+        },
+        alertFive: {
+          header: "Hinweis",
+          ok: "OK",
+        },
+      },
     },
   },
 };

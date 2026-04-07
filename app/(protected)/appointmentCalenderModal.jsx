@@ -109,8 +109,8 @@ const appointmentCalenderModal = () => {
       const { status } = await Calendar.requestCalendarPermissionsAsync();
       if (status !== "granted") {
         Alert.alert(
-          "Permission Denied",
-          "Please enable calendar access in settings.",
+          baseContent.alertBox.alertOne.header,
+          baseContent.alertBox.alertOne.subHeader,
         );
         setBookAppointmentLoader(false);
         return;
@@ -127,7 +127,7 @@ const appointmentCalenderModal = () => {
         ) || calendars.find((cal) => cal.allowsModifications);
 
       if (!targetCalendar) {
-        throw new Error("No valid Google calendar found.");
+        throw new Error(baseContent.errorStatesAndApi.noGoogleCalender);
       }
 
       const calendarId = targetCalendar.id;
@@ -168,7 +168,7 @@ const appointmentCalenderModal = () => {
         },
       );
 
-      Alert.alert("Success", "Appointment created! Check your calendar.");
+      Alert.alert(baseContent.alertBox.alertTwo.header, baseContent.alertBox.alertTwo.subHeader);
 
       setBookAppointmentLoader(false);
       router.replace({
@@ -181,7 +181,7 @@ const appointmentCalenderModal = () => {
     } catch (error) {
       setBookAppointmentLoader(false);
       console.error("❌ Calendar Error:", error);
-      Alert.alert("Error", error.message);
+      Alert.alert(baseContent.alertBox.alertThree.header, error.message);
     }
   };
 
@@ -236,7 +236,7 @@ const appointmentCalenderModal = () => {
       );
     } catch (error) {
       setBookAppointmentLoader(false);
-      Alert.alert("Notice", error?.response?.data?.message, [{ text: "OK" }]);
+      Alert.alert(baseContent.alertBox.alertFour.header, error?.response?.data?.message, [{ text: baseContent.alertBox.alertFour.ok }]);
       console.log("Error doing book appointment ", error);
     }
   };
@@ -291,15 +291,14 @@ const appointmentCalenderModal = () => {
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data?.message || "Payment initialization failed");
+      throw new Error(data?.message || baseContent.errorStatesAndApi.paymentInitializationFailed);
     }
 
     const { paymentIntent, ephemeralKey, customer } = data;
 
-    console.log("book Appointment Data ", data?.tempAppointment?._id);
 
     if (!paymentIntent || !ephemeralKey || !customer) {
-      throw new Error("Invalid Stripe response");
+      throw new Error(baseContent.errorStatesAndApi.invalidStripeError);
     }
 
     return {
@@ -366,7 +365,7 @@ const appointmentCalenderModal = () => {
     } catch (err) {
       console.log("Stripe error:", err?.message);
 
-      Alert.alert("Payment failed", err?.message || "Something went wrong");
+      Alert.alert(baseContent.alertBox.alertFive.header, err?.message || baseContent.alertBox.alertFive.subHeader);
     } finally {
       setLoading(false);
     }

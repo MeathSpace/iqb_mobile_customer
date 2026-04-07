@@ -34,11 +34,6 @@ import { ddmmformatDate } from "../../../utils/ddmmformatDate";
 const appointment = () => {
   const baseContent = i18n.t("protected.appointment");
 
-  const customPageData = ["header", "list"];
-
-  const [selectedTab, setSelectedTab] = useState("All");
-
-  const [tabs, setTabs] = useState(["All", "Upcoming", "Served", "Cancelled"]);
 
   const router = useRouter();
   const {

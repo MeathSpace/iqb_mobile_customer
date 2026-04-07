@@ -34,8 +34,8 @@ import { io } from "socket.io-client";
 import { Feather } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { Toast } from "toastify-react-native";
-import Header from "./Header";
 import i18n from "../src/localization/i18n";
+import Header from "./Header";
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -52,7 +52,7 @@ function handleRegistrationError(errorMessage) {
   console.log("Notification Error Message ", errorMessage);
 }
 
-async function registerForPushNotificationsAsync() {
+async function registerForPushNotificationsAsync(baseContent) {
   if (Platform.OS === "android") {
     Notifications.setNotificationChannelAsync("default", {
       name: "default",
@@ -72,7 +72,7 @@ async function registerForPushNotificationsAsync() {
     }
     if (finalStatus !== "granted") {
       handleRegistrationError(
-        "Permission not granted to get push token for push notification!",
+        baseContent.errorStatesAndApi.permissionNotGranted,
       );
       return;
     }
@@ -80,7 +80,7 @@ async function registerForPushNotificationsAsync() {
       Constants?.expoConfig?.extra?.eas?.projectId ??
       Constants?.easConfig?.projectId;
     if (!projectId) {
-      handleRegistrationError("Project ID not found");
+      handleRegistrationError(baseContent.errorStatesAndApi.projectIDNotFound);
     }
     try {
       const pushTokenString = (
@@ -94,47 +94,14 @@ async function registerForPushNotificationsAsync() {
       handleRegistrationError(`${e}`);
     }
   } else {
-    handleRegistrationError("Must use physical device for push notifications");
+    handleRegistrationError(baseContent.errorStatesAndApi.projectIDNotFound);
   }
 }
 
 const Dashboard = () => {
   const [latestVersion, setLatestVersion] = useState("");
 
-  // console.log("IOS", Constants?.expoConfig?.ios?.buildNumber);
-  // console.log("Android", Constants?.expoConfig?.android?.versionCode);
-
-  // Platform.OS
-
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     const fetch_new_version = async () => {
-  //       try {
-  //         const { data } = await axios.get(
-  //           `${BASE_URL}/version/getMobileVersion`,
-  //         );
-  //         const recentAppVersion = Constants.expoConfig.version;
-
-  //         const newVersionAvailable = data?.response?.mobileVersion;
-
-  //         if (recentAppVersion !== newVersionAvailable) {
-  //           setLatestVersion(newVersionAvailable);
-  //         } else {
-  //           setLatestVersion("");
-  //         }
-  //       } catch (err) {
-  //         console.log("Version fetch error", err);
-  //       }
-  //     };
-
-  //     fetch_new_version();
-
-  //     // cleanup (optional)
-  //     return () => {};
-  //   }, []),
-  // );
-
-  const baseContent = i18n.t("protected.dashboard")
+  const baseContent = i18n.t("protected.dashboard");
 
   const [apiVersionData, setApiVersionData] = useState(null);
 
@@ -185,9 +152,6 @@ const Dashboard = () => {
 
   const { homeDashboardData, setHomeDashboardData } = useGlobal();
   const { authenticatedUser } = useAuth();
-
-  // console.log("Authenticated user", authenticatedUser)
-
   const [sliceBarber, setSliceBarber] = useState(4);
 
   const [homeAdvertisementData, setHomeAdvertisementData] = useState({
@@ -462,7 +426,7 @@ const Dashboard = () => {
 
   useFocusEffect(
     useCallback(() => {
-      registerForPushNotificationsAsync()
+      registerForPushNotificationsAsync(baseContent)
         .then((token) => setExpoPushToken(token ?? ""))
         .catch((error) => setExpoPushToken(`${error}`));
 
@@ -480,7 +444,7 @@ const Dashboard = () => {
         notificationListener.remove();
         responseListener.remove();
       };
-    }, []),
+    }, [baseContent]),
   );
 
   useFocusEffect(
@@ -1224,10 +1188,14 @@ const Dashboard = () => {
                     </View> */}
 
                     <View style={styles.hintTextWrapper}>
-                      <CustomText 
-                      style={[styles.hintTitle, {
-                        color: colors.accentColor
-                      }]}>
+                      <CustomText
+                        style={[
+                          styles.hintTitle,
+                          {
+                            color: colors.accentColor,
+                          },
+                        ]}
+                      >
                         {baseContent.hint.label}
                       </CustomText>
 
@@ -1250,7 +1218,9 @@ const Dashboard = () => {
                             fontSize: scale(14),
                           }}
                         >
-                          {textShown ? `${baseContent.hint.readLess}...` : `${baseContent.hint.readMore}...`}
+                          {textShown
+                            ? `${baseContent.hint.readLess}...`
+                            : `${baseContent.hint.readMore}...`}
                         </CustomText>
                       ) : null}
                     </View>
@@ -1381,7 +1351,7 @@ const Dashboard = () => {
                         justifyContent: "center",
                         alignItems: "center",
                         marginTop: verticalScale(15),
-                        marginBottom: verticalScale(20)
+                        marginBottom: verticalScale(20),
                       }}
                     >
                       <View

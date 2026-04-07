@@ -85,8 +85,6 @@ const GroupJoin = () => {
     fetchCategoryList();
   }, [authenticatedUser]);
 
-  const categoryList = ["Hair Cut", "Beard", "Trim", "Spa", "Hair"];
-
   const [selectedCategory, setSelectedCategory] = useState("");
 
   const [salonServicesByCategory, setSalonServicesByCategory] = useState({
@@ -222,18 +220,18 @@ const GroupJoin = () => {
     }
 
     Alert.alert(
-      "Discard group join data?",
-      "All selected members will be cleared, and the group join information will be reset.",
+      baseContent.alertBox.header,
+      baseContent.alertBox.subHeader,
       [
         {
-          text: "Cancel",
+          text: baseContent.alertBox.cancel,
           style: "destructive",
           onPress: () => {
             // Do nothing, block navigation
           },
         },
         {
-          text: "OK",
+          text: baseContent.alertBox.ok,
           onPress: () => {
             allowGroupJoinExitRef.current = true;
             router.back(); // or router.push("/home") etc.

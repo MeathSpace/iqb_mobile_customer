@@ -210,16 +210,16 @@ const SingleJoin = () => {
     hasUnsavedChanges, // This boolean determines if removal should be prevented
     ({ data }) => {
       Alert.alert(
-        "Confirm",
-        "If you go back now, your queue will be reset",
+        baseContent.alertBox.alertOne.header,
+        baseContent.alertBox.alertOne.subHeader,
         [
           {
-            text: "Cancel",
+            text: baseContent.alertBox.alertOne.cancel,
             style: "cancel",
             onPress: () => null, // Do nothing, stay on screen
           },
           {
-            text: "OK",
+            text: baseContent.alertBox.alertOne.ok,
             onPress: () => {
               setQueueJoinType({
                 barberSelect: false,

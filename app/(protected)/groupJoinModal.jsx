@@ -127,7 +127,7 @@ const GroupJoinModal = () => {
     } catch (error) {
       setGroupJoinLoader(false);
       // Toast.error(error?.response?.data?.message)
-      Alert.alert("Notice", error?.response?.data?.message, [{ text: "OK" }]);
+      Alert.alert(baseContent.alertBox.alertOne.header, error?.response?.data?.message, [{ text: baseContent.alertBox.alertOne.ok }]);
       console.log("Error doing group join ", error);
     }
   };
@@ -190,13 +190,13 @@ const GroupJoinModal = () => {
 
     // ✅ Do NOT mask backend error
     if (!response.ok) {
-      throw new Error(data?.message || "Payment initialization failed");
+      throw new Error(data?.message || baseContent.errorStatesAndApi.paymentInitializationFailed );
     }
 
     const { paymentIntent, ephemeralKey, customer } = data;
 
     if (!paymentIntent || !ephemeralKey || !customer) {
-      throw new Error("Invalid Stripe response");
+      throw new Error(baseContent.errorStatesAndApi.invalidStripeError);
     }
 
     return { paymentIntent, ephemeralKey, customer };
@@ -263,7 +263,7 @@ const GroupJoinModal = () => {
     } catch (err) {
       console.log("Stripe error:", err?.message);
 
-      Alert.alert("Payment failed", err?.message || "Something went wrong");
+      Alert.alert(baseContent.alertBox.alertTwo.header, err?.message || baseContent.alertBox.alertTwo.subHeader);
     } finally {
       setLoading(false);
     }

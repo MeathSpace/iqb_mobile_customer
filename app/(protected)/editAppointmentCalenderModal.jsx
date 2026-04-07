@@ -101,8 +101,8 @@ const editAppointmentCalenderModal = () => {
       const { status } = await Calendar.requestCalendarPermissionsAsync();
       if (status !== "granted") {
         Alert.alert(
-          "Permission Denied",
-          "Please enable calendar access in settings.",
+          baseContent.alertBox.alertOne.header,
+          baseContent.alertBox.alertOne.subHeader,
         );
         return;
       }
@@ -118,7 +118,7 @@ const editAppointmentCalenderModal = () => {
         ) || calendars.find((cal) => cal.allowsModifications);
 
       if (!targetCalendar) {
-        throw new Error("No valid Google calendar found.");
+        throw new Error(baseContent.errorStatesAndApi.googleCalenderNotFound);
       }
 
       // ✅ 4. Parse Date & Time safely
@@ -154,8 +154,8 @@ const editAppointmentCalenderModal = () => {
         await Calendar.updateEventAsync(testId, eventConfig);
 
         Alert.alert(
-          "Success",
-          "Appointment updated! Please check your calendar.",
+          baseContent.alertBox.alertTwo.header,
+          baseContent.alertBox.alertTwo.subHeader,
         );
 
         router.replace({
@@ -166,11 +166,11 @@ const editAppointmentCalenderModal = () => {
           },
         });
       } else {
-        Alert.alert("Success", "Appointment event not found !");
+        Alert.alert(baseContent.alertBox.alertThree.header, baseContent.alertBox.alertThree.subHeader);
       }
     } catch (error) {
       console.error("❌ Calendar Error:", error);
-      Alert.alert("Error", error.message);
+      Alert.alert(baseContent.alertBox.alertFour.header, error.message);
     }
   };
 
@@ -220,7 +220,7 @@ const editAppointmentCalenderModal = () => {
       );
     } catch (error) {
       setEditAppointmentLoader(false);
-      Alert.alert("Notice", error?.response?.data?.message, [{ text: "OK" }]);
+      Alert.alert(baseContent.alertBox.alertFive.header, error?.response?.data?.message, [{ text: baseContent.alertBox.alertFive.ok }]);
       console.log(
         "Error doing edit appointment ",
         error?.response?.data?.message,
@@ -726,62 +726,6 @@ const editAppointmentCalenderModal = () => {
     </View>
   );
 };
-
-{
-  /* ===== FOOTER ===== */
-}
-// <View
-//   style={{
-//     padding: scale(24),
-//     paddingBottom: scale(10),
-//     borderTopWidth: 1,
-//     borderColor: colors.queueBorder,
-//   }}
-// >
-//   <TouchableOpacity
-//     onPress={editAppointmentLoader}
-//     disabled={editAppointmentLoader}
-//     style={{
-//       backgroundColor: editAppointmentLoader ? "#94a3b8" : "#0d9488",
-//       paddingVertical: verticalScale(18),
-//       borderRadius: moderateScale(16),
-//       alignItems: "center",
-//     }}
-//   >
-//     {editAppointmentLoader ? (
-//       <ActivityIndicator color="#fff" />
-//     ) : (
-//       <CustomText
-//         style={{
-//           color: "#fff",
-//           fontFamily: "AirbnbCereal_W_Bd",
-//           fontSize: moderateScale(16),
-//         }}
-//       >
-//         Save Booking
-//       </CustomText>
-//     )}
-//   </TouchableOpacity>
-
-//   <TouchableOpacity
-//     onPress={() => !editAppointmentLoader && router.back()}
-//     style={{
-//       marginTop: verticalScale(12),
-//       paddingVertical: verticalScale(8),
-//       alignItems: "center",
-//     }}
-//   >
-//     <CustomText
-//       style={{
-//         fontFamily: "AirbnbCereal_W_Bd",
-//         color: "#64748b",
-//         fontSize: moderateScale(15),
-//       }}
-//     >
-//       Go Back
-//     </CustomText>
-//   </TouchableOpacity>
-// </View>
 
 export default editAppointmentCalenderModal;
 
