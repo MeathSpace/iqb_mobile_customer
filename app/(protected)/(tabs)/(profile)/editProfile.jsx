@@ -303,9 +303,7 @@ const editProfile = () => {
       ];
 
       if (!allowedMimeTypes.includes(mimeType)) {
-        Toast.error(
-          baseContent.mimeNotInclude
-        );
+        Toast.error(baseContent.mimeNotInclude);
         return;
       }
 

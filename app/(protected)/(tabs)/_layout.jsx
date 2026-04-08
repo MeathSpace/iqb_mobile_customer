@@ -1,13 +1,12 @@
 import { useTheme } from "@react-navigation/native";
 import { Tabs } from "expo-router";
 import { useEffect, useRef } from "react";
-import { Animated, FlatList, Platform, Pressable, View } from "react-native";
+import { Animated, Platform, Pressable, View } from "react-native";
 import {
   SafeAreaView,
   useSafeAreaInsets,
 } from "react-native-safe-area-context";
 import { scale, verticalScale } from "react-native-size-matters";
-import AdvertiseCard from "../../../components/AdvertiseCard";
 import {
   CalenderIcon,
   HomeIcon,
@@ -16,8 +15,13 @@ import {
   SalonIcon,
 } from "../../../constants/icons";
 import { useAuth } from "../../../context/AuthContext";
+import { useLanguage } from "../../../context/LanguageContext";
+import i18n from "../../../src/localization/i18n";
 
 export default function TabLayout() {
+  const { locale } = useLanguage();
+  const baseContent = i18n.t("protected.tabs");
+
   const { colors } = useTheme();
 
   const insets = useSafeAreaInsets();
@@ -87,7 +91,7 @@ export default function TabLayout() {
           <Tabs.Screen
             name="home"
             options={{
-              title: "Home",
+              title: baseContent.home,
               tabBarIcon: ({ color, focused }) => (
                 <AnimatedTabIcon
                   focused={focused}
@@ -100,7 +104,7 @@ export default function TabLayout() {
           <Tabs.Screen
             name="queuelist"
             options={{
-              title: "Qlist",
+              title: baseContent.qlist,
               tabBarIcon: ({ color, focused }) => (
                 <AnimatedTabIcon
                   focused={focused}
@@ -113,7 +117,7 @@ export default function TabLayout() {
           <Tabs.Screen
             name="salon"
             options={{
-              title: "Salon",
+              title: baseContent.salon,
               tabBarIcon: ({ color, focused }) => (
                 <AnimatedTabIcon
                   focused={focused}
@@ -127,7 +131,7 @@ export default function TabLayout() {
           <Tabs.Screen
             name="appointment"
             options={{
-              title: "Appointment",
+              title: baseContent.appointment,
               tabBarIcon: ({ color, focused }) => (
                 <AnimatedTabIcon
                   focused={focused}
@@ -141,7 +145,7 @@ export default function TabLayout() {
           <Tabs.Screen
             name="(profile)"
             options={{
-              title: "Profile",
+              title: baseContent.profile,
               tabBarIcon: ({ color, focused }) => (
                 <AnimatedTabIcon
                   focused={focused}
@@ -159,7 +163,6 @@ export default function TabLayout() {
             }}
           />
         </Tabs>
-
       </SafeAreaView>
     </>
   );
@@ -212,30 +215,32 @@ function AnimatedTabIcon({ focused, color, Icon }) {
     <View style={{ alignItems: "center", justifyContent: "center" }}>
       {/* Pill Background */}
       <Animated.View
-        style={{
-          // position: "absolute",
-          // width: scale(50),
-          // height: verticalScale(30),
-          // borderRadius: 25,
-          // backgroundColor: focused ? color : "transparent",
-          // opacity: pillOpacity,
-          // transform: [{ scale: pillScale }],
-        }}
+        style={
+          {
+            // position: "absolute",
+            // width: scale(50),
+            // height: verticalScale(30),
+            // borderRadius: 25,
+            // backgroundColor: focused ? color : "transparent",
+            // opacity: pillOpacity,
+            // transform: [{ scale: pillScale }],
+          }
+        }
       />
 
       {/* Icon */}
       <Animated.View
-        style={{
-          // transform: [{ scale: iconScale }],
-        }}
+        style={
+          {
+            // transform: [{ scale: iconScale }],
+          }
+        }
       >
-        <Icon 
-        // color={focused ? "#FFFFFF" : colors.text} 
-        color={focused ? colors.accentColor : colors.text}
+        <Icon
+          // color={focused ? "#FFFFFF" : colors.text}
+          color={focused ? colors.accentColor : colors.text}
         />
       </Animated.View>
     </View>
   );
 }
-
-

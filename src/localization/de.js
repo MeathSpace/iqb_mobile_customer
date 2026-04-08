@@ -201,6 +201,14 @@ export default {
   },
 
   protected: {
+    tabs: {
+      home: "Startseite",
+      qlist: "Q-Liste",
+      salon: "Salon",
+      appointment: "Termine",
+      profile: "Profil",
+    },
+
     searchHeader: {
       placeholder: "Stadt oder Salonname suchen",
     },
@@ -263,6 +271,11 @@ export default {
           },
         },
         logout: "Abmelden",
+      },
+      language: {
+        header: "Sprache",
+        english: "Englisch",
+        german: "Deutsch",
       },
     },
 

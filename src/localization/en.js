@@ -175,6 +175,13 @@ export default {
   },
 
   protected: {
+    tabs: {
+      home: "Home",
+      qlist: "Qlist",
+      salon: "Salon",
+      appointment: "Appointment",
+      profile: "Profile",
+    },
     searchHeader: {
       placeholder: "Search city or salon name",
     },
@@ -234,6 +241,12 @@ export default {
         },
         logout: "Log Out",
       },
+
+      language: {
+        header: "language",
+        english: "English",
+        german: "German"
+      }
     },
     editProfile: {
       header: "Manage Account",
@@ -266,14 +279,15 @@ export default {
         fullNameLeastCharecter: "Full name must be at least 2 characters",
         fullNameMostCharecter: "Full name must be at most 20 characters",
         phoneNumberRequired: "Phone number is required",
-        dateOfBirthRequired: "Date of birth is required"
+        dateOfBirthRequired: "Date of birth is required",
       },
 
       profileUpdateSuccess: "Profile updated successfully",
-      pickImageAlertGranted: "Sorry, we need media library permissions to make this work!",
-      mimeNotInclude: "Invalid File Type. Only Webp, JPEG, JPG, and PNG images are allowed",
+      pickImageAlertGranted:
+        "Sorry, we need media library permissions to make this work!",
+      mimeNotInclude:
+        "Invalid File Type. Only Webp, JPEG, JPG, and PNG images are allowed",
       imageUploadSuccess: "Image uploaded successfully",
-
     },
     connectSalon: {
       header: "Are you sure you want to disconnect ?",
@@ -291,11 +305,12 @@ export default {
       },
       alertBox: {
         header: "Remove Favourite Salon",
-        subHeader: "Are you sure you want to remove this salon from your favourites ?",
+        subHeader:
+          "Are you sure you want to remove this salon from your favourites ?",
         cancel: "Cancel",
-        remove: "Yes, Remove"
+        remove: "Yes, Remove",
       },
-      somethingWentWrong: "Something went wrong"
+      somethingWentWrong: "Something went wrong",
     },
     helpAndSupport: {
       header: "Help & Support",
@@ -313,7 +328,7 @@ export default {
 
       errorStatesAndApi: {
         subjectRequired: "Subject is required",
-        bodyRequired: "Body is required"
+        bodyRequired: "Body is required",
       },
 
       alertBox: {
@@ -322,9 +337,9 @@ export default {
         ok: "Ok",
         error: {
           header: "Error",
-          subHeader: "Something went wrong. Please try again later."
-        }
-      }
+          subHeader: "Something went wrong. Please try again later.",
+        },
+      },
     },
     about: {
       index: {
@@ -662,10 +677,12 @@ export default {
       },
 
       errorStatesAndApi: {
-        permissionNotGranted: "Permission not granted to get push token for push notification!",
+        permissionNotGranted:
+          "Permission not granted to get push token for push notification!",
         projectIDNotFound: "Project ID not found",
-        physicalDevicePushNotification: "Must use physical device for push notifications",
-      }
+        physicalDevicePushNotification:
+          "Must use physical device for push notifications",
+      },
     },
     queuelist: {
       header: "Live Queue",
@@ -716,9 +733,9 @@ export default {
           header: "Confirm",
           subHeader: "If you go back now, your queue will be reset",
           cancel: "Cancel",
-          ok: "Ok"
-        }
-      }
+          ok: "Ok",
+        },
+      },
     },
     singleJoinBarberServices: {
       header: "Single Join (Services)",
@@ -743,9 +760,9 @@ export default {
           header: "Confirm",
           subHeader: "If you go back now, your queue will be reset",
           cancel: "Cancel",
-          ok: "OK"
-        }
-      }
+          ok: "OK",
+        },
+      },
     },
     singleJoinBarber: {
       header: "Single Join",
@@ -777,18 +794,18 @@ export default {
       alertBox: {
         alertOne: {
           header: "Notice",
-          ok: "OK"
+          ok: "OK",
         },
         alertTwo: {
           header: "Payment failed",
-          subHeader: "Something went wrong"
-        }
+          subHeader: "Something went wrong",
+        },
       },
 
       errorStatesAndApi: {
         paymentInitializationFailed: "Payment initialization failed",
         invalidStripeError: "Invalid Stripe response",
-      }
+      },
     },
     singleJoinSuccessPage: {
       header: "Queue Joined!",
@@ -808,8 +825,8 @@ export default {
       errorStatesAndApi: {
         memberRequired: "Member name is required",
         memberLeastCharecters: "Member name must be at least 2 characters",
-        memberMostCharecters: "Member name must be at most 20 characters"
-      }
+        memberMostCharecters: "Member name must be at most 20 characters",
+      },
     },
     groupJoin: {
       header: "Group Join (Services)",
@@ -822,10 +839,11 @@ export default {
 
       alertBox: {
         header: "Discard group join data ?",
-        subHeader: "All selected members will be cleared, and the group join information will be reset.",
+        subHeader:
+          "All selected members will be cleared, and the group join information will be reset.",
         cancel: "Cancel",
-        ok: "OK"
-      }
+        ok: "OK",
+      },
     },
     groupJoinBarber: {
       header: "Group Join (Stylists)",
@@ -855,11 +873,12 @@ export default {
       alertBox: {
         alertOne: {
           header: "Discard group join data ?",
-          subHeader: "All selected members will be cleared, and the group join information will be reset.",
+          subHeader:
+            "All selected members will be cleared, and the group join information will be reset.",
           cancel: "Cancel",
-          ok: "OK"
-        }
-      }
+          ok: "OK",
+        },
+      },
     },
     groupAddMemberModal: {
       header: "Add New Member",
@@ -872,8 +891,8 @@ export default {
       errorStatesAndApi: {
         memberRequired: "Member name is required",
         memberLeastCharecters: "Member name must be at least 2 characters",
-        memberMostCharecters: "Member name must be at most 20 characters"
-      }
+        memberMostCharecters: "Member name must be at most 20 characters",
+      },
     },
     groupJoinModal: {
       header: "Group Booking",
@@ -899,13 +918,13 @@ export default {
       alertBox: {
         alertOne: {
           header: "Notice",
-          ok: "OK"
+          ok: "OK",
         },
         alertTwo: {
           header: "Payment failed",
-          subHeader: "Something went wrong"
-        }
-      }
+          subHeader: "Something went wrong",
+        },
+      },
     },
     groupJoinSuccessPage: {
       header: "Queue Joined!",
@@ -979,15 +998,16 @@ export default {
         selectStylist: "Please select a stylist",
         selectBarber: "Please select a barber",
         selectTimeslot: "Please select a timeslot",
-        selectDate: "Please select a date"
+        selectDate: "Please select a date",
       },
 
       alertBox: {
         header: "Confirm",
-        subHeader: "If you go back now, your booking appointment progress will be lost. Are you sure you want to exit ?",
+        subHeader:
+          "If you go back now, your booking appointment progress will be lost. Are you sure you want to exit ?",
         cancel: "Cancel",
-        ok: "OK"
-      }
+        ok: "OK",
+      },
     },
     appointmentCalenderModal: {
       header: "Confirm Appointment",
@@ -1015,20 +1035,20 @@ export default {
       errorStatesAndApi: {
         noGoogleCalender: "No valid Google calendar found.",
         paymentInitializationFailed: "Payment initialization failed",
-        invalidStripeError: "Invalid Stripe response"
+        invalidStripeError: "Invalid Stripe response",
       },
 
       alertBox: {
         alertOne: {
           header: "Permission Denied",
-          subHeader: "Please enable calendar access in settings."
+          subHeader: "Please enable calendar access in settings.",
         },
         alertTwo: {
           header: "Success",
-          subHeader: "Appointment created! Check your calendar."
+          subHeader: "Appointment created! Check your calendar.",
         },
         alertThree: {
-          header: "Error"
+          header: "Error",
         },
         alertFour: {
           header: "Notice",
@@ -1036,9 +1056,9 @@ export default {
         },
         alertFive: {
           header: "Payment failed",
-          subHeader: "Something went wrong"
-        }
-      }
+          subHeader: "Something went wrong",
+        },
+      },
     },
     appointmentSuccessPage: {
       appointmentBooked: "Appointment Booked !",
@@ -1071,17 +1091,17 @@ export default {
           header: "Delete Appointment",
           subHeader: "Are you sure you want to delete this appointment ?",
           cancel: "Cancel",
-          confirm: "Confirm"
+          confirm: "Confirm",
         },
         alertTwo: {
           header: "Warning !",
-          ok: "OK"
+          ok: "OK",
         },
         alertThree: {
           header: "Permission Denied",
-          subHeader: "Please enable calendar access in settings."
-        }
-      }
+          subHeader: "Please enable calendar access in settings.",
+        },
+      },
     },
     appointmentpopup: {
       header: "Booking options",
@@ -1130,17 +1150,18 @@ export default {
 
       errorStatesAndApi: {
         selectDate: "Please select a date",
-        selectTimeslot: "Please select a timeslot"
+        selectTimeslot: "Please select a timeslot",
       },
 
       alertBox: {
         alertOne: {
           header: "Confirm",
-          subHeader: "If you go back now, your edit appointment progress will be lost. Are you sure you want to exit ?",
+          subHeader:
+            "If you go back now, your edit appointment progress will be lost. Are you sure you want to exit ?",
           cancel: "Cancel",
-          ok: "OK"
-        }
-      }
+          ok: "OK",
+        },
+      },
     },
     editAppointmentCalenderModal: {
       header: "Confirm Appointment",
@@ -1173,24 +1194,24 @@ export default {
       alertBox: {
         alertOne: {
           header: "Permission Denied",
-          subHeader: "Please enable calendar access in settings."
+          subHeader: "Please enable calendar access in settings.",
         },
         alertTwo: {
           header: "Success",
-          subHeader: "Appointment updated! Please check your calendar."
+          subHeader: "Appointment updated! Please check your calendar.",
         },
         alertThree: {
           header: "Error",
-          subHeader: "Appointment event not found !"
+          subHeader: "Appointment event not found !",
         },
         alertFour: {
-          header: "Error"
+          header: "Error",
         },
         alertFive: {
           header: "Notice",
-          ok: "OK"
-        }
-      }
+          ok: "OK",
+        },
+      },
     },
   },
 };

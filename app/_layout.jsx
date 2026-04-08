@@ -15,32 +15,12 @@ import { StyleSheet, useColorScheme } from "react-native";
 import ToastManager from "toastify-react-native";
 import { AuthProvider } from "../context/AuthContext";
 import { GlobalProvider } from "../context/GlobalContext";
+import { LanguageProvider } from "../context/LanguageContext";
+
 
 SplashScreen.preventAutoHideAsync();
 
 const RootLayout = () => {
-  // const colorScheme = useColorScheme()
-
-  // useEffect(() => {
-  //   if (colorScheme === 'dark') {
-  //     SystemUI.setBackgroundColorAsync('#151718');
-  //   } else {
-  //     SystemUI.setBackgroundColorAsync('#ffffff');
-  //   }
-  // }, [colorScheme]);
-
-  // const segments = useSegments();
-
-  // const isInsideTabs = segments.includes('(tabs)');
-
-  // const backgroundColor = isInsideTabs
-  //   ? colorScheme === 'dark'
-  //     ? '#151718'
-  //     : '#efefef'
-  //   : colorScheme === 'dark'
-  //     ? '#151718'
-  //     : '#ffffff'
-
   const colorScheme = useColorScheme();
 
   // Load custom fonts
@@ -88,7 +68,7 @@ const RootLayout = () => {
       // linearColor2: "#1a1a1a",
       linearColor1: "#E65100",
       linearColor2: "#FF8F00",
-      accentColor: "#E65100"
+      accentColor: "#E65100",
     },
   };
 
@@ -119,19 +99,9 @@ const RootLayout = () => {
 
       linearColor1: "#FF6A00",
       linearColor2: "#FFB347",
-      accentColor: "#FF6A00"
+      accentColor: "#FF6A00",
     },
   };
-
-  // 🌿 Color Palette
-  // -----------------------------------------
-  // const colors = {
-  //   teal500: '#14B8A6', // Used in gradients, icons
-  //   teal600: '#0D9488', // Darker gradient
-  //   teal400: '#2DD4BF', // Notification badge dot
-  //   green500: '#22C55E', // System background with 10% opacity
-  //   green600: '#16A34A', // “Online” text
-  // };
 
   return (
     <StripeProvider
@@ -139,25 +109,27 @@ const RootLayout = () => {
       merchantIdentifier="merchant.identifier" // required for Apple Pay
       urlScheme="your-url-scheme" // required for 3D Secure and bank redirects
     >
-      <AuthProvider>
-        <GlobalProvider>
-          <ClerkProvider
-            telemetry={false}
-            publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY}
-            tokenCache={tokenCache}
-          >
-            {/* <AppInitializer> */}
-            <ThemeProvider
-              value={colorScheme === "dark" ? MyDarkTheme : MyLightTheme}
+      <LanguageProvider>
+        <AuthProvider>
+          <GlobalProvider>
+            <ClerkProvider
+              telemetry={false}
+              publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY}
+              tokenCache={tokenCache}
             >
-              <Stack screenOptions={{ headerShown: false }} />
-              <StatusBar style="auto" />
-              <ToastManager />
-            </ThemeProvider>
-            {/* </AppInitializer> */}
-          </ClerkProvider>
-        </GlobalProvider>
-      </AuthProvider>
+              {/* <AppInitializer> */}
+              <ThemeProvider
+                value={colorScheme === "dark" ? MyDarkTheme : MyLightTheme}
+              >
+                <Stack screenOptions={{ headerShown: false }} />
+                <StatusBar style="auto" />
+                <ToastManager />
+              </ThemeProvider>
+              {/* </AppInitializer> */}
+            </ClerkProvider>
+          </GlobalProvider>
+        </AuthProvider>
+      </LanguageProvider>
     </StripeProvider>
   );
 };

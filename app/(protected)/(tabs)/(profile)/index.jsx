@@ -28,11 +28,12 @@ import {
 } from "../../../../constants/icons";
 import { useAuth } from "../../../../context/AuthContext";
 import { useGlobal } from "../../../../context/GlobalContext";
-import i18n from "../../../../src/localization/i18n"
+import { useLanguage } from "../../../../context/LanguageContext";
+import i18n from "../../../../src/localization/i18n";
 
 const index = () => {
-
-  const baseContent = i18n.t("protected.profile")
+  const { changeLanguage, locale } = useLanguage();
+  const baseContent = i18n.t("protected.profile");
 
   const { colors } = useTheme();
   const { signOut } = useClerk();
@@ -127,7 +128,10 @@ const index = () => {
       baseContent.options.deleteAccount.alert.header,
       baseContent.options.deleteAccount.alert.subHeader,
       [
-        { text: baseContent.options.deleteAccount.alert.cancel, style: "cancel" },
+        {
+          text: baseContent.options.deleteAccount.alert.cancel,
+          style: "cancel",
+        },
         {
           text: baseContent.options.deleteAccount.alert.delete,
           style: "destructive",
@@ -309,7 +313,11 @@ const index = () => {
                   { backgroundColor: "#DC26261A" }, // light red bg for delete
                 ]}
               >
-                <Feather name="trash-2" size={moderateScale(24)} color="#DC2626" />
+                <Feather
+                  name="trash-2"
+                  size={moderateScale(24)}
+                  color="#DC2626"
+                />
                 {/* trash icon + red color */}
               </View>
               <CustomText style={[styles.optionLabel]}>
@@ -321,8 +329,90 @@ const index = () => {
                 style={{ marginLeft: "auto" }}
               />
             </TouchableOpacity>
-
           </View>
+        </View>
+
+        {/* Header */}
+        <CustomText
+          style={{
+            fontFamily: "AirbnbCereal_W_Bd",
+          }}
+        >
+          {baseContent?.language?.header}
+        </CustomText>
+        <View
+          style={[
+            styles.optionsBox,
+            {
+              backgroundColor: colors.cardColor,
+              borderColor: colors.queueBorder,
+              marginTop: verticalScale(10),
+            },
+          ]}
+        >
+          {/* English */}
+          <TouchableOpacity
+            style={styles.optionRow}
+            onPress={() => changeLanguage("en")}
+          >
+            <View
+              style={[
+                styles.optionIconWrapper,
+                { backgroundColor: `${colors.accentColor}1A` },
+              ]}
+            >
+              <Feather
+                name="globe"
+                size={moderateScale(20)}
+                color={colors.accentColor}
+              />
+            </View>
+
+            <CustomText style={styles.optionLabel}>{baseContent?.language?.english}</CustomText>
+
+            {locale === "en" && (
+              <Feather
+                name="check"
+                size={moderateScale(18)}
+                color={colors.accentColor}
+                style={{ marginLeft: "auto" }}
+              />
+            )}
+          </TouchableOpacity>
+
+          <View
+            style={[styles.separator, { backgroundColor: colors.queueBorder }]}
+          />
+
+          {/* German */}
+          <TouchableOpacity
+            style={styles.optionRow}
+            onPress={() => changeLanguage("de")}
+          >
+            <View
+              style={[
+                styles.optionIconWrapper,
+                { backgroundColor: `${colors.accentColor}1A` },
+              ]}
+            >
+              <Feather
+                name="globe"
+                size={moderateScale(20)}
+                color={colors.accentColor}
+              />
+            </View>
+
+            <CustomText style={styles.optionLabel}>{baseContent?.language?.german}</CustomText>
+
+            {locale === "de" && (
+              <Feather
+                name="check"
+                size={moderateScale(18)}
+                color={colors.accentColor}
+                style={{ marginLeft: "auto" }}
+              />
+            )}
+          </TouchableOpacity>
         </View>
 
         {/* Log Out */}
