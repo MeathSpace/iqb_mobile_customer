@@ -38,9 +38,24 @@ import {
   ErrorIcon,
 } from "../../../../constants/icons";
 import { useAuth } from "../../../../context/AuthContext";
+import { useLanguage } from "../../../../context/LanguageContext";
 import i18n from "../../../../src/localization/i18n";
 
 const editProfile = () => {
+  const { locale } = useLanguage();
+
+  // Map your i18n codes to CountryPicker's translation codes
+  const countryTranslationMap = {
+    en: "common",
+    de: "deu",
+  };
+
+  // Map your i18n codes to the Search Placeholder text
+  const searchPlaceholderMap = {
+    en: "Search country...",
+    de: "Land suchen...",
+  };
+
   const baseContent = i18n.t("protected.editProfile");
   const colorScheme = useColorScheme();
 
@@ -686,6 +701,10 @@ const editProfile = () => {
 
               {countryPickerVisible && (
                 <CountryPicker
+                  translation={countryTranslationMap[locale]}
+                  filterProps={{
+                    placeholder: searchPlaceholderMap[locale],
+                  }}
                   withFilter={true}
                   withFlagButton={true}
                   withFlag={true}

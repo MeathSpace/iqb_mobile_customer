@@ -1,5 +1,7 @@
 import { Colors } from "@/constants/Colors";
+import { useClerk, useUser } from "@clerk/clerk-expo";
 import DateTimePicker from "@react-native-community/datetimepicker";
+import { usePreventRemove, useTheme } from "@react-navigation/native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -15,21 +17,33 @@ import {
   useColorScheme,
   View,
 } from "react-native";
+import CountryPicker, { DARK_THEME } from "react-native-country-picker-modal";
+import PhoneInput from "react-native-phone-input";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import CustomScrollView from "../../components/CustomScrollView";
 import CustomSecondaryText from "../../components/CustomSecondaryText";
 import CustomText from "../../components/CustomText";
 import ProgressHeader from "../../components/ProgressHeader";
 import { ArrowDownIcon, CalendarIcon, ErrorIcon } from "../../constants/icons";
-import { useClerk, useUser } from "@clerk/clerk-expo";
-import { usePreventRemove, useTheme } from "@react-navigation/native";
-import CountryPicker, { DARK_THEME } from "react-native-country-picker-modal";
-import PhoneInput from "react-native-phone-input";
-import i18n from "../../src/localization/i18n"
+import { useLanguage } from "../../context/LanguageContext";
+import i18n from "../../src/localization/i18n";
 
 const personalInfo = () => {
+  const { locale } = useLanguage();
 
-  const baseContent = i18n.t("auth.personalInfo")
+  // Map your i18n codes to CountryPicker's translation codes
+  const countryTranslationMap = {
+    en: "common",
+    de: "deu",
+  };
+
+  // Map your i18n codes to the Search Placeholder text
+  const searchPlaceholderMap = {
+    en: "Search country...",
+    de: "Land suchen...",
+  };
+
+  const baseContent = i18n.t("auth.personalInfo");
 
   const { email, authType, password } = useLocalSearchParams();
 
@@ -48,8 +62,6 @@ const personalInfo = () => {
 
   const [calenderModal, setCalenderModal] = useState(false);
   // const [selectedCountry, setSelectedCountry] = useState({});
-
-
 
   // console.log("sdv", date)
 
@@ -296,9 +308,7 @@ const personalInfo = () => {
                 {baseContent.header}
               </CustomText>
 
-              <CustomSecondaryText>
-                {baseContent.subHeader}
-              </CustomSecondaryText>
+              <CustomSecondaryText>{baseContent.subHeader}</CustomSecondaryText>
             </View>
 
             <View style={styles.inputWrapper}>
@@ -397,7 +407,11 @@ const personalInfo = () => {
                       shadowRadius: 4,
                     }}
                   >
-                    {[baseContent.gender.male, baseContent.gender.female, baseContent.gender.other].map((item, index) => (
+                    {[
+                      baseContent.gender.male,
+                      baseContent.gender.female,
+                      baseContent.gender.other,
+                    ].map((item, index) => (
                       <Pressable
                         key={index}
                         onPress={() => {
@@ -466,6 +480,10 @@ const personalInfo = () => {
 
               {countryPickerVisible && (
                 <CountryPicker
+                  translation={countryTranslationMap[locale]}
+                  filterProps={{
+                    placeholder: searchPlaceholderMap[locale],
+                  }}
                   withFilter={true}
                   withFlagButton={true}
                   withFlag={true}
@@ -653,10 +671,15 @@ const personalInfo = () => {
 
           <TouchableOpacity
             onPress={() => saveHandler()}
-            style={[styles.signinButton, {backgroundColor: colors.accentColor}]}
+            style={[
+              styles.signinButton,
+              { backgroundColor: colors.accentColor },
+            ]}
             activeOpacity={0.85}
           >
-            <CustomText style={styles.signinButtonText}>{baseContent.saveAndNext}</CustomText>
+            <CustomText style={styles.signinButtonText}>
+              {baseContent.saveAndNext}
+            </CustomText>
           </TouchableOpacity>
         </View>
       </TouchableWithoutFeedback>
@@ -733,7 +756,7 @@ const styles = StyleSheet.create({
 
   signinButton: {
     width: "100%",
-     // bg-teal-500
+    // bg-teal-500
     paddingVertical: verticalScale(12), // py-4
     borderRadius: scale(8), // rounded-xl
     alignItems: "center",
@@ -745,5 +768,3 @@ const styles = StyleSheet.create({
     fontSize: scale(16),
   },
 });
-
-
