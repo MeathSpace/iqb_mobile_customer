@@ -62,8 +62,6 @@ const singleJoinBarberServices = () => {
 
   const parsedSelectBarber = JSON.parse(selectBarber);
 
-  // console.log("Parsed Selected Barber ", parsedSelectBarber)
-
   const router = useRouter();
   const { colors } = useTheme();
   const colorScheme = useColorScheme();
@@ -86,8 +84,8 @@ const singleJoinBarberServices = () => {
         const { data } = await axios.post(
           `${BASE_URL}/mobileRoutes/getServicesByBarberId`,
           {
-            salonId: 1,
-            barberId: 1,
+            salonId: authenticatedUser?.salonId,
+            barberId: parsedSelectBarber?.barberId,
           },
         );
 
