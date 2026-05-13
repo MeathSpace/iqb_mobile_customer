@@ -40,13 +40,15 @@ export const LanguageProvider = ({ children }) => {
   const [locale, setLocale] = useState(i18n.locale);
   const [isReady, setIsReady] = useState(false); // prevent flicker
 
+  console.log("Current Locale:", locale);
+
   // ---------------------------------------------------------
   // 3. Load saved language on app start
   // ---------------------------------------------------------
   useEffect(() => {
     const loadLanguage = async () => {
       try {
-        const savedLang = await AsyncStorage.getItem(locale);
+        const savedLang = await AsyncStorage.getItem("currentLanguage");
 
         if (savedLang) {
           i18n.locale = savedLang;

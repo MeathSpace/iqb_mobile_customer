@@ -332,14 +332,15 @@ const index = () => {
           </View>
         </View>
 
-        {/* Header */}
-        <CustomText
+        {/*  Language Section */}
+        {/* <CustomText
           style={{
             fontFamily: "AirbnbCereal_W_Bd",
           }}
         >
           {baseContent?.language?.header}
         </CustomText>
+        
         <View
           style={[
             styles.optionsBox,
@@ -350,10 +351,12 @@ const index = () => {
             },
           ]}
         >
-          {/* English */}
           <TouchableOpacity
             style={styles.optionRow}
-            onPress={() => changeLanguage("en")}
+            onPress={async () => {
+              await AsyncStorage.setItem("currentLanguage","en");
+              changeLanguage("en");
+            }}
           >
             <View
               style={[
@@ -368,7 +371,9 @@ const index = () => {
               />
             </View>
 
-            <CustomText style={styles.optionLabel}>{baseContent?.language?.english}</CustomText>
+            <CustomText style={styles.optionLabel}>
+              {baseContent?.language?.english}
+            </CustomText>
 
             {locale === "en" && (
               <Feather
@@ -384,10 +389,12 @@ const index = () => {
             style={[styles.separator, { backgroundColor: colors.queueBorder }]}
           />
 
-          {/* German */}
           <TouchableOpacity
             style={styles.optionRow}
-            onPress={() => changeLanguage("de")}
+            onPress={async () => {
+              await AsyncStorage.setItem("currentLanguage", "de");
+              changeLanguage("de");
+            }}
           >
             <View
               style={[
@@ -402,7 +409,9 @@ const index = () => {
               />
             </View>
 
-            <CustomText style={styles.optionLabel}>{baseContent?.language?.german}</CustomText>
+            <CustomText style={styles.optionLabel}>
+              {baseContent?.language?.german}
+            </CustomText>
 
             {locale === "de" && (
               <Feather
@@ -413,7 +422,7 @@ const index = () => {
               />
             )}
           </TouchableOpacity>
-        </View>
+        </View> */}
 
         {/* Log Out */}
         <TouchableOpacity
