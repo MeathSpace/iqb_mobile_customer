@@ -4,7 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { usePreventRemove, useTheme } from "@react-navigation/native";
 import axios from "axios";
 import { useFocusEffect, useRouter } from "expo-router";
-import { useCallback, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import {
   FlatList,
   Platform,
@@ -27,8 +27,7 @@ import { useGlobal } from "../../../context/GlobalContext";
 import i18n from "../../../src/localization/i18n";
 
 const QueueList = () => {
-
-  const baseContent = i18n.t("protected.queuelist")
+  const baseContent = i18n.t("protected.queuelist");
 
   const { authenticatedUser } = useAuth();
   const { homeDashboardData } = useGlobal();
@@ -53,6 +52,18 @@ const QueueList = () => {
           },
         },
       );
+
+      if (!data?.isJoinedQueue) {
+        setQlistData((prev) => ({
+          ...prev,
+          loading: false,
+          data: data?.response,
+          success: true,
+          error: null,
+          isJoinedQueue: data?.isJoinedQueue,
+        }));
+        return;
+      }
 
       const multipleBarbers = data?.response?.filter(
         (qlistItem) => qlistItem.customerEmail === authenticatedUser?.email,
@@ -103,7 +114,6 @@ const QueueList = () => {
           customerEmail: authenticatedUser?.email,
         },
       );
-      // console.log(data)
 
       setShowHideQueBtn((prev) => ({
         ...prev,
@@ -123,10 +133,6 @@ const QueueList = () => {
       console.log("Error fetching queue button status ", error);
     }
   };
-
-  const socket = io("https://iqb-final.onrender.com", {
-    transports: ["websocket"],
-  });
 
   const [getSalonFeature, setGetSalonFeature] = useState({
     salonFeature: null,
@@ -165,22 +171,36 @@ const QueueList = () => {
     }
   };
 
+
+  // Create socket ref
+  const socketRef = useRef(null);
+
   useFocusEffect(
     useCallback(() => {
+      // Create socket connection ONLY if not already connected
+      if (!socketRef.current) {
+        socketRef.current = io("https://iqb-final.onrender.com", {
+          transports: ["websocket"],
+        });
+      }
+
+      const socket = socketRef.current;
+
+      // Initial API calls
       fetchQlist();
       fetSalonFeatureData();
-
       fetchShowHideQueueButton();
 
-      socket.emit("joinSalon", authenticatedUser?.salonId); // this is for queue list
+      // Join socket rooms
+      socket.emit("joinSalon", authenticatedUser?.salonId);
 
       socket.emit("customerJoinQueueButton", {
         salonId: authenticatedUser?.salonId,
         customerEmail: authenticatedUser?.email,
-      }); // this is for show/hide joinqueue button
+      });
 
-      socket.on("queueButtonToggle", (showhideQueueBtnDta) => {
-        // console.log("showhideBtn ", showhideQueueBtnDta)
+      // Queue button toggle listener
+      const handleQueueButtonToggle = (showhideQueueBtnDta) => {
         setShowHideQueBtn((prev) => ({
           ...prev,
           loading: false,
@@ -188,20 +208,36 @@ const QueueList = () => {
           success: true,
           error: null,
         }));
-      });
+      };
 
-      socket.on("queueUpdated", (queueData) => {
+      // Queue update listener
+      const handleQueueUpdated = (queueData) => {
         const multipleBarbers = queueData?.filter(
           (qlistItem) => qlistItem.customerEmail === authenticatedUser?.email,
         );
 
+        // Customer not in queue anymore
+        // Show full queue list
+        if (multipleBarbers.length === 0) {
+          setQlistData((prev) => ({
+            ...prev,
+            loading: false,
+            data: queueData,
+            success: true,
+            error: null,
+            isJoinedQueue: false,
+          }));
+
+          return;
+        }
+
+        // Customer still in queue
+        // Show only related barber queues
         const multipleBarberIds = multipleBarbers.map((item) => item.barberId);
 
-        const filteredQlistData = queueData?.filter((qlistItem) => {
-          if (multipleBarberIds.includes(qlistItem.barberId)) {
-            return qlistItem;
-          }
-        });
+        const filteredQlistData = queueData?.filter((qlistItem) =>
+          multipleBarberIds.includes(qlistItem.barberId),
+        );
 
         setQlistData((prev) => ({
           ...prev,
@@ -209,8 +245,23 @@ const QueueList = () => {
           data: filteredQlistData,
           success: true,
           error: null,
+          isJoinedQueue: true,
         }));
-      });
+      };
+
+      // Register listeners
+      socket.on("queueButtonToggle", handleQueueButtonToggle);
+      socket.on("queueUpdated", handleQueueUpdated);
+
+      // Cleanup
+      return () => {
+        socket.off("queueButtonToggle", handleQueueButtonToggle);
+        socket.off("queueUpdated", handleQueueUpdated);
+
+        // Disconnect socket when screen unfocuses
+        socket.disconnect();
+        socketRef.current = null;
+      };
     }, [authenticatedUser]),
   );
 
@@ -327,7 +378,9 @@ const QueueList = () => {
               ]}
               activeOpacity={0.85}
             >
-              <CustomText style={styles.queueButtonText}>{baseContent.joinQueue}</CustomText>
+              <CustomText style={styles.queueButtonText}>
+                {baseContent.joinQueue}
+              </CustomText>
             </TouchableOpacity>
           </View>
         ) : null}
@@ -492,7 +545,7 @@ const QueueList = () => {
               <View
                 style={[
                   styles.iconContainer,
-                  { backgroundColor: `${colors.accentColor}1A`},
+                  { backgroundColor: `${colors.accentColor}1A` },
                 ]}
               >
                 <Feather
@@ -538,9 +591,12 @@ const QueueList = () => {
 
                   router.push("/joinpopup");
                 }}
-                style={[styles.queueButton, {
-                  backgroundColor: `${colors.accentColor}`
-                }]}
+                style={[
+                  styles.queueButton,
+                  {
+                    backgroundColor: `${colors.accentColor}`,
+                  },
+                ]}
                 activeOpacity={0.85}
               >
                 <CustomText style={styles.queueButtonText}>
@@ -559,15 +615,15 @@ export default QueueList;
 
 const styles = StyleSheet.create({
   queueButton: {
-    width: "100%", 
-    paddingVertical: verticalScale(16), 
-    borderRadius: scale(12), 
-    marginBottom: verticalScale(15), 
+    width: "100%",
+    paddingVertical: verticalScale(16),
+    borderRadius: scale(12),
+    marginBottom: verticalScale(15),
     alignItems: "center",
     justifyContent: "center",
   },
   queueButtonText: {
-    color: "#fff", 
+    color: "#fff",
     fontFamily: "AirbnbCereal_W_XBd",
     fontSize: scale(16),
   },
@@ -632,35 +688,3 @@ const styles = StyleSheet.create({
     marginHorizontal: "auto",
   },
 });
-
-// import { Platform, StyleSheet, Text, View } from 'react-native'
-// import React from 'react'
-// import { scale, verticalScale } from 'react-native-size-matters'
-// import { SafeAreaView, useSafeAreaInsets } from 'react-native-safe-area-context'
-
-// const queuelist = () => {
-
-//     const insets = useSafeAreaInsets();
-
-//     return (
-//         <View style={{
-//             flex: 1,
-//             backgroundColor: "red",
-//             justifyContent: "center",
-//             alignItems: "center",
-//             paddingBottom: Platform.OS === "ios" ? insets.bottom : undefined
-//         }}>
-//             <View style={{
-//                 height: scale(200),
-//                 width: scale(200),
-//                 backgroundColor: "#fff"
-//             }}>
-
-//             </View>
-//         </View>
-//     )
-// }
-
-// export default queuelist
-
-// const styles = StyleSheet.create({})

@@ -114,8 +114,7 @@ const QlistItem = ({
   item,
   index,
   qlistLength,
-  setQlistData,
-  setShowHideQueBtn,
+  setQlistData
 }) => {
   const { colors } = useTheme();
   const { authenticatedUser } = useAuth();
@@ -154,61 +153,9 @@ const QlistItem = ({
             );
 
             Toast.success(data?.message || "Customer cancelled successfully");
-
-            const { data: queuelistData } = await axios.get(
-              `${BASE_URL}/mobileRoutes/getQlistBySalonId`,
-              {
-                params: {
-                  salonId: authenticatedUser?.salonId,
-                  customerEmail: authenticatedUser?.email,
-                },
-              },
-            );
-
-            const multipleBarbers = queuelistData?.response?.filter(
-              (qlistItem) =>
-                qlistItem.customerEmail === authenticatedUser?.email,
-            );
-
-            const multipleBarberIds = multipleBarbers.map(
-              (item) => item.barberId,
-            );
-
-            const filteredQlistData = queuelistData?.response?.filter(
-              (qlistItem) => {
-                if (multipleBarberIds.includes(qlistItem.barberId)) {
-                  return qlistItem;
-                }
-              },
-            );
-
-            setQlistData((prev) => ({
-              ...prev,
-              loading: false,
-              data: filteredQlistData,
-              success: true,
-              error: null,
-              isJoinedQueue: queuelistData?.isJoinedQueue,
-            }));
-
-            // setQlistData((prev) => ({ ...prev, loading: false, data: queuelistData?.response, success: true, error: null, isJoinedQueue: queuelistData?.isJoinedQueue }))
           } catch (error) {
             Toast.error(error?.response?.data?.message);
             console.log("Canceled queue error ", error?.response?.data);
-            setQlistData((prev) => ({
-              ...prev,
-              loading: false,
-              data: null,
-              success: false,
-              error: error,
-            }));
-            setShowHideQueBtn((prev) => ({
-              ...prev,
-              loading: false,
-              data: null,
-              success: false,
-              error: error,
-            }));
           }
         },
       },
