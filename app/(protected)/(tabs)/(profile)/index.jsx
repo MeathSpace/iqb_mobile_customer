@@ -15,6 +15,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   View,
+  Modal,
 } from "react-native";
 import { moderateScale, scale, verticalScale } from "react-native-size-matters";
 import CustomText from "../../../../components/CustomText";
@@ -30,8 +31,11 @@ import { useAuth } from "../../../../context/AuthContext";
 import { useGlobal } from "../../../../context/GlobalContext";
 import { useLanguage } from "../../../../context/LanguageContext";
 import i18n from "../../../../src/localization/i18n";
+import { useState } from "react";
 
 const index = () => {
+  const [languageModalVisible, setLanguageModalVisible] = useState(false);
+
   const { changeLanguage, locale } = useLanguage();
   const baseContent = i18n.t("protected.profile");
 
@@ -332,15 +336,15 @@ const index = () => {
           </View>
         </View>
 
-        {/*  Language Section */}
-        {/* <CustomText
+        {/* Language Section */}
+        <CustomText
           style={{
             fontFamily: "AirbnbCereal_W_Bd",
           }}
         >
           {baseContent?.language?.header}
         </CustomText>
-        
+
         <View
           style={[
             styles.optionsBox,
@@ -353,10 +357,7 @@ const index = () => {
         >
           <TouchableOpacity
             style={styles.optionRow}
-            onPress={async () => {
-              await AsyncStorage.setItem("currentLanguage","en");
-              changeLanguage("en");
-            }}
+            onPress={() => setLanguageModalVisible(true)}
           >
             <View
               style={[
@@ -372,57 +373,127 @@ const index = () => {
             </View>
 
             <CustomText style={styles.optionLabel}>
-              {baseContent?.language?.english}
+              {locale === "en"
+                ? baseContent?.language?.english
+                : baseContent?.language?.german}
             </CustomText>
 
-            {locale === "en" && (
-              <Feather
-                name="check"
-                size={moderateScale(18)}
-                color={colors.accentColor}
-                style={{ marginLeft: "auto" }}
-              />
-            )}
+            <RightIcon
+              size={moderateScale(16)}
+              color={colors.text}
+              style={{ marginLeft: "auto" }}
+            />
           </TouchableOpacity>
+        </View>
 
-          <View
-            style={[styles.separator, { backgroundColor: colors.queueBorder }]}
-          />
-
-          <TouchableOpacity
-            style={styles.optionRow}
-            onPress={async () => {
-              await AsyncStorage.setItem("currentLanguage", "de");
-              changeLanguage("de");
-            }}
+        {/* Language Modal */}
+        <Modal
+          visible={languageModalVisible}
+          transparent
+          animationType="fade"
+          onRequestClose={() => setLanguageModalVisible(false)}
+        >
+          <Pressable
+            style={styles.modalOverlay}
+            onPress={() => setLanguageModalVisible(false)}
           >
-            <View
+            <Pressable
               style={[
-                styles.optionIconWrapper,
-                { backgroundColor: `${colors.accentColor}1A` },
+                styles.modalContainer,
+                { backgroundColor: colors.cardColor },
               ]}
             >
-              <Feather
-                name="globe"
-                size={moderateScale(20)}
-                color={colors.accentColor}
-              />
-            </View>
+              <CustomText
+                style={{
+                  fontFamily: "AirbnbCereal_W_XBd",
+                  fontSize: scale(18),
+                  marginBottom: verticalScale(16),
+                }}
+              >
+                {baseContent?.language?.header}
+              </CustomText>
 
-            <CustomText style={styles.optionLabel}>
-              {baseContent?.language?.german}
-            </CustomText>
+              {/* English */}
+              <TouchableOpacity
+                style={styles.modalOption}
+                onPress={async () => {
+                  await AsyncStorage.setItem("currentLanguage", "en");
+                  changeLanguage("en");
+                  setLanguageModalVisible(false);
+                }}
+              >
+                <View
+                  style={[
+                    styles.optionIconWrapper,
+                    { backgroundColor: `${colors.accentColor}1A` },
+                  ]}
+                >
+                  <Feather
+                    name="globe"
+                    size={moderateScale(20)}
+                    color={colors.accentColor}
+                  />
+                </View>
 
-            {locale === "de" && (
-              <Feather
-                name="check"
-                size={moderateScale(18)}
-                color={colors.accentColor}
-                style={{ marginLeft: "auto" }}
+                <CustomText style={styles.optionLabel}>
+                  {baseContent?.language?.english}
+                </CustomText>
+
+                {locale === "en" && (
+                  <Feather
+                    name="check"
+                    size={moderateScale(18)}
+                    color={colors.accentColor}
+                    style={{ marginLeft: "auto" }}
+                  />
+                )}
+              </TouchableOpacity>
+
+              <View
+                style={[
+                  styles.separator,
+                  { backgroundColor: colors.queueBorder },
+                ]}
               />
-            )}
-          </TouchableOpacity>
-        </View> */}
+
+              {/* German */}
+              <TouchableOpacity
+                style={styles.modalOption}
+                onPress={async () => {
+                  await AsyncStorage.setItem("currentLanguage", "de");
+                  changeLanguage("de");
+                  setLanguageModalVisible(false);
+                }}
+              >
+                <View
+                  style={[
+                    styles.optionIconWrapper,
+                    { backgroundColor: `${colors.accentColor}1A` },
+                  ]}
+                >
+                  <Feather
+                    name="globe"
+                    size={moderateScale(20)}
+                    color={colors.accentColor}
+                  />
+                </View>
+
+                <CustomText style={styles.optionLabel}>
+                  {baseContent?.language?.german}
+                </CustomText>
+
+                {locale === "de" && (
+                  <Feather
+                    name="check"
+                    size={moderateScale(18)}
+                    color={colors.accentColor}
+                    style={{ marginLeft: "auto" }}
+                  />
+                )}
+              </TouchableOpacity>
+            </Pressable>
+          </Pressable>
+        </Modal>
 
         {/* Log Out */}
         <TouchableOpacity
@@ -536,5 +607,23 @@ const styles = StyleSheet.create({
   },
   logoutText: {
     fontWeight: "700",
+  },
+
+  modalOverlay: {
+    flex: 1,
+    backgroundColor: "rgba(0,0,0,0.4)",
+    justifyContent: "center",
+    paddingHorizontal: scale(20),
+  },
+
+  modalContainer: {
+    borderRadius: scale(20),
+    padding: scale(20),
+  },
+
+  modalOption: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: verticalScale(14),
   },
 });

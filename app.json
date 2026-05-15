@@ -22,7 +22,7 @@
       "usesAppleSignIn": true
     },
     "android": {
-      "versionCode": 41,
+      "versionCode": 42,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/iqbookAdaptive.png",
         "backgroundColor": "#ffffff"

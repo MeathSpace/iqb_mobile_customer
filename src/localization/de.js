@@ -694,7 +694,7 @@ export default {
       card: {
         title:
           "Treten Sie der virtuellen Warteschlange bei oder buchen Sie einen Termin.",
-        joinQueue: "Warteschlange beitreten",
+        joinQueue: "Beitreten",
         book: "Buchen",
         cancel: "Abbrechen",
       },
