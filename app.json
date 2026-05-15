@@ -2,7 +2,7 @@
   "expo": {
     "name": "IQBook",
     "slug": "iqb_mobile_customer",
-    "version": "1.0.26",
+    "version": "1.0.27",
     "orientation": "portrait",
     "icon": "./assets/images/iqbookAdaptive.png",
     "scheme": "iqbmobilecustomer",
@@ -11,7 +11,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.iqbook.iqb",
-      "buildNumber": "73",
+      "buildNumber": "74",
       "config": {
         "googleMapsApiKey": "AIzaSyCFTy8N-ZV2Oji8QbpQjuzXHwuC-kNSdmU",
         "usesNonExemptEncryption": false
