@@ -435,9 +435,14 @@ const index = () => {
                   />
                 </View>
 
-                <CustomText style={styles.optionLabel}>
-                  {baseContent?.language?.english}
-                </CustomText>
+                <View>
+                  <CustomText style={styles.optionLabel}>English</CustomText>
+                  <CustomText
+                    style={[styles.optionLabel, { fontSize: scale(12) }]}
+                  >
+                    {baseContent?.language?.english}
+                  </CustomText>
+                </View>
 
                 {locale === "en" && (
                   <Feather
@@ -478,9 +483,14 @@ const index = () => {
                   />
                 </View>
 
-                <CustomText style={styles.optionLabel}>
-                  {baseContent?.language?.german}
-                </CustomText>
+                <View>
+                  <CustomText style={styles.optionLabel}>German</CustomText>
+                  <CustomText
+                    style={[styles.optionLabel, { fontSize: scale(12) }]}
+                  >
+                    {baseContent?.language?.german}
+                  </CustomText>
+                </View>
 
                 {locale === "de" && (
                   <Feather
