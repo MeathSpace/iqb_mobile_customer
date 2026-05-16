@@ -380,7 +380,7 @@ const signin = () => {
                 gap: verticalScale(10),
               }}
             >
-              <CustomText>{baseContent.email.label}</CustomText>
+              <CustomText>{baseContent.email.label} DEV BRANCH</CustomText>
               <TextInput
                 editable
                 placeholder={baseContent.email.placeholder}
