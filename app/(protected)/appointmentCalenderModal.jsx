@@ -22,11 +22,10 @@ import { CheckIcon } from "../../constants/icons";
 import { useAuth } from "../../context/AuthContext";
 import { useGlobal } from "../../context/GlobalContext";
 import { ddmmformatDate } from "../../utils/ddmmformatDate";
-import i18n from "../../src/localization/i18n"
+import i18n from "../../src/localization/i18n";
 
 const appointmentCalenderModal = () => {
-
-  const baseContent = i18n.t("protected.appointmentCalenderModal")
+  const baseContent = i18n.t("protected.appointmentCalenderModal");
 
   const [salonAddress, setSalonAddress] = useState("");
 
@@ -168,7 +167,10 @@ const appointmentCalenderModal = () => {
         },
       );
 
-      Alert.alert(baseContent.alertBox.alertTwo.header, baseContent.alertBox.alertTwo.subHeader);
+      Alert.alert(
+        baseContent.alertBox.alertTwo.header,
+        baseContent.alertBox.alertTwo.subHeader,
+      );
 
       setBookAppointmentLoader(false);
       router.replace({
@@ -185,12 +187,136 @@ const appointmentCalenderModal = () => {
     }
   };
 
+  // NEW CALENDER CODe
+  // const saveToCalender = async (
+  //   selectedBookCalenderDateParse,
+  //   selectedBookCalenderTimeslotParse,
+  //   selectedCustomerBookAppointmentServicesParse,
+  //   appointmentId,
+  // ) => {
+  //   try {
+  //     setBookAppointmentLoader(true);
+
+  //     let calenderEventId = null;
+
+  //     // ✅ Request Permission
+  //     const { status } = await Calendar.requestCalendarPermissionsAsync();
+
+  //     if (status === "granted") {
+  //       try {
+  //         // ✅ Get Calendars
+  //         const calendars = await Calendar.getCalendarsAsync(
+  //           Calendar.EntityTypes.EVENT,
+  //         );
+
+  //         let targetCalendar =
+  //           calendars.find(
+  //             (cal) =>
+  //               cal.source?.type === "com.google" && cal.allowsModifications,
+  //           ) || calendars.find((cal) => cal.allowsModifications);
+
+  //         // ✅ If no calendar found → show alert BUT continue flow
+  //         if (!targetCalendar) {
+  //           Alert.alert(
+  //             baseContent.alertBox.alertThree.header,
+  //             baseContent.errorStatesAndApi.noGoogleCalender,
+  //           );
+  //         } else {
+  //           const calendarId = targetCalendar.id;
+
+  //           // ✅ Parse Date & Time
+  //           const [year, month, day] = selectedBookCalenderDateParse
+  //             .split("-")
+  //             .map(Number);
+
+  //           const [hours, minutes] = selectedBookCalenderTimeslotParse
+  //             .split(":")
+  //             .map(Number);
+
+  //           const startDate = new Date(year, month - 1, day, hours, minutes);
+
+  //           const duration = 30;
+
+  //           const endDate = new Date(
+  //             startDate.getTime() + duration * 60 * 1000,
+  //           );
+
+  //           // ✅ Event Config
+  //           const eventConfig = {
+  //             title: `Book Appointment (Created) - ${selectedCustomerBookAppointmentBarberParse?.name}`,
+  //             startDate,
+  //             endDate,
+  //             notes: selectedBookAppointmentNoteParse
+  //               ? selectedBookAppointmentNoteParse
+  //               : "Appointment booked via app",
+  //             location: salonAddress,
+  //           };
+
+  //           // ✅ Create Calendar Event
+  //           calenderEventId = await Calendar.createEventAsync(
+  //             calendarId,
+  //             eventConfig,
+  //           );
+  //         }
+  //       } catch (calendarError) {
+  //         console.log("Calendar creation failed:", calendarError);
+
+  //         // Optional popup
+  //         Alert.alert(
+  //           baseContent.alertBox.alertThree.header,
+  //           "Calendar event could not be created",
+  //         );
+  //       }
+  //     } else {
+  //       // Permission denied but continue app flow
+  //       Alert.alert(
+  //         baseContent.alertBox.alertOne.header,
+  //         baseContent.alertBox.alertOne.subHeader,
+  //       );
+  //     }
+
+  //     // ✅ ALWAYS update backend even if calendar fails
+  //     await axios.post(`${BASE_URL}/mobileRoutes/updatecalenderEventId`, {
+  //       salonId: authenticatedUser?.salonId,
+  //       appointmentId: appointmentId,
+  //       calenderEventId: calenderEventId,
+  //     });
+
+  //     Alert.alert(
+  //       baseContent.alertBox.alertTwo.header,
+  //       baseContent.alertBox.alertTwo.subHeader,
+  //     );
+
+  //     setBookAppointmentLoader(false);
+
+  //     router.replace({
+  //       pathname: "/appointmentSuccessPage",
+  //       params: {
+  //         booked: true,
+  //         edit: false,
+  //       },
+  //     });
+  //   } catch (error) {
+  //     setBookAppointmentLoader(false);
+
+  //     console.error("❌ Calendar Error:", error);
+
+  //     Alert.alert(baseContent.alertBox.alertThree.header, error.message);
+  //   }
+  // };
+
   const bookAppointmentPressed = async () => {
     const appData = {
       salonId: authenticatedUser?.salonId,
       barberId: selectedCustomerBookAppointmentBarberParse?.barberId,
       serviceId: selectedCustomerBookAppointmentServicesParse.map(
         (item) => item.serviceId,
+      ),
+      serviceIdWithCount: selectedCustomerBookAppointmentServicesParse.map(
+        (item) => ({
+          serviceId: item.serviceId,
+          count: item.count,
+        }),
       ),
       appointmentDate: selectedBookCalenderDateParse,
       appointmentNotes: selectedBookAppointmentNoteParse,
@@ -236,7 +362,11 @@ const appointmentCalenderModal = () => {
       );
     } catch (error) {
       setBookAppointmentLoader(false);
-      Alert.alert(baseContent.alertBox.alertFour.header, error?.response?.data?.message, [{ text: baseContent.alertBox.alertFour.ok }]);
+      Alert.alert(
+        baseContent.alertBox.alertFour.header,
+        error?.response?.data?.message,
+        [{ text: baseContent.alertBox.alertFour.ok }],
+      );
       console.log("Error doing book appointment ", error);
     }
   };
@@ -275,6 +405,12 @@ const appointmentCalenderModal = () => {
           serviceId: selectedCustomerBookAppointmentServicesParse.map(
             (item) => item.serviceId,
           ),
+          serviceIdWithCount: selectedCustomerBookAppointmentServicesParse.map(
+            (item) => ({
+              serviceId: item.serviceId,
+              count: item.count,
+            }),
+          ),
           appointmentDate: selectedBookCalenderDateParse,
           appointmentNotes: selectedBookAppointmentNoteParse,
           startTime: selectedBookCalenderTimeslotParse,
@@ -291,11 +427,13 @@ const appointmentCalenderModal = () => {
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data?.message || baseContent.errorStatesAndApi.paymentInitializationFailed);
+      throw new Error(
+        data?.message ||
+          baseContent.errorStatesAndApi.paymentInitializationFailed,
+      );
     }
 
     const { paymentIntent, ephemeralKey, customer } = data;
-
 
     if (!paymentIntent || !ephemeralKey || !customer) {
       throw new Error(baseContent.errorStatesAndApi.invalidStripeError);
@@ -365,7 +503,10 @@ const appointmentCalenderModal = () => {
     } catch (err) {
       console.log("Stripe error:", err?.message);
 
-      Alert.alert(baseContent.alertBox.alertFive.header, err?.message || baseContent.alertBox.alertFive.subHeader);
+      Alert.alert(
+        baseContent.alertBox.alertFive.header,
+        err?.message || baseContent.alertBox.alertFive.subHeader,
+      );
     } finally {
       setLoading(false);
     }
@@ -521,7 +662,10 @@ const appointmentCalenderModal = () => {
                   {selectedCustomerBookAppointmentBarberParse?.name}
                 </CustomText>
                 <CustomSecondaryText style={{ marginTop: verticalScale(2) }}>
-                  {totalServices} {totalServices === 1 ? baseContent.service : baseContent.services}{" "}
+                  {totalServices}{" "}
+                  {totalServices === 1
+                    ? baseContent.service
+                    : baseContent.services}{" "}
                   • {formatMinutesToHrMin(totalTime)}
                 </CustomSecondaryText>
               </View>
@@ -665,7 +809,8 @@ const appointmentCalenderModal = () => {
                     <CustomSecondaryText
                       style={{ fontSize: moderateScale(12) }}
                     >
-                      {baseContent.deposit} ({paymentSettingsDataParse?.advancePaymentPercent}
+                      {baseContent.deposit} (
+                      {paymentSettingsDataParse?.advancePaymentPercent}
                       %)
                     </CustomSecondaryText>
                   </View>

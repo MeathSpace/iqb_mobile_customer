@@ -25,11 +25,10 @@ import Skeleton from "../../components/Skeleton";
 import { ArrowLeftIcon, LeftIcon, RightIcon } from "../../constants/icons";
 import { useAuth } from "../../context/AuthContext";
 import { useGlobal } from "../../context/GlobalContext";
-import i18n from "../../src/localization/i18n"
+import i18n from "../../src/localization/i18n";
 
 const appointmentCalendar = () => {
-
-  const baseContent = i18n.t("protected.appointmentCalender")
+  const baseContent = i18n.t("protected.appointmentCalender");
 
   const { appointmentPopupType, setAppointmentPopupType } = useGlobal();
   const [paymentSettingsLoading, setPaymentSettingsLoading] = useState(false);
@@ -105,7 +104,7 @@ const appointmentCalendar = () => {
             ...prev,
             loading: false,
             data: data?.response?.map((item) => {
-              return { ...item, selected: false };
+              return { ...item, count: 0, selected: false };
             }),
             success: true,
             error: null,
@@ -258,11 +257,11 @@ const appointmentCalendar = () => {
     authenticatedUser?.salonId,
   ]);
 
-  const addServiceHandler = (service) => {
+  const addServiceHandler = (service, countValue) => {
     setContinueService(false);
     const updatedSalonServices = salonServices?.data?.map((item) => {
       return item?.serviceId === service?.serviceId
-        ? { ...service, selected: true }
+        ? { ...service, count: countValue, selected: true }
         : item;
     });
 
@@ -273,7 +272,26 @@ const appointmentCalendar = () => {
       success: false,
     });
 
-    setSelectedCustomerServices([...selectCustomerServices, service]);
+    setSelectedCustomerServices((prev) => {
+      const existingService = prev.find(
+        (item) => item?.serviceId === service?.serviceId,
+      );
+
+      let updatedArray;
+
+      if (existingService) {
+        return [
+          ...prev.map((item) => {
+            return item?.serviceId === service?.serviceId
+              ? { ...item, count: countValue }
+              : item;
+          }),
+        ];
+      } else {
+        updatedArray = [...prev, { ...service, count: countValue }];
+      }
+      return updatedArray;
+    });
 
     if (appointmentPopupType?.selectServices) {
       setSelectedCustomerBarber(null);
@@ -288,7 +306,7 @@ const appointmentCalendar = () => {
     setContinueService(false);
     const updatedSalonServices = salonServices?.data?.map((item) => {
       return item?.serviceId === service?.serviceId
-        ? { ...service, selected: false }
+        ? { ...service, count: 0, selected: false }
         : item;
     });
 
@@ -706,27 +724,23 @@ const appointmentCalendar = () => {
   const hasUnsavedChanges = true;
 
   usePreventRemove(hasUnsavedChanges, ({ data }) => {
-    Alert.alert(
-      baseContent.alertBox.header,
-      baseContent.alertBox.subHeader,
-      [
-        {
-          text: baseContent.alertBox.cancel,
-          style: "cancel",
-          onPress: () => null,
+    Alert.alert(baseContent.alertBox.header, baseContent.alertBox.subHeader, [
+      {
+        text: baseContent.alertBox.cancel,
+        style: "cancel",
+        onPress: () => null,
+      },
+      {
+        text: baseContent.alertBox.ok,
+        onPress: async () => {
+          setAppointmentPopupType({
+            selectServices: false,
+            selectBarber: false,
+          });
+          router.push("/appointment");
         },
-        {
-          text: baseContent.alertBox.ok,
-          onPress: async () => {
-            setAppointmentPopupType({
-              selectServices: false,
-              selectBarber: false,
-            });
-            router.push("/appointment");
-          },
-        },
-      ],
-    );
+      },
+    ]);
   });
 
   const [step, setStep] = useState(1);
@@ -809,7 +823,7 @@ const appointmentCalendar = () => {
                             ", ",
                           )} + ${selectCustomerServices.length - 3} ${baseContent.more}`
                       : selectCustomerServices
-                          .map((s) => s?.serviceName)
+                          .map((s) => `${s?.serviceName} ${s?.count > 0 ? `(${s?.count})` : ""  }`)
                           .join(", ")
                     : "-"}
                 </CustomText>
@@ -1023,7 +1037,7 @@ const appointmentCalendar = () => {
                                 flexDirection: "row",
                                 alignItems: "flex-start",
                                 gap: scale(12),
-                                width: "75%",
+                                width: "70%",
                               }}
                             >
                               <View
@@ -1078,7 +1092,7 @@ const appointmentCalendar = () => {
                             </View>
 
                             {/* RIGHT SIDE BUTTON */}
-                            {item?.selected ? (
+                            {/* {item?.selected ? (
                               <Pressable
                                 onPress={() => removeServiceHandler(item)}
                                 style={{
@@ -1099,6 +1113,87 @@ const appointmentCalendar = () => {
                             ) : (
                               <Pressable
                                 onPress={() => addServiceHandler(item)}
+                                style={{
+                                  height: verticalScale(28),
+                                  paddingHorizontal: scale(12),
+                                  // backgroundColor: "#000",
+                                  backgroundColor: colors.accentColor,
+                                  borderRadius: scale(6),
+                                  justifyContent: "center",
+                                  alignItems: "center",
+                                }}
+                              >
+                                <CustomText
+                                  style={{ fontSize: scale(12), color: "#fff" }}
+                                >
+                                  {baseContent.add}
+                                </CustomText>
+                              </Pressable>
+                            )} */}
+
+                            {item?.selected && item?.count > 0 ? (
+                              <View
+                                style={{
+                                  flexDirection: "row",
+                                  alignItems: "center",
+                                  gap: scale(8),
+                                }}
+                              >
+                                <Pressable
+                                  style={{
+                                    height: verticalScale(28),
+                                    paddingHorizontal: scale(12),
+                                    // backgroundColor: "#000",
+                                    backgroundColor: colors.accentColor,
+                                    borderRadius: scale(6),
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                  }}
+                                  onPress={() => {
+                                    if (item?.count === 1) {
+                                      removeServiceHandler(item);
+                                      return;
+                                    }
+                                    addServiceHandler(item, item?.count - 1);
+                                  }}
+                                >
+                                  <CustomText
+                                    style={{
+                                      fontSize: scale(18),
+                                      color: "#fff",
+                                    }}
+                                  >
+                                    -
+                                  </CustomText>
+                                </Pressable>
+                                <CustomText>{item?.count}</CustomText>
+                                <Pressable
+                                  style={{
+                                    height: verticalScale(28),
+                                    paddingHorizontal: scale(12),
+                                    // backgroundColor: "#000",
+                                    backgroundColor: colors.accentColor,
+                                    borderRadius: scale(6),
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                  }}
+                                  onPress={() => {
+                                    addServiceHandler(item, item?.count + 1);
+                                  }}
+                                >
+                                  <CustomText
+                                    style={{
+                                      fontSize: scale(18),
+                                      color: "#fff",
+                                    }}
+                                  >
+                                    +
+                                  </CustomText>
+                                </Pressable>
+                              </View>
+                            ) : (
+                              <Pressable
+                                onPress={() => addServiceHandler(item, 1)}
                                 style={{
                                   height: verticalScale(28),
                                   paddingHorizontal: scale(12),
@@ -1797,7 +1892,9 @@ const appointmentCalendar = () => {
 
         {/* ================= FOOTER ================= */}
         <View style={styles.footer}>
-          <CustomText>{baseContent.step} {step} {baseContent.of} {baseContent.stepNumber}</CustomText>
+          <CustomText>
+            {baseContent.step} {step} {baseContent.of} {baseContent.stepNumber}
+          </CustomText>
           <View
             style={{
               flexDirection: "row",
@@ -1848,7 +1945,7 @@ const appointmentCalendar = () => {
                 <CustomText
                   style={{
                     // color: colors.background,
-                    color: "#fff"
+                    color: "#fff",
                   }}
                 >
                   {baseContent.prev}
@@ -1926,7 +2023,9 @@ const appointmentCalendar = () => {
               disabled={paymentSettingsLoading}
             >
               {activeSection === "appointmentnote" ? (
-                <CustomText style={{ color: "#fff" }}>{baseContent.finish}</CustomText>
+                <CustomText style={{ color: "#fff" }}>
+                  {baseContent.finish}
+                </CustomText>
               ) : (
                 // <RightIcon size={scale(12)} color="#fff" />
                 <CustomText
