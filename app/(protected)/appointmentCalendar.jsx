@@ -818,12 +818,15 @@ const appointmentCalendar = () => {
                     ? selectCustomerServices.length > 3
                       ? `${selectCustomerServices
                           .slice(0, 3)
-                          .map((s) => s?.serviceName)
+                          .map((s) => `${s?.serviceName} ${s?.count > 0 ? `(${s?.count})` : ""}`)
                           .join(
                             ", ",
                           )} + ${selectCustomerServices.length - 3} ${baseContent.more}`
                       : selectCustomerServices
-                          .map((s) => `${s?.serviceName} ${s?.count > 0 ? `(${s?.count})` : ""  }`)
+                          .map(
+                            (s) =>
+                              `${s?.serviceName} ${s?.count > 0 ? `(${s?.count})` : ""}`,
+                          )
                           .join(", ")
                     : "-"}
                 </CustomText>
@@ -915,12 +918,15 @@ const appointmentCalendar = () => {
                     ? selectCustomerServices.length > 3
                       ? `${selectCustomerServices
                           .slice(0, 3)
-                          .map((s) => s?.serviceName)
+                          .map((s) => `${s?.serviceName} ${s?.count > 0 ? `(${s?.count})` : ""}`)
                           .join(
                             ", ",
                           )} + ${selectCustomerServices.length - 3} ${baseContent.more}`
                       : selectCustomerServices
-                          .map((s) => s?.serviceName)
+                          .map(
+                            (s) =>
+                              `${s?.serviceName} ${s?.count > 0 ? `(${s?.count})` : ""}`,
+                          )
                           .join(", ")
                     : "-"}
                 </CustomText>
@@ -1433,7 +1439,7 @@ const appointmentCalendar = () => {
                               flexDirection: "row",
                               alignItems: "flex-start",
                               gap: scale(12),
-                              width: "75%",
+                              width: "70%",
                             }}
                           >
                             <View
@@ -1487,7 +1493,7 @@ const appointmentCalendar = () => {
                           </View>
 
                           {/* RIGHT SIDE BUTTON */}
-                          {item?.selected ? (
+                          {/* {item?.selected ? (
                             <Pressable
                               onPress={() => removeServiceHandler(item)}
                               style={{
@@ -1512,6 +1518,87 @@ const appointmentCalendar = () => {
                                 height: verticalScale(28),
                                 paddingHorizontal: scale(12),
                                 backgroundColor: "#000",
+                                borderRadius: scale(6),
+                                justifyContent: "center",
+                                alignItems: "center",
+                              }}
+                            >
+                              <CustomText
+                                style={{ fontSize: scale(12), color: "#fff" }}
+                              >
+                                {baseContent.add}
+                              </CustomText>
+                            </Pressable>
+                          )} */}
+
+                          {item?.selected && item?.count > 0 ? (
+                            <View
+                              style={{
+                                flexDirection: "row",
+                                alignItems: "center",
+                                gap: scale(8),
+                              }}
+                            >
+                              <Pressable
+                                style={{
+                                  height: verticalScale(28),
+                                  paddingHorizontal: scale(12),
+                                  // backgroundColor: "#000",
+                                  backgroundColor: colors.accentColor,
+                                  borderRadius: scale(6),
+                                  justifyContent: "center",
+                                  alignItems: "center",
+                                }}
+                                onPress={() => {
+                                  if (item?.count === 1) {
+                                    removeServiceHandler(item);
+                                    return;
+                                  }
+                                  addServiceHandler(item, item?.count - 1);
+                                }}
+                              >
+                                <CustomText
+                                  style={{
+                                    fontSize: scale(18),
+                                    color: "#fff",
+                                  }}
+                                >
+                                  -
+                                </CustomText>
+                              </Pressable>
+                              <CustomText>{item?.count}</CustomText>
+                              <Pressable
+                                style={{
+                                  height: verticalScale(28),
+                                  paddingHorizontal: scale(12),
+                                  // backgroundColor: "#000",
+                                  backgroundColor: colors.accentColor,
+                                  borderRadius: scale(6),
+                                  justifyContent: "center",
+                                  alignItems: "center",
+                                }}
+                                onPress={() => {
+                                  addServiceHandler(item, item?.count + 1);
+                                }}
+                              >
+                                <CustomText
+                                  style={{
+                                    fontSize: scale(18),
+                                    color: "#fff",
+                                  }}
+                                >
+                                  +
+                                </CustomText>
+                              </Pressable>
+                            </View>
+                          ) : (
+                            <Pressable
+                              onPress={() => addServiceHandler(item, 1)}
+                              style={{
+                                height: verticalScale(28),
+                                paddingHorizontal: scale(12),
+                                // backgroundColor: "#000",
+                                backgroundColor: colors.accentColor,
                                 borderRadius: scale(6),
                                 justifyContent: "center",
                                 alignItems: "center",

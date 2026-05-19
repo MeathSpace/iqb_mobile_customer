@@ -518,12 +518,12 @@ const editAppointmentCalender = () => {
                   ? selectedEditAppointmentData?.services?.length > 3
                     ? `${selectedEditAppointmentData?.services
                         .slice(0, 3)
-                        .map((s) => s?.serviceName)
+                        .map((s) => `${s?.serviceName} ${s?.count > 0 ? `(${s?.count})` : ""}`)
                         .join(
                           ", ",
                         )} + ${selectedEditAppointmentData?.services?.length - 3} ${baseContent.more}`
                     : selectedEditAppointmentData?.services
-                        .map((s) => s?.serviceName)
+                        .map((s) => `${s?.serviceName} ${s?.count > 0 ? `(${s?.count})` : ""}`)
                         .join(", ")
                   : "-"}
               </CustomText>

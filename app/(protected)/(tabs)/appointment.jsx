@@ -475,6 +475,8 @@ const appointment = () => {
                         selectBarber: item?.selectBarber,
                       });
 
+                      // console.log("Selected appointment: ", item);
+
                       router.push({
                         pathname: "/appointmentPop",
                         params: {
