@@ -276,7 +276,8 @@ export default {
         header: "Sprache",
         english: "Englisch",
         german: "Deutsch",
-      },
+        portugese: "Portugiesisch",
+      }
     },
 
     editProfile: {
@@ -1046,6 +1047,7 @@ export default {
       service: "Service",
       upcoming: "Bevorstehend",
       past: "Vergangen",
+      next: "Weiter",
     },
 
     appointmentCalender: {

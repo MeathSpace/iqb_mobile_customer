@@ -1,12 +1,14 @@
 import { I18n } from "i18n-js";
 import de from "./de";
 import en from "./en";
+import pt from "./pt";
 import * as Localization from "expo-localization";
 
 // Define the key-value pairs for the languages you want to support.
 const translations = {
   en: en,
   de: de,
+  pt: pt
 };
 
 const i18n = new I18n(translations);

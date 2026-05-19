@@ -632,7 +632,7 @@ const appointment = () => {
                       <CustomText
                         style={{ color: "#FFF", fontSize: scale(14) }}
                       >
-                        Next
+                        {baseContent.next}
                       </CustomText>
                     </View>
                   )}

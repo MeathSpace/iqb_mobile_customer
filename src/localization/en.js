@@ -245,7 +245,8 @@ export default {
       language: {
         header: "language",
         english: "English",
-        german: "German"
+        german: "German",
+        portugese: "Portuguese",
       }
     },
     editProfile: {
@@ -297,6 +298,8 @@ export default {
         ok: "OK",
       },
     },
+
+
     myFavourites: {
       header: "My Favorites",
       error: {
@@ -807,6 +810,8 @@ export default {
         invalidStripeError: "Invalid Stripe response",
       },
     },
+
+
     singleJoinSuccessPage: {
       header: "Queue Joined!",
       subHeader:
@@ -962,7 +967,11 @@ export default {
       service: "service",
       upcoming: "Upcoming",
       past: "Past",
+      next: "Next"
     },
+
+
+
     appointmentCalender: {
       header: "Book Appointment",
       services: "Services",

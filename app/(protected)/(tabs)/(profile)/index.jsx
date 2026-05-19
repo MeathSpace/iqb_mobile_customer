@@ -501,6 +501,55 @@ const index = () => {
                   />
                 )}
               </TouchableOpacity>
+
+              <View
+                style={[
+                  styles.separator,
+                  { backgroundColor: colors.queueBorder },
+                ]}
+              />
+
+              {/* Portugese */}
+              <TouchableOpacity
+                style={styles.modalOption}
+                onPress={async () => {
+                  await AsyncStorage.setItem("currentLanguage", "pt");
+                  changeLanguage("pt");
+                  setLanguageModalVisible(false);
+                }}
+              >
+                <View
+                  style={[
+                    styles.optionIconWrapper,
+                    { backgroundColor: `${colors.accentColor}1A` },
+                  ]}
+                >
+                  <Feather
+                    name="globe"
+                    size={moderateScale(20)}
+                    color={colors.accentColor}
+                  />
+                </View>
+
+                <View>
+                  <CustomText style={styles.optionLabel}>Portugese</CustomText>
+                  <CustomText
+                    style={[styles.optionLabel, { fontSize: scale(12) }]}
+                  >
+                    {baseContent?.language?.portugese}
+                  </CustomText>
+                </View>
+
+                {locale === "pt" && (
+                  <Feather
+                    name="check"
+                    size={moderateScale(18)}
+                    color={colors.accentColor}
+                    style={{ marginLeft: "auto" }}
+                  />
+                )}
+              </TouchableOpacity>
+              
             </Pressable>
           </Pressable>
         </Modal>
