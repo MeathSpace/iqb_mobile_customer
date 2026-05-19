@@ -538,7 +538,8 @@ const appointmentCalenderModal = () => {
     } else {
       setTotalTime(
         selectedCustomerBookAppointmentServicesParse.reduce(
-          (sum, item) => sum + (Number(item.barberServiceEWT) || 0),
+          (sum, item) =>
+            sum + (Number(item.barberServiceEWT) * item.count || 0),
           0,
         ),
       );

@@ -711,9 +711,9 @@ export default {
       status: {
         label: "Live-Warteschlangenstatus",
         system: "System",
-        nextIn: "Als Nächstes",
+        nextIn: "Nächste",
         onDuty: "Im Dienst",
-        inQueue: "In der Warteschlange",
+        inQueue: "Wartend",
         online: "Online",
         offline: "Offline",
       },

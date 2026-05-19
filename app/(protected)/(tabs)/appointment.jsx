@@ -34,7 +34,6 @@ import { ddmmformatDate } from "../../../utils/ddmmformatDate";
 const appointment = () => {
   const baseContent = i18n.t("protected.appointment");
 
-
   const router = useRouter();
   const {
     setJoinModes,
@@ -444,7 +443,9 @@ const appointment = () => {
 
                   <View style={{ flexDirection: "row", alignItems: "center" }}>
                     <CustomText style={styles.Listheader}>
-                      {title === "Upcoming" ? baseContent.upcoming : baseContent.past}
+                      {title === "Upcoming"
+                        ? baseContent.upcoming
+                        : baseContent.past}
                     </CustomText>
                     {title === "Past" && (
                       <View
@@ -466,7 +467,7 @@ const appointment = () => {
                   </View>
                 </>
               )}
-              renderItem={({ item, section }) => (
+              renderItem={({ item, index, section }) => (
                 <Pressable
                   onPress={() => {
                     if (item.status === "upcoming") {
@@ -495,8 +496,18 @@ const appointment = () => {
                   style={[
                     styles.card,
                     {
-                      backgroundColor: colors.cardColor,
-                      borderColor: colors.cardBorder,
+                      backgroundColor:
+                        item.status === "upcoming" && index === 0
+                          ? `${colors.accentColor}33`
+                          : colors.cardColor,
+                      borderColor:
+                        item.status === "upcoming" && index === 0
+                          ? colors.accentColor
+                          : colors.cardBorder,
+                      borderWidth:
+                        item.status === "upcoming" && index === 0
+                          ? scale(1)
+                          : scale(0),
                     },
                   ]}
                 >
@@ -526,7 +537,7 @@ const appointment = () => {
                         "dddd",
                       )}  |  ${ddmmformatDate(
                         item?.appointmentDate?.split("T")[0],
-                      )}  |  ${item?.timeSlots?.split("-")[0]}`}
+                      )}`}
                     </CustomSecondaryText>
 
                     <CustomSecondaryText style={[styles.meta, {}]}>
@@ -536,7 +547,10 @@ const appointment = () => {
                         0,
                       )}{" "}
                       • {item?.services.length}{" "}
-                      {item?.services.length > 1 ? baseContent.services : baseContent.service}
+                      {item?.services.length > 1
+                        ? baseContent.services
+                        : baseContent.service}{" "}
+                      | {item?.timeSlots?.split("-")[0]}
                     </CustomSecondaryText>
 
                     <View style={styles.footer}>
@@ -601,6 +615,27 @@ const appointment = () => {
                       )}
                     </View>
                   </View>
+
+                  {item.status === "upcoming" && index === 0 && (
+                    <View
+                      style={{
+                        position: "absolute",
+                        top: scale(0),
+                        right: scale(0),
+                        backgroundColor: colors.accentColor,
+                        borderTopRightRadius: scale(12),
+                        borderBottomLeftRadius: scale(12),
+                        paddingInline: scale(9),
+                        paddingVertical: verticalScale(3),
+                      }}
+                    >
+                      <CustomText
+                        style={{ color: "#FFF", fontSize: scale(14) }}
+                      >
+                        Next
+                      </CustomText>
+                    </View>
+                  )}
                 </Pressable>
               )}
               contentContainerStyle={{
@@ -625,7 +660,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    height: verticalScale(40)
+    height: verticalScale(40),
   },
 
   bellWrapper: {
@@ -688,6 +723,7 @@ const styles = StyleSheet.create({
   },
 
   card: {
+    position: "relative",
     flexDirection: "row",
     borderRadius: scale(12),
     padding: scale(12),
@@ -718,7 +754,8 @@ const styles = StyleSheet.create({
     marginTop: verticalScale(8),
   },
   meta: {
-    fontSize: moderateScale(12.5),
+    fontSize: moderateScale(13),
+    fontFamily: "AirbnbCereal_W_Bd",
   },
   rebookButton: {
     paddingHorizontal: scale(10),

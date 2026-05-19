@@ -70,15 +70,15 @@ const MyFavourites = () => {
 
     const confirmAndDeleteFavouriteSalon = (item) => {
         Alert.alert(
-            "Remove Favourite Salon",
-            "Are you sure you want to remove this salon from your favourites ?",
+            baseContent.alertBox.header,
+            baseContent.alertBox.subHeader,
             [
                 {
-                    text: "Cancel",
+                    text: baseContent.alertBox.cancel,
                     style: "cancel"
                 },
                 {
-                    text: "Yes, Remove",
+                    text: baseContent.alertBox.remove,
                     onPress: () => deleteCustomerFavouriteSalon(item),
                     style: "destructive"
                 }
