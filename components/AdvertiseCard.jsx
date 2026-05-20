@@ -1,22 +1,34 @@
-import { StyleSheet, Text, View } from 'react-native'
+import { Pressable, StyleSheet, Text, View } from 'react-native'
 import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import React from 'react'
 import { useTheme } from '@react-navigation/native';
 import { Image } from 'expo-image';
+import { useRouter } from 'expo-router';
 
 const AdvertiseCard = ({ item }) => {
 
     const { colors } = useTheme()
+    const router = useRouter()
+
 
     return (
-        <View style={[styles.cardWrapper, { backgroundColor: colors.background }]}>
+        <Pressable
+            onPress={() => {
+                if (item?.link) {
+                    router.push(item?.link)
+                }
+
+            }}
+            style={[styles.cardWrapper, {}]}>
             <Image
-                style={styles.cardImage}
-                source={{ uri: item.image }}
-                contentFit="cover"
+                style={[styles.cardImage, {
+                    borderColor: colors.queueBorder
+                }]}
+                source={{ uri: item.url }}
+                contentFit="fill"
                 transition={300}
             />
-        </View>
+        </Pressable>
     )
 }
 
@@ -24,20 +36,14 @@ export default AdvertiseCard
 
 const styles = StyleSheet.create({
     cardWrapper: {
-        height: verticalScale(150),
-        width: scale(280),
-        borderRadius: moderateScale(8),
-        elevation: 4,
-
-        // iOS shadow
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
+        width: scale(350),
+        // paddingHorizontal: scale(5),
+        backgroundColor: "rgba(0,0,0,0.1)"
     },
     cardImage: {
-        height: "100%",
+        height: verticalScale(87.5),
         width: "100%",
-        borderRadius: moderateScale(8),
+        borderRadius: scale(0),
+        borderWidth: scale(0)
     }
 })

@@ -1,103 +1,133 @@
-import { Image, Pressable, StyleSheet, Text, useColorScheme, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import { Redirect, useRouter } from 'expo-router'
-import { useAuth } from '../context/AuthContext'
-import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
-import CustomView from '../components/CustomView'
-import CustomText from '../components/CustomText';
-import CustomSecondaryText from '../components/CustomSecondaryText';
-import { Colors } from '../constants/Colors'
-import { useTheme } from '@react-navigation/native';
+import { useTheme } from "@react-navigation/native";
+import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
+import { Image, StyleSheet, TouchableOpacity, View } from "react-native";
+import { moderateScale, scale, verticalScale } from "react-native-size-matters";
+import CustomSecondaryText from "../components/CustomSecondaryText";
+import CustomText from "../components/CustomText";
+import CustomView from "../components/CustomView";
+import { useAuth } from "../context/AuthContext";
+import i18n from "../src/localization/i18n";
 
 const index = () => {
+  const { colors } = useTheme();
 
-  const { colors } = useTheme()
+  const router = useRouter();
 
-  const router = useRouter()
+  const { isAuthenticated } = useAuth();
 
-  const { isAuthenticated } = useAuth()
-
-  const [splashLoading, setSplashLoading] = useState(true)
+  const [splashLoading, setSplashLoading] = useState(true);
 
   useEffect(() => {
     let timer = setTimeout(() => {
       if (isAuthenticated) {
-        router.replace("/home")
+        router.replace("/home");
       } else {
-        setSplashLoading(false)
+        setSplashLoading(false);
       }
-    }, 500)
+    }, 500);
 
     return () => {
-      clearTimeout(timer)
-    }
-  }, [isAuthenticated, router])
+      clearTimeout(timer);
+    };
+  }, [isAuthenticated, router]);
 
   if (splashLoading) {
     return (
       <CustomView style={{ alignItems: "center", justifyContent: "center" }}>
         <Image
           style={[styles.Logo, { tintColor: colors.text }]}
-          source={require("../assets/images/IQB_Logo.png")}
+          source={require("../assets/images/iqbook.png")}
           resizeMode="cover"
         />
-        <CustomText style={styles.heading}>iQueueBook</CustomText>
+        <CustomText style={styles.heading}>iQBook</CustomText>
       </CustomView>
-    )
+    );
   }
 
   return (
     <CustomView style={{ alignItems: "center", justifyContent: "center" }}>
       <View style={{ width: "100%" }}>
         <Image
-          style={[styles.Logo, { tintColor: colors.background }]}
-          source={require("../assets/images/IQB_Logo.png")}
+          style={[styles.Logo, { tintColor: colors.text }]}
+          source={require("../assets/images/iqbook.png")}
           resizeMode="cover"
         />
-        <Image
-          style={styles.onboardImage}
-          source={require("../assets/images/Onboarding.png")}
-        />
-        <CustomText style={styles.heading}>
-          Welcome to iQueueBook
-        </CustomText>
-        <CustomSecondaryText style={styles.sub_heading}>
-          Instantly book, style your hair and mustache the way you want by the
-          stylist of your choice.
+
+        <CustomText style={styles.heading}>{i18n.t("index.header")}</CustomText>
+        <CustomSecondaryText
+          style={[styles.sub_heading, { color: colors.secondaryText }]}
+        >
+          {i18n.t("index.subheader")}
         </CustomSecondaryText>
 
-        <Pressable
-          onPress={() => router.push("/signup")}
-          style={[styles.auth_btn, { backgroundColor: Colors.modeColor.colorCode, marginBottom: verticalScale(10) }]}><CustomText style={{ color: "#fff" }}>Register</CustomText></Pressable>
-        <Pressable
-          onPress={() => router.push("/signin")}
-          style={[styles.auth_btn, { borderWidth: moderateScale(1.5), borderColor: Colors.modeColor.colorCode }]}><CustomText style={{ color: Colors.modeColor.colorCode }}>Log In</CustomText></Pressable>
+        {isAuthenticated ? (
+          <TouchableOpacity
+            onPress={() => router.push("/home")}
+            style={[
+              styles.authButton,
+              {
+                marginBottom: verticalScale(10),
+                backgroundColor: colors.accentColor,
+              },
+            ]}
+            activeOpacity={0.85}
+          >
+            <CustomText style={styles.authButtonText}>{i18n.t("index.registerButtonText")}</CustomText>
+          </TouchableOpacity>
+        ) : (
+          <>
+            <TouchableOpacity
+              onPress={() => router.push("/signup")}
+              style={[
+                styles.authButton,
+                {
+                  marginBottom: verticalScale(10),
+                  backgroundColor: colors.accentColor,
+                },
+              ]}
+              activeOpacity={0.85}
+            >
+              <CustomText style={styles.authButtonText}>{i18n.t("index.registerButtonText")}</CustomText>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => router.push("/signin")}
+              style={[
+                styles.authButton,
+                { backgroundColor: colors.accentColor },
+              ]}
+              activeOpacity={0.85}
+            >
+              <CustomText style={styles.authButtonText}>{i18n.t("index.loginButtonText")}</CustomText>
+            </TouchableOpacity>
+          </>
+        )}
       </View>
-
     </CustomView>
-  )
-}
+  );
+};
 
-export default index
+export default index;
 
 const styles = StyleSheet.create({
   Logo: {
     width: moderateScale(100),
     height: moderateScale(100),
     marginHorizontal: "auto",
-    marginBlock: verticalScale(15)
+    marginBlock: verticalScale(15),
   },
   onboardImage: {
     width: moderateScale(200),
     height: moderateScale(200),
     marginHorizontal: "auto",
-    marginBottom: verticalScale(15)
+    marginBottom: verticalScale(15),
   },
   heading: {
-    fontFamily: "AirbnbCereal_W_Bd",
-    fontSize: moderateScale(22),
+    fontFamily: "AirbnbCereal_W_XBd",
+    fontSize: moderateScale(28),
     marginHorizontal: "auto",
-    marginBottom: verticalScale(15)
+    marginBottom: verticalScale(15),
   },
   sub_heading: {
     marginHorizontal: "auto",
@@ -108,9 +138,20 @@ const styles = StyleSheet.create({
     height: verticalScale(40),
     borderRadius: scale(4),
     alignItems: "center",
-    justifyContent: "center"
-  }
-})
+    justifyContent: "center",
+  },
 
-
-
+  authButton: {
+    width: "100%",
+    // bg-teal-500
+    paddingVertical: verticalScale(12), // py-4
+    borderRadius: scale(8), // rounded-xl
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  authButtonText: {
+    color: "#fff", // text-white
+    fontFamily: "AirbnbCereal_W_XBd",
+    fontSize: scale(16),
+  },
+});

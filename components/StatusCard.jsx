@@ -8,14 +8,21 @@ import CustomSecondaryText from './CustomSecondaryText'
 const StatusCard = ({ item }) => {
 
     const { colors } = useTheme()
+    
 
     return (
-        <View style={[styles.statusCard, { backgroundColor: colors.background }]}>
-            <View style={[styles.icon, { backgroundColor: item.color1, shadowColor: item.color1 }]}>
-                <item.icon size={moderateScale(20)} color={"#fff"} />
+        <View style={[styles.statusCard]}>
+            <View style={[styles.icon, { backgroundColor: item.color2 }]}>
+                <item.icon size={moderateScale(18)} color={item.color1} />
             </View>
-            <CustomText style={{ fontFamily: "AirbnbCereal_W_Md", fontSize: moderateScale(12), textAlign: "center", marginVertical: verticalScale(5) }}>{item.title}</CustomText>
-            <CustomSecondaryText style={{ fontFamily: "AirbnbCereal_W_Md", textAlign: "center" }}>{item.value}</CustomSecondaryText>
+            <CustomText style={{ fontSize: scale(11), textAlign: "center", marginVertical: verticalScale(6), color: "gray" }}>{item.title}</CustomText>
+            <CustomText style={{
+                fontFamily: "AirbnbCereal_W_Bd",
+                fontSize: scale(14),
+                textAlign: "center",
+                color: item.title === "System Status" ? (item.color1) : undefined
+                // color: `${item.color1}`
+            }}>{item.value}</CustomText>
         </View>
     )
 }
@@ -24,28 +31,31 @@ export default StatusCard
 
 const styles = StyleSheet.create({
     statusCard: {
-        width: scale(75),
+        // width: scale(75),
         // height: verticalScale(125),
-        borderRadius: moderateScale(4),
-        padding: moderateScale(10),
+        // borderRadius: moderateScale(4),
+        // padding: moderateScale(10),
+        // marginTop: verticalScale(17),
         // borderWidth: scale(1),
         // elevation: 4,
+        // gap: verticalScale(5),
+        marginBottom: verticalScale(20)
     },
     icon: {
-        width: moderateScale(40),
-        height: moderateScale(40),
-        borderRadius: moderateScale(30),
+        width: scale(40),
+        height: scale(40),
+        borderRadius: scale(8),
         justifyContent: "center",
         alignItems: "center",
         marginHorizontal: "auto",
-        borderWidth: moderateScale(2),
-        borderColor: "#fff",
-        elevation: 25,
-        shadowOffset: {
-            width: 0,
-            height: 10,
-        },
-        shadowOpacity: 0.6,
-        shadowRadius: 20,
+        // borderWidth: moderateScale(2),
+        // borderColor: "#fff",
+        // elevation: 25,
+        // shadowOffset: {
+        //     width: 0,
+        //     height: 10,
+        // },
+        // shadowOpacity: 0.6,
+        // shadowRadius: 20,
     }
 })

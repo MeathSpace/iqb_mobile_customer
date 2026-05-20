@@ -1,27 +1,30 @@
 {
   "expo": {
-    "name": "iqb_mobile_customer",
+    "name": "IQBook",
     "slug": "iqb_mobile_customer",
-    "version": "1.0.0",
+    "version": "1.0.27",
     "orientation": "portrait",
-    "icon": "./assets/images/icon.png",
+    "icon": "./assets/images/iqbookAdaptive.png",
     "scheme": "iqbmobilecustomer",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true,
+      "supportsTablet": false,
       "bundleIdentifier": "com.iqbook.iqb",
-      "buildNumber": "12",
+      "buildNumber": "74",
       "config": {
-        "googleMapsApiKey": "AIzaSyCFTy8N-ZV2Oji8QbpQjuzXHwuC-kNSdmU"
+        "googleMapsApiKey": "AIzaSyCFTy8N-ZV2Oji8QbpQjuzXHwuC-kNSdmU",
+        "usesNonExemptEncryption": false
       },
       "infoPlist": {
         "ITSAppUsesNonExemptEncryption": false
-      }
+      },
+      "usesAppleSignIn": true
     },
     "android": {
+      "versionCode": 42,
       "adaptiveIcon": {
-        "foregroundImage": "./assets/images/icon.png",
+        "foregroundImage": "./assets/images/iqbookAdaptive.png",
         "backgroundColor": "#ffffff"
       },
       "config": {
@@ -30,7 +33,9 @@
         }
       },
       "softwareKeyboardLayoutMode": "pan",
-      "package": "com.iqbook.iqb"
+      "package": "com.iqbook.iqb",
+      "googleServicesFile": "./google-services.json",
+      "allowBackup": false
     },
     "web": {
       "bundler": "metro",
@@ -50,7 +55,33 @@
         {
           "photosPermission": "The app accesses your photos to let you share them with your friends."
         }
-      ]
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/images/iqbook.png",
+          "color": "#ffffff",
+          "defaultChannel": "default"
+        }
+      ],
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#f1f5f9",
+          "image": "./assets/images/splash-icon.png",
+          "dark": {
+            "image": "./assets/images/splash-icon.png",
+            "backgroundColor": "#f1f5f9"
+          },
+          "imageWidth": 200
+        }
+      ],
+      [
+        "expo-apple-authentication"
+      ],
+      "expo-secure-store",
+      "expo-web-browser",
+      "expo-localization"
     ],
     "experiments": {
       "typedRoutes": true
@@ -58,9 +89,9 @@
     "extra": {
       "router": {},
       "eas": {
-        "projectId": "534c7c91-23ce-44be-84b7-28139f754f31"
+        "projectId": "a912a935-9575-4ef0-be44-656c47d4c86f"
       }
     },
-    "owner": "sagnik26"
+    "owner": "sagnikn00"
   }
 }

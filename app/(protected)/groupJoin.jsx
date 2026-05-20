@@ -1,229 +1,658 @@
-import { Alert, FlatList, Keyboard, KeyboardAvoidingView, Platform, Pressable, ScrollView, StyleSheet, Text, TextInput, TouchableWithoutFeedback, View } from 'react-native'
-import React, { useEffect, useState } from 'react'
-import CustomView from '../../components/CustomView'
-import CustomText from '../../components/CustomText'
-import CustomSecondaryText from '../../components/CustomSecondaryText'
-import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
-import { useTheme } from '@react-navigation/native'
-import { Link, useRouter } from 'expo-router'
-import { Image } from 'expo-image'
-import { Colors } from '../../constants/Colors'
-import GroupItem from '../../components/GroupItem'
-import { useGlobal } from '../../context/GlobalContext'
+import { BASE_URL } from "@/utils/api";
+import { usePreventRemove, useTheme } from "@react-navigation/native";
+import axios from "axios";
+import { Image } from "expo-image";
+import { useRouter } from "expo-router";
+import { useEffect, useRef, useState } from "react";
+import {
+  Alert,
+  FlatList,
+  Keyboard,
+  Pressable,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  TouchableWithoutFeedback,
+  useColorScheme,
+  View,
+} from "react-native"; // Removed unused TouchableOpacity
+import {
+  SafeAreaView,
+  useSafeAreaInsets,
+} from "react-native-safe-area-context";
+import { scale, verticalScale } from "react-native-size-matters";
+import CustomSecondaryText from "../../components/CustomSecondaryText";
+import CustomText from "../../components/CustomText";
+import Skeleton from "../../components/Skeleton";
+import {
+  AddIcon,
+  ArrowLeftIcon,
+  CheckIcon,
+  SearchIcon,
+} from "../../constants/icons";
+import { useAuth } from "../../context/AuthContext";
+import { useGlobal } from "../../context/GlobalContext";
+import i18n from "../../src/localization/i18n"
 
-const groupJoin = () => {
+const GroupJoin = () => {
 
-    const { colors } = useTheme()
-    const router = useRouter()
+  const baseContent = i18n.t("protected.groupJoin")
 
-    const { groupJoinMembers, setGroupJoinMembers, customerName, setCustomerName, selectedBarber, setSelectedBarber, selectedBarberServices, setSelectedBarberServices, removeGroupMember, setRemoveGroupMember } = useGlobal();
+  const router = useRouter();
+  const { colors } = useTheme();
+  const colorScheme = useColorScheme();
+  const { authenticatedUser } = useAuth();
 
-    useEffect(() => {
-        if (removeGroupMember?.remove) {
-            setCustomerName(removeGroupMember.data.customerName)
-            setSelectedBarber(removeGroupMember.data.barber)
-            setSelectedBarberServices(removeGroupMember.data.barberServices)
-        }
+  const [servicesCategoryList, setServicesCategoryList] = useState({
+    data: null,
+    loading: false,
+    error: null,
+    success: false,
+  });
 
-    }, [removeGroupMember])
+  useEffect(() => {
+    const fetchCategoryList = async () => {
+      try {
+        setServicesCategoryList((prev) => ({ ...prev, loading: true }));
 
-    // useEffect(() => {
-    //     return () => {
-    //         console.log("triggered ")
-    //         setCustomerName("")
-    //         setSelectedBarber({})
-    //         setSelectedBarberServices([])
-    //         setGroupJoinMembers([])
-    //     }
-    // }, [])
+        const { data } = await axios.post(
+          `${BASE_URL}/mobileRoutes/getAllSalonCategories`,
+          {
+            salonId: authenticatedUser?.salonId,
+          },
+        );
 
-    return (
-        <CustomView>
-            <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
-                <View>
-                    <View>
-                        <CustomText style={styles.heading}>
-                            Group Join
-                        </CustomText>
+        setServicesCategoryList((prev) => ({
+          ...prev,
+          loading: false,
+          data: data?.response,
+          success: true,
+          error: null,
+        }));
+        setSelectedCategory(data?.response?.[0]?.serviceCategoryName);
+      } catch (error) {
+        setServicesCategoryList((prev) => ({
+          ...prev,
+          loading: false,
+          data: null,
+          success: false,
+          error: error,
+        }));
+        console.log("Error ", error?.response);
+      }
+    };
 
-                        <CustomSecondaryText>
-                            Please provide information for all members joining the group (maximum of 5).
-                        </CustomSecondaryText>
-                    </View>
+    fetchCategoryList();
+  }, [authenticatedUser]);
 
+  const [selectedCategory, setSelectedCategory] = useState("");
 
-                    <View style={[styles.card, { backgroundColor: colors.card, borderColor: colors.border }]}>
-                        <TextInput
-                            value={customerName}
-                            onChangeText={text => setCustomerName(text)}
-                            placeholder='Enter customer name'
-                            placeholderTextColor={colors.secondaryText}
-                            style={[styles.input, { backgroundColor: colors.secondaryInputBackground, color: colors.text }]} />
+  const [salonServicesByCategory, setSalonServicesByCategory] = useState({
+    data: [],
+    filteredData: [],
+    loading: false,
+    error: null,
+    success: false,
+  });
 
-                        <Pressable
-                            onPress={() => {
-                                setRemoveGroupMember({
-                                    remove: false,
-                                    data: {}
-                                })
-                                router.push("/selectBarber")
+  useEffect(() => {
+    const fetchSalonServicesByCategory = async () => {
+      try {
+        setSalonServicesByCategory((prev) => ({ ...prev, loading: true }));
 
-                            }}
-                            style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode, shadowColor: Colors.modeColor.colorCode }]}>
-                            <CustomText style={{ color: "#fff" }}>Select Barber & Services</CustomText>
-                        </Pressable>
+        const { data } = await axios.get(
+          `${BASE_URL}/mobileRoutes/getSalonServicesByCategory`,
+          {
+            params: {
+              salonId: authenticatedUser?.salonId,
+              serviceCategoryName: selectedCategory,
+            },
+          },
+        );
 
-                        {
-                            Object.keys(selectedBarber).length > 0 ? (
-                                <>
-                                    <CustomText>Details</CustomText>
+        setSalonServicesByCategory((prev) => ({
+          ...prev,
+          loading: false,
+          data: data?.response,
+          filteredData: data?.response,
+          success: true,
+          error: null,
+        }));
+      } catch (error) {
+        setSalonServicesByCategory((prev) => ({
+          ...prev,
+          loading: false,
+          data: null,
+          filteredData: null,
+          success: false,
+          error: error,
+        }));
+        console.log("Error ", error);
+      }
+    };
 
-                                    <View style={{
-                                        flexDirection: "row",
-                                        alignItems: "center",
-                                        gap: scale(10),
-                                    }}>
-                                        <Image
-                                            style={{ height: moderateScale(45), width: moderateScale(45), borderRadius: moderateScale(30) }}
-                                            source={{ uri: selectedBarber.image, }}
-                                            // placeholder={{ blurhash }}
-                                            contentFit="cover"
-                                            transition={300}
-                                        />
-                                        <CustomText>{selectedBarber.name}</CustomText>
-                                    </View>
+    if (selectedCategory) {
+      fetchSalonServicesByCategory();
+    }
+  }, [selectedCategory]);
 
-                                    <View style={{ height: verticalScale(1), borderBottomColor: colors.border, borderBottomWidth: moderateScale(1.5) }}></View>
+  const [searchServiceQuery, setSearchServiceQuery] = useState("");
 
-                                    <View style={{ gap: verticalScale(6) }}>
-                                        {
-                                            selectedBarberServices.map((ele, index) => {
-                                                return (
-                                                    <CustomSecondaryText key={index}>{index + 1}. {ele.serviceName}</CustomSecondaryText>
-                                                )
-                                            })
-                                        }
-                                    </View>
+  const handleChange = (text) => {
+    setSearchServiceQuery(text);
+  };
 
-                                    <Pressable
-                                        onPress={() => {
-                                            if (!customerName || !Object.keys(selectedBarber).length || !selectedBarberServices.length) {
-                                                return Alert.alert(
-                                                    "Missing Information",
-                                                    "Please enter the customer name, select a barber, and choose at least one service.",
-                                                    [{ text: "OK" }]
-                                                );
-                                            }
-                                            setGroupJoinMembers([...groupJoinMembers, {
-                                                id: `${Date.now()}-${Math.floor(Math.random() * 10000)}`,
-                                                customerName: customerName,
-                                                barber: selectedBarber,
-                                                barberServices: selectedBarberServices
-                                            }])
-                                            setCustomerName("")
-                                            setSelectedBarber({})
-                                            setSelectedBarberServices([])
-                                            setRemoveGroupMember({
-                                                remove: false,
-                                                data: {}
-                                            })
-                                        }}
-                                        style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode, shadowColor: Colors.modeColor.colorCode }]}>
-                                        <CustomText style={{ color: "#fff" }}>Add Customer</CustomText>
-                                    </Pressable>
-                                </>
-                            ) : (
-                                <>
-                                    <View style={{
-                                        height: verticalScale(100),
-                                        justifyContent: "center",
-                                        alignItems: "center"
-                                    }}>
-                                        <CustomSecondaryText>Barber and services not selected</CustomSecondaryText>
-                                    </View>
-                                </>
-                            )
-                        }
+  useEffect(() => {
+    if (searchServiceQuery) {
+      const filtered = salonServicesByCategory?.data?.filter((item) =>
+        item?.serviceName
+          ?.toLowerCase()
+          .includes(searchServiceQuery.toLowerCase()),
+      );
 
-                    </View>
-                </View>
-            </TouchableWithoutFeedback>
+      setSalonServicesByCategory((prev) => ({
+        ...prev,
+        filteredData: filtered,
+      }));
+    } else {
+      setSalonServicesByCategory((prev) => ({
+        ...prev,
+        filteredData: prev.data,
+      }));
+    }
+  }, [searchServiceQuery]);
 
-            <View style={{ flex: 1, justifyContent: "space-between" }}>
+  function formatMinutesToHrMin(totalMinutes) {
+    const hours = Math.floor(totalMinutes / 60);
+    const mins = totalMinutes % 60;
+
+    if (hours > 0 && mins > 0) return `${hours}hr ${mins}m`;
+    if (hours > 0) return `${hours}hr`;
+    return `${mins}m`;
+  }
+
+  const {
+    groupJoinMembers,
+    setGroupJoinMembers,
+    memberName,
+    setMemberName,
+    selectedMemberServices,
+    setSelectedMemberServices,
+    setSelectedMemberBarber,
+  } = useGlobal();
+
+  const addServiceHandler = (service) => {
+    setSelectedMemberServices((prev) => {
+      const exists = prev.find((s) => s.serviceId === service.serviceId);
+      if (exists) return prev;
+      return [...prev, service];
+    });
+  };
+
+  const removeServiceHandler = (service) => {
+    setSelectedMemberServices((prev) =>
+      prev.filter((s) => s.serviceId !== service.serviceId),
+    );
+  };
+
+  const insets = useSafeAreaInsets();
+
+  const totalPrice = selectedMemberServices.reduce(
+    (acc, service) => acc + service.servicePrice,
+    0,
+  );
+  const totalTime = selectedMemberServices.reduce(
+    (acc, service) => acc + service.serviceEWT,
+    0,
+  );
+  const totalServices = selectedMemberServices.length;
+
+  const allowGroupJoinExitRef = useRef(false);
+
+  usePreventRemove(true, ({ data }) => {
+    if (allowGroupJoinExitRef.current) {
+      setSelectedMemberServices([]);
+      setSelectedMemberBarber(null);
+      setGroupJoinMembers([]);
+      setMemberName(authenticatedUser?.name);
+      router.push("/queuelist"); // or router.push("/something")
+      return;
+    }
+
+    Alert.alert(
+      baseContent.alertBox.header,
+      baseContent.alertBox.subHeader,
+      [
+        {
+          text: baseContent.alertBox.cancel,
+          style: "destructive",
+          onPress: () => {
+            // Do nothing, block navigation
+          },
+        },
+        {
+          text: baseContent.alertBox.ok,
+          onPress: () => {
+            allowGroupJoinExitRef.current = true;
+            router.back(); // or router.push("/home") etc.
+          },
+        },
+      ],
+      { cancelable: true },
+    );
+  });
+
+  return (
+    <SafeAreaView
+      style={{
+        flex: 1,
+        backgroundColor: colors.background,
+        // padding: scale(10),
+      }}
+    >
+      <View
+        style={{
+          flex: 1,
+          padding: scale(10),
+        }}
+      >
+        {/* Header */}
+        <View
+          style={{
+            flexDirection: "row",
+            alignItems: "center",
+            gap: scale(10),
+            marginBottom: verticalScale(20),
+          }}
+        >
+          <Pressable onPress={() => router.replace("/queuelist")}>
+            <ArrowLeftIcon color={colors.text} size={scale(16)} />
+          </Pressable>
+          <CustomText
+            style={{
+              flex: 1,
+              fontFamily: "AirbnbCereal_W_XBd",
+              fontSize: scale(18),
+            }}
+          >
+            {baseContent.header}
+          </CustomText>
+        </View>
+
+        <TouchableWithoutFeedback onPress={Keyboard.dismiss} accessible={false}>
+          {/* Search Input */}
+          <View style={styles.inputContainer}>
+            <TextInput
+              placeholder={baseContent.searchInput.placeholder}
+              placeholderTextColor={colors.secondaryText}
+              value={searchServiceQuery}
+              onChangeText={handleChange}
+              style={[
+                styles.input,
                 {
-                    groupJoinMembers.length > 0 ? (
-                        <>
-                            <CustomText style={{ fontFamily: "AirbnbCereal_W_Bd", fontSize: moderateScale(18), marginBottom: verticalScale(10) }}>
-                                Group Members
-                            </CustomText>
-                            <FlatList
-                                data={groupJoinMembers}
-                                // style={{ marginTop: verticalScale(10)}}
-                                contentContainerStyle={{
-                                    gap: verticalScale(10),
-                                }}
-                                showsVerticalScrollIndicator={false}
-                                renderItem={({ item }) => <GroupItem item={item} />}
-                                keyExtractor={item => item.id}
-                            />
+                  borderWidth: scale(1),
+                  borderColor: colors.queueBorder,
+                  backgroundColor: colors.cardColor,
+                  color: colors.text,
+                },
+              ]}
+            />
+            <Pressable style={[styles.searchButton, { backgroundColor: colors.accentColor}]}>
+              <SearchIcon size={scale(20)} color="white" />
+            </Pressable>
+          </View>
+        </TouchableWithoutFeedback>
 
-                        </>
-                    ) : (<View />)
-                }
+        {/* Categories */}
+        {servicesCategoryList?.loading ? (
+          <FlatList
+            data={[0, 1, 2, 3, 4, 5, 6]}
+            renderItem={({ item }) => (
+              <Skeleton
+                height={verticalScale(40)}
+                width={scale(100)}
+                borderRadius={scale(12)}
+              />
+            )}
+            keyExtractor={(item) => item.toString()}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={{
+              height: verticalScale(40),
+              flexGrow: 0,
+              marginBottom: verticalScale(15),
+            }}
+            contentContainerStyle={{
+              alignItems: "center",
+              gap: scale(8),
+            }}
+          />
+        ) : (
+          <FlatList
+            data={servicesCategoryList?.data}
+            renderItem={({ item }) => (
+              <TouchableOpacity
+                onPress={() => setSelectedCategory(item.serviceCategoryName)}
+                style={[
+                  styles.categoryButton,
+                  {
+                    backgroundColor:
+                      selectedCategory === item?.serviceCategoryName
+                        ? colors.accentColor
+                        : colorScheme === "dark"
+                          ? "#3f3f46"
+                          : "#e4e4e7",
+                    flexDirection: "row",
+                    gap: scale(5),
+                  },
+                ]}
+              >
+                <Image
+                  style={{
+                    width: scale(20),
+                    height: scale(20),
+                    borderRadius: scale(20),
+                    borderWidth: scale(1),
+                    borderColor: colors.queueBorder,
+                  }}
+                  source={{ uri: item?.serviceCategoryImage?.url }}
+                  contentFit="cover"
+                  transition={300}
+                />
+                <CustomText
+                  style={{
+                    lineHeight: verticalScale(35),
+                    color:
+                      selectedCategory === item?.serviceCategoryName
+                        ? "#fff"
+                        : colorScheme === "dark"
+                          ? "#fff"
+                          : "#000",
+                    textAlign: "center",
+                  }}
+                >
+                  {item?.serviceCategoryName}
+                </CustomText>
+              </TouchableOpacity>
+            )}
+            keyExtractor={(item) => item._id}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            style={{
+              height: verticalScale(35),
+              flexGrow: 0,
+              marginBottom: verticalScale(15),
+            }}
+            contentContainerStyle={{
+              alignItems: "center",
+              gap: scale(8),
+            }}
+          />
+        )}
 
-                <Pressable
-                    onPress={() => { }}
-                    style={[styles.btn, { backgroundColor: Colors.modeColor.colorCode }]}>
-                    <CustomText style={{ color: "#fff" }}>Continue</CustomText>
-                </Pressable>
-            </View>
+        {/* Scrollable List Area */}
+        <View
+          style={{
+            flex: 1,
+          }}
+        >
+          {salonServicesByCategory?.loading ? (
+            <FlatList
+              data={[1, 2, 3, 4, 5, 6, 7, 8]}
+              renderItem={() => (
+                <Skeleton
+                  width={scale(160)}
+                  height={235}
+                  borderRadius={scale(8)}
+                />
+              )}
+              keyExtractor={(item) => item.toString()}
+              numColumns={2}
+              columnWrapperStyle={{ columnGap: scale(10) }}
+              ItemSeparatorComponent={() => (
+                <View style={{ height: scale(10) }} />
+              )}
+              contentContainerStyle={{
+                paddingBottom: scale(20),
+                paddingTop: scale(10),
+              }}
+              showsVerticalScrollIndicator={false}
+            />
+          ) : salonServicesByCategory?.data?.length > 0 ? (
+            <FlatList
+              data={salonServicesByCategory?.filteredData}
+              renderItem={({ item }) => {
+                const isSelected = selectedMemberServices.find(
+                  (s) => s.serviceId === item.serviceId,
+                );
+                return (
+                  <Pressable
+                    onPress={() =>
+                      isSelected
+                        ? removeServiceHandler(item)
+                        : addServiceHandler(item)
+                    }
+                    style={[
+                      styles.serviceCard,
+                      {
+                        backgroundColor: colors.cardColor,
+                        borderColor: isSelected
+                          ? colors.accentColor
+                          : colors.queueBorder,
+                        borderWidth: isSelected ? scale(2) : scale(1),
+                      },
+                    ]}
+                  >
+                    <View style={styles.serviceCardImageContainer}>
+                      <Image
+                        style={[
+                          styles.serviceCardImage,
+                          {
+                            borderWidth: scale(1),
+                            borderColor: colors.queueBorder,
+                          },
+                        ]}
+                        source={{ uri: item?.serviceIcon?.url }}
+                        contentFit="cover"
+                        transition={300}
+                      />
+                      <Pressable
+                        onPress={() =>
+                          isSelected
+                            ? removeServiceHandler(item)
+                            : addServiceHandler(item)
+                        }
+                        style={[
+                          styles.selectIcon,
+                          {
+                            backgroundColor: isSelected
+                              ? colors.accentColor
+                              : colorScheme === "dark"
+                                ? "#3f3f46"
+                                : "#e4e4e7",
+                          },
+                        ]}
+                      >
+                        {isSelected ? (
+                          <CheckIcon color="#fff" size={scale(18)} />
+                        ) : (
+                          <AddIcon color={colors.text} />
+                        )}
+                      </Pressable>
+                    </View>
+                    <CustomText
+                      style={{
+                        fontFamily: "AirbnbCereal_W_Bd",
+                        textAlign: "center",
+                      }}
+                    >
+                      {item?.serviceName}
+                    </CustomText>
+                    <CustomSecondaryText>
+                      ~{formatMinutesToHrMin(item?.serviceEWT)}
+                    </CustomSecondaryText>
+                    <CustomText
+                      style={{
+                        fontFamily: "AirbnbCereal_W_XBd",
+                      }}
+                    >
+                      {authenticatedUser?.currency} {item?.servicePrice}
+                    </CustomText>
+                  </Pressable>
+                );
+              }}
+              keyExtractor={(item) => item?.serviceId}
+              numColumns={2}
+              columnWrapperStyle={{ columnGap: scale(10) }}
+              ItemSeparatorComponent={() => (
+                <View style={{ height: scale(10) }} />
+              )}
+              contentContainerStyle={{ paddingVertical: scale(10) }}
+              showsVerticalScrollIndicator={false}
+            />
+          ) : null}
+        </View>
+      </View>
 
-        </CustomView>
-    )
-}
+      {/* Footer */}
+      {selectedMemberServices?.length ? (
+        <View
+          style={{
+            // backgroundColor: colors.cardColor,
+            borderTopColor: colors.queueBorder,
+            borderTopWidth: scale(1),
+            flexDirection: "row",
+            alignItems: "center",
+            justifyContent: "space-between",
+            padding: scale(10),
+          }}
+        >
+          <View style={{}}>
+            <CustomText
+              style={{ fontFamily: "AirbnbCereal_W_XBd", fontSize: scale(18) }}
+            >
+              {authenticatedUser?.currency} {totalPrice.toFixed(2)}
+            </CustomText>
+            <CustomSecondaryText>
+              {totalServices} {totalServices === 1 ? baseContent.service : baseContent.services} |{" "}
+              {formatMinutesToHrMin(totalTime)}
+            </CustomSecondaryText>
+          </View>
 
-export default groupJoin
+          <TouchableOpacity
+            onPress={() => {
+              // router.push({
+              //     pathname: "/groupJoinBarber",
+              //     params: {
+              //         data: JSON.stringify(selectedMemberServices),
+              //     },
+              // });
+              setSelectedMemberServices(selectedMemberServices);
+              router.push("/groupJoinBarber");
+            }}
+            style={[styles.queueButton, {backgroundColor: colors.accentColor}]}
+            activeOpacity={0.85}
+          >
+            <CustomText style={styles.queueButtonText}>{baseContent.continue}</CustomText>
+          </TouchableOpacity>
+        </View>
+      ) : null}
+    </SafeAreaView>
+  );
+};
+
+export default GroupJoin;
 
 const styles = StyleSheet.create({
-    heading: {
-        fontFamily: "AirbnbCereal_W_Bd",
-        fontSize: moderateScale(22),
-        marginBottom: verticalScale(10)
-    },
+  categoryButton: {
+    paddingHorizontal: scale(10),
+    borderRadius: scale(8),
+    justifyContent: "center",
+    alignItems: "center",
+  },
 
-    card: {
-        padding: moderateScale(10),
-        marginVertical: verticalScale(20),
-        borderRadius: scale(4),
-        borderWidth: scale(1),
-        gap: verticalScale(10),
-        elevation: 3,
+  inputContainer: {
+    position: "relative",
+    width: "100%",
+    justifyContent: "center",
+    marginBottom: verticalScale(15),
+  },
+  input: {
+    width: "100%",
+    paddingVertical: verticalScale(12),
+    paddingHorizontal: scale(16),
+    paddingRight: scale(50), // space for the search button
+    borderRadius: scale(8),
+  },
+  searchButton: {
+    position: "absolute",
+    right: scale(4),
+     // teal-500
+    padding: scale(8),
+    borderRadius: scale(6),
+    justifyContent: "center",
+    alignItems: "center",
+  },
 
-        shadowColor: '#000',
-        shadowOffset: { width: 0, height: 2 },
-        shadowOpacity: 0.2,
-        shadowRadius: 4,
-    },
+  serviceCard: {
+    // width: scale(103), for 3 cards
+    width: scale(160),
+    // height: verticalScale(150),
+    borderRadius: scale(8),
+    justifyContent: "center",
+    alignItems: "center",
+    padding: scale(10),
+    gap: verticalScale(5),
+  },
 
-    input: {
-        height: verticalScale(40),
-        borderRadius: scale(4),
-        paddingHorizontal: scale(10),
-        fontSize: moderateScale(14),
-    },
+  serviceCardImageContainer: {
+    width: "100%",
+    height: verticalScale(120),
+    position: "relative",
+  },
 
-    btn: {
-        height: verticalScale(35),
-        borderRadius: scale(4),
-        alignItems: "center",
-        justifyContent: "center",
-        elevation: 4,
-    },
+  serviceCardImage: {
+    width: "100%",
+    height: "100%",
+    borderRadius: scale(4),
+  },
+  selectIcon: {
+    position: "absolute",
+    bottom: verticalScale(10),
+    right: scale(10),
+    height: scale(30),
+    width: scale(30),
+    borderRadius: scale(30),
+    backgroundColor: "gray",
+    justifyContent: "center",
+    alignItems: "center",
+  },
 
+  queueButton: {
+    width: "40%",
+     // bg-teal-500
+    paddingVertical: verticalScale(12), // py-4
+    borderRadius: scale(8), // rounded-xl
+    // marginBottom: verticalScale(15), // mb-6
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  queueButtonText: {
+    color: "#fff", // text-white
+    fontFamily: "AirbnbCereal_W_XBd",
+    fontSize: scale(16),
+  },
 
-    container: {
-        flex: 1,
-        marginTop: 0,
-    },
-
-})
+  container: {
+    flex: 1,
+  },
+  item: {
+    backgroundColor: "#f9c2ff",
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
+  },
+  title: {
+    fontSize: 32,
+  },
+});

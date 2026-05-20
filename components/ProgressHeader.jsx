@@ -4,36 +4,52 @@ import * as Progress from 'react-native-progress';
 import { scale, verticalScale } from 'react-native-size-matters';
 import { useTheme } from '@react-navigation/native';
 
-const ProgressHeader = ({ progressOne, progressTwo, progressThree }) => {
+const ProgressHeader = ({ progressOne, progressTwo, progressThree, authType = "local" }) => {
 
     const { colors } = useTheme()
 
     return (
         <View style={styles.container}>
+
             <Progress.Bar
                 progress={progressOne}
-                style={styles.bar}
+                style={[styles.bar, { borderColor: colors.queueBorder }]}
                 color={colors.text}
-                unfilledColor={colors.border}
+                unfilledColor={colors.cardColor}
                 borderWidth={0}
                 height={verticalScale(5)}
             />
-            <Progress.Bar
+            {/* <Progress.Bar
                 progress={progressTwo}
-                style={styles.bar}
+                style={[styles.bar, { borderColor: colors.queueBorder }]}
                 color={colors.text}
-                unfilledColor={colors.border}
+                unfilledColor={colors.cardColor}
                 borderWidth={0}
                 height={verticalScale(5)}
-            />
+            /> */}
+
+            {/* {
+                authType !== "google" && (
+                    <Progress.Bar
+                        progress={progressThree}
+                        style={[styles.bar, { borderColor: colors.queueBorder }]}
+                        color={colors.text}
+                        unfilledColor={colors.cardColor}
+                        borderWidth={0}
+                        height={verticalScale(5)}
+                    />
+                )
+            } */}
+
             <Progress.Bar
                 progress={progressThree}
-                style={styles.bar}
+                style={[styles.bar, { borderColor: colors.queueBorder }]}
                 color={colors.text}
-                unfilledColor={colors.border}
+                unfilledColor={colors.cardColor}
                 borderWidth={0}
                 height={verticalScale(5)}
             />
+
         </View>
     );
 };
@@ -51,6 +67,7 @@ const styles = StyleSheet.create({
 
     },
     bar: {
-        flex: 1
+        flex: 1,
+        borderWidth: scale(1),
     },
 });

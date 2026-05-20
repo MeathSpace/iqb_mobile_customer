@@ -11,7 +11,7 @@ const AuthLayout = () => {
         return <Redirect href="/home" />
     }
 
-    console.log("Authenticated Auth", isAuthenticated)
+    // console.log("Authenticated Auth", isAuthenticated)
 
     return (
         <Stack screenOptions={{ headerShown: false }}>
@@ -20,7 +20,7 @@ const AuthLayout = () => {
             <Stack.Screen name="personalInfo" />
             <Stack.Screen name="passwordConfirmation" />
             <Stack.Screen name="verification" />
-            <Stack.Screen name="forgetVerification" />
+            <Stack.Screen name="forgetPasswordConfirmation" />
             <Stack.Screen name="forgetPassword" />
         </Stack>
     )

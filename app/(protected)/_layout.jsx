@@ -1,55 +1,158 @@
-import { StyleSheet, Text, View } from 'react-native'
-import React from 'react'
-import { Redirect, Slot, Stack } from 'expo-router'
-import { useAuth } from '../../context/AuthContext'
+import { Redirect, Stack, useRouter } from "expo-router";
+import { StyleSheet } from "react-native";
+import { useAuth } from "../../context/AuthContext";
 
 const ProtectedLayout = () => {
-    const { isAuthenticated } = useAuth()
+  const { isAuthenticated } = useAuth();
+  const router = useRouter();
 
-    if (!isAuthenticated) {
-        return <Redirect href="/" />
-    }
+  if (!isAuthenticated) {
+    return <Redirect href="/signin" />;
+  }
 
-    return (
-        <Stack
-            initialRouteName="(tabs)"
-            screenOptions={{ headerShown: false }}>
-            <Stack.Screen
-                name="selectBarber"
-                options={{
-                    presentation: 'modal',
-                    animation: 'slide_from_bottom',
-                }}
-            />
-            <Stack.Screen
-                name="selectServices"
-                options={{
-                    presentation: 'modal',
-                    animation: 'slide_from_bottom',
-                }} />
-            <Stack.Screen
-                name="joinConfirmation"
-                options={{
-                    presentation: 'modal',
-                    animation: 'slide_from_bottom',
-                }} />
-            <Stack.Screen
-                name="groupJoin"
-                options={{
-                    presentation: 'modal',
-                    animation: 'slide_from_bottom',
-                }} />
+  // useEffect(() => {
+  //     if (!isAuthenticated) {
+  //         router.push("/s")
+  //         console.log("Loged out")
+  //     }
+  // }, [isAuthenticated])
 
-            <Stack.Screen
-                name="appointmentConfirmation"
-                options={{
-                    presentation: 'transparentModal',
-                    animation: 'fade',
-                }} />
-        </Stack>
-    )
-}
+  return (
+    <Stack
+      initialRouteName="(tabs)"
+      screenOptions={{
+        headerShown: false,
+      }}
+    >
+      <Stack.Screen
+        name="selectBarber"
+        options={{
+          presentation: "modal",
+          animation: "slide_from_bottom",
+        }}
+      />
+      <Stack.Screen
+        name="selectServices"
+        options={{
+          presentation: "modal",
+          animation: "slide_from_bottom",
+        }}
+      />
+      <Stack.Screen
+        name="appointmentConfirmation"
+        options={{
+          presentation: "transparentModal",
+          animation: "fade",
+        }}
+      />
 
-export default ProtectedLayout
+      <Stack.Screen
+        name="joinpopup"
+        options={{
+          presentation: "transparentModal",
+          animation: "fade",
+        }}
+      />
 
-const styles = StyleSheet.create({})
+      <Stack.Screen
+        name="joinQueueTypeModal"
+        options={{
+          presentation: "transparentModal",
+          animation: "fade",
+        }}
+      />
+
+      <Stack.Screen
+        name="appointmentFilter"
+        options={{
+          presentation: "transparentModal",
+          animation: "fade",
+        }}
+      />
+
+      <Stack.Screen
+        name="singleJoinModal"
+        options={{
+          presentation: "transparentModal",
+          animation: "fade",
+        }}
+      />
+
+      <Stack.Screen
+        name="groupAddMemberModal"
+        options={{
+          presentation: "transparentModal",
+          animation: "fade",
+        }}
+      />
+
+      <Stack.Screen
+        name="groupHostMemberModal"
+        options={{
+          presentation: "transparentModal",
+          animation: "fade",
+        }}
+      />
+
+      <Stack.Screen
+        name="groupJoinModal"
+        options={{
+          presentation: "transparentModal",
+          animation: "fade",
+        }}
+      />
+
+      <Stack.Screen
+        name="appointmentCalenderModal"
+        options={{
+          presentation: "transparentModal",
+          animation: "fade",
+        }}
+      />
+
+      <Stack.Screen
+        name="editAppointmentCalenderModal"
+        options={{
+          presentation: "transparentModal",
+          animation: "fade",
+        }}
+      />
+
+      <Stack.Screen
+        name="appointmentSuccessPage"
+        options={{
+          presentation: "card",
+          animation: "default",
+        }}
+      />
+
+      <Stack.Screen
+        name="appointmentPop"
+        options={{
+          presentation: "transparentModal",
+          animation: "fade",
+        }}
+      />
+
+      <Stack.Screen
+        name="appointmentpopup"
+        options={{
+          presentation: "transparentModal",
+          animation: "fade",
+        }}
+      />
+
+      <Stack.Screen
+        name="editAppointmentCalender"
+        options={{
+          presentation: "card",
+        }}
+      />
+      {/* editAppointmentCalender */}
+    </Stack>
+  );
+};
+
+export default ProtectedLayout;
+
+const styles = StyleSheet.create({});

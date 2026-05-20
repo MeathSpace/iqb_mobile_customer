@@ -1,24 +1,60 @@
-Clerk Production Key Rule - 
+🚀 Running the Project
 
-EXPO_PUBLIC_CLERK_PUBLISHABLE_LIVE_KEY=
-"This key value will start like this pk_live. 
-Then the warning from console will go away.
-In the free version we cannot remove the clerk branding. It requires the paid version"
+To start the project in development mode:
+npx expo start
 
-CLERK EXPO  PRODUCTION BUILD LOGIC.
+📦 Building the Project
 
-1. No clerk dashboard configuration required
-2. only go to clerk dashboard go to attack protection and disable bot signup protection
+Android (Production Build)
+eas build --platform android --profile production
 
-3. IN expo go app i donot need to configure scheme and path 
-4. But if i am in eas build then beause it is a native code so i must write the scheme and the path
-5. Here path means after google signin when will google redirect to the app
-6. AuthSession under the hood uses expo linking.
-await startSSOFlow({
-                strategy: 'oauth_google',
-                // For web, defaults to current path
-                // For native, you must pass a scheme, like AuthSession.makeRedirectUri({ scheme, path })
-                // For more info, see https://docs.expo.dev/versions/latest/sdk/auth-session/#authsessionmakeredirecturioptions
-                // redirectUrl: AuthSession.makeRedirectUri(),
-                redirectUrl: AuthSession.makeRedirectUri({ scheme: 'iqbmobilecustomer', path: '/signin' })
-})
+iOS (Production Build)
+eas build --platform ios --profile production
+
+📁 Project Structure
+
+The project is organized into the following main folders:
+
+🔐 (auths) Folder
+
+Contains all authentication-related screens:
+
+Sign In
+
+Sign Up
+
+Forgot Password
+
+Personal Info
+
+Verification
+
+🔒 (protected) Folder
+
+Contains screens accessible only after user authentication.
+
+This folder includes two types of screens:
+
+Tab Screens
+
+Located inside the tab folder
+
+Accessible via bottom tab navigation
+
+Other App Screens
+
+Not part of the tab navigation
+
+Still accessible after login
+
+🧠 Context Folder
+
+Manages application state using React Context:
+
+AuthContext.jsx – Handles authentication-related state and logic
+
+GlobalContext.jsx – Manages global application state
+
+🧩 Components Folder
+
+Contains all reusable components used throughout the application.
