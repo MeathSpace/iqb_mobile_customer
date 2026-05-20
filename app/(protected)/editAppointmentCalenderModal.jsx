@@ -21,11 +21,10 @@ import { CheckIcon } from "../../constants/icons";
 import { useAuth } from "../../context/AuthContext";
 import { useGlobal } from "../../context/GlobalContext";
 import { ddmmformatDate } from "../../utils/ddmmformatDate";
-import i18n from "../../src/localization/i18n"
+import i18n from "../../src/localization/i18n";
 
 const editAppointmentCalenderModal = () => {
-
-  const baseContent = i18n.t("protected.editAppointmentCalenderModal")
+  const baseContent = i18n.t("protected.editAppointmentCalenderModal");
 
   const [salonAddress, setSalonAddress] = useState("");
 
@@ -166,7 +165,10 @@ const editAppointmentCalenderModal = () => {
           },
         });
       } else {
-        Alert.alert(baseContent.alertBox.alertThree.header, baseContent.alertBox.alertThree.subHeader);
+        Alert.alert(
+          baseContent.alertBox.alertThree.header,
+          baseContent.alertBox.alertThree.subHeader,
+        );
       }
     } catch (error) {
       console.error("❌ Calendar Error:", error);
@@ -220,7 +222,11 @@ const editAppointmentCalenderModal = () => {
       );
     } catch (error) {
       setEditAppointmentLoader(false);
-      Alert.alert(baseContent.alertBox.alertFive.header, error?.response?.data?.message, [{ text: baseContent.alertBox.alertFive.ok }]);
+      Alert.alert(
+        baseContent.alertBox.alertFive.header,
+        error?.response?.data?.message,
+        [{ text: baseContent.alertBox.alertFive.ok }],
+      );
       console.log(
         "Error doing edit appointment ",
         error?.response?.data?.message,
@@ -248,14 +254,15 @@ const editAppointmentCalenderModal = () => {
     if (appointmentPopupType?.selectServices) {
       setTotalTime(
         selectedCustomerBookAppointmentServicesParse.reduce(
-          (sum, item) => sum + (Number(item.serviceEWT) || 0),
+          (sum, item) => sum + (Number(item.serviceEWT) * item.count || 0),
           0,
         ),
       );
     } else {
       setTotalTime(
         selectedCustomerBookAppointmentServicesParse.reduce(
-          (sum, item) => sum + (Number(item.barberServiceEWT) || 0),
+          (sum, item) =>
+            sum + (Number(item.barberServiceEWT) * item.count || 0),
           0,
         ),
       );
@@ -377,7 +384,10 @@ const editAppointmentCalenderModal = () => {
                   {selectedCustomerBookAppointmentBarberParse?.name}
                 </CustomText>
                 <CustomSecondaryText style={{ marginTop: verticalScale(2) }}>
-                  {totalServices} {totalServices === 1 ? baseContent.service : baseContent.services}{" "}
+                  {totalServices}{" "}
+                  {totalServices === 1
+                    ? baseContent.service
+                    : baseContent.services}{" "}
                   • {formatMinutesToHrMin(totalTime)}
                 </CustomSecondaryText>
               </View>

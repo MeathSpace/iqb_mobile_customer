@@ -83,6 +83,8 @@ const appointmentCalendar = () => {
   const [selectedCustomerBarber, setSelectedCustomerBarber] = useState(null);
   const [continueService, setContinueService] = useState(false);
 
+  // console.log("selectCustomerServices ", selectCustomerServices);
+
   // First Flow
 
   useEffect(() => {
@@ -139,6 +141,12 @@ const appointmentCalendar = () => {
             {
               salonId: authenticatedUser.salonId,
               serviceIds: selectCustomerServices.map((item) => item.serviceId),
+              serviceIdWithCount: selectCustomerServices.map((item) => {
+                return {
+                  serviceId: item.serviceId,
+                  count: item.count,
+                };
+              }),
             },
           );
 
@@ -258,6 +266,8 @@ const appointmentCalendar = () => {
   ]);
 
   const addServiceHandler = (service, countValue) => {
+    if (countValue > 5) return;
+
     setContinueService(false);
     const updatedSalonServices = salonServices?.data?.map((item) => {
       return item?.serviceId === service?.serviceId
@@ -818,7 +828,10 @@ const appointmentCalendar = () => {
                     ? selectCustomerServices.length > 3
                       ? `${selectCustomerServices
                           .slice(0, 3)
-                          .map((s) => `${s?.serviceName} ${s?.count > 0 ? `(${s?.count})` : ""}`)
+                          .map(
+                            (s) =>
+                              `${s?.serviceName} ${s?.count > 0 ? `(${s?.count})` : ""}`,
+                          )
                           .join(
                             ", ",
                           )} + ${selectCustomerServices.length - 3} ${baseContent.more}`
@@ -918,7 +931,10 @@ const appointmentCalendar = () => {
                     ? selectCustomerServices.length > 3
                       ? `${selectCustomerServices
                           .slice(0, 3)
-                          .map((s) => `${s?.serviceName} ${s?.count > 0 ? `(${s?.count})` : ""}`)
+                          .map(
+                            (s) =>
+                              `${s?.serviceName} ${s?.count > 0 ? `(${s?.count})` : ""}`,
+                          )
                           .join(
                             ", ",
                           )} + ${selectCustomerServices.length - 3} ${baseContent.more}`
