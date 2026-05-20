@@ -1,7 +1,6 @@
-import { BASE_URL } from "@/utils/api";
 import { useTheme } from "@react-navigation/native";
-import axios from "axios";
 import { Image } from "expo-image";
+import api from "../../utils/api"
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
 import {
@@ -43,8 +42,8 @@ const singleJoinBarberServices = () => {
       const getSalonPaymentSettings = async () => {
         try {
           setPaymentSettingsLoading(true);
-          const { data } = await axios.get(
-            `${BASE_URL}/mobileRoutes/getPaymentSettings?salonId=${authenticatedUser?.salonId}`,
+          const { data } = await api.get(
+            `/mobileRoutes/getPaymentSettings?salonId=${authenticatedUser?.salonId}`,
           );
           setPaymentSettingsData(data?.response?.[0]);
         } catch (error) {
@@ -81,8 +80,8 @@ const singleJoinBarberServices = () => {
       try {
         setServicesList((prev) => ({ ...prev, loading: true }));
 
-        const { data } = await axios.post(
-          `${BASE_URL}/mobileRoutes/getServicesByBarberId`,
+        const { data } = await api.post(
+          `/mobileRoutes/getServicesByBarberId`,
           {
             salonId: authenticatedUser?.salonId,
             barberId: parsedSelectBarber?.barberId,

@@ -8,8 +8,7 @@ import { Link, useRouter } from 'expo-router';
 import { Image } from 'expo-image';
 import { useAuth } from '../context/AuthContext';
 import { useGlobal } from '../context/GlobalContext';
-import { BASE_URL } from '@/utils/api'
-import axios from 'axios'
+import api from '../utils/api';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import i18n from "../src/localization/i18n"
 
@@ -41,7 +40,7 @@ const SearchHeader = () => {
 
                         setSearchCitySalons((prev) => ({ ...prev, loading: true }))
 
-                        const { data } = await axios.get(`${BASE_URL}/mobileRoutes/searchByNameAndCity`, {
+                        const { data } = await api.get(`/mobileRoutes/searchByNameAndCity`, {
                             params: {
                                 searchValue: query
                             }

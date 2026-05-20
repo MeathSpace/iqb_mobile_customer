@@ -513,8 +513,7 @@ import CustomTabView from '../../components/CustomTabView';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useGlobal } from '../../context/GlobalContext';
 import { useAuth } from '../../context/AuthContext';
-import axios from 'axios';
-import { BASE_URL } from '@/utils/api';
+import api from "../../utils/api";
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const singleJoinConfirmation = () => {
@@ -613,7 +612,7 @@ const singleJoinConfirmation = () => {
 
       setSingleJoinLoader(true)
 
-      const { data } = await axios.post(`${BASE_URL}/mobileRoutes/singleJoinQueue`, singleJoinData)
+      const { data } = await api.post(`/mobileRoutes/singleJoinQueue`, singleJoinData)
 
       Toast.success(data?.message)
       setSingleJoinLoader(false)
@@ -664,7 +663,7 @@ const singleJoinConfirmation = () => {
 
       setGroupJoinLoader(true)
 
-      const { data } = await axios.post(`${BASE_URL}/mobileRoutes/groupJoinQueue`, groupJoinData)
+      const { data } = await api.post(`/mobileRoutes/groupJoinQueue`, groupJoinData)
 
       Toast.success(data?.message)
       setGroupJoinLoader(false)
@@ -713,7 +712,7 @@ const singleJoinConfirmation = () => {
 
       setBookAppointmentLoader(true)
 
-      const { data } = await axios.post(`${BASE_URL}/mobileRoutes/createAppointment`, appData)
+      const { data } = await api.post(`/mobileRoutes/createAppointment`, appData)
 
       Toast.success(data?.message)
       setBookAppointmentLoader(false)
@@ -757,7 +756,7 @@ const singleJoinConfirmation = () => {
 
       setEditAppointmentLoader(true)
 
-      const { data } = await axios.put(`${BASE_URL}/mobileRoutes/editAppointments`, appData)
+      const { data } = await api.put(`/mobileRoutes/editAppointments`, appData)
 
       Toast.success(data?.message)
       setEditAppointmentLoader(false)

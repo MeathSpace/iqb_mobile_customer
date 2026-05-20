@@ -1,9 +1,7 @@
 import { Colors } from "@/constants/Colors";
-import { BASE_URL } from "@/utils/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { useTheme } from "@react-navigation/native";
-import axios from "axios";
 import { Image } from "expo-image";
 import * as ImagePicker from "expo-image-picker";
 import { useFocusEffect, useRouter } from "expo-router";
@@ -40,6 +38,7 @@ import {
 import { useAuth } from "../../../../context/AuthContext";
 import { useLanguage } from "../../../../context/LanguageContext";
 import i18n from "../../../../src/localization/i18n";
+import api from "../../../../utils/api";
 
 const editProfile = () => {
   const { locale } = useLanguage();
@@ -249,8 +248,8 @@ const editProfile = () => {
 
       setUpdateProfileLoader(true);
 
-      const { data } = await axios.put(
-        `${BASE_URL}/customer/updateCustomer`,
+      const { data } = await api.put(
+        `/customer/updateCustomer`,
         editProfileData,
       );
 
@@ -343,8 +342,8 @@ const editProfile = () => {
     try {
       setUploadImageLoader(true);
 
-      const { data } = await axios.post(
-        `${BASE_URL}/customer/uploadCustomerProfilePic`,
+      const { data } = await api.post(
+        `/customer/uploadCustomerProfilePic`,
         formData,
         {
           headers: {

@@ -1,7 +1,6 @@
-import { BASE_URL } from "@/utils/api";
 import { useTheme } from "@react-navigation/native";
-import axios from "axios";
 import { Image } from "expo-image";
+import api from "../../utils/api"
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
@@ -65,8 +64,8 @@ const GroupJoinBarber = () => {
         try {
           setBarberList((prev) => ({ ...prev, loading: true }));
 
-          const { data } = await axios.post(
-            `${BASE_URL}/mobileRoutes/getBarberByMultipleServiceId`,
+          const { data } = await api.post(
+            `/mobileRoutes/getBarberByMultipleServiceId`,
             {
               salonId: authenticatedUser.salonId,
               serviceIds: selectedMemberServices.map((item) => item.serviceId),

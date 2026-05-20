@@ -18,12 +18,11 @@ import CustomText from '../../../../components/CustomText';
 import { useFocusEffect, useRouter } from 'expo-router';
 import { useTheme } from '@react-navigation/native';
 import { useAuth } from '../../../../context/AuthContext';
-import axios from 'axios';
-import { BASE_URL } from '@/utils/api';
 import { Toast } from 'toastify-react-native'
 import Skeleton from '../../../../components/Skeleton';
 import CustomSecondaryText from '../../../../components/CustomSecondaryText';
 import i18n from "../../../../src/localization/i18n"
+import api from '../../../../utils/api';
 
 const MyFavourites = () => {
 
@@ -46,7 +45,7 @@ const MyFavourites = () => {
 
                     setFavouriteSalonData((prev) => ({ ...prev, loading: true }))
 
-                    const { data } = await axios.post(`${BASE_URL}/customer/getCustomerFavouriteSalon`, {
+                    const { data } = await api.post(`/customer/getCustomerFavouriteSalon`, {
                         customerEmail: authenticatedUser?.email
                     })
 
@@ -89,7 +88,7 @@ const MyFavourites = () => {
 
     const deleteCustomerFavouriteSalon = async (item) => {
         try {
-            const { data } = await axios.post(`${BASE_URL}/customer/deleteCustomerFavouriteSalon`, {
+            const { data } = await api.post(`/customer/deleteCustomerFavouriteSalon`, {
                 salonId: item?.salonId,
                 email: authenticatedUser.email
             });

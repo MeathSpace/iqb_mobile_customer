@@ -1,8 +1,6 @@
-import { BASE_URL } from "@/utils/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "@react-navigation/native";
 import { useStripe } from "@stripe/stripe-react-native";
-import axios from "axios";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import {
@@ -22,6 +20,7 @@ import { CheckIcon } from "../../constants/icons";
 import { useAuth } from "../../context/AuthContext";
 import { useGlobal } from "../../context/GlobalContext";
 import i18n from "../../src/localization/i18n";
+import api from "../../utils/api";
 
 const singleJoinModal = () => {
   const baseContent = i18n.t("protected.singleJoinModal");
@@ -104,8 +103,8 @@ const singleJoinModal = () => {
 
       setSingleJoinLoader(true);
 
-      const { data } = await axios.post(
-        `${BASE_URL}/mobileRoutes/singleJoinQueue`,
+      const { data } = await api.post(
+        `/mobileRoutes/singleJoinQueue`,
         singleJoinData,
       );
 
@@ -136,7 +135,11 @@ const singleJoinModal = () => {
     } catch (error) {
       setSingleJoinLoader(false);
       // Toast.error(error?.response?.data?.message)
-      Alert.alert(baseContent.alertBox.alertOne.header, error?.response?.data?.message, [{ text: baseContent.alertBox.alertOne.ok }]);
+      Alert.alert(
+        baseContent.alertBox.alertOne.header,
+        error?.response?.data?.message,
+        [{ text: baseContent.alertBox.alertOne.ok }],
+      );
       console.log("Error doing single join ", error);
     }
   };
@@ -161,14 +164,10 @@ const singleJoinModal = () => {
   );
 
   const fetchPaymentSheetParams = async () => {
-    const response = await fetch(
-      `${BASE_URL}/mobileRoutes/singleJoinQueuePaymentApi`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+    try {
+      const response = await api.post(
+        "/mobileRoutes/singleJoinQueuePaymentApi",
+        {
           totalAmount: advanceAmount, // backend must convert to smallest unit
           currency: authenticatedUser?.isoCurrencyCode,
           queueJoinData: {
@@ -183,24 +182,25 @@ const singleJoinModal = () => {
             barberId: parsedSelectBarber?.barberId,
             services: parsedSelectedServices,
           },
-        }),
-      },
-    );
+        },
+      );
 
-    const data = await response.json();
+      const data = response.data;
 
-    // ✅ Do NOT mask backend error message
-    if (!response.ok) {
-      throw new Error(data?.message || baseContent.errorStatesAndApi.paymentInitializationFailed);
+      const { paymentIntent, ephemeralKey, customer } = data;
+
+      if (!paymentIntent || !ephemeralKey || !customer) {
+        throw new Error(baseContent.errorStatesAndApi.invalidStripeError);
+      }
+
+      return { paymentIntent, ephemeralKey, customer };
+    } catch (error) {
+      const message =
+        error?.response?.data?.message ||
+        baseContent.errorStatesAndApi.paymentInitializationFailed;
+
+      throw new Error(message);
     }
-
-    const { paymentIntent, ephemeralKey, customer } = data;
-
-    if (!paymentIntent || !ephemeralKey || !customer) {
-      throw new Error(baseContent.errorStatesAndApi.invalidStripeError);
-    }
-
-    return { paymentIntent, ephemeralKey, customer };
   };
 
   const openPaymentSheet = async () => {
@@ -269,7 +269,10 @@ const singleJoinModal = () => {
     } catch (err) {
       console.log("Stripe error:", err?.message);
 
-      Alert.alert(baseContent.alertBox.alertTwo.header, err?.message || baseContent.alertBox.alertTwo.subHeader);
+      Alert.alert(
+        baseContent.alertBox.alertTwo.header,
+        err?.message || baseContent.alertBox.alertTwo.subHeader,
+      );
     } finally {
       setLoading(false);
     }

@@ -1,8 +1,6 @@
-import { BASE_URL } from "@/utils/api";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "@react-navigation/native";
-import axios from "axios";
 import { Image } from "expo-image";
 import { useFocusEffect } from "expo-router";
 import React, {
@@ -45,6 +43,7 @@ import {
 } from "../../../constants/icons";
 import { useAuth } from "../../../context/AuthContext";
 import i18n from "../../../src/localization/i18n";
+import api from "../../../utils/api";
 
 const SalonItem = ({ item }) => {
   const { colors } = useTheme();
@@ -78,8 +77,8 @@ const salon = () => {
         try {
           setSalonInfoData((prev) => ({ ...prev, loading: true }));
 
-          const { data } = await axios.get(
-            `${BASE_URL}/mobileRoutes/getSalonInfoBySalonId`,
+          const { data } = await api.get(
+            `/mobileRoutes/getSalonInfoBySalonId`,
             {
               params: {
                 salonId: authenticatedUser?.salonId,
@@ -273,8 +272,8 @@ const salon = () => {
         try {
           setServiceCategoryData((prev) => ({ ...prev, loading: true }));
 
-          const { data } = await axios.get(
-            `${BASE_URL}/mobileRoutes/getAllServiceCategories`,
+          const { data } = await api.get(
+            `/mobileRoutes/getAllServiceCategories`,
           );
 
           setServiceCategoryData((prev) => ({
@@ -309,8 +308,8 @@ const salon = () => {
               loading: true,
             }));
 
-            const { data } = await axios.get(
-              `${BASE_URL}/mobileRoutes/getSalonServicesByCategory`,
+            const { data } = await api.get(
+              `/mobileRoutes/getSalonServicesByCategory`,
               {
                 params: {
                   salonId: authenticatedUser?.salonId,
@@ -399,8 +398,8 @@ const salon = () => {
     try {
       setFavouriteLoader(true);
 
-      const { data } = await axios.post(
-        `${BASE_URL}/customer/customerFavouriteSalon`,
+      const { data } = await api.post(
+        `/customer/customerFavouriteSalon`,
         {
           email: authenticatedUser?.email,
           salonId: authenticatedUser?.salonId,

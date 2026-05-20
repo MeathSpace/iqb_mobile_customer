@@ -1,7 +1,6 @@
-import { BASE_URL } from "@/utils/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "@react-navigation/native";
-import axios from "axios";
+import api from "../../utils/api";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import {
@@ -49,8 +48,8 @@ const verification = () => {
     if (email && phoneNumber && callingCode) {
       const sendCustomerVerificationCodeFnc = async () => {
         try {
-          const { data } = await axios.post(
-            `${BASE_URL}/customer/sendCustomerVerificationCode`,
+          const { data } = await api.post(
+            `/customer/sendCustomerVerificationCode`,
             {
               email,
               mobileCountryCode: callingCode,
@@ -114,8 +113,8 @@ const verification = () => {
       setSignupLoading(true);
 
       if (authType === "google") {
-        const { data } = await axios.post(
-          `${BASE_URL}/customer/googleCustomerSignup`,
+        const { data } = await api.post(
+          `/customer/googleCustomerSignup`,
           oauthSignUpData,
         );
         setSignInData((prev) => ({
@@ -135,8 +134,8 @@ const verification = () => {
         setIsAuthenticated(true);
         router.push("/home");
       } else if (authType === "apple") {
-        const { data } = await axios.post(
-          `${BASE_URL}/customer/appleCustomerSignup`,
+        const { data } = await api.post(
+          `/customer/appleCustomerSignup`,
           oauthSignUpData,
         );
         setSignInData((prev) => ({
@@ -156,8 +155,8 @@ const verification = () => {
         setIsAuthenticated(true);
         router.push("/home");
       } else {
-        const { data } = await axios.post(
-          `${BASE_URL}/customer/signUp`,
+        const { data } = await api.post(
+          `/customer/signUp`,
           signUpData,
         );
 
@@ -212,8 +211,8 @@ const verification = () => {
 
     try {
       setVerificationCodeLoading(true);
-      const { data } = await axios.post(
-        `${BASE_URL}/customer/sendCustomerVerificationCode`,
+      const { data } = await api.post(
+        `/customer/sendCustomerVerificationCode`,
         {
           email,
           mobileCountryCode: callingCode,

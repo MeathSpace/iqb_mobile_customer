@@ -1,7 +1,5 @@
-import { BASE_URL } from "@/utils/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "@react-navigation/native";
-import axios from "axios";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
@@ -17,6 +15,7 @@ import CustomText from "../../../../components/CustomText";
 import { CloseIcon, ErrorIcon } from "../../../../constants/icons";
 import { useAuth } from "../../../../context/AuthContext";
 import i18n from  "../../../../src/localization/i18n"
+import api from "../../../../utils/api";
 
 const connectSalon = () => {
 
@@ -32,8 +31,8 @@ const connectSalon = () => {
     try {
       setConnectSalonLoader(true);
 
-      const { data } = await axios.post(
-        `${BASE_URL}/customer/customerDisconnectSalon`,
+      const { data } = await api.post(
+        `/customer/customerDisconnectSalon`,
         {
           email: authenticatedUser?.email,
         },

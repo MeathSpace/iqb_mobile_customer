@@ -1,8 +1,6 @@
-import { BASE_URL } from "@/utils/api";
 import { Feather } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { usePreventRemove, useTheme } from "@react-navigation/native";
-import axios from "axios";
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useRef, useState } from "react";
 import {
@@ -25,6 +23,7 @@ import { NotificationIcon } from "../../../constants/icons";
 import { useAuth } from "../../../context/AuthContext";
 import { useGlobal } from "../../../context/GlobalContext";
 import i18n from "../../../src/localization/i18n";
+import api from "../../../utils/api";
 
 const QueueList = () => {
   const baseContent = i18n.t("protected.queuelist");
@@ -43,8 +42,8 @@ const QueueList = () => {
     try {
       setQlistData((prev) => ({ ...prev, loading: true }));
 
-      const { data } = await axios.get(
-        `${BASE_URL}/mobileRoutes/getQlistBySalonId`,
+      const { data } = await api.get(
+        `/mobileRoutes/getQlistBySalonId`,
         {
           params: {
             salonId: authenticatedUser?.salonId,
@@ -108,8 +107,8 @@ const QueueList = () => {
     try {
       setShowHideQueBtn((prev) => ({ ...prev, loading: true }));
 
-      const { data } = await axios.post(
-        `${BASE_URL}/customer/showHideJoinQueueButton`,
+      const { data } = await api.post(
+        `/customer/showHideJoinQueueButton`,
         {
           customerEmail: authenticatedUser?.email,
         },
@@ -145,8 +144,8 @@ const QueueList = () => {
     try {
       setGetSalonFeature((prev) => ({ ...prev, loading: true }));
 
-      const { data } = await axios.post(
-        `${BASE_URL}/mobileRoutes/getSalonFeatures`,
+      const { data } = await api.post(
+        `/mobileRoutes/getSalonFeatures`,
         {
           salonId: authenticatedUser?.salonId,
         },

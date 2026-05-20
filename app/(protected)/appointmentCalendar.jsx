@@ -1,7 +1,6 @@
-import { BASE_URL } from "@/utils/api";
 import { usePreventRemove, useTheme } from "@react-navigation/native";
-import axios from "axios";
 import { Checkbox } from "expo-checkbox";
+import api from "../../utils/api";
 import { Image } from "expo-image";
 import { useFocusEffect, useRouter } from "expo-router";
 import moment from "moment";
@@ -39,8 +38,8 @@ const appointmentCalendar = () => {
       const getSalonPaymentSettings = async () => {
         try {
           setPaymentSettingsLoading(true);
-          const { data } = await axios.get(
-            `${BASE_URL}/mobileRoutes/getPaymentSettings?salonId=${authenticatedUser?.salonId}`,
+          const { data } = await api.get(
+            `/mobileRoutes/getPaymentSettings?salonId=${authenticatedUser?.salonId}`,
           );
           setPaymentSettingsData(data?.response?.[1]);
         } catch (error) {
@@ -93,8 +92,8 @@ const appointmentCalendar = () => {
         try {
           setSalonServices((prev) => ({ ...prev, loading: true }));
 
-          const { data } = await axios.get(
-            `${BASE_URL}/mobileRoutes/getAllSalonServices`,
+          const { data } = await api.get(
+            `/mobileRoutes/getAllSalonServices`,
             {
               params: {
                 salonId: authenticatedUser?.salonId,
@@ -136,8 +135,8 @@ const appointmentCalendar = () => {
         try {
           setSalonBarber((prev) => ({ ...prev, loading: true }));
 
-          const { data } = await axios.post(
-            `${BASE_URL}/mobileRoutes/bookAppointmentBarbers`,
+          const { data } = await api.post(
+            `/mobileRoutes/bookAppointmentBarbers`,
             {
               salonId: authenticatedUser.salonId,
               serviceIds: selectCustomerServices.map((item) => item.serviceId),
@@ -188,8 +187,8 @@ const appointmentCalendar = () => {
         try {
           setSalonBarber((prev) => ({ ...prev, loading: true }));
 
-          const { data } = await axios.post(
-            `${BASE_URL}/mobileRoutes/getAppointmentBarbers`,
+          const { data } = await api.post(
+            `/mobileRoutes/getAppointmentBarbers`,
             {
               salonId: authenticatedUser.salonId,
             },
@@ -227,8 +226,8 @@ const appointmentCalendar = () => {
         try {
           setSalonServices((prev) => ({ ...prev, loading: true }));
 
-          const { data } = await axios.post(
-            `${BASE_URL}/mobileRoutes/getServicesByBarberId`,
+          const { data } = await api.post(
+            `/mobileRoutes/getServicesByBarberId`,
             {
               salonId: authenticatedUser?.salonId,
               barberId: selectedCustomerBarber?.barberId,
@@ -366,8 +365,8 @@ const appointmentCalendar = () => {
         try {
           setEngageTimeslotsData((prev) => ({ ...prev, loading: true }));
 
-          const { data } = await axios.post(
-            `${BASE_URL}/mobileRoutes/getEngageBarberTimeSlots`,
+          const { data } = await api.post(
+            `/mobileRoutes/getEngageBarberTimeSlots`,
             {
               salonId: selectedCustomerBarber?.salonId,
               barberId: selectedCustomerBarber?.barberId,
@@ -404,8 +403,8 @@ const appointmentCalendar = () => {
         try {
           setMaxAppointmentDays((prev) => ({ ...prev, loading: true }));
 
-          const { data } = await axios.post(
-            `${BASE_URL}/mobileRoutes/getMaxAppointmentDays`,
+          const { data } = await api.post(
+            `/mobileRoutes/getMaxAppointmentDays`,
             {
               salonId: selectedCustomerBarber?.salonId,
             },
@@ -430,8 +429,8 @@ const appointmentCalendar = () => {
         try {
           setDisableLoader(true);
 
-          const { data } = await axios.post(
-            `${BASE_URL}/mobileRoutes/getFullyBookedDatesBySalonIdBarberId`,
+          const { data } = await api.post(
+            `/mobileRoutes/getFullyBookedDatesBySalonIdBarberId`,
             {
               salonId: selectedCustomerBarber?.salonId,
               barberId: selectedCustomerBarber?.barberId,
@@ -452,8 +451,8 @@ const appointmentCalendar = () => {
       const fetchBarberDisableAppointmentDates = async () => {
         try {
           setDisableLoader(true);
-          const { data } = await axios.post(
-            `${BASE_URL}/mobileRoutes/getBarberDisabledAppointmentDates`,
+          const { data } = await api.post(
+            `/mobileRoutes/getBarberDisabledAppointmentDates`,
             {
               salonId: selectedCustomerBarber?.salonId,
               barberId: selectedCustomerBarber?.barberId,
@@ -644,8 +643,8 @@ const appointmentCalendar = () => {
             appointmentDate: selectedCalenderDay?.fullDate,
           };
 
-          const { data } = await axios.post(
-            `${BASE_URL}/customer/getCustomerToNotifyAppointmentAvailability`,
+          const { data } = await api.post(
+            `/customer/getCustomerToNotifyAppointmentAvailability`,
             payload,
           );
 
@@ -677,8 +676,8 @@ const appointmentCalendar = () => {
         checkValue: isNotifyCheck,
       };
 
-      const { data } = await axios.post(
-        `${BASE_URL}/customer/saveCustomerToNotifyAppointmentAvailability`,
+      const { data } = await api.post(
+        `/customer/saveCustomerToNotifyAppointmentAvailability`,
         payload,
       );
 
@@ -699,8 +698,8 @@ const appointmentCalendar = () => {
         barberId: selectedCustomerBarber.barberId,
       };
 
-      const { data } = await axios.post(
-        `${BASE_URL}/customer/deleteCustomerToNotifyAppointmentAvailability`,
+      const { data } = await api.post(
+        `/customer/deleteCustomerToNotifyAppointmentAvailability`,
         payload,
       );
 

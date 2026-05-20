@@ -1,8 +1,6 @@
-import { BASE_URL } from "@/utils/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "@react-navigation/native";
 import { useStripe } from "@stripe/stripe-react-native";
-import axios from "axios";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useState } from "react";
 import {
@@ -21,11 +19,11 @@ import CustomText from "../../components/CustomText";
 import { CheckIcon } from "../../constants/icons";
 import { useAuth } from "../../context/AuthContext";
 import { useGlobal } from "../../context/GlobalContext";
-import i18n from "../../src/localization/i18n"
+import i18n from "../../src/localization/i18n";
+import api from "../../utils/api";
 
 const GroupJoinModal = () => {
-
-  const baseContent = i18n.t("protected.groupJoinModal")
+  const baseContent = i18n.t("protected.groupJoinModal");
 
   const {
     groupJoinMembers,
@@ -100,8 +98,8 @@ const GroupJoinModal = () => {
 
       setGroupJoinLoader(true);
 
-      const { data } = await axios.post(
-        `${BASE_URL}/mobileRoutes/groupJoinQueue`,
+      const { data } = await api.post(
+        `/mobileRoutes/groupJoinQueue`,
         groupJoinData,
       );
 
@@ -127,7 +125,11 @@ const GroupJoinModal = () => {
     } catch (error) {
       setGroupJoinLoader(false);
       // Toast.error(error?.response?.data?.message)
-      Alert.alert(baseContent.alertBox.alertOne.header, error?.response?.data?.message, [{ text: baseContent.alertBox.alertOne.ok }]);
+      Alert.alert(
+        baseContent.alertBox.alertOne.header,
+        error?.response?.data?.message,
+        [{ text: baseContent.alertBox.alertOne.ok }],
+      );
       console.log("Error doing group join ", error);
     }
   };
@@ -158,14 +160,10 @@ const GroupJoinModal = () => {
   );
 
   const fetchPaymentSheetParams = async () => {
-    const response = await fetch(
-      `${BASE_URL}/mobileRoutes/groupJoinQueuePaymentApi`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
+    try {
+      const response = await api.post(
+        "/mobileRoutes/groupJoinQueuePaymentApi",
+        {
           totalAmount: advanceAmount, // backend must convert to smallest unit
           currency: authenticatedUser?.isoCurrencyCode,
           queueJoinData: {
@@ -182,24 +180,26 @@ const GroupJoinModal = () => {
               services: item?.selectedServices,
             })),
           },
-        }),
-      },
-    );
+        },
+      );
 
-    const data = await response.json();
+      const data = response.data;
 
-    // ✅ Do NOT mask backend error
-    if (!response.ok) {
-      throw new Error(data?.message || baseContent.errorStatesAndApi.paymentInitializationFailed );
+      const { paymentIntent, ephemeralKey, customer } = data;
+
+      // ❌ Do NOT mask backend error
+      if (!paymentIntent || !ephemeralKey || !customer) {
+        throw new Error(baseContent.errorStatesAndApi.invalidStripeError);
+      }
+
+      return { paymentIntent, ephemeralKey, customer };
+    } catch (error) {
+      const message =
+        error?.response?.data?.message ||
+        baseContent.errorStatesAndApi.paymentInitializationFailed;
+
+      throw new Error(message);
     }
-
-    const { paymentIntent, ephemeralKey, customer } = data;
-
-    if (!paymentIntent || !ephemeralKey || !customer) {
-      throw new Error(baseContent.errorStatesAndApi.invalidStripeError);
-    }
-
-    return { paymentIntent, ephemeralKey, customer };
   };
 
   const openPaymentSheet = async () => {
@@ -263,7 +263,10 @@ const GroupJoinModal = () => {
     } catch (err) {
       console.log("Stripe error:", err?.message);
 
-      Alert.alert(baseContent.alertBox.alertTwo.header, err?.message || baseContent.alertBox.alertTwo.subHeader);
+      Alert.alert(
+        baseContent.alertBox.alertTwo.header,
+        err?.message || baseContent.alertBox.alertTwo.subHeader,
+      );
     } finally {
       setLoading(false);
     }

@@ -1,6 +1,5 @@
-import { BASE_URL } from "@/utils/api";
 import { useTheme } from "@react-navigation/native";
-import axios from "axios";
+import api from "../../utils/api";
 import { useRouter } from "expo-router";
 import { useState } from "react";
 import {
@@ -45,7 +44,7 @@ const forgetPassword = () => {
     try {
       setForgetLoader(true);
 
-      const { data } = await axios.post(`${BASE_URL}/customer/forgetPassword`, {
+      const { data } = await api.post(`/customer/forgetPassword`, {
         email,
       });
 

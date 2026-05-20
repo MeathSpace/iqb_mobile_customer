@@ -1,6 +1,4 @@
-import { BASE_URL } from "@/utils/api";
 import { usePreventRemove, useTheme } from "@react-navigation/native";
-import axios from "axios";
 import { Image } from "expo-image";
 import { router, useFocusEffect } from "expo-router";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -36,6 +34,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { Toast } from "toastify-react-native";
 import i18n from "../src/localization/i18n";
 import Header from "./Header";
+import api from "../utils/api"
 
 Notifications.setNotificationHandler({
   handleNotification: async () => ({
@@ -109,8 +108,8 @@ const Dashboard = () => {
     useCallback(() => {
       const fetch_new_version = async () => {
         try {
-          const { data } = await axios.post(
-            `${BASE_URL}/version/getMobileVersion`,
+          const { data } = await api.post(
+            `/version/getMobileVersion`,
             {
               platformType: Platform.OS,
             },
@@ -189,8 +188,8 @@ const Dashboard = () => {
           try {
             setHomeDashboardData((prev) => ({ ...prev, loading: true }));
 
-            const { data } = await axios.post(
-              `${BASE_URL}/customer/customerDashboard`,
+            const { data } = await api.post(
+              `/customer/customerDashboard`,
               {
                 salonId: authenticatedUser?.salonId,
                 customerEmail: authenticatedUser?.email,
@@ -223,8 +222,8 @@ const Dashboard = () => {
           try {
             setHomeAdvertisementData((prev) => ({ ...prev, loading: true }));
 
-            const { data } = await axios.post(
-              `${BASE_URL}/mobileRoutes/getAllAdvertisements`,
+            const { data } = await api.post(
+              `/mobileRoutes/getAllAdvertisements`,
               {
                 salonId: authenticatedUser?.salonId,
               },
@@ -253,8 +252,8 @@ const Dashboard = () => {
           try {
             setServiceCategoryData((prev) => ({ ...prev, loading: true }));
 
-            const { data } = await axios.get(
-              `${BASE_URL}/mobileRoutes/getAllServiceCategories`,
+            const { data } = await api.get(
+              `/mobileRoutes/getAllServiceCategories`,
             );
 
             setServiceCategoryData((prev) => ({
@@ -280,8 +279,8 @@ const Dashboard = () => {
           try {
             setCustomerLiveData((prev) => ({ ...prev, loading: true }));
 
-            const { data } = await axios.post(
-              `${BASE_URL}/customer/customerLiveQueue`,
+            const { data } = await api.post(
+              `/customer/customerLiveQueue`,
               {
                 salonId: authenticatedUser?.salonId,
                 customerEmail: authenticatedUser?.email,
@@ -311,8 +310,8 @@ const Dashboard = () => {
           try {
             setGetSalonFeature((prev) => ({ ...prev, loading: true }));
 
-            const { data } = await axios.post(
-              `${BASE_URL}/mobileRoutes/getSalonFeatures`,
+            const { data } = await api.post(
+              `/mobileRoutes/getSalonFeatures`,
               {
                 salonId: authenticatedUser?.salonId,
               },
@@ -452,8 +451,8 @@ const Dashboard = () => {
       if (expoPushToken) {
         const saveExpoPushToken = async () => {
           try {
-            const { data } = await axios.post(
-              `${BASE_URL}/mobileRoutes/pushDevices`,
+            const { data } = await api.post(
+              `/mobileRoutes/pushDevices`,
               {
                 salonId: authenticatedUser?.salonId,
                 name: authenticatedUser?.name,
@@ -719,8 +718,8 @@ const Dashboard = () => {
 
                                       setCancelQueueLoading(true);
 
-                                      const { data } = await axios.post(
-                                        `${BASE_URL}/mobileRoutes/cancelQueueByCustomer`,
+                                      const { data } = await api.post(
+                                        `/mobileRoutes/cancelQueueByCustomer`,
                                         cancelQueueData,
                                       );
 
@@ -730,8 +729,8 @@ const Dashboard = () => {
                                       }));
 
                                       const { data: livedata } =
-                                        await axios.post(
-                                          `${BASE_URL}/customer/customerLiveQueue`,
+                                        await api.post(
+                                          `/customer/customerLiveQueue`,
                                           {
                                             salonId: authenticatedUser?.salonId,
                                             customerEmail:

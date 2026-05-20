@@ -1,7 +1,6 @@
-import { BASE_URL } from "@/utils/api";
 import { useTheme } from "@react-navigation/native";
-import axios from "axios";
 import * as Calendar from "expo-calendar";
+import api from "../../utils/api"
 import { Image } from "expo-image";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import moment from "moment";
@@ -32,8 +31,8 @@ const appointmentPop = () => {
       const getSalonPaymentSettings = async () => {
         try {
           setPaymentSettingsLoading(true);
-          const { data } = await axios.get(
-            `${BASE_URL}/mobileRoutes/getPaymentSettings?salonId=${authenticatedUser?.salonId}`,
+          const { data } = await api.get(
+            `/mobileRoutes/getPaymentSettings?salonId=${authenticatedUser?.salonId}`,
           );
           setPaymentSettingsData(data?.response?.[1]);
         } catch (error) {
@@ -85,8 +84,8 @@ const appointmentPop = () => {
     try {
       setDeleteAppointmentLoader(true);
 
-      const { data } = await axios.delete(
-        `${BASE_URL}/mobileRoutes/deleteAppointments`,
+      const { data } = await api.delete(
+        `/mobileRoutes/deleteAppointments`,
         {
           data: {
             salonId: authenticatedUser?.salonId,

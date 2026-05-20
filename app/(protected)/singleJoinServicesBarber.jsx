@@ -1,6 +1,4 @@
-import { BASE_URL } from "@/utils/api";
 import { usePreventRemove, useTheme } from "@react-navigation/native";
-import axios from "axios";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
@@ -25,6 +23,7 @@ import { ArrowLeftIcon, ProfileIcon } from "../../constants/icons";
 import { useAuth } from "../../context/AuthContext";
 import { useGlobal } from "../../context/GlobalContext";
 import i18n from "../../src/localization/i18n"
+import api from "../../utils/api";
 
 const singleJoinServicesBarber = () => {
 
@@ -92,8 +91,8 @@ const singleJoinServicesBarber = () => {
       try {
         setBarberList((prev) => ({ ...prev, loading: true }));
 
-        const { data } = await axios.get(
-          `${BASE_URL}/mobileRoutes/getAvailableBarbersForQ?salonId=${authenticatedUser.salonId}`,
+        const { data } = await api.get(
+          `mobileRoutes/getAvailableBarbersForQ?salonId=${authenticatedUser.salonId}`,
         );
 
         setBarberList((prev) => ({

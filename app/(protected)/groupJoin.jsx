@@ -1,6 +1,4 @@
-import { BASE_URL } from "@/utils/api";
 import { usePreventRemove, useTheme } from "@react-navigation/native";
-import axios from "axios";
 import { Image } from "expo-image";
 import { useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
@@ -33,6 +31,7 @@ import {
 import { useAuth } from "../../context/AuthContext";
 import { useGlobal } from "../../context/GlobalContext";
 import i18n from "../../src/localization/i18n"
+import api from "../../utils/api";
 
 const GroupJoin = () => {
 
@@ -55,8 +54,8 @@ const GroupJoin = () => {
       try {
         setServicesCategoryList((prev) => ({ ...prev, loading: true }));
 
-        const { data } = await axios.post(
-          `${BASE_URL}/mobileRoutes/getAllSalonCategories`,
+        const { data } = await api.post(
+          `/mobileRoutes/getAllSalonCategories`,
           {
             salonId: authenticatedUser?.salonId,
           },
@@ -100,8 +99,8 @@ const GroupJoin = () => {
       try {
         setSalonServicesByCategory((prev) => ({ ...prev, loading: true }));
 
-        const { data } = await axios.get(
-          `${BASE_URL}/mobileRoutes/getSalonServicesByCategory`,
+        const { data } = await api.get(
+          `/mobileRoutes/getSalonServicesByCategory`,
           {
             params: {
               salonId: authenticatedUser?.salonId,

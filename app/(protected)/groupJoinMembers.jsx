@@ -1,7 +1,6 @@
-import { BASE_URL } from "@/utils/api";
 import { AntDesign, Feather } from "@expo/vector-icons";
 import { usePreventRemove, useTheme } from "@react-navigation/native";
-import axios from "axios";
+import api from "../../utils/api"
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback, useRef, useState } from "react";
 import {
@@ -39,8 +38,8 @@ const GroupJoinMembers = () => {
       const getSalonPaymentSettings = async () => {
         try {
           setPaymentSettingsLoading(true);
-          const { data } = await axios.get(
-            `${BASE_URL}/mobileRoutes/getPaymentSettings?salonId=${authenticatedUser?.salonId}`,
+          const { data } = await api.get(
+            `/mobileRoutes/getPaymentSettings?salonId=${authenticatedUser?.salonId}`,
           );
           setPaymentSettingsData(data?.response?.[0]);
         } catch (error) {

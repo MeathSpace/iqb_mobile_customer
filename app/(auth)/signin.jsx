@@ -21,10 +21,9 @@ import CustomView from "../../components/CustomView";
 import { useAuth } from "../../context/AuthContext";
 
 import { useGlobal } from "@/context/GlobalContext";
-import { BASE_URL } from "@/utils/api";
 import { useClerk, useSSO, useUser } from "@clerk/clerk-expo";
 import { usePreventRemove, useTheme } from "@react-navigation/native";
-import axios from "axios";
+import api from "../../utils/api";
 import * as AppleAuthentication from "expo-apple-authentication";
 import * as AuthSession from "expo-auth-session";
 import * as WebBrowser from "expo-web-browser";
@@ -114,7 +113,7 @@ const signin = () => {
 
       setSignInData((prev) => ({ ...prev, loading: true }));
 
-      const { data } = await axios.post(`${BASE_URL}/customer/signIn`, {
+      const { data } = await api.post(`/customer/signIn`, {
         email,
         password,
       });
@@ -213,8 +212,8 @@ const signin = () => {
 
             setGoogleSigninLoader(true);
 
-            const { data } = await axios.post(
-              `${BASE_URL}/customer/googleCustomerSignIn`,
+            const { data } = await api.post(
+              `/customer/googleCustomerSignIn`,
               {
                 email: user?.primaryEmailAddress?.emailAddress,
               },
@@ -298,8 +297,8 @@ const signin = () => {
 
       setAppleSigninLoader(true);
 
-      const { data } = await axios.post(
-        `${BASE_URL}/customer/appleCustomerSignIn`,
+      const { data } = await api.post(
+        `/customer/appleCustomerSignIn`,
         {
           email: decodedUser?.email,
         },

@@ -1,6 +1,4 @@
-import { BASE_URL } from "@/utils/api";
 import { useTheme } from "@react-navigation/native";
-import axios from "axios";
 import { Image } from "expo-image";
 import { useFocusEffect, useRouter } from "expo-router";
 import { useCallback } from "react";
@@ -22,6 +20,7 @@ import { ArrowLeftIcon, NotificationOffIcon } from "../../../constants/icons";
 import { useAuth } from "../../../context/AuthContext";
 import { useGlobal } from "../../../context/GlobalContext";
 import i18n from "../../../src/localization/i18n"
+import api from "../../../utils/api";
 
 const notification = () => {
   const router = useRouter();
@@ -36,8 +35,8 @@ const notification = () => {
         try {
           setNotificationListData((prev) => ({ ...prev, loading: true }));
 
-          const { data } = await axios.post(
-            `${BASE_URL}/mobileRoutes/getAllNotificationsByCustomerEmail`,
+          const { data } = await api.post(
+            `/mobileRoutes/getAllNotificationsByCustomerEmail`,
             {
               email: authenticatedUser?.email,
             },
@@ -86,8 +85,8 @@ const notification = () => {
                 id: item?._id,
               };
 
-              const { data } = await axios.post(
-                `${BASE_URL}/mobileRoutes/deleteNotifications`,
+              const { data } = await api.post(
+                `/mobileRoutes/deleteNotifications`,
                 cancelNotificationData,
               );
 
@@ -95,8 +94,8 @@ const notification = () => {
 
               setNotificationListData((prev) => ({ ...prev, loading: true }));
 
-              const { data: notificationListData } = await axios.post(
-                `${BASE_URL}/mobileRoutes/getAllNotificationsByCustomerEmail`,
+              const { data: notificationListData } = await api.post(
+                `/mobileRoutes/getAllNotificationsByCustomerEmail`,
                 {
                   email: authenticatedUser?.email,
                 },

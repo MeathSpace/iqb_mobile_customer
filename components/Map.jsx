@@ -1,8 +1,6 @@
-import { BASE_URL } from "@/utils/api";
 import BottomSheet, { BottomSheetScrollView } from "@gorhom/bottom-sheet";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { usePreventRemove, useTheme } from "@react-navigation/native";
-import axios from "axios";
 import { Image } from "expo-image";
 import * as Location from "expo-location";
 import { useFocusEffect } from "expo-router";
@@ -51,6 +49,7 @@ import CustomSecondaryText from "./CustomSecondaryText";
 import CustomText from "./CustomText";
 import SalonCard from "./SalonCard";
 import Skeleton from "./Skeleton";
+import api from "../utils/api";
 
 const Map = () => {
 
@@ -103,8 +102,8 @@ const Map = () => {
         }
 
         // Fetch salons by location
-        const { data } = await axios.get(
-          `${BASE_URL}/mobileRoutes/getSalonsByLocation`,
+        const { data } = await api.get(
+          `/mobileRoutes/getSalonsByLocation`,
           {
             params: { latitude, longitude },
             timeout: 10000, // optional timeout for safety
@@ -226,8 +225,8 @@ const Map = () => {
       try {
         setServiceCategoryData((prev) => ({ ...prev, loading: true }));
 
-        const { data } = await axios.get(
-          `${BASE_URL}/mobileRoutes/getAllServiceCategories`,
+        const { data } = await api.get(
+          `/mobileRoutes/getAllServiceCategories`,
         );
 
         setServiceCategoryData((prev) => ({
@@ -264,8 +263,8 @@ const Map = () => {
       try {
         setGetAllSalons((prev) => ({ ...prev, loading: true }));
 
-        const { data } = await axios.get(
-          `${BASE_URL}/mobileRoutes/getAllSalonsMob`,
+        const { data } = await api.get(
+          `/mobileRoutes/getAllSalonsMob`,
         );
 
         setGetAllSalons((prev) => ({
@@ -296,8 +295,8 @@ const Map = () => {
     try {
       setConnectSalonLoader(true);
 
-      const { data } = await axios.post(
-        `${BASE_URL}/customer/customerConnectSalon`,
+      const { data } = await api.post(
+        `/customer/customerConnectSalon`,
         {
           salonId: selectedCustomerSalon?.data?.salonId,
           email: authenticatedUser?.email,
@@ -345,8 +344,8 @@ const Map = () => {
           try {
             setSalonInfoData((prev) => ({ ...prev, loading: true }));
 
-            const { data } = await axios.get(
-              `${BASE_URL}/mobileRoutes/getSalonInfoBySalonId`,
+            const { data } = await api.get(
+              `/mobileRoutes/getSalonInfoBySalonId`,
               {
                 params: {
                   salonId: selectecConnectSalonId,
@@ -444,8 +443,8 @@ const Map = () => {
         try {
           setServiceCategoryData((prev) => ({ ...prev, loading: true }));
 
-          const { data } = await axios.get(
-            `${BASE_URL}/mobileRoutes/getAllServiceCategories`,
+          const { data } = await api.get(
+            `/mobileRoutes/getAllServiceCategories`,
           );
 
           setServiceCategoryData((prev) => ({
@@ -480,8 +479,8 @@ const Map = () => {
               loading: true,
             }));
 
-            const { data } = await axios.get(
-              `${BASE_URL}/mobileRoutes/getSalonServicesByCategory`,
+            const { data } = await api.get(
+              `/mobileRoutes/getSalonServicesByCategory`,
               {
                 params: {
                   salonId: selectecConnectSalonId,
@@ -523,8 +522,8 @@ const Map = () => {
     try {
       setFavouriteLoader(true);
 
-      const { data } = await axios.post(
-        `${BASE_URL}/customer/customerFavouriteSalon`,
+      const { data } = await api.post(
+        `/customer/customerFavouriteSalon`,
         {
           email: authenticatedUser?.email,
           salonId: selectecConnectSalonId,
@@ -669,8 +668,8 @@ const Map = () => {
                     try {
                       setConnectSalonLoader(true);
 
-                      const { data } = await axios.post(
-                        `${BASE_URL}/customer/customerConnectSalon`,
+                      const { data } = await api.post(
+                        `/customer/customerConnectSalon`,
                         {
                           salonId: selectedDemo?.salonId,
                           email: authenticatedUser?.email,

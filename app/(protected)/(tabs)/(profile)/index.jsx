@@ -1,9 +1,8 @@
-import { BASE_URL } from "@/utils/api";
 import { useClerk, useUser } from "@clerk/clerk-expo";
 import { Feather } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "@react-navigation/native";
-import axios from "axios";
+import api from "../../../../utils/api";
 import { Image } from "expo-image";
 import { LinearGradient } from "expo-linear-gradient";
 import { useRouter } from "expo-router";
@@ -149,7 +148,7 @@ const index = () => {
     try {
       // Delete from your backend first
 
-      await axios.post(`${BASE_URL}/customer/deleteCustomer`, {
+      await api.post(`/customer/deleteCustomer`, {
         email: authenticatedUser?.email,
       });
 

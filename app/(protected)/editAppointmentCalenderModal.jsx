@@ -1,7 +1,6 @@
-import { BASE_URL } from "@/utils/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "@react-navigation/native";
-import axios from "axios";
+import api from "../../utils/api"
 import * as Calendar from "expo-calendar";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
@@ -192,8 +191,8 @@ const editAppointmentCalenderModal = () => {
     try {
       setEditAppointmentLoader(true);
 
-      const { data } = await axios.put(
-        `${BASE_URL}/mobileRoutes/editAppointments`,
+      const { data } = await api.put(
+        `/mobileRoutes/editAppointments`,
         appData,
       );
 

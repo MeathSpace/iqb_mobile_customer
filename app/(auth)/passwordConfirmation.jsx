@@ -9,8 +9,7 @@ import { scale, verticalScale, moderateScale } from 'react-native-size-matters';
 import { usePreventRemove, useTheme } from '@react-navigation/native'
 import { Colors } from '@/constants/Colors';
 import { ErrorIcon, EyeIcon, EyeOffIcon } from '../../constants/icons'
-import axios from 'axios';
-import { BASE_URL } from '@/utils/api';
+import api from '../../utils/api';
 import { Toast } from 'toastify-react-native'
 import { Alert } from 'react-native'
 
@@ -76,16 +75,6 @@ const passwordConfirmation = () => {
                 return;
             }
 
-
-            // setVerificationCodeData((prev) => ({ ...prev, loading: true }))
-
-            // const { data } = await axios.post(`${BASE_URL}/customer/sendCustomerVerificationCode`, {
-            //     email,
-            //     mobileCountryCode: callingCode,
-            //     mobileNumber: phoneNumber
-            // })
-
-            // setVerificationCodeData((prev) => ({ ...prev, loading: false, verificationData: data?.response, success: true, error: null }))
 
             setVerificationLoader(true)
 

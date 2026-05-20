@@ -1,8 +1,6 @@
-import { BASE_URL } from "@/utils/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "@react-navigation/native";
 import { useStripe } from "@stripe/stripe-react-native";
-import axios from "axios";
 import * as Calendar from "expo-calendar";
 import { useFocusEffect, useLocalSearchParams, useRouter } from "expo-router";
 import { useCallback, useEffect, useState } from "react";
@@ -23,6 +21,7 @@ import { useAuth } from "../../context/AuthContext";
 import { useGlobal } from "../../context/GlobalContext";
 import { ddmmformatDate } from "../../utils/ddmmformatDate";
 import i18n from "../../src/localization/i18n";
+import api from "../../utils/api";
 
 const appointmentCalenderModal = () => {
   const baseContent = i18n.t("protected.appointmentCalenderModal");
@@ -158,14 +157,11 @@ const appointmentCalenderModal = () => {
 
       const newId = await Calendar.createEventAsync(calendarId, eventConfig);
 
-      const { data } = await axios.post(
-        `${BASE_URL}/mobileRoutes/updatecalenderEventId`,
-        {
-          salonId: authenticatedUser?.salonId,
-          appointmentId: appointmentId,
-          calenderEventId: newId,
-        },
-      );
+      const { data } = await api.post(`/mobileRoutes/updatecalenderEventId`, {
+        salonId: authenticatedUser?.salonId,
+        appointmentId: appointmentId,
+        calenderEventId: newId,
+      });
 
       Alert.alert(
         baseContent.alertBox.alertTwo.header,
@@ -333,8 +329,8 @@ const appointmentCalenderModal = () => {
     try {
       setBookAppointmentLoader(true);
 
-      const { data } = await axios.post(
-        `${BASE_URL}/mobileRoutes/createAppointment`,
+      const { data } = await api.post(
+        `/mobileRoutes/createAppointment`,
         appData,
       );
 
@@ -388,12 +384,8 @@ const appointmentCalenderModal = () => {
   const advanceAmount = (totalServicePriceAmount * advancePaymentPercent) / 100;
 
   const fetchPaymentSheetParams = async () => {
-    const response = await fetch(`${BASE_URL}/mobileRoutes/paymentApi`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
+    try {
+      const response = await api.post("/mobileRoutes/paymentApi", {
         totalAmount: advanceAmount, // backend must convert to smallest unit
         salonId: authenticatedUser?.salonId,
         currency: authenticatedUser?.isoCurrencyCode,
@@ -421,30 +413,29 @@ const appointmentCalenderModal = () => {
           selectServices: appointmentPopupType?.selectServices,
           selectBarber: appointmentPopupType?.selectBarber,
         },
-      }),
-    });
+      });
 
-    const data = await response.json();
+      const data = response.data;
 
-    if (!response.ok) {
-      throw new Error(
-        data?.message ||
-          baseContent.errorStatesAndApi.paymentInitializationFailed,
-      );
+      const { paymentIntent, ephemeralKey, customer } = data;
+
+      if (!paymentIntent || !ephemeralKey || !customer) {
+        throw new Error(baseContent.errorStatesAndApi.invalidStripeError);
+      }
+
+      return {
+        paymentIntent,
+        ephemeralKey,
+        customer,
+        appointmentId: data?.tempAppointment?._id,
+      };
+    } catch (error) {
+      const message =
+        error?.response?.data?.message ||
+        baseContent.errorStatesAndApi.paymentInitializationFailed;
+
+      throw new Error(message);
     }
-
-    const { paymentIntent, ephemeralKey, customer } = data;
-
-    if (!paymentIntent || !ephemeralKey || !customer) {
-      throw new Error(baseContent.errorStatesAndApi.invalidStripeError);
-    }
-
-    return {
-      paymentIntent,
-      ephemeralKey,
-      customer,
-      appointmentId: data?.tempAppointment?._id,
-    };
   };
 
   const openPaymentSheet = async () => {

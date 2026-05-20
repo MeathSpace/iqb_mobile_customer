@@ -1,6 +1,4 @@
-import { BASE_URL } from "@/utils/api";
 import { useTheme } from "@react-navigation/native";
-import axios from "axios";
 import { useRouter } from "expo-router";
 import { useEffect, useRef, useState } from "react";
 import {
@@ -21,6 +19,7 @@ import { Colors } from "../../../../constants/Colors";
 import { CloseIcon, ErrorIcon } from "../../../../constants/icons";
 import { useAuth } from "../../../../context/AuthContext";
 import i18n from "../../../../src/localization/i18n"
+import api from "../../../../utils/api";
 
 const helpSupport = () => {
 
@@ -53,8 +52,8 @@ const helpSupport = () => {
 
       setSendMailLoading(true);
 
-      const { data } = await axios.post(
-        `${BASE_URL}/customer/sendSupportMailCustomer`,
+      const { data } = await api.post(
+        `/customer/sendSupportMailCustomer`,
         {
           salonId: authenticatedUser?.salonId,
           email: authenticatedUser?.email,

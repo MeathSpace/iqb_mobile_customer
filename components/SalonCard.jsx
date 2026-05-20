@@ -1,7 +1,5 @@
-import { BASE_URL } from "@/utils/api";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "@react-navigation/native";
-import axios from "axios";
 import { Image } from "expo-image";
 import { useState } from "react";
 import {
@@ -16,6 +14,7 @@ import { AddIcon } from "../constants/icons";
 import { useAuth } from "../context/AuthContext";
 import { useGlobal } from "../context/GlobalContext";
 import CustomText from "./CustomText";
+import api from "../utils/api";
 
 const SalonCard = ({
   item,
@@ -33,8 +32,8 @@ const SalonCard = ({
     try {
       setSalonCardConnectLoader(true);
 
-      const { data } = await axios.post(
-        `${BASE_URL}/customer/customerConnectSalon`,
+      const { data } = await api.post(
+        `/customer/customerConnectSalon`,
         {
           salonId: selectSalonId,
           email: authenticatedUser?.email,

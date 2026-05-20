@@ -100,15 +100,14 @@
 //     },
 // });
 
-import { BASE_URL } from "@/utils/api";
 import { useTheme } from "@react-navigation/native";
-import axios from "axios";
 import { Image } from "expo-image";
 import { Alert, StyleSheet, TouchableOpacity, View } from "react-native";
 import { scale, verticalScale } from "react-native-size-matters";
 import { Toast } from "toastify-react-native";
 import { useAuth } from "../context/AuthContext";
 import CustomText from "./CustomText";
+import api from "../utils/api";
 
 const QlistItem = ({
   item,
@@ -147,8 +146,8 @@ const QlistItem = ({
 
             setQlistData((prev) => ({ ...prev, loading: true }));
 
-            const { data } = await axios.post(
-              `${BASE_URL}/mobileRoutes/cancelQueueByCustomer`,
+            const { data } = await api.post(
+              `/mobileRoutes/cancelQueueByCustomer`,
               cancelQueueData,
             );
 

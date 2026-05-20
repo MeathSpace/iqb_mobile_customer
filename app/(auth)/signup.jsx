@@ -18,10 +18,8 @@ import CustomText from "../../components/CustomText";
 import CustomView from "../../components/CustomView";
 import { ErrorIcon, EyeIcon, EyeOffIcon } from "../../constants/icons";
 import { useAuth } from "../../context/AuthContext";
-
-import { BASE_URL } from "@/utils/api";
 import { useClerk, useSSO, useUser } from "@clerk/clerk-expo";
-import axios from "axios";
+import api from "../../utils/api";
 import * as AppleAuthentication from "expo-apple-authentication";
 import * as AuthSession from "expo-auth-session";
 import * as WebBrowser from "expo-web-browser";
@@ -92,7 +90,7 @@ const signup = () => {
 
       setCheckEmailLoading(true);
 
-      const { data } = await axios.post(`${BASE_URL}/customer/checkEmail`, {
+      const { data } = await api.post(`/customer/checkEmail`, {
         email,
       });
 
@@ -213,8 +211,8 @@ const signup = () => {
           try {
             setGoogleSigninLoader(true);
 
-            const { data } = await axios.post(
-              `${BASE_URL}/customer/checkEmail`,
+            const { data } = await api.post(
+              `/customer/checkEmail`,
               {
                 email: user?.primaryEmailAddress?.emailAddress,
               },
@@ -273,7 +271,7 @@ const signup = () => {
 
       setAppleSignupLoader(true);
 
-      const { data } = await axios.post(`${BASE_URL}/customer/checkEmail`, {
+      const { data } = await api.post(`/customer/checkEmail`, {
         email: decodedUser?.email,
       });
 
