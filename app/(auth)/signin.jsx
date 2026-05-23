@@ -81,6 +81,8 @@ const signin = () => {
     setAuthenticatedUser,
     setSignInData,
     signInData,
+    rememberMe,
+    setRememberMe,
   } = useAuth();
 
   const { colors } = useTheme();
@@ -88,8 +90,6 @@ const signin = () => {
   const router = useRouter();
 
   // const [rememberMe, setRememberMe] = useState(true);
-
-  const { rememberMe, setRememberMe } = useGlobal();
 
   const { signOut } = useClerk();
 
@@ -130,7 +130,7 @@ const signin = () => {
 
       // console.log(data)
 
-      await saveToken(data?.token)
+      await saveToken(data?.token);
 
       if (rememberMe) {
         await AsyncStorage.setItem("isAuthenticated", JSON.stringify(true));
@@ -144,7 +144,7 @@ const signin = () => {
       setIsAuthenticated(true);
       router.push("/home");
     } catch (error) {
-      console.log(error)
+      console.log(error);
       setSignInData((prev) => ({
         ...prev,
         loading: false,
@@ -219,12 +219,9 @@ const signin = () => {
 
             setGoogleSigninLoader(true);
 
-            const { data } = await api.post(
-              `/customer/googleCustomerSignIn`,
-              {
-                email: user?.primaryEmailAddress?.emailAddress,
-              },
-            );
+            const { data } = await api.post(`/customer/googleCustomerSignIn`, {
+              email: user?.primaryEmailAddress?.emailAddress,
+            });
 
             setSignInData((prev) => ({
               ...prev,
@@ -304,12 +301,11 @@ const signin = () => {
 
       setAppleSigninLoader(true);
 
-      const { data } = await api.post(
-        `/customer/appleCustomerSignIn`,
-        {
-          email: decodedUser?.email,
-        },
-      );
+      const { data } = await api.post(`/customer/appleCustomerSignIn`, {
+        email: decodedUser?.email,
+      });
+
+      await saveToken(data?.token);
 
       setSignInData((prev) => ({
         ...prev,
@@ -355,15 +351,6 @@ const signin = () => {
         console.log("Error ", error);
       }
     }
-
-    // try {
-    //     const token = "eyJraWQiOiJTZjJsRnF3a3BYIiwiYWxnIjoiUlMyNTYifQ.eyJpc3MiOiJodHRwczovL2FwcGxlaWQuYXBwbGUuY29tIiwiYXVkIjoiaG9zdC5leHAuRXhwb25lbnQiLCJleHAiOjE3NTg2MTQ4OTEsImlhdCI6MTc1ODUyODQ5MSwic3ViIjoiMDAwMTQ2LmUwODE3ZjJmMmNjNTQxODE4MTYyZjdkMTVmMzQ5NzQzLjA3MjUiLCJjX2hhc2giOiJDdERBRk52VnVCMm9wNUlKcV9OSWdBIiwiZW1haWwiOiJzdW1pdGNvbUBob3RtYWlsLmNvbSIsImVtYWlsX3ZlcmlmaWVkIjp0cnVlLCJhdXRoX3RpbWUiOjE3NTg1Mjg0OTEsIm5vbmNlX3N1cHBvcnRlZCI6dHJ1ZX0.bxoGQDa2qn6XfdLyoYR-83bd7gsEU_hKFTu4L4W1niZoUUzLKUBZpJe7soMADM8PWlsANMIkFhOhZcGIII3qO35xYgS21FSpvbG9FkDrIj7SbNUIGoooZvdIS-cbA6wYOFc-kR9VLWal4gP0hJ738RB7sErQHatrD7HrZHAIfk-6SoAjEuf6WW0V0x756Em8o6oDqV4hm1aLZldLY88qhGk74NjoshIQ4LkDVmYlg29xtaMIo0pCbN-r3TkItKjeCcGseq1CJeuV0c2tms1GRnSLLjN3qCyXmeeAaHDa34MT9cRZ2OpITa4KSKpVbmDDf450xchoCLBsk_T1YAheMQ";
-
-    //     const decodedUser = jwtDecode(token);
-    //     console.log("Decoded User", decodedUser);
-    // } catch (err) {
-    //     console.log("Error decoding", err);
-    // }
   };
 
   return (

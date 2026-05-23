@@ -45,7 +45,7 @@ export const GlobalProvider = ({ children }) => {
     selectedTab: "All",
     open: true,
   });
-  const [rememberMe, setRememberMe] = useState(true);
+  
   const [notificationListData, setNotificationListData] = useState(
     useState({
       notificationData: null,
@@ -136,8 +136,6 @@ export const GlobalProvider = ({ children }) => {
     setSelectedTab,
     applyAppointmentFilter,
     setApplyAppointmentFilter,
-    rememberMe,
-    setRememberMe,
     notificationListData,
     setNotificationListData,
     newNotification,

@@ -46,15 +46,18 @@ const index = () => {
     setSelectedBarber,
     setSelectedBarberServices,
     setCustomerName,
-    rememberMe,
-    setRememberMe,
     newNotification,
     setNewNotification,
     // hasRun
   } = useGlobal();
 
-  const { setIsAuthenticated, authenticatedUser, setAuthenticatedUser } =
-    useAuth();
+  const {
+    setIsAuthenticated,
+    authenticatedUser,
+    setAuthenticatedUser,
+    rememberMe,
+    setRememberMe,
+  } = useAuth();
   const router = useRouter();
 
   const profileOptions = [
@@ -119,7 +122,7 @@ const index = () => {
     } else {
       await AsyncStorage.removeItem("LoggedInUser");
     }
-    await removeToken()
+    await removeToken();
     await AsyncStorage.removeItem("isAuthenticated");
     setIsAuthenticated(false);
     setAuthenticatedUser(null);
@@ -549,7 +552,6 @@ const index = () => {
                   />
                 )}
               </TouchableOpacity>
-              
             </Pressable>
           </Pressable>
         </Modal>
