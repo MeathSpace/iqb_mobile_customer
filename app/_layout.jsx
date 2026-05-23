@@ -17,7 +17,6 @@ import { AuthProvider } from "../context/AuthContext";
 import { GlobalProvider } from "../context/GlobalContext";
 import { LanguageProvider } from "../context/LanguageContext";
 
-
 SplashScreen.preventAutoHideAsync();
 
 const RootLayout = () => {

@@ -82,10 +82,14 @@ const verification = () => {
   const signupHandler = async () => {
     try {
       if (!verificationCode) {
-        setVerificationCodeError(baseContent.errorStatesAndApi.verificationCodeRequired);
+        setVerificationCodeError(
+          baseContent.errorStatesAndApi.verificationCodeRequired,
+        );
         return;
       } else if (Number(verificationCode) !== Number(currentVerificationOtp)) {
-        setVerificationCodeError(baseContent.errorStatesAndApi.verificationCodeNotMatch);
+        setVerificationCodeError(
+          baseContent.errorStatesAndApi.verificationCodeNotMatch,
+        );
         return;
       }
 
@@ -155,10 +159,7 @@ const verification = () => {
         setIsAuthenticated(true);
         router.push("/home");
       } else {
-        const { data } = await api.post(
-          `/customer/signUp`,
-          signUpData,
-        );
+        const { data } = await api.post(`/customer/signUp`, signUpData);
 
         setSignInData((prev) => ({
           ...prev,
@@ -221,7 +222,10 @@ const verification = () => {
       );
       setVerificationCodeLoading(false);
       setCurrentVerificationOtp(data?.response);
-      console.log(baseContent.errorStatesAndApi.resendVerificationCode, data?.response);
+      console.log(
+        baseContent.errorStatesAndApi.resendVerificationCode,
+        data?.response,
+      );
 
       // ✅ Start cooldown here
       setIsCooldown(true);

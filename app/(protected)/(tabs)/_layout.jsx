@@ -14,19 +14,14 @@ import {
   QueueIcon,
   SalonIcon,
 } from "../../../constants/icons";
-import { useAuth } from "../../../context/AuthContext";
-import { useLanguage } from "../../../context/LanguageContext";
 import i18n from "../../../src/localization/i18n";
 
 export default function TabLayout() {
-  const { locale } = useLanguage();
   const baseContent = i18n.t("protected.tabs");
 
   const { colors } = useTheme();
 
   const insets = useSafeAreaInsets();
-
-  const { authenticatedUser } = useAuth();
 
   return (
     <>

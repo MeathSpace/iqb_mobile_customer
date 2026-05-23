@@ -31,6 +31,8 @@ import { jwtDecode } from "jwt-decode";
 import { Toast } from "toastify-react-native";
 import { ErrorIcon, EyeIcon, EyeOffIcon } from "../../constants/icons";
 import i18n from "../../src/localization/i18n";
+import { getToken, saveToken } from "@/utils/tokenStorage";
+import axios from "axios";
 
 export const useWarmUpBrowser = () => {
   useEffect(() => {
@@ -126,6 +128,10 @@ const signin = () => {
         error: null,
       }));
 
+      // console.log(data)
+
+      await saveToken(data?.token)
+
       if (rememberMe) {
         await AsyncStorage.setItem("isAuthenticated", JSON.stringify(true));
       }
@@ -138,6 +144,7 @@ const signin = () => {
       setIsAuthenticated(true);
       router.push("/home");
     } catch (error) {
+      console.log(error)
       setSignInData((prev) => ({
         ...prev,
         loading: false,

@@ -31,6 +31,7 @@ import { useGlobal } from "../../../../context/GlobalContext";
 import { useLanguage } from "../../../../context/LanguageContext";
 import i18n from "../../../../src/localization/i18n";
 import { useState } from "react";
+import { removeToken } from "../../../../utils/tokenStorage";
 
 const index = () => {
   const [languageModalVisible, setLanguageModalVisible] = useState(false);
@@ -118,10 +119,10 @@ const index = () => {
     } else {
       await AsyncStorage.removeItem("LoggedInUser");
     }
+    await removeToken()
     await AsyncStorage.removeItem("isAuthenticated");
     setIsAuthenticated(false);
     setAuthenticatedUser(null);
-    // router.push("/index")
   };
 
   const { user } = useUser();
