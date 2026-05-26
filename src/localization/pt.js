@@ -7,6 +7,12 @@ export default {
     loginButtonText: "Entrar",
   },
 
+  LanguageDropdown: {
+    english: "Inglês",
+    german: "Alemão",
+    portugese: "Português",
+  },
+
   auth: {
     signin: {
       email: {

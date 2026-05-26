@@ -18,11 +18,12 @@ import CustomSecondaryText from "../../components/CustomSecondaryText";
 import CustomText from "../../components/CustomText";
 import CustomView from "../../components/CustomView";
 import { ErrorIcon } from "../../constants/icons";
-import i18n from "../../src/localization/i18n"
+import i18n from "../../src/localization/i18n";
+import { useLanguage } from "@/context/LanguageContext";
 
 const forgetPassword = () => {
-
-  const baseContent = i18n.t("auth.forgotPassword")
+  const { locale } = useLanguage();
+  const baseContent = i18n.t("auth.forgotPassword");
 
   const { colors } = useTheme();
 
@@ -77,9 +78,7 @@ const forgetPassword = () => {
           <View>
             <CustomText style={styles.heading}>{baseContent.header}</CustomText>
 
-            <CustomSecondaryText>
-              {baseContent.subHeader}
-            </CustomSecondaryText>
+            <CustomSecondaryText>{baseContent.subHeader}</CustomSecondaryText>
           </View>
 
           <View style={styles.inputWrapper}>
@@ -126,13 +125,15 @@ const forgetPassword = () => {
         <TouchableOpacity
           onPress={() => forgetHandler()}
           disabled={forgetLoader}
-          style={[styles.signinButton, {backgroundColor: colors.accentColor}]}
+          style={[styles.signinButton, { backgroundColor: colors.accentColor }]}
           activeOpacity={0.85}
         >
           {forgetLoader ? (
             <ActivityIndicator size="small" color="#fff" />
           ) : (
-            <CustomText style={styles.signinButtonText}>{baseContent.continue}</CustomText>
+            <CustomText style={styles.signinButtonText}>
+              {baseContent.continue}
+            </CustomText>
           )}
         </TouchableOpacity>
       </CustomView>

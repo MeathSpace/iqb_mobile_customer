@@ -1,10 +1,16 @@
 export default {
   index: {
-    header: "Willkommen bei IQBook",
+    header: "Hi bei IQBook",
     subheader:
       "Buchen Sie sofort und stylen Sie Ihr Haar und Ihren Schnurrbart ganz nach Ihren Wünschen bei einem Stylisten Ihrer Wahl.",
     registerButtonText: "Registrieren",
     loginButtonText: "Anmelden",
+  },
+
+  LanguageDropdown: {
+    english: "Englisch",
+    german: "Deutsch",
+    portugese: "Portugiesisch",
   },
 
   auth: {
@@ -277,7 +283,7 @@ export default {
         english: "Englisch",
         german: "Deutsch",
         portugese: "Portugiesisch",
-      }
+      },
     },
 
     editProfile: {

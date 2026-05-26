@@ -28,6 +28,8 @@ import * as WebBrowser from "expo-web-browser";
 import { jwtDecode } from "jwt-decode";
 import { Toast } from "toastify-react-native";
 import i18n from "../../src/localization/i18n";
+import { useLanguage } from "@/context/LanguageContext";
+import LanguageDropdown from "../../components/LanguageDropdown";
 
 export const useWarmUpBrowser = () => {
   useEffect(() => {
@@ -46,6 +48,8 @@ WebBrowser.maybeCompleteAuthSession();
 
 const signup = () => {
   useWarmUpBrowser();
+
+  const { locale } = useLanguage();
 
   const baseContent = i18n.t("auth.signup");
 
@@ -305,6 +309,7 @@ const signup = () => {
       <CustomView
         style={{ flex: 1, alignItems: "center", justifyContent: "center" }}
       >
+        <LanguageDropdown/>
         <View style={{ width: "100%", gap: verticalScale(20) }}>
           <Image
             style={[styles.Logo, { tintColor: colors.text }]}

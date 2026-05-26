@@ -8,8 +8,11 @@ import CustomText from "../components/CustomText";
 import CustomView from "../components/CustomView";
 import { useAuth } from "../context/AuthContext";
 import i18n from "../src/localization/i18n";
+import LanguageDropdown from "../components/LanguageDropdown";
+import { useLanguage } from "../context/LanguageContext";
 
 const index = () => {
+  const { locale } = useLanguage();
   const { colors } = useTheme();
 
   const router = useRouter();
@@ -47,6 +50,7 @@ const index = () => {
 
   return (
     <CustomView style={{ alignItems: "center", justifyContent: "center" }}>
+      <LanguageDropdown />
       <View style={{ width: "100%" }}>
         <Image
           style={[styles.Logo, { tintColor: colors.text }]}
@@ -73,7 +77,9 @@ const index = () => {
             ]}
             activeOpacity={0.85}
           >
-            <CustomText style={styles.authButtonText}>{i18n.t("index.registerButtonText")}</CustomText>
+            <CustomText style={styles.authButtonText}>
+              {i18n.t("index.registerButtonText")}
+            </CustomText>
           </TouchableOpacity>
         ) : (
           <>
@@ -88,7 +94,9 @@ const index = () => {
               ]}
               activeOpacity={0.85}
             >
-              <CustomText style={styles.authButtonText}>{i18n.t("index.registerButtonText")}</CustomText>
+              <CustomText style={styles.authButtonText}>
+                {i18n.t("index.registerButtonText")}
+              </CustomText>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -99,7 +107,9 @@ const index = () => {
               ]}
               activeOpacity={0.85}
             >
-              <CustomText style={styles.authButtonText}>{i18n.t("index.loginButtonText")}</CustomText>
+              <CustomText style={styles.authButtonText}>
+                {i18n.t("index.loginButtonText")}
+              </CustomText>
             </TouchableOpacity>
           </>
         )}

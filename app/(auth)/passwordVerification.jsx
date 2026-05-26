@@ -20,10 +20,11 @@ import CustomText from "../../components/CustomText";
 import CustomView from "../../components/CustomView";
 import { ErrorIcon } from "../../constants/icons";
 import i18n from "../../src/localization/i18n";
+import { useLanguage } from "@/context/LanguageContext";
 
 const passwordVerification = () => {
-
-  const baseContent = i18n.t("auth.passwordVerification")
+  const { locale } = useLanguage();
+  const baseContent = i18n.t("auth.passwordVerification");
 
   const { colors } = useTheme();
   const { email, verificationCodeValue } = useLocalSearchParams();
@@ -68,7 +69,10 @@ const passwordVerification = () => {
 
       setVerificationCodeLoading(false);
       setCurrentVerificationOtp(data?.response?.verificationCode);
-      console.log(baseContent.errorStatesAndApi.resendVerifyCode, data?.response);
+      console.log(
+        baseContent.errorStatesAndApi.resendVerifyCode,
+        data?.response,
+      );
 
       // ✅ Start cooldown here
       setIsCooldown(true);
@@ -82,10 +86,14 @@ const passwordVerification = () => {
 
   const continueHandler = () => {
     if (!verificationCode) {
-      setVerificationCodeError(baseContent.errorStatesAndApi.verificationCodeRequired);
+      setVerificationCodeError(
+        baseContent.errorStatesAndApi.verificationCodeRequired,
+      );
       return;
     } else if (Number(verificationCode) !== Number(currentVerificationOtp)) {
-      setVerificationCodeError(baseContent.errorStatesAndApi.verificationCodeNotMatched);
+      setVerificationCodeError(
+        baseContent.errorStatesAndApi.verificationCodeNotMatched,
+      );
       return;
     }
 
@@ -106,19 +114,13 @@ const passwordVerification = () => {
       <CustomView style={{ justifyContent: "space-between" }}>
         <View style={{ gap: verticalScale(20) }}>
           <View>
-            <CustomText style={styles.heading}>
-              {baseContent.header}
-            </CustomText>
+            <CustomText style={styles.heading}>{baseContent.header}</CustomText>
 
-            <CustomSecondaryText>
-              {baseContent.subHeader}
-            </CustomSecondaryText>
+            <CustomSecondaryText>{baseContent.subHeader}</CustomSecondaryText>
           </View>
 
           <View style={styles.inputWrapper}>
-            <CustomText>
-              {baseContent.verificationCode.label}
-            </CustomText>
+            <CustomText>{baseContent.verificationCode.label}</CustomText>
 
             <TextInput
               editable
@@ -179,7 +181,9 @@ const passwordVerification = () => {
               marginHorizontal: "auto",
             }}
           >
-            <CustomSecondaryText>{baseContent.didntReceiveCode} </CustomSecondaryText>
+            <CustomSecondaryText>
+              {baseContent.didntReceiveCode}{" "}
+            </CustomSecondaryText>
 
             <Pressable
               onPress={resendVerification}

@@ -1,29 +1,3 @@
-// // 1. Import your i18n instance
-// import { createContext, useContext, useState } from "react";
-// import i18n from "../src/localization/i18n";
-
-// // ---------------------------------------------------------
-// // 2. Language Context Definition
-// // ---------------------------------------------------------
-// const LanguageContext = createContext();
-
-// export const LanguageProvider = ({ children }) => {
-//   const [locale, setLocale] = useState(i18n.locale);
-
-//   const changeLanguage = (langCode) => {
-//     i18n.locale = langCode;
-//     setLocale(langCode);
-//   };
-
-//   return (
-//     <LanguageContext.Provider value={{ locale, changeLanguage }}>
-//       {children}
-//     </LanguageContext.Provider>
-//   );
-// };
-
-// export const useLanguage = () => useContext(LanguageContext);
-
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createContext, useContext, useEffect, useState } from "react";
 import i18n from "../src/localization/i18n";

@@ -23,8 +23,10 @@ import ProgressHeader from "../../components/ProgressHeader";
 import { ErrorIcon } from "../../constants/icons";
 import { useAuth } from "../../context/AuthContext";
 import i18n from "../../src/localization/i18n";
+import { useLanguage } from "@/context/LanguageContext";
 
 const verification = () => {
+  const { locale } = useLanguage();
   const baseContent = i18n.t("auth.verification");
 
   const {

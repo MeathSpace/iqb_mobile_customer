@@ -32,6 +32,8 @@ import { jwtDecode } from "jwt-decode";
 import { Toast } from "toastify-react-native";
 import { ErrorIcon, EyeIcon, EyeOffIcon } from "../../constants/icons";
 import i18n from "../../src/localization/i18n";
+import LanguageDropdown from "../../components/LanguageDropdown";
+import { useLanguage } from "@/context/LanguageContext";
 
 export const useWarmUpBrowser = () => {
   useEffect(() => {
@@ -49,6 +51,9 @@ export const useWarmUpBrowser = () => {
 WebBrowser.maybeCompleteAuthSession();
 
 const signin = () => {
+  
+  // This useLanguage should be imported
+  const { locale } = useLanguage();
   const baseContent = i18n.t("auth.signin");
 
   useEffect(() => {
@@ -363,6 +368,7 @@ const signin = () => {
   return (
     <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
       <CustomView style={{ alignItems: "center", justifyContent: "center" }}>
+        <LanguageDropdown />
         <View style={{ width: "100%", gap: verticalScale(20) }}>
           <Image
             style={[styles.Logo, { tintColor: colors.text }]}

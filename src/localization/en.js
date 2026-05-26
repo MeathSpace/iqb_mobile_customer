@@ -7,6 +7,12 @@ export default {
     loginButtonText: "Log In",
   },
 
+  LanguageDropdown: {
+    english: "English",
+    german: "German",
+    portugese: "Portuguese",
+  },
+
   auth: {
     signin: {
       email: {
@@ -247,7 +253,7 @@ export default {
         english: "English",
         german: "German",
         portugese: "Portuguese",
-      }
+      },
     },
     editProfile: {
       header: "Manage Account",
@@ -298,7 +304,6 @@ export default {
         ok: "OK",
       },
     },
-
 
     myFavourites: {
       header: "My Favorites",
@@ -811,7 +816,6 @@ export default {
       },
     },
 
-
     singleJoinSuccessPage: {
       header: "Queue Joined!",
       subHeader:
@@ -967,10 +971,8 @@ export default {
       service: "service",
       upcoming: "Upcoming",
       past: "Past",
-      next: "Next"
+      next: "Next",
     },
-
-
 
     appointmentCalender: {
       header: "Book Appointment",

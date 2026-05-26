@@ -375,7 +375,9 @@ const index = () => {
             <CustomText style={styles.optionLabel}>
               {locale === "en"
                 ? baseContent?.language?.english
-                : baseContent?.language?.german}
+                : locale === "de"
+                  ? baseContent?.language?.german
+                  : locale === "pt" && baseContent?.language?.portugese}
             </CustomText>
 
             <RightIcon
@@ -549,7 +551,6 @@ const index = () => {
                   />
                 )}
               </TouchableOpacity>
-              
             </Pressable>
           </Pressable>
         </Modal>

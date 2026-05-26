@@ -20,8 +20,10 @@ import CustomText from "../../components/CustomText";
 import CustomView from "../../components/CustomView";
 import { ErrorIcon, EyeIcon, EyeOffIcon } from "../../constants/icons";
 import i18n from "../../src/localization/i18n";
+import { useLanguage } from "@/context/LanguageContext";
 
 const forgetPasswordConfirmation = () => {
+  const { locale } = useLanguage();
   const baseContent = i18n.t("auth.forgetPasswordConfirmation");
 
   const { colors } = useTheme();
