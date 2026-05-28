@@ -22,6 +22,8 @@ import ProgressHeader from "../../components/ProgressHeader";
 import { ErrorIcon } from "../../constants/icons";
 import { useAuth } from "../../context/AuthContext";
 import i18n from "../../src/localization/i18n";
+import { saveToken } from "@/utils/tokenStorage";
+
 
 const verification = () => {
   const baseContent = i18n.t("auth.verification");
@@ -79,6 +81,8 @@ const verification = () => {
     signInData,
   } = useAuth();
 
+  console.log("currentVerificationOtp ", currentVerificationOtp);
+
   const signupHandler = async () => {
     try {
       if (!verificationCode) {
@@ -121,6 +125,9 @@ const verification = () => {
           `/customer/googleCustomerSignup`,
           oauthSignUpData,
         );
+
+        await saveToken(data?.token);
+
         setSignInData((prev) => ({
           ...prev,
           loading: false,
@@ -142,6 +149,9 @@ const verification = () => {
           `/customer/appleCustomerSignup`,
           oauthSignUpData,
         );
+
+        await saveToken(data?.token);
+
         setSignInData((prev) => ({
           ...prev,
           loading: false,
@@ -161,6 +171,8 @@ const verification = () => {
       } else {
         const { data } = await api.post(`/customer/signUp`, signUpData);
 
+        await saveToken(data?.token);
+        
         setSignInData((prev) => ({
           ...prev,
           loading: false,

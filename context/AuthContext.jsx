@@ -2,6 +2,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createContext, useState, useContext, useEffect } from "react";
 import api from "../utils/api"; // Ensure this points to the standalone api.js file
 import { getToken, removeToken } from "@/utils/tokenStorage";
+import { FirebaseLogout } from "@/src/firebase/authService";
 
 const AuthContext = createContext();
 
@@ -60,38 +61,12 @@ export const AuthProvider = ({ children }) => {
     initToken();
   }, []);
 
-  //   const logout = async () => {
-  //     try {
-  //       cachedToken = null;
-  //       console.log("rememberMe ", rememberMe)
-
-  //       if (rememberMe) {
-  //         await AsyncStorage.setItem(
-  //           "LoggedInUser",
-  //           JSON.stringify({
-  //             email: authenticatedUser?.email,
-  //             // userPassword: authenticatedUser?.userPassword,
-  //             authType: authenticatedUser?.AuthType,
-  //           }),
-  //         );
-  //       } else {
-  //         await AsyncStorage.removeItem("LoggedInUser");
-  //       }
-
-  //       await removeToken();
-  //       await AsyncStorage.removeItem("isAuthenticated");
-
-  //       setIsAuthenticated(false);
-  //       setAuthenticatedUser(null);
-  //     } catch (error) {
-  //       console.log("Logout error:", error);
-  //     }
-  //   };
 
   const logout = async () => {
     try {
       cachedToken = null;
 
+      await FirebaseLogout()
       await removeToken();
       await AsyncStorage.removeItem("isAuthenticated");
 
@@ -127,7 +102,6 @@ export const AuthProvider = ({ children }) => {
       (response) => response,
       async (error) => {
         const status = error?.response?.status;
-
         // -----------------------------
         // Auto logout on auth failure
         // -----------------------------

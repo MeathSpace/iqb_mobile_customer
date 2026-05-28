@@ -12,7 +12,20 @@
           "package_name": "com.iqbook.iqb"
         }
       },
-      "oauth_client": [],
+      "oauth_client": [
+        {
+          "client_id": "328989269092-k83knkt10ee582c6vg8su7ipcnfnt74h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.iqbook.iqb",
+            "certificate_hash": "414eb003a77cc13d6a2a3353128f314037468089"
+          }
+        },
+        {
+          "client_id": "328989269092-gs9sjo1bhn0a153olt6p1peq6i25u7f2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
       "api_key": [
         {
           "current_key": "AIzaSyBZ8qfFaTHLZaVu1K4yFlHN28y13apRRlc"
@@ -20,7 +33,12 @@
       ],
       "services": {
         "appinvite_service": {
-          "other_platform_oauth_client": []
+          "other_platform_oauth_client": [
+            {
+              "client_id": "328989269092-gs9sjo1bhn0a153olt6p1peq6i25u7f2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

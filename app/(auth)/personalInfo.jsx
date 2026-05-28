@@ -1,5 +1,4 @@
 import { Colors } from "@/constants/Colors";
-import { useClerk, useUser } from "@clerk/clerk-expo";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { usePreventRemove, useTheme } from "@react-navigation/native";
 import { useLocalSearchParams, useRouter } from "expo-router";
@@ -27,6 +26,7 @@ import ProgressHeader from "../../components/ProgressHeader";
 import { ArrowDownIcon, CalendarIcon, ErrorIcon } from "../../constants/icons";
 import { useLanguage } from "../../context/LanguageContext";
 import i18n from "../../src/localization/i18n";
+import { FirebaseLogout } from "../../src/firebase/authService";
 
 const personalInfo = () => {
   const { locale } = useLanguage();
@@ -236,9 +236,6 @@ const personalInfo = () => {
   };
 
   const [openGenderDrop, setOpenGenderDrop] = useState(false);
-  const { isSignedIn } = useUser();
-  const { signOut } = useClerk();
-
   const hasUnsavedChanges = true;
 
   usePreventRemove(
@@ -258,9 +255,7 @@ const personalInfo = () => {
           {
             text: baseContent.alertBox.alertOne.ok,
             onPress: async () => {
-              if (isSignedIn) {
-                await signOut();
-              }
+              await FirebaseLogout()
               router.push("/signup");
             },
           },

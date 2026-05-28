@@ -1,4 +1,3 @@
-import { useClerk, useUser } from "@clerk/clerk-expo";
 import { Feather } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useTheme } from "@react-navigation/native";
@@ -32,6 +31,7 @@ import { useLanguage } from "../../../../context/LanguageContext";
 import i18n from "../../../../src/localization/i18n";
 import { useState } from "react";
 import { removeToken } from "../../../../utils/tokenStorage";
+import { FirebaseLogout } from "../../../../src/firebase/authService";
 
 const index = () => {
   const [languageModalVisible, setLanguageModalVisible] = useState(false);
@@ -40,8 +40,6 @@ const index = () => {
   const baseContent = i18n.t("protected.profile");
 
   const { colors } = useTheme();
-  const { signOut } = useClerk();
-  const { isSignedIn } = useUser();
   const {
     setSelectedBarber,
     setSelectedBarberServices,
@@ -104,9 +102,7 @@ const index = () => {
   ];
 
   const logoutPressed = async () => {
-    if (isSignedIn) {
-      await signOut();
-    }
+    await FirebaseLogout();
     setSelectedBarber({});
     setSelectedBarberServices([]);
     setCustomerName("");
@@ -127,8 +123,6 @@ const index = () => {
     setIsAuthenticated(false);
     setAuthenticatedUser(null);
   };
-
-  const { user } = useUser();
 
   const deleteHandler = () => {
     Alert.alert(
@@ -156,12 +150,9 @@ const index = () => {
         email: authenticatedUser?.email,
       });
 
-      if (user) {
-        // Delete user from Clerk
-        await user.delete();
-        await signOut();
-      }
-
+      await FirebaseLogout();
+      await removeToken();
+      
       setSelectedBarber({});
       setSelectedBarberServices([]);
       setCustomerName("");

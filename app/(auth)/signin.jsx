@@ -4,6 +4,7 @@ import { useFocusEffect, useRouter } from "expo-router";
 import React, { useCallback, useEffect, useState } from "react";
 import {
   ActivityIndicator,
+  Alert,
   Image,
   Keyboard,
   Platform,
@@ -21,7 +22,6 @@ import CustomView from "../../components/CustomView";
 import { useAuth } from "../../context/AuthContext";
 
 import { useGlobal } from "@/context/GlobalContext";
-import { useClerk, useSSO, useUser } from "@clerk/clerk-expo";
 import { usePreventRemove, useTheme } from "@react-navigation/native";
 import api from "../../utils/api";
 import * as AppleAuthentication from "expo-apple-authentication";
@@ -34,20 +34,17 @@ import i18n from "../../src/localization/i18n";
 import { getToken, saveToken } from "@/utils/tokenStorage";
 import axios from "axios";
 
-export const useWarmUpBrowser = () => {
-  useEffect(() => {
-    // Preloads the browser for Android devices to reduce authentication load time
-    // See: https://docs.expo.dev/guides/authentication/#improving-user-experience
-    void WebBrowser.warmUpAsync();
-    return () => {
-      // Cleanup: closes browser when component unmounts
-      void WebBrowser.coolDownAsync();
-    };
-  }, []);
-};
-
-// Handle any pending authentication sessions
-WebBrowser.maybeCompleteAuthSession();
+import {
+  GoogleSignin,
+  statusCodes,
+} from "@react-native-google-signin/google-signin";
+import {
+  GoogleAuthProvider,
+  signInWithCredential,
+  onAuthStateChanged,
+} from "firebase/auth";
+import { auth } from "../../src/firebase/auth";
+import { FirebaseLogout } from "../../src/firebase/authService";
 
 const signin = () => {
   const baseContent = i18n.t("auth.signin");
@@ -74,8 +71,6 @@ const signin = () => {
   const [emailError, setEmailError] = useState(false);
   const [passwordError, setPasswordError] = useState(false);
 
-  useWarmUpBrowser();
-
   const {
     setIsAuthenticated,
     setAuthenticatedUser,
@@ -90,8 +85,6 @@ const signin = () => {
   const router = useRouter();
 
   // const [rememberMe, setRememberMe] = useState(true);
-
-  const { signOut } = useClerk();
 
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
@@ -155,130 +148,6 @@ const signin = () => {
       Toast.error(error?.response?.data?.message);
     }
   };
-
-  const { startSSOFlow } = useSSO();
-
-  const { isLoaded, isSignedIn, user } = useUser();
-
-  const [googleClicked, setGoogleClicked] = useState(false);
-
-  const googleSigninPressed = useCallback(async () => {
-    try {
-      setEmail("");
-      setPassword("");
-      setEmailError("");
-      setPasswordError("");
-      setGoogleClicked(true);
-
-      // Start the authentication process by calling `startSSOFlow()`
-      const { createdSessionId, setActive, signIn, signUp } =
-        await startSSOFlow({
-          strategy: "oauth_google",
-          // For web, defaults to current path
-          // For native, you must pass a scheme, like AuthSession.makeRedirectUri({ scheme, path })
-          // For more info, see https://docs.expo.dev/versions/latest/sdk/auth-session/#authsessionmakeredirecturioptions
-          // redirectUrl: AuthSession.makeRedirectUri(),
-          redirectUrl: AuthSession.makeRedirectUri({
-            scheme: "iqbmobilecustomer",
-            path: "/signin",
-          }),
-        });
-
-      // This code generates the URL that your app tells
-      // the authentication provider (like Google) to use when sending
-      // the user back to your app. It includes the scheme (iqbmobilecustomer)
-      // and the path (/callback).
-
-      // If sign in was successful, set the active session
-      if (createdSessionId && setActive) {
-        await setActive({ session: createdSessionId });
-      } else {
-        // If there is no `createdSessionId`,
-        // there are missing requirements, such as MFA
-        // Use the `signIn` or `signUp` returned from `startSSOFlow`
-        // to handle next steps
-      }
-
-      setGoogleClicked(false);
-    } catch (err) {
-      setGoogleClicked(false);
-      // See https://clerk.com/docs/custom-flows/error-handling
-      // for more info on error handling
-      console.error(JSON.stringify(err, null, 2));
-    }
-  }, []);
-
-  const [googleSigninLoader, setGoogleSigninLoader] = useState(false);
-
-  useFocusEffect(
-    useCallback(() => {
-      if (isSignedIn) {
-        const handleAuth = async () => {
-          try {
-            // setSignInData((prev) => ({ ...prev, loading: true }))
-
-            setGoogleSigninLoader(true);
-
-            const { data } = await api.post(`/customer/googleCustomerSignIn`, {
-              email: user?.primaryEmailAddress?.emailAddress,
-            });
-
-            setSignInData((prev) => ({
-              ...prev,
-              loading: false,
-              user: {
-                ...data?.response,
-              },
-              success: true,
-              error: null,
-            }));
-
-            setGoogleSigninLoader(false);
-
-            if (rememberMe) {
-              await AsyncStorage.setItem(
-                "isAuthenticated",
-                JSON.stringify(true),
-              );
-            } else {
-              await signOut();
-            }
-
-            await AsyncStorage.setItem(
-              "LoggedInUser",
-              JSON.stringify({
-                ...data?.response,
-              }),
-            );
-            setAuthenticatedUser({
-              ...data?.response,
-            });
-            setIsAuthenticated(true);
-            router.push("/home");
-          } catch (error) {
-            await signOut();
-            setGoogleSigninLoader(false);
-            setSignInData((prev) => ({
-              ...prev,
-              loading: false,
-              user: null,
-              success: false,
-              error: error,
-            }));
-            Toast.error(error?.response?.data?.message);
-            console.log("Error ", error);
-          }
-        };
-
-        handleAuth();
-      }
-
-      // Optional cleanup when screen is unfocused
-      return () => {
-        // console.log('Screen is unfocused');
-      };
-    }, [isSignedIn, router, rememberMe, user]),
-  );
 
   usePreventRemove(true, ({ data }) => {});
 
@@ -350,6 +219,99 @@ const signin = () => {
         Toast.error(error?.response?.data?.message);
         console.log("Error ", error);
       }
+    }
+  };
+
+  // Google Firebase
+
+  const [googleSigninLoader, setGoogleSigninLoader] = useState(false);
+
+  useEffect(() => {
+    // This configures the native Google SDK layer
+    GoogleSignin.configure({
+      webClientId:
+        "328989269092-gs9sjo1bhn0a153olt6p1peq6i25u7f2.apps.googleusercontent.com",
+      offlineAccess: true,
+    });
+  }, []);
+
+  const syncWithBackend = async (currentUser) => {
+    try {
+      setGoogleSigninLoader(true);
+
+      const { data } = await api.post(`/customer/googleCustomerSignIn`, {
+        email: currentUser?.email,
+      });
+
+      setSignInData((prev) => ({
+        ...prev,
+        loading: false,
+        user: {
+          ...data?.response,
+        },
+        success: true,
+        error: null,
+      }));
+
+      setGoogleSigninLoader(false);
+
+      await saveToken(data?.token);
+
+      if (rememberMe) {
+        await AsyncStorage.setItem("isAuthenticated", JSON.stringify(true));
+      }
+
+      await AsyncStorage.setItem(
+        "LoggedInUser",
+        JSON.stringify({
+          ...data?.response,
+        }),
+      );
+
+      setAuthenticatedUser({
+        ...data?.response,
+      });
+      setIsAuthenticated(true);
+      router.push("/home");
+    } catch (error) {
+      await FirebaseLogout();
+      setGoogleSigninLoader(false);
+      setSignInData((prev) => ({
+        ...prev,
+        loading: false,
+        user: null,
+        success: false,
+        error: error,
+      }));
+      Toast.error(error?.response?.data?.message);
+      console.log("Error ", error);
+    }
+  };
+
+  const signInWithGoogle = async () => {
+    try {
+      await GoogleSignin.hasPlayServices({
+        showPlayServicesUpdateDialog: true,
+      });
+      const response = await GoogleSignin.signIn();
+      const idToken = response.data?.idToken || response.idToken;
+
+      if (!idToken) {
+        console.log("No ID Token found from Google Sign-In");
+        return;
+      }
+
+      // This line of code is the essential bridge between Google and Firebase. It takes the successful login proof from the mobile device and translates it into a standard
+      // format that the Firebase backend understands.
+      const credential = GoogleAuthProvider.credential(idToken);
+
+      // Pass token to Firebase. onAuthStateChanged automatically catches this state.
+      const userCredential = await signInWithCredential(auth, credential);
+      await syncWithBackend(userCredential.user);
+    } catch (error) {
+      await FirebaseLogout();
+      console.error("Google Sign-In Error: ", error);
+      Alert.alert("Google Sign-In Failed", error.message);
     }
   };
 
@@ -578,34 +540,71 @@ const signin = () => {
               />
             </Pressable>
           ) : (
-            <Pressable
-              disabled={googleSigninLoader}
-              onPress={googleSigninPressed}
-              style={[
-                styles.auth_btn,
-                {
-                  borderWidth: scale(1),
-                  backgroundColor: colors.cardColor,
-                  borderColor: colors.queueBorder,
-                  flexDirection: "row",
-                  alignItems: "center",
-                  gap: scale(10),
-                },
-              ]}
-            >
-              {googleSigninLoader ? (
-                <ActivityIndicator size="small" color={colors.text} />
-              ) : (
-                <>
-                  <Image
-                    source={require("../../assets/images/google.png")}
-                    height={30}
-                    width={30}
-                  />
-                  <CustomText>{baseContent.signInWithGoogle}</CustomText>
-                </>
-              )}
-            </Pressable>
+            // <Pressable
+            //   disabled={googleSigninLoader}
+            //   onPress={googleSigninPressed}
+            // style={[
+            //   styles.auth_btn,
+            //   {
+            //     borderWidth: scale(1),
+            //     backgroundColor: colors.cardColor,
+            //     borderColor: colors.queueBorder,
+            //     flexDirection: "row",
+            //     alignItems: "center",
+            //     gap: scale(10),
+            //   },
+            // ]}
+            // >
+            // {googleSigninLoader ? (
+            //   <ActivityIndicator size="small" color={colors.text} />
+            // ) : (
+            //   <>
+            //     <Image
+            //       source={require("../../assets/images/google.png")}
+            //       height={30}
+            //       width={30}
+            //     />
+            //     <CustomText>{baseContent.signInWithGoogle}</CustomText>
+            //   </>
+            // )}
+            // </Pressable>
+            <>
+              <Pressable
+                onPress={signInWithGoogle}
+                style={[
+                  styles.auth_btn,
+                  {
+                    borderWidth: scale(1),
+                    backgroundColor: colors.cardColor,
+                    borderColor: colors.queueBorder,
+                    flexDirection: "row",
+                    alignItems: "center",
+                    gap: scale(10),
+                  },
+                ]}
+              >
+                {googleSigninLoader ? (
+                  <ActivityIndicator size="small" color={colors.text} />
+                ) : (
+                  <>
+                    <Image
+                      source={require("../../assets/images/google.png")}
+                      height={30}
+                      width={30}
+                    />
+                    <CustomText>{baseContent.signInWithGoogle}</CustomText>
+                  </>
+                )}
+              </Pressable>
+
+              <Pressable
+                onPress={async () => {
+                  await FirebaseLogout();
+                }}
+              >
+                <CustomText>Google Log out</CustomText>
+              </Pressable>
+            </>
           )}
 
           <Pressable onPress={() => router.push("/signup")}>
@@ -684,3 +683,283 @@ const styles = StyleSheet.create({
     fontSize: scale(16),
   },
 });
+
+// import React, { useEffect, useState } from "react";
+// import {
+//   Pressable,
+//   StyleSheet,
+//   Text,
+//   View,
+//   Alert,
+//   ActivityIndicator,
+// } from "react-native";
+// import {
+//   GoogleSignin,
+//   statusCodes,
+// } from "@react-native-google-signin/google-signin";
+// import {
+//   GoogleAuthProvider,
+//   signInWithCredential,
+//   onAuthStateChanged,
+// } from "firebase/auth";
+// import { auth } from "../../src/firebase/auth";
+// import { FirebaseLogout } from "../../src/firebase/authService";
+
+// const index = () => {
+// // Track the logged-in user state and the initial checking/loading state
+// const [user, setUser] = useState(null);
+// const [loading, setLoading] = useState(true);
+
+// // const auth = getAuth();
+
+// useEffect(() => {
+//   // This configures the native Google SDK layer
+//   GoogleSignin.configure({
+//     webClientId:
+//       "328989269092-gs9sjo1bhn0a153olt6p1peq6i25u7f2.apps.googleusercontent.com",
+//     offlineAccess: true,
+//   });
+
+//   // Listen globally for session updates (login, sign up, or logout events)
+//   const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+//     setUser(currentUser);
+//     setLoading(false);
+//   });
+
+//   // Clean up authentication listener thread when component unmounts
+//   return unsubscribe;
+// }, []);
+
+// const signInWithGoogle = async () => {
+//   try {
+//     await GoogleSignin.hasPlayServices({
+//       showPlayServicesUpdateDialog: true,
+//     });
+//     const response = await GoogleSignin.signIn();
+//     const idToken = response.data?.idToken || response.idToken;
+
+//     if (!idToken) {
+//       console.log("No ID Token found from Google Sign-In");
+//       return;
+//     }
+
+//     // This line of code is the essential bridge between Google and Firebase. It takes the successful login proof from the mobile device and translates it into a standard
+//     // format that the Firebase backend understands.
+//     const credential = GoogleAuthProvider.credential(idToken);
+
+//     // Pass token to Firebase. onAuthStateChanged automatically catches this state.
+//     await signInWithCredential(auth, credential);
+//   } catch (error) {
+//     console.error("Google Sign-In Error: ", error);
+//     Alert.alert("Sign-In Failed", error.message);
+//   }
+// };
+
+//   // Render a clean loading indicator while initializing active session state
+//   if (loading) {
+//     return (
+//       <View style={styles.container}>
+//         <ActivityIndicator size="large" color="#4285F4" />
+//       </View>
+//     );
+//   }
+
+//   return (
+//     <View style={styles.container}>
+//       {user ? (
+//         // ─── AUTHENTICATED / LOGGED IN PANEL ───
+//         <View style={styles.authCard}>
+//           <View style={styles.headerZone}>
+//             <Text style={styles.titleText}>Profile Info</Text>
+//             <Text style={styles.subtitleText}>
+//               Successfully authenticated session
+//             </Text>
+//           </View>
+
+//           {/* User Data Fields */}
+//           <View style={styles.profileDataWrapper}>
+//             <Text style={styles.label}>Name</Text>
+//             <Text style={styles.value}>
+//               {user.displayName || "Standard Email User"}
+//             </Text>
+
+//             <View style={styles.innerFieldDivider} />
+
+//             <Text style={styles.label}>Email Address</Text>
+//             <Text style={styles.value}>{user.email}</Text>
+//           </View>
+
+//           {/* System Logout Trigger */}
+//           <Pressable
+//             style={[styles.button, styles.logoutButton]}
+//             onPress={async () => {
+//               try {
+//                 await FirebaseLogout();
+//               } catch (error) {
+//                 Alert.alert("Logout Failed", error.message);
+//               }
+//             }}
+//           >
+//             <Text style={styles.logoutButtonText}>Log out</Text>
+//           </Pressable>
+//         </View>
+//       ) : (
+//         // ─── UNAUTHENTICATED / LOGGED OUT FORMS ───
+//         <View style={styles.authCard}>
+//           {/* Header Title Section */}
+//           <View style={styles.headerZone}>
+//             <Text style={styles.titleText}>Welcome</Text>
+//             <Text style={styles.subtitleText}>
+//               Manage your authentication session
+//             </Text>
+//           </View>
+
+//           {/* OAuth Google Federated Button */}
+//           <Pressable
+//             style={[styles.button, styles.googleButton]}
+//             onPress={signInWithGoogle}
+//           >
+//             <Text style={styles.googleButtonText}>Sign In with Google</Text>
+//           </Pressable>
+//         </View>
+//       )}
+//     </View>
+//   );
+// };
+
+// export default index;
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     backgroundColor: "#F8FAFC",
+//     alignItems: "center",
+//     justifyContent: "center",
+//     paddingHorizontal: 20,
+//   },
+//   authCard: {
+//     width: "100%",
+//     maxWidth: 360,
+//     backgroundColor: "#FFFFFF",
+//     borderRadius: 16,
+//     padding: 24,
+//     alignItems: "center",
+//     elevation: 4,
+//     shadowColor: "#0F172A",
+//     shadowOffset: { width: 0, height: 4 },
+//     shadowOpacity: 0.08,
+//     shadowRadius: 12,
+//   },
+//   headerZone: {
+//     alignItems: "center",
+//     marginBottom: 28,
+//   },
+//   titleText: {
+//     fontSize: 26,
+//     fontWeight: "700",
+//     color: "#0F172A",
+//     letterSpacing: -0.5,
+//   },
+//   subtitleText: {
+//     fontSize: 14,
+//     color: "#64748B",
+//     marginTop: 4,
+//     textAlign: "center",
+//   },
+//   profileDataWrapper: {
+//     width: "100%",
+//     backgroundColor: "#F8FAFC",
+//     borderRadius: 12,
+//     padding: 16,
+//     borderWidth: 1,
+//     borderColor: "#E2E8F0",
+//     marginBottom: 16,
+//   },
+//   label: {
+//     fontSize: 11,
+//     color: "#64748B",
+//     fontWeight: "600",
+//     textTransform: "uppercase",
+//     letterSpacing: 0.5,
+//   },
+//   value: {
+//     fontSize: 15,
+//     color: "#0F172A",
+//     fontWeight: "600",
+//     marginTop: 2,
+//   },
+//   innerFieldDivider: {
+//     height: 1,
+//     backgroundColor: "#E2E8F0",
+//     my: 12,
+//     marginVertical: 12,
+//   },
+//   button: {
+//     width: "100%",
+//     height: 48,
+//     borderRadius: 10,
+//     alignItems: "center",
+//     justifyContent: "center",
+//     marginVertical: 6,
+//   },
+//   primaryButton: {
+//     backgroundColor: "#0F172A",
+//   },
+//   primaryButtonText: {
+//     color: "#FFFFFF",
+//     fontWeight: "600",
+//     fontSize: 15,
+//   },
+//   secondaryButton: {
+//     backgroundColor: "#F1F5F9",
+//     borderWidth: 1,
+//     borderColor: "#E2E8F0",
+//   },
+//   secondaryButtonText: {
+//     color: "#334155",
+//     fontWeight: "600",
+//     fontSize: 15,
+//   },
+//   dividerContainer: {
+//     flexDirection: "row",
+//     alignItems: "center",
+//     width: "100%",
+//     marginVertical: 16,
+//   },
+//   dividerLine: {
+//     flex: 1,
+//     height: 1,
+//     backgroundColor: "#E2E8F0",
+//   },
+//   dividerText: {
+//     marginHorizontal: 12,
+//     color: "#94A3B8",
+//     fontSize: 12,
+//     fontWeight: "600",
+//   },
+//   googleButton: {
+//     backgroundColor: "#4285F4",
+//     elevation: 2,
+//     shadowColor: "#4285F4",
+//     shadowOffset: { width: 0, height: 2 },
+//     shadowOpacity: 0.2,
+//     shadowRadius: 4,
+//   },
+//   googleButtonText: {
+//     color: "#FFFFFF",
+//     fontWeight: "700",
+//     fontSize: 15,
+//   },
+//   logoutButton: {
+//     backgroundColor: "transparent",
+//     marginTop: 12,
+//     borderWidth: 1,
+//     borderColor: "#FEE2E2",
+//     width: "100%",
+//   },
+//   logoutButtonText: {
+//     color: "#EF4444",
+//     fontWeight: "600",
+//     fontSize: 14,
+//   },
+// });
