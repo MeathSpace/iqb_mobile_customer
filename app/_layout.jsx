@@ -1,5 +1,3 @@
-import { ClerkProvider } from "@clerk/clerk-expo";
-import { tokenCache } from "@clerk/clerk-expo/token-cache";
 import {
   DarkTheme,
   DefaultTheme,
@@ -111,11 +109,6 @@ const RootLayout = () => {
       <LanguageProvider>
         <AuthProvider>
           <GlobalProvider>
-            {/* <ClerkProvider
-              telemetry={false}
-              publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY}
-              tokenCache={tokenCache}
-            > */}
               {/* <AppInitializer> */}
               <ThemeProvider
                 value={colorScheme === "dark" ? MyDarkTheme : MyLightTheme}
@@ -125,7 +118,6 @@ const RootLayout = () => {
                 <ToastManager />
               </ThemeProvider>
               {/* </AppInitializer> */}
-            {/* </ClerkProvider> */}
           </GlobalProvider>
         </AuthProvider>
       </LanguageProvider>
