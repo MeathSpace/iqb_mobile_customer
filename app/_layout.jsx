@@ -111,11 +111,11 @@ const RootLayout = () => {
       <LanguageProvider>
         <AuthProvider>
           <GlobalProvider>
-            <ClerkProvider
+            {/* <ClerkProvider
               telemetry={false}
               publishableKey={process.env.EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY}
               tokenCache={tokenCache}
-            >
+            > */}
               {/* <AppInitializer> */}
               <ThemeProvider
                 value={colorScheme === "dark" ? MyDarkTheme : MyLightTheme}
@@ -125,7 +125,7 @@ const RootLayout = () => {
                 <ToastManager />
               </ThemeProvider>
               {/* </AppInitializer> */}
-            </ClerkProvider>
+            {/* </ClerkProvider> */}
           </GlobalProvider>
         </AuthProvider>
       </LanguageProvider>

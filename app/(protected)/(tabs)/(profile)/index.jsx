@@ -103,6 +103,7 @@ const index = () => {
 
   const logoutPressed = async () => {
     await FirebaseLogout();
+    await removeToken();
     setSelectedBarber({});
     setSelectedBarberServices([]);
     setCustomerName("");
@@ -118,7 +119,7 @@ const index = () => {
     } else {
       await AsyncStorage.removeItem("LoggedInUser");
     }
-    await removeToken();
+    
     await AsyncStorage.removeItem("isAuthenticated");
     setIsAuthenticated(false);
     setAuthenticatedUser(null);

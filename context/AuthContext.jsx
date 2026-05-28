@@ -107,6 +107,7 @@ export const AuthProvider = ({ children }) => {
         // -----------------------------
         if (status === 401 || status === 403) {
           await logout();
+          return
         }
 
         return Promise.reject(error);
