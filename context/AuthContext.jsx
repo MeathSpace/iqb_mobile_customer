@@ -1,14 +1,18 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createContext, useState, useContext, useEffect } from "react";
-import api from "../utils/api"; // Ensure this points to the standalone api.js file
+
+import api from "../utils/api";
+
 import { getToken, removeToken } from "@/utils/tokenStorage";
+
 import { FirebaseLogout } from "@/src/firebase/authService";
 
 const AuthContext = createContext();
 
-let cachedToken = null;
-
 export const AuthProvider = ({ children }) => {
+  // ----------------------------------------
+  // Sign In State
+  // ----------------------------------------
   const [signInData, setSignInData] = useState({
     user: null,
     loading: false,
@@ -16,6 +20,9 @@ export const AuthProvider = ({ children }) => {
     success: false,
   });
 
+  // ----------------------------------------
+  // Sign Up State
+  // ----------------------------------------
   const [signUpData, setSignUpData] = useState({
     user: null,
     loading: false,
@@ -23,74 +30,85 @@ export const AuthProvider = ({ children }) => {
     success: false,
   });
 
+  // ----------------------------------------
+  // Auth State
+  // ----------------------------------------
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+
   const [authenticatedUser, setAuthenticatedUser] = useState(null);
+
   const [searchSalon, setSearchSalon] = useState(null);
+
   const [rememberMe, setRememberMe] = useState(true);
 
-  // 1. Initial hydration
+  // ----------------------------------------
+  // Initial Hydration
+  // ----------------------------------------
   useEffect(() => {
     const loadUserFromStorage = async () => {
       try {
-        const value = await AsyncStorage.getItem("isAuthenticated");
-        const user = await AsyncStorage.getItem("LoggedInUser");
+        const storedAuth = await AsyncStorage.getItem("isAuthenticated");
 
-        if (value !== null) {
-          const parsedValue = JSON.parse(value);
-          setIsAuthenticated(parsedValue);
+        const storedUser = await AsyncStorage.getItem("LoggedInUser");
+
+        if (storedAuth !== null) {
+          setIsAuthenticated(JSON.parse(storedAuth));
         }
 
-        if (user) {
-          const parseUser = JSON.parse(user);
-          setAuthenticatedUser(parseUser);
+        if (storedUser) {
+          setAuthenticatedUser(JSON.parse(storedUser));
         }
       } catch (error) {
-        console.error("Failed to load user data from AsyncStorage", error);
+        console.log("Failed to hydrate auth state:", error);
       }
     };
 
     loadUserFromStorage();
   }, []);
 
-  useEffect(() => {
-    const initToken = async () => {
-      const token = await getToken();
-      cachedToken = token;
-    };
-
-    initToken();
-  }, []);
-
-
+  // ----------------------------------------
+  // Logout Function
+  // ----------------------------------------
   const logout = async () => {
     try {
-      cachedToken = null;
+      // Firebase Logout
+      try {
+        await FirebaseLogout();
+      } catch (firebaseError) {
+        console.log("Firebase logout failed:", firebaseError);
+      }
 
-      await FirebaseLogout()
+      // Remove Secure Token
       await removeToken();
-      await AsyncStorage.removeItem("isAuthenticated");
 
+      // Remove Persisted User Data
+      await AsyncStorage.multiRemove(["isAuthenticated", "LoggedInUser"]);
+
+      // Reset React State
       setIsAuthenticated(false);
       setAuthenticatedUser(null);
-      setRememberMe(false)
+      setRememberMe(false);
     } catch (error) {
       console.log("Logout error:", error);
     }
   };
 
+  // ----------------------------------------
+  // Axios Interceptors
+  // ----------------------------------------
   useEffect(() => {
+    // Request Interceptor
     const requestInterceptor = api.interceptors.request.use(
       async (config) => {
         try {
-          if (!cachedToken) {
-            cachedToken = await getToken();
-          }
+          // Always get fresh token
+          const token = await getToken();
 
-          if (cachedToken) {
-            config.headers.Authorization = `Bearer ${cachedToken}`;
+          if (token) {
+            config.headers.Authorization = `Bearer ${token}`;
           }
-        } catch (err) {
-          console.log("Token interceptor error", err);
+        } catch (error) {
+          console.log("Request interceptor error:", error);
         }
 
         return config;
@@ -98,45 +116,65 @@ export const AuthProvider = ({ children }) => {
       (error) => Promise.reject(error),
     );
 
+    // Response Interceptor
     const responseInterceptor = api.interceptors.response.use(
       (response) => response,
+
       async (error) => {
         const status = error?.response?.status;
-        // -----------------------------
+
         // Auto logout on auth failure
-        // -----------------------------
-        if (status === 401 || status === 403) {
+        if ((status === 401 || status === 403) && isAuthenticated) {
           await logout();
-          return
         }
 
         return Promise.reject(error);
       },
     );
 
-    // cleanup
+    // Cleanup Interceptors
     return () => {
       api.interceptors.request.eject(requestInterceptor);
+
       api.interceptors.response.eject(responseInterceptor);
     };
-  }, []);
+  }, [isAuthenticated]);
 
+  // ----------------------------------------
+  // Context Value
+  // ----------------------------------------
   const value = {
+    // Auth State
     isAuthenticated,
     setIsAuthenticated,
+
     authenticatedUser,
     setAuthenticatedUser,
+
+    // Salon State
     searchSalon,
     setSearchSalon,
+
+    // Sign In State
     signInData,
     setSignInData,
+
+    // Sign Up State
     signUpData,
     setSignUpData,
+
+    // Remember Me
     rememberMe,
     setRememberMe,
+
+    // Logout
+    logout,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
+// ----------------------------------------
+// Custom Hook
+// ----------------------------------------
 export const useAuth = () => useContext(AuthContext);
