@@ -1,6 +1,6 @@
 import { usePreventRemove, useTheme } from "@react-navigation/native";
-import { useFocusEffect, useRouter } from "expo-router";
-import { useCallback, useEffect, useState } from "react";
+import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Image,
@@ -20,16 +20,11 @@ import { ErrorIcon, EyeIcon, EyeOffIcon } from "../../constants/icons";
 import { useAuth } from "../../context/AuthContext";
 import api from "../../utils/api";
 import * as AppleAuthentication from "expo-apple-authentication";
-import * as AuthSession from "expo-auth-session";
-import * as WebBrowser from "expo-web-browser";
 import { jwtDecode } from "jwt-decode";
 import { Toast } from "toastify-react-native";
 import i18n from "../../src/localization/i18n";
 
-import {
-  GoogleSignin,
-  statusCodes,
-} from "@react-native-google-signin/google-signin";
+import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import {
   GoogleAuthProvider,
   signInWithCredential,
@@ -38,24 +33,7 @@ import {
 import { auth } from "../../src/firebase/auth";
 import { FirebaseLogout } from "../../src/firebase/authService";
 
-// export const useWarmUpBrowser = () => {
-//   useEffect(() => {
-//     // Preloads the browser for Android devices to reduce authentication load time
-//     // See: https://docs.expo.dev/guides/authentication/#improving-user-experience
-//     void WebBrowser.warmUpAsync();
-//     return () => {
-//       // Cleanup: closes browser when component unmounts
-//       void WebBrowser.coolDownAsync();
-//     };
-//   }, []);
-// };
-
-// // Handle any pending authentication sessions
-// WebBrowser.maybeCompleteAuthSession();
-
 const signup = () => {
-  // useWarmUpBrowser();
-
   const baseContent = i18n.t("auth.signup");
 
   const { colors } = useTheme();
@@ -122,103 +100,6 @@ const signup = () => {
     }
   };
 
-  // const { startSSOFlow } = useSSO();
-
-  // const { isLoaded, isSignedIn, user } = useUser();
-  // const { signOut } = useClerk();
-
-  // const [googleClicked, setGoogleClicked] = useState(false);
-
-  // const googleSignupPressed = useCallback(async () => {
-  //   try {
-  //     setGoogleClicked(true);
-
-  //     // Start the authentication process by calling `startSSOFlow()`
-  //     const { createdSessionId, setActive, signIn, signUp } =
-  //       await startSSOFlow({
-  //         strategy: "oauth_google",
-  //         // For web, defaults to current path
-  //         // For native, you must pass a scheme, like AuthSession.makeRedirectUri({ scheme, path })
-  //         // For more info, see https://docs.expo.dev/versions/latest/sdk/auth-session/#authsessionmakeredirecturioptions
-  //         // redirectUrl: AuthSession.makeRedirectUri(),
-  //         redirectUrl: AuthSession.makeRedirectUri({
-  //           scheme: "iqbmobilecustomer",
-  //           path: "/signup",
-  //         }),
-  //       });
-
-  //     // This code generates the URL that your app tells
-  //     // the authentication provider (like Google) to use when sending
-  //     // the user back to your app. It includes the scheme (iqbmobilecustomer)
-  //     // and the path (/callback).
-
-  //     // If sign in was successful, set the active session
-  //     if (createdSessionId && setActive) {
-  //       await setActive({ session: createdSessionId });
-  //     } else {
-  //       // If there is no `createdSessionId`,
-  //       // there are missing requirements, such as MFA
-  //       // Use the `signIn` or `signUp` returned from `startSSOFlow`
-  //       // to handle next steps
-  //     }
-
-  //     setGoogleClicked(false);
-  //   } catch (err) {
-  //     // See https://clerk.com/docs/custom-flows/error-handling
-  //     // for more info on error handling
-  //     console.error(JSON.stringify(err, null, 2));
-  //     setGoogleClicked(false);
-  //   }
-  // }, []);
-
-  // const [googleSigninLoader, setGoogleSigninLoader] = useState(false);
-
-  // useFocusEffect(
-  //   useCallback(() => {
-  //     if (isSignedIn) {
-  // const checkEmail = async () => {
-  //   try {
-  //     setGoogleSigninLoader(true);
-
-  //     const { data } = await api.post(
-  //       `/customer/checkEmail`,
-  //       {
-  //         email: user?.primaryEmailAddress?.emailAddress,
-  //       },
-  //     );
-
-  //     setGoogleSigninLoader(false);
-
-  //     router.push({
-  //       pathname: "/personalInfo",
-  //       params: {
-  //         email: user?.primaryEmailAddress?.emailAddress,
-  //         authType: "google",
-  //       },
-  //     });
-
-  //     // await signOut()
-
-  //     // // Delay signOut slightly so it doesn't interrupt navigation
-  //     // InteractionManager.runAfterInteractions(() => {
-  //     //     signOut(); // Donot give await
-  //     // });
-  //   } catch (error) {
-  //     await signOut();
-  //     setGoogleSigninLoader(false);
-  //     Toast.error(error?.response?.data?.message);
-  //   }
-  // };
-
-  //       checkEmail();
-  //     }
-
-  //     return () => {
-  //       // console.log("Screen unfocused")
-  //     };
-  //   }, [isSignedIn, router, user]),
-  // );
-
   // Google Firebase
 
   const [googleSigninLoader, setGoogleSigninLoader] = useState(false);
@@ -227,7 +108,7 @@ const signup = () => {
     // This configures the native Google SDK layer
     GoogleSignin.configure({
       webClientId:
-        "328989269092-gs9sjo1bhn0a153olt6p1peq6i25u7f2.apps.googleusercontent.com",
+        process.env.EXPO_PUBLIC_WEBCLIENT_ID,
       offlineAccess: true,
     });
   }, []);
@@ -513,64 +394,30 @@ const signup = () => {
               />
             </Pressable>
           ) : (
-            // <Pressable
-            //   disabled={googleClicked || googleSigninLoader}
-            //   onPress={async () => {
-            //     if (isSignedIn) {
-            //       await signOut();
-            //       await googleSignupPressed();
-            //     } else {
-            //       await googleSignupPressed();
-            //     }
-            //   }}
-            // style={[
-            //   styles.auth_btn,
-            //   {
-            //     borderWidth: scale(1),
-            //     backgroundColor: colors.cardColor,
-            //     borderColor: colors.queueBorder,
-            //     flexDirection: "row",
-            //     alignItems: "center",
-            //     gap: scale(10),
-            //   },
-            // ]}
-            // >
-            //   {googleSigninLoader ? (
-            //     <ActivityIndicator size="small" color={colors.text} />
-            //   ) : (
-            //     <>
-            //   <Image
-            //     source={require("../../assets/images/google.png")}
-            //     height={30}
-            //     width={30}
-            //   />
-            //   <CustomText>{baseContent.signUpWithGoogle}</CustomText>
-            // </>
-            //   )}
-            // </Pressable>
-              <Pressable
-                onPress={signUpWithGoogle}
-                style={[
-                  styles.auth_btn,
-                  {
-                    borderWidth: scale(1),
-                    backgroundColor: colors.cardColor,
-                    borderColor: colors.queueBorder,
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: scale(10),
-                  },
-                ]}
-              >
-                <>
-                  <Image
-                    source={require("../../assets/images/google.png")}
-                    height={30}
-                    width={30}
-                  />
-                  <CustomText>{baseContent.signUpWithGoogle}</CustomText>
-                </>
-              </Pressable>
+            <Pressable
+              disabled={googleSigninLoader}
+              onPress={signUpWithGoogle}
+              style={[
+                styles.auth_btn,
+                {
+                  borderWidth: scale(1),
+                  backgroundColor: colors.cardColor,
+                  borderColor: colors.queueBorder,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: scale(10),
+                },
+              ]}
+            >
+              <>
+                <Image
+                  source={require("../../assets/images/google.png")}
+                  height={30}
+                  width={30}
+                />
+                <CustomText>{baseContent.signUpWithGoogle}</CustomText>
+              </>
+            </Pressable>
           )}
 
           <Pressable

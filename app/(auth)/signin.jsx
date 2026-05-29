@@ -229,8 +229,7 @@ const signin = () => {
   useEffect(() => {
     // This configures the native Google SDK layer
     GoogleSignin.configure({
-      webClientId:
-        "328989269092-gs9sjo1bhn0a153olt6p1peq6i25u7f2.apps.googleusercontent.com",
+      webClientId: process.env.EXPO_PUBLIC_WEBCLIENT_ID,
       offlineAccess: true,
     });
   }, []);
@@ -243,6 +242,8 @@ const signin = () => {
         email: currentUser?.email,
       });
 
+      await saveToken(data?.token);
+
       setSignInData((prev) => ({
         ...prev,
         loading: false,
@@ -254,8 +255,6 @@ const signin = () => {
       }));
 
       setGoogleSigninLoader(false);
-
-      await saveToken(data?.token);
 
       if (rememberMe) {
         await AsyncStorage.setItem("isAuthenticated", JSON.stringify(true));
@@ -540,71 +539,34 @@ const signin = () => {
               />
             </Pressable>
           ) : (
-            // <Pressable
-            //   disabled={googleSigninLoader}
-            //   onPress={googleSigninPressed}
-            // style={[
-            //   styles.auth_btn,
-            //   {
-            //     borderWidth: scale(1),
-            //     backgroundColor: colors.cardColor,
-            //     borderColor: colors.queueBorder,
-            //     flexDirection: "row",
-            //     alignItems: "center",
-            //     gap: scale(10),
-            //   },
-            // ]}
-            // >
-            // {googleSigninLoader ? (
-            //   <ActivityIndicator size="small" color={colors.text} />
-            // ) : (
-            //   <>
-            //     <Image
-            //       source={require("../../assets/images/google.png")}
-            //       height={30}
-            //       width={30}
-            //     />
-            //     <CustomText>{baseContent.signInWithGoogle}</CustomText>
-            //   </>
-            // )}
-            // </Pressable>
-            <>
-              <Pressable
-                onPress={signInWithGoogle}
-                style={[
-                  styles.auth_btn,
-                  {
-                    borderWidth: scale(1),
-                    backgroundColor: colors.cardColor,
-                    borderColor: colors.queueBorder,
-                    flexDirection: "row",
-                    alignItems: "center",
-                    gap: scale(10),
-                  },
-                ]}
-              >
-                {googleSigninLoader ? (
-                  <ActivityIndicator size="small" color={colors.text} />
-                ) : (
-                  <>
-                    <Image
-                      source={require("../../assets/images/google.png")}
-                      height={30}
-                      width={30}
-                    />
-                    <CustomText>{baseContent.signInWithGoogle}</CustomText>
-                  </>
-                )}
-              </Pressable>
-
-              <Pressable
-                onPress={async () => {
-                  await FirebaseLogout();
-                }}
-              >
-                <CustomText>Google Log out</CustomText>
-              </Pressable>
-            </>
+            <Pressable
+              onPress={signInWithGoogle}
+              disabled={googleSigninLoader}
+              style={[
+                styles.auth_btn,
+                {
+                  borderWidth: scale(1),
+                  backgroundColor: colors.cardColor,
+                  borderColor: colors.queueBorder,
+                  flexDirection: "row",
+                  alignItems: "center",
+                  gap: scale(10),
+                },
+              ]}
+            >
+              {googleSigninLoader ? (
+                <ActivityIndicator size="small" color={colors.text} />
+              ) : (
+                <>
+                  <Image
+                    source={require("../../assets/images/google.png")}
+                    height={30}
+                    width={30}
+                  />
+                  <CustomText>{baseContent.signInWithGoogle}</CustomText>
+                </>
+              )}
+            </Pressable>
           )}
 
           <Pressable onPress={() => router.push("/signup")}>
