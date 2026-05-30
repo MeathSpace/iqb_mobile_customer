@@ -54,7 +54,7 @@ const index = () => {
           resizeMode="cover"
         />
 
-        <CustomText style={styles.heading}>{i18n.t("index.header")}</CustomText>
+        <CustomText style={styles.heading}>{i18n.t("index.header")} Firebase</CustomText>
         <CustomSecondaryText
           style={[styles.sub_heading, { color: colors.secondaryText }]}
         >
