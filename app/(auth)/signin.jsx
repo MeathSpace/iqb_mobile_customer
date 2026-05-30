@@ -34,10 +34,10 @@ import i18n from "../../src/localization/i18n";
 import { getToken, saveToken } from "@/utils/tokenStorage";
 import axios from "axios";
 
-import {
-  GoogleSignin,
-  statusCodes,
-} from "@react-native-google-signin/google-signin";
+// import {
+//   GoogleSignin,
+//   statusCodes,
+// } from "@react-native-google-signin/google-signin";
 import {
   GoogleAuthProvider,
   signInWithCredential,
@@ -226,13 +226,13 @@ const signin = () => {
 
   const [googleSigninLoader, setGoogleSigninLoader] = useState(false);
 
-  useEffect(() => {
-    // This configures the native Google SDK layer
-    GoogleSignin.configure({
-      webClientId: process.env.EXPO_PUBLIC_WEBCLIENT_ID,
-      offlineAccess: true,
-    });
-  }, []);
+  // useEffect(() => {
+  //   // This configures the native Google SDK layer
+  //   GoogleSignin.configure({
+  //     webClientId: process.env.EXPO_PUBLIC_WEBCLIENT_ID,
+  //     offlineAccess: true,
+  //   });
+  // }, []);
 
   const syncWithBackend = async (currentUser) => {
     try {

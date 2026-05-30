@@ -24,7 +24,7 @@ import { jwtDecode } from "jwt-decode";
 import { Toast } from "toastify-react-native";
 import i18n from "../../src/localization/i18n";
 
-import { GoogleSignin } from "@react-native-google-signin/google-signin";
+// import { GoogleSignin } from "@react-native-google-signin/google-signin";
 import {
   GoogleAuthProvider,
   signInWithCredential,
@@ -104,14 +104,14 @@ const signup = () => {
 
   const [googleSigninLoader, setGoogleSigninLoader] = useState(false);
 
-  useEffect(() => {
-    // This configures the native Google SDK layer
-    GoogleSignin.configure({
-      webClientId:
-        process.env.EXPO_PUBLIC_WEBCLIENT_ID,
-      offlineAccess: true,
-    });
-  }, []);
+  // useEffect(() => {
+  //   // This configures the native Google SDK layer
+  //   GoogleSignin.configure({
+  //     webClientId:
+  //       process.env.EXPO_PUBLIC_WEBCLIENT_ID,
+  //     offlineAccess: true,
+  //   });
+  // }, []);
 
   const syncWithBackend = async (currentUser) => {
     try {

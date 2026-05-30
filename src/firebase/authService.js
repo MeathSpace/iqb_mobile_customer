@@ -1,4 +1,3 @@
-import { GoogleSignin } from "@react-native-google-signin/google-signin"; // Added import
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,

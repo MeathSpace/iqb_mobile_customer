@@ -109,15 +109,13 @@ const RootLayout = () => {
       <LanguageProvider>
         <AuthProvider>
           <GlobalProvider>
-              {/* <AppInitializer> */}
-              <ThemeProvider
-                value={colorScheme === "dark" ? MyDarkTheme : MyLightTheme}
-              >
-                <Stack screenOptions={{ headerShown: false }} />
-                <StatusBar style="auto" />
-                <ToastManager />
-              </ThemeProvider>
-              {/* </AppInitializer> */}
+            <ThemeProvider
+              value={colorScheme === "dark" ? MyDarkTheme : MyLightTheme}
+            >
+              <Stack screenOptions={{ headerShown: false }} />
+              <StatusBar style="auto" />
+              <ToastManager />
+            </ThemeProvider>
           </GlobalProvider>
         </AuthProvider>
       </LanguageProvider>
