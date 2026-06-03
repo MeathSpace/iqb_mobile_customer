@@ -21,12 +21,11 @@ import CustomText from "../../components/CustomText";
 import { CheckIcon } from "../../constants/icons";
 import { useAuth } from "../../context/AuthContext";
 import { useGlobal } from "../../context/GlobalContext";
+import i18n from "../../src/localization/i18n";
 import { ddmmformatDate } from "../../utils/ddmmformatDate";
-import i18n from "../../src/localization/i18n"
 
 const appointmentCalenderModal = () => {
-
-  const baseContent = i18n.t("protected.appointmentCalenderModal")
+  const baseContent = i18n.t("protected.appointmentCalenderModal");
 
   const [salonAddress, setSalonAddress] = useState("");
 
@@ -94,8 +93,6 @@ const appointmentCalenderModal = () => {
 
   const [bookAppointmentLoader, setBookAppointmentLoader] = useState(false);
 
-  // console.log("selectedCustomerBookAppointmentBarberParse ", selectedCustomerBookAppointmentBarberParse?.name)
-
   const saveToCalender = async (
     selectedBookCalenderDateParse,
     selectedBookCalenderTimeslotParse,
@@ -127,7 +124,8 @@ const appointmentCalenderModal = () => {
         ) || calendars.find((cal) => cal.allowsModifications);
 
       if (!targetCalendar) {
-        throw new Error(baseContent.errorStatesAndApi.noGoogleCalender);
+        console.log("❌ No calendar found");
+        return
       }
 
       const calendarId = targetCalendar.id;
@@ -168,16 +166,12 @@ const appointmentCalenderModal = () => {
         },
       );
 
-      Alert.alert(baseContent.alertBox.alertTwo.header, baseContent.alertBox.alertTwo.subHeader);
+      Alert.alert(
+        baseContent.alertBox.alertTwo.header,
+        baseContent.alertBox.alertTwo.subHeader,
+      );
 
       setBookAppointmentLoader(false);
-      router.replace({
-        pathname: "/appointmentSuccessPage",
-        params: {
-          booked: true,
-          edit: false,
-        },
-      });
     } catch (error) {
       setBookAppointmentLoader(false);
       console.error("❌ Calendar Error:", error);
@@ -234,9 +228,21 @@ const appointmentCalenderModal = () => {
         selectedCustomerBookAppointmentServicesParse,
         data?.response?._id,
       );
+
+      router.replace({
+        pathname: "/appointmentSuccessPage",
+        params: {
+          booked: true,
+          edit: false,
+        },
+      });
     } catch (error) {
       setBookAppointmentLoader(false);
-      Alert.alert(baseContent.alertBox.alertFour.header, error?.response?.data?.message, [{ text: baseContent.alertBox.alertFour.ok }]);
+      Alert.alert(
+        baseContent.alertBox.alertFour.header,
+        error?.response?.data?.message,
+        [{ text: baseContent.alertBox.alertFour.ok }],
+      );
       console.log("Error doing book appointment ", error);
     }
   };
@@ -291,11 +297,13 @@ const appointmentCalenderModal = () => {
     const data = await response.json();
 
     if (!response.ok) {
-      throw new Error(data?.message || baseContent.errorStatesAndApi.paymentInitializationFailed);
+      throw new Error(
+        data?.message ||
+          baseContent.errorStatesAndApi.paymentInitializationFailed,
+      );
     }
 
     const { paymentIntent, ephemeralKey, customer } = data;
-
 
     if (!paymentIntent || !ephemeralKey || !customer) {
       throw new Error(baseContent.errorStatesAndApi.invalidStripeError);
@@ -365,7 +373,10 @@ const appointmentCalenderModal = () => {
     } catch (err) {
       console.log("Stripe error:", err?.message);
 
-      Alert.alert(baseContent.alertBox.alertFive.header, err?.message || baseContent.alertBox.alertFive.subHeader);
+      Alert.alert(
+        baseContent.alertBox.alertFive.header,
+        err?.message || baseContent.alertBox.alertFive.subHeader,
+      );
     } finally {
       setLoading(false);
     }
@@ -521,7 +532,10 @@ const appointmentCalenderModal = () => {
                   {selectedCustomerBookAppointmentBarberParse?.name}
                 </CustomText>
                 <CustomSecondaryText style={{ marginTop: verticalScale(2) }}>
-                  {totalServices} {totalServices === 1 ? baseContent.service : baseContent.services}{" "}
+                  {totalServices}{" "}
+                  {totalServices === 1
+                    ? baseContent.service
+                    : baseContent.services}{" "}
                   • {formatMinutesToHrMin(totalTime)}
                 </CustomSecondaryText>
               </View>
@@ -665,7 +679,8 @@ const appointmentCalenderModal = () => {
                     <CustomSecondaryText
                       style={{ fontSize: moderateScale(12) }}
                     >
-                      {baseContent.deposit} ({paymentSettingsDataParse?.advancePaymentPercent}
+                      {baseContent.deposit} (
+                      {paymentSettingsDataParse?.advancePaymentPercent}
                       %)
                     </CustomSecondaryText>
                   </View>

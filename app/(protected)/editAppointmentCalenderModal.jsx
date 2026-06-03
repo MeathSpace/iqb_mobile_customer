@@ -8,6 +8,7 @@ import { useCallback, useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
+  Platform,
   ScrollView,
   StyleSheet,
   TouchableOpacity,
@@ -20,12 +21,11 @@ import CustomText from "../../components/CustomText";
 import { CheckIcon } from "../../constants/icons";
 import { useAuth } from "../../context/AuthContext";
 import { useGlobal } from "../../context/GlobalContext";
+import i18n from "../../src/localization/i18n";
 import { ddmmformatDate } from "../../utils/ddmmformatDate";
-import i18n from "../../src/localization/i18n"
 
 const editAppointmentCalenderModal = () => {
-
-  const baseContent = i18n.t("protected.editAppointmentCalenderModal")
+  const baseContent = i18n.t("protected.editAppointmentCalenderModal");
 
   const [salonAddress, setSalonAddress] = useState("");
 
@@ -89,6 +89,94 @@ const editAppointmentCalenderModal = () => {
       }, 0);
   };
 
+  // const updateCalendarEvent = async (
+  //   selectedBookCalenderDateParse,
+  //   selectedBookCalenderTimeslotParse,
+  //   selectedBookAppointmentNoteParse,
+  //   appointmentId,
+  //   calenderEventId,
+  // ) => {
+  //   try {
+  //     // ✅ 1. Request Permission
+  //     const { status } = await Calendar.requestCalendarPermissionsAsync();
+  //     if (status !== "granted") {
+  //       Alert.alert(
+  //         baseContent.alertBox.alertOne.header,
+  //         baseContent.alertBox.alertOne.subHeader,
+  //       );
+  //       return;
+  //     }
+
+  //     // ✅ 2. Get Calendars
+  //     const calendars = await Calendar.getCalendarsAsync(
+  //       Calendar.EntityTypes.EVENT,
+  //     );
+
+  //     let targetCalendar =
+  //       calendars.find(
+  //         (cal) => cal.source?.type === "com.google" && cal.allowsModifications,
+  //       ) || calendars.find((cal) => cal.allowsModifications);
+
+  //     if (!targetCalendar) {
+  //       // throw new Error(baseContent.errorStatesAndApi.googleCalenderNotFound);
+  //       console.log(baseContent.errorStatesAndApi.googleCalenderNotFound);
+  //     }
+
+  //     // ✅ 4. Parse Date & Time safely
+  //     const [year, month, day] = selectedBookCalenderDateParse
+  //       .split("-")
+  //       .map(Number);
+
+  //     const [hours, minutes] = selectedBookCalenderTimeslotParse
+  //       .split(":")
+  //       .map(Number);
+
+  //     const startDate = new Date(year, month - 1, day, hours, minutes);
+
+  //     const duration = 30;
+  //     const endDate = new Date(startDate.getTime() + duration * 60 * 1000);
+
+  //     // ✅ 5. Event Config
+  //     const eventConfig = {
+  //       title: `Book Appointment (Updated) - ${selectedCustomerBookAppointmentBarberParse?.name}`,
+  //       startDate,
+  //       endDate,
+  //       notes: selectedBookAppointmentNoteParse
+  //         ? selectedBookAppointmentNoteParse
+  //         : "Booked appointment updated via app",
+  //       location: salonAddress,
+  //     };
+
+  //     const testId = calenderEventId;
+
+  //     const existingEvent = await Calendar.getEventAsync(testId);
+
+  //     if (existingEvent) {
+  //       await Calendar.updateEventAsync(testId, eventConfig);
+
+  //       Alert.alert(
+  //         baseContent.alertBox.alertTwo.header,
+  //         baseContent.alertBox.alertTwo.subHeader,
+  //       );
+
+  //       router.replace({
+  //         pathname: "/appointmentSuccessPage",
+  //         params: {
+  //           booked: false,
+  //           edit: true,
+  //         },
+  //       });
+  //     } else {
+  //       Alert.alert(baseContent.alertBox.alertThree.header, baseContent.alertBox.alertThree.subHeader);
+  //     }
+  //   } catch (error) {
+  //     console.error("❌ Calendar Error:", error);
+  //     Alert.alert(baseContent.alertBox.alertFour.header, error.message);
+  //   }
+  // };
+
+  // This is the fixed code of the calender
+
   const updateCalendarEvent = async (
     selectedBookCalenderDateParse,
     selectedBookCalenderTimeslotParse,
@@ -97,7 +185,7 @@ const editAppointmentCalenderModal = () => {
     calenderEventId,
   ) => {
     try {
-      // ✅ 1. Request Permission
+      // ✅ 1. Permission
       const { status } = await Calendar.requestCalendarPermissionsAsync();
       if (status !== "granted") {
         Alert.alert(
@@ -112,16 +200,15 @@ const editAppointmentCalenderModal = () => {
         Calendar.EntityTypes.EVENT,
       );
 
-      let targetCalendar =
-        calendars.find(
-          (cal) => cal.source?.type === "com.google" && cal.allowsModifications,
-        ) || calendars.find((cal) => cal.allowsModifications);
+      const targetCalendar =
+        calendars.find((cal) => cal.allowsModifications) || calendars[0];
 
       if (!targetCalendar) {
-        throw new Error(baseContent.errorStatesAndApi.googleCalenderNotFound);
+        console.log("❌ No calendar found");
+        return;
       }
 
-      // ✅ 4. Parse Date & Time safely
+      // ✅ 3. Parse Date & Time
       const [year, month, day] = selectedBookCalenderDateParse
         .split("-")
         .map(Number);
@@ -131,25 +218,46 @@ const editAppointmentCalenderModal = () => {
         .map(Number);
 
       const startDate = new Date(year, month - 1, day, hours, minutes);
+      const endDate = new Date(startDate.getTime() + 30 * 60 * 1000);
 
-      const duration = 30;
-      const endDate = new Date(startDate.getTime() + duration * 60 * 1000);
-
-      // ✅ 5. Event Config
+      // ✅ 4. Event Config
       const eventConfig = {
         title: `Book Appointment (Updated) - ${selectedCustomerBookAppointmentBarberParse?.name}`,
         startDate,
         endDate,
-        notes: selectedBookAppointmentNoteParse
-          ? selectedBookAppointmentNoteParse
-          : "Booked appointment updated via app",
+        notes:
+          selectedBookAppointmentNoteParse ||
+          "Booked appointment updated via app",
         location: salonAddress,
       };
 
       const testId = calenderEventId;
 
-      const existingEvent = await Calendar.getEventAsync(testId);
+      // 🚫 CRITICAL FIX: Android UUID crash prevention
+      if (Platform.OS === "android" && isNaN(Number(testId))) {
+        console.log("❌ Invalid Android event ID:", testId);
 
+        // // 👉 fallback: create new event instead
+        // const newId = await Calendar.createEventAsync(
+        //   targetCalendar.id,
+        //   eventConfig,
+        // );
+
+        // console.log("✅ Created new event (fallback):", newId);
+        return;
+      }
+
+      // ✅ 5. Try fetching existing event safely
+      let existingEvent = null;
+
+      console.log("🔍 Fetching event with ID:", testId);
+      try {
+        existingEvent = await Calendar.getEventAsync(testId);
+      } catch (err) {
+        console.log("⚠️ Event fetch failed:", err.message);
+      }
+
+      // ✅ 6. Update or Create
       if (existingEvent) {
         await Calendar.updateEventAsync(testId, eventConfig);
 
@@ -157,16 +265,18 @@ const editAppointmentCalenderModal = () => {
           baseContent.alertBox.alertTwo.header,
           baseContent.alertBox.alertTwo.subHeader,
         );
-
-        router.replace({
-          pathname: "/appointmentSuccessPage",
-          params: {
-            booked: false,
-            edit: true,
-          },
-        });
       } else {
-        Alert.alert(baseContent.alertBox.alertThree.header, baseContent.alertBox.alertThree.subHeader);
+        const newId = await Calendar.createEventAsync(
+          targetCalendar.id,
+          eventConfig,
+        );
+
+        console.log("✅ Event not found, created new:", newId);
+
+        Alert.alert(
+          "Event recreated",
+          "Previous event not found, new one created",
+        );
       }
     } catch (error) {
       console.error("❌ Calendar Error:", error);
@@ -211,16 +321,28 @@ const editAppointmentCalenderModal = () => {
         value: true,
       });
 
-      updateCalendarEvent(
+      await updateCalendarEvent(
         selectedBookCalenderDateParse,
         selectedBookCalenderTimeslotParse,
         selectedBookAppointmentNoteParse,
         data?.response?._id,
-        String(selectedcalenderEventIdParse),
+        selectedcalenderEventIdParse, // ⚠️ don't force String()
       );
+
+      router.replace({
+        pathname: "/appointmentSuccessPage",
+        params: {
+          booked: false,
+          edit: true,
+        },
+      });
     } catch (error) {
       setEditAppointmentLoader(false);
-      Alert.alert(baseContent.alertBox.alertFive.header, error?.response?.data?.message, [{ text: baseContent.alertBox.alertFive.ok }]);
+      Alert.alert(
+        baseContent.alertBox.alertFive.header,
+        error?.response?.data?.message,
+        [{ text: baseContent.alertBox.alertFive.ok }],
+      );
       console.log(
         "Error doing edit appointment ",
         error?.response?.data?.message,
@@ -377,7 +499,10 @@ const editAppointmentCalenderModal = () => {
                   {selectedCustomerBookAppointmentBarberParse?.name}
                 </CustomText>
                 <CustomSecondaryText style={{ marginTop: verticalScale(2) }}>
-                  {totalServices} {totalServices === 1 ? baseContent.service : baseContent.services}{" "}
+                  {totalServices}{" "}
+                  {totalServices === 1
+                    ? baseContent.service
+                    : baseContent.services}{" "}
                   • {formatMinutesToHrMin(totalTime)}
                 </CustomSecondaryText>
               </View>

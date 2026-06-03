@@ -2,7 +2,7 @@
   "expo": {
     "name": "IQBook",
     "slug": "iqb_mobile_customer",
-    "version": "1.0.27",
+    "version": "1.0.28",
     "orientation": "portrait",
     "icon": "./assets/images/iqbookAdaptive.png",
     "scheme": "iqbmobilecustomer",
@@ -11,7 +11,7 @@
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.iqbook.iqb",
-      "buildNumber": "74",
+      "buildNumber": "75",
       "config": {
         "googleMapsApiKey": "AIzaSyCFTy8N-ZV2Oji8QbpQjuzXHwuC-kNSdmU",
         "usesNonExemptEncryption": false
@@ -22,7 +22,7 @@
       "usesAppleSignIn": true
     },
     "android": {
-      "versionCode": 42,
+      "versionCode": 43,
       "adaptiveIcon": {
         "foregroundImage": "./assets/images/iqbookAdaptive.png",
         "backgroundColor": "#ffffff"
@@ -44,6 +44,12 @@
     },
     "plugins": [
       "expo-router",
+      [
+        "expo-calendar",
+        {
+          "calendarPermission": "This app needs access to your calendar to sync appointment dates and reminders."
+        }
+      ],
       [
         "expo-location",
         {
@@ -76,9 +82,7 @@
           "imageWidth": 200
         }
       ],
-      [
-        "expo-apple-authentication"
-      ],
+      ["expo-apple-authentication"],
       "expo-secure-store",
       "expo-web-browser",
       "expo-localization"

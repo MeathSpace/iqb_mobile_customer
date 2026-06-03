@@ -43,3 +43,5 @@ app-example
 # Local environment files (✅ Added .env)
 .env
 .env*.local
+
+/android
